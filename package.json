@@ -1,0 +1,81 @@
+{
+  "name": "lekhjs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The Lekh diagramming engine in TypeScript, shared by the board and the backend. No DOM, no React.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "sideEffects": [
+    "./src/model/index.ts",
+    "./dist/node/index.js"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "node": "./dist/node/index.js",
+      "default": "./src/index.ts"
+    },
+    "./headless": {
+      "types": "./dist/types/headless/index.d.ts",
+      "node": "./dist/node/headless.js",
+      "default": "./src/headless/index.ts"
+    },
+    "./interaction": {
+      "types": "./dist/types/interaction/index.d.ts",
+      "default": "./src/interaction/index.ts"
+    },
+    "./recognizer": {
+      "types": "./dist/types/recognizer/index.d.ts",
+      "default": "./src/recognizer/index.ts"
+    },
+    "./recognizer/worker": {
+      "types": "./dist/types/recognizer/worker/index.d.ts",
+      "default": "./src/recognizer/worker/index.ts"
+    },
+    "./export/pdf": {
+      "types": "./dist/types/export/pdf/index.d.ts",
+      "default": "./src/export/pdf/index.ts"
+    },
+    "./testing": {
+      "types": "./dist/types/testing/index.d.ts",
+      "node": "./dist/node/testing.js",
+      "default": "./src/testing/index.ts"
+    },
+    "./fonts/*": "./fonts/*"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json && node esbuild.config.mjs && node tools/build-info.mjs",
+    "audit:bundle": "node tools/bundle-audit.mjs",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm run audit:bundle"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@napi-rs/canvas": "1.0.9",
+    "@types/node": "24.19.2",
+    "acorn": "8.19.0",
+    "acorn-walk": "8.3.5",
+    "bidi-js": "1.1.0",
+    "esbuild": "0.28.2",
+    "eslint": "10.12.0",
+    "eslint-import-resolver-typescript": "4.4.5",
+    "eslint-plugin-import-x": "4.17.1",
+    "fontkit": "2.0.4",
+    "globals": "17.13.0",
+    "jpeg-js": "0.4.4",
+    "pako": "3.0.2",
+    "pdfkit": "0.20.2",
+    "prettier": "3.9.10",
+    "rbush": "4.0.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.2",
+    "vitest": "5.0.5"
+  }
+}

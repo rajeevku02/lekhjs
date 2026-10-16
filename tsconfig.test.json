@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "rootDir": ".",
+    "noEmit": true,
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "tools/**/*.mjs",
+    "tools/**/*.js",
+    "parity/**/*.mjs",
+    "*.ts",
+    "*.mjs",
+    "*.js"
+  ],
+  "exclude": ["test/lint/fixtures/**", "node_modules", "dist"]
+}

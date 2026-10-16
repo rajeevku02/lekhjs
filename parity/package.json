@@ -1,0 +1,10 @@
+{
+  "name": "lekhjs-parity",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Porting-only tools: the difference register, the C++ oracle comparisons and golden regeneration (spec 01 §7). Not exported, never bundled; src/ may not import it.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  }
+}

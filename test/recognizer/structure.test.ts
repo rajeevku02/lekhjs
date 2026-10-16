@@ -96,13 +96,21 @@ describe('AC-REC-03: the recognizer core stays in its zone', () => {
       return [];
     }
   });
-  const allowedRoots = [path.join(SRC, 'base'), path.join(SRC, 'geometry'), ...CORE_DIRS.map((d) => path.join(REC, d))];
+  // The delegate contract (types and small value types, no behaviour) is the one file outside the
+  // core the algorithms may name: the specialists and the pipeline talk to the scene through it.
+  const allowedRoots = [
+    path.join(SRC, 'base'),
+    path.join(SRC, 'geometry'),
+    ...CORE_DIRS.map((d) => path.join(REC, d)),
+    path.join(REC, 'delegate', 'CanvasDelegate'),
+    path.join(REC, 'delegate', 'RecMutation'),
+  ];
 
   it('has sources to check', () => {
     expect(coreFiles.length).toBeGreaterThan(10);
   });
 
-  it('imports only base/, geometry/ and the core folders (no packages, no Node, no host)', () => {
+  it('imports only base/, geometry/, the core folders and the delegate contract (no packages, no Node, no host)', () => {
     const bad: string[] = [];
     for (const f of coreFiles) {
       for (const i of imports(readFileSync(f, 'utf8'))) {

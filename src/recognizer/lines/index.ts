@@ -4,7 +4,23 @@ import { stubLineAggregatorModule } from './StubLineAggregator';
 
 export type { LineAggregator, LineAggregatorModule } from './LineAggregatorModule';
 export { StubLineAggregator, stubLineAggregatorModule } from './StubLineAggregator';
+export { ConnectionInfo, Line2Line } from './Line2Line';
+export { LineColl, lineBit, MAX_LINES } from './LineColl';
+export { LineRelation } from './LineRelation';
 export { Probability, ProbabilityType, RangeNumber } from './RangeNumber';
+export {
+  areAlmostEqual,
+  areComparableLength,
+  at,
+  canClose,
+  getConnectDistance,
+  getErrSize,
+  getErrSize2,
+  getErrSizeForLine,
+  isNegligible,
+  RecInternalError,
+  RecognizerUtil,
+} from './RecognizerUtil';
 export {
   copyPoints,
   LinePart,

@@ -170,6 +170,18 @@ export function closedPolygon(name: string, corners: readonly Point[]): LineSet 
   return b.take();
 }
 
+/** One open stroke through the vertices, one line per segment. */
+export function openPolyline(name: string, vertices: readonly Point[]): LineSet {
+  const b = new StrokeBuilder(name);
+  const v0 = vertices[0] as Point;
+  b.start(v0.x, v0.y);
+  for (let i = 1; i < vertices.length; i++) {
+    const p = vertices[i] as Point;
+    b.segment(p.x, p.y);
+  }
+  return b.take();
+}
+
 export function rect(): LineSet {
   return closedPolygon('rect', [new Point(100, 100), new Point(220, 100), new Point(220, 180), new Point(100, 180)]);
 }

@@ -69,7 +69,7 @@ export class BoxShape extends LekhObject {
     this.invalidate();
   }
 
-  translate(dx: number, dy: number): void {
+  override translate(dx: number, dy: number): void {
     this.setRect(new Rect(this.rect.x + dx, this.rect.y + dy, this.rect.width, this.rect.height));
   }
 

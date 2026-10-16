@@ -11,13 +11,12 @@
 // the linear scan over the whole store and throws `LekhError('index_mismatch')` on a difference
 // (AC-ENG-03).
 //
-// Ported from `ObjectStore.cpp` at the lines named on each method. Queries whose predicates live
-// in the object kinds (editable text, movable text, alignment points) are added with those kinds.
+// Ported from `ObjectStore.cpp` at the lines named on each method.
 import type { Config } from '../base';
 import { INT_MAX, LekhError } from '../base';
 import type { Point } from '../geometry';
-import { Rect, rectIntersects } from '../geometry';
-import type { LekhObject, SceneQuery } from './lekh-object';
+import { Rect, getDistance, rectIntersects } from '../geometry';
+import type { AlignmentPoints, LekhObject, MovableTextInfo, SceneQuery } from './lekh-object';
 import { ObjectKind } from './lekh-object';
 
 /** What the hit tester needs from the store. */
@@ -364,6 +363,78 @@ export class HitTester implements SceneQuery {
     const list = [...set].filter((o) => this.scene_.positionOf(o) >= 0);
     list.sort((a, b) => this.scene_.positionOf(a) - this.scene_.positionOf(b));
     return list;
+  }
+
+  // ---- SceneQuery: objectsWhere, alignmentPoints ----
+
+  objectsWhere(rect: Rect, pred: (obj: LekhObject) => boolean): LekhObject[] {
+    const r = this.candidates(grown(rect)).filter(pred);
+    if (this.verify && !sameList(this.scene_.objects.filter(pred), r)) this.mismatch('objectsWhere');
+    return r;
+  }
+
+  /**
+   * C++ `getAlignmentPoints(excluded)` (ObjectStore.cpp:696-707): every top-level object's points,
+   * in store order, then xs sorted by x and ys sorted by y. B7 fixed: C++ sorted the ys by x too.
+   * The sorts are stable, so equal coordinates keep store order (DR-ENG-09).
+   */
+  alignmentPoints(excluded: ReadonlySet<LekhObject>): AlignmentPoints {
+    this.scene_.flushLayout();
+    const xs: Point[] = [];
+    const ys: Point[] = [];
+    for (const o of this.scene_.objects) if (!excluded.has(o)) o.collectAlignmentPoints(xs, ys);
+    xs.sort((a, b) => a.x - b.x);
+    ys.sort((a, b) => a.y - b.y);
+    return { xs, ys };
+  }
+
+  // ---- getEditableObjectAt (ObjectStore.cpp:551-584) ----
+
+  /**
+   * The object whose text an edit at `loc` opens: a shape with non-empty text there (containers
+   * included), else a shape's text slot there that is not an implicit container, else a
+   * connector label (existing, or a new one near its route).
+   */
+  editableAt(loc: Point): LekhObject | null {
+    const shapeKind = (o: LekhObject | null): o is LekhObject =>
+      o !== null && (o.kind === ObjectKind.Templated || o.kind === ObjectKind.Freehand);
+    let obj = this.objectContaining(loc, { flattenGroup: true, checkContainer: false });
+    if (shapeKind(obj) && obj.canEditText() && obj.canEditTextAt(loc) && obj.getTextForEditing() !== '') return obj;
+    obj = this.objectContaining(loc, { flattenGroup: true, checkContainer: true });
+    if (shapeKind(obj) && obj.canEditText() && obj.canEditTextAt(loc) && !obj.isImplicitContainer(this)) return obj;
+    const tap = this.scene_.config.tapToSelectDistance;
+    const isLabel = (o: LekhObject) => o.kind === ObjectKind.Connector && o.canEditTextAt(loc);
+    const hit = this.candidates(around(loc, tap * 1.25)).find(isLabel) ?? null;
+    if (this.verify && (this.scene_.objects.find(isLabel) ?? null) !== hit) this.mismatch('editableAt');
+    return hit;
+  }
+
+  // ---- getMovableTextNear (ObjectStore.cpp:586-609) ----
+
+  /** The label nearest `pt` that can be dragged (connector labels); ties: first in store order. */
+  movableTextNear(pt: Point): MovableTextInfo | null {
+    const tap = this.scene_.config.tapToSelectDistance;
+    const r = this.movableIn(this.candidates(around(pt, tap * 1.25)), pt);
+    if (this.verify) {
+      const lin = this.movableIn(this.scene_.objects, pt);
+      if (lin?.obj !== r?.obj || lin?.index !== r?.index) this.mismatch('movableTextNear');
+    }
+    return r;
+  }
+
+  private movableIn(objects: readonly LekhObject[], pt: Point): MovableTextInfo | null {
+    let dist = INT_MAX;
+    let found: MovableTextInfo | null = null;
+    for (const o of objects) {
+      const mi = o.getMovableTextNear(pt);
+      if (mi === null) continue;
+      const d = getDistance(pt, mi.center);
+      if (d < dist) {
+        dist = d;
+        found = mi;
+      }
+    }
+    return found;
   }
 
   // ---- getBoundsOfAll (ObjectStore.cpp:622-659) ----

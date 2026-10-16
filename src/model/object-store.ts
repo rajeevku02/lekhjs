@@ -21,7 +21,15 @@ import type { DrawingPlatform } from '../render';
 import { ConnectionDependencyMap } from './connection-dependency-map';
 import { HitTester, type HitScene } from './hit-tester';
 import { LayoutTracker, type LayoutHost } from './layout-tracker';
-import type { LayoutEnv, LayoutOwner, LayoutServices, LekhObject, PaintEnv, SceneQuery } from './lekh-object';
+import type {
+  AlignmentPoints,
+  LayoutEnv,
+  LayoutOwner,
+  LayoutServices,
+  LekhObject,
+  PaintEnv,
+  SceneQuery,
+} from './lekh-object';
 import { ObjectKind } from './lekh-object';
 import { OrderAllocator } from './order-allocator';
 import { SpatialIndex } from './spatial-index';
@@ -286,6 +294,16 @@ export class ObjectStore implements LayoutOwner, LayoutHost, HitScene, SceneQuer
   /** SceneQuery: `getObjectsIn`. */
   objectsIn(rect: Rect, excludeContainer = true): LekhObject[] {
     return this.hit.objectsIn(rect, excludeContainer);
+  }
+
+  /** SceneQuery. */
+  objectsWhere(rect: Rect, pred: (obj: LekhObject) => boolean): LekhObject[] {
+    return this.hit.objectsWhere(rect, pred);
+  }
+
+  /** SceneQuery: C++ `getAlignmentPoints`. */
+  alignmentPoints(excluded: ReadonlySet<LekhObject>): AlignmentPoints {
+    return this.hit.alignmentPoints(excluded);
   }
 
   /**

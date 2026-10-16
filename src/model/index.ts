@@ -14,6 +14,11 @@ export {
   type LayoutServices,
   type PaintEnv,
   type SceneQuery,
+  type AlignmentPoints,
+  type Delta2,
+  type ModificationContext,
+  type MovableTextInfo,
+  type TextEditResult,
 } from './lekh-object';
 export { isConnector, isFreehand, isGroup, isTemplated } from './kinds';
 export { INDEX_MAX_ENTRIES, SpatialIndex } from './spatial-index';
@@ -38,3 +43,48 @@ export { DocumentInfo } from './document-info';
 export { LekhDocument, type DocumentContext, type GridSettings } from './lekh-document';
 export { ImageRefs, ImageRequests, type ImageRequestPort, type ImageRequestsOptions } from './image-refs';
 export { skipTextAtLowZoom } from './low-zoom';
+export { OPEN_ARROW_ID, SOLID_ARROW_ID, type ObjectEnv } from './object-env';
+export { snapNumber, snapRectToGrid } from './snap';
+export { ArrowHeads, ArrowLocation, type ArrowAt } from './arrow-heads';
+export { TemplatedObject, type FlipResult } from './templated-object';
+export { UnrecognizedObject } from './unrecognized-object';
+export { GroupObject, type ContainedObject } from './group-object';
+export { MultiObjects, type MultiObjectInfo } from './multi-objects';
+export { modificationContext } from './modification';
+export { PathPlacement, type ViewMapping } from './path-placement';
+export { lowZoomTextFilter } from './low-zoom';
+export {
+  AutoType,
+  ConnectionParam,
+  ConnectionType,
+  ConnectorTextInfo,
+  cloneParams,
+  type ParamMap,
+  type Params,
+  type RouteHost,
+  type VertexEdit,
+} from './connection/types';
+export { ConnectionObject, type DrawCounters } from './connection/connection-object';
+export { Connection } from './connection/connection';
+export { LineConnection } from './connection/line-connection';
+export { GenericLineConnection } from './connection/generic-line-connection';
+export { CurveConnection } from './connection/curve-connection';
+export { PathConnection } from './connection/path-connection';
+export { ConnectionEndPoint, CurveConnectionEndPoint, LineConnectionEndPoint } from './connection/end-point';
+export { ConnectionPoint, LineAlign, RouteLine } from './connection/route-line';
+export { LineGenerator } from './connection/line-generator';
+export {
+  Bend,
+  SelfLoopError,
+  Side,
+  SideRelation,
+  allowsSelfLoop,
+  attachPoint,
+  relationOf,
+  selfLoopDefaults,
+  selfLoopParams,
+  sideAngle,
+  sideOfAngle,
+  worldSideOf,
+  type SelfLoopOptions,
+} from './connection/self-loop';

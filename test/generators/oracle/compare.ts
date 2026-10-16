@@ -2,7 +2,7 @@
 // order; draw paths, locations and index lists by token; styles and other members by value; and
 // the data expressions by evaluating them, in order, on a grid of boxes with a 1e-6 tolerance (the
 // text differs by design: Lua's `%.14g` against JS's shortest round trip, DR-GEN-13). `minW`,
-// `minH` and `disabled` are compared too.
+// `minH`, `disabled` and `alignpoints` are compared too.
 import { Size } from '../../../src/geometry';
 import {
   DataExpressionParser,
@@ -151,6 +151,10 @@ export function compareOutputs(
   const lc = list(lt['containers']).map(tokens);
   const tc = list(tt['containers']).map(tokens);
   if (stable(lc) !== stable(tc)) diffs.push(`containers: ${stable(lc)} vs ${stable(tc)}`);
+  // `alignpoints` (tabs, vtabs): parseTemplateData reads it from the script's JSON.
+  if (tokens(lt['alignpoints']) !== tokens(tt['alignpoints'])) {
+    diffs.push(`alignpoints: ${tokens(lt['alignpoints'])} vs ${tokens(tt['alignpoints'])}`);
+  }
   if (!near(lua.minW, ts.minW)) diffs.push(`minW: ${String(lua.minW)} vs ${String(ts.minW)}`);
   if (!near(lua.minH, ts.minH)) diffs.push(`minH: ${String(lua.minH)} vs ${String(ts.minH)}`);
   if ((lua.disabled ?? null) !== (ts.disabled ?? null)) {

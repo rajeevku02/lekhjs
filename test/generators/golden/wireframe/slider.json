@@ -1,0 +1,273 @@
+{
+ "avabodh.wireframe.iosslider": [
+  {
+   "params": {
+    "position indicator": "circular",
+    "position": 0.4
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "0",
+     "w/2",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "h",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3"
+     },
+     {
+      "path": "M 4 5 L 2 3",
+      "style": {
+       "disabled": true
+      }
+     },
+     {
+      "path": "E 6 7 8 9 10"
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  },
+  {
+   "params": {
+    "position indicator": "circular",
+    "position": 0.4
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "0",
+     "w/2",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "h",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3"
+     },
+     {
+      "path": "M 4 5 L 2 3",
+      "style": {
+       "disabled": true
+      }
+     },
+     {
+      "path": "E 6 7 8 9 10"
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  },
+  {
+   "params": {
+    "position indicator": "circular",
+    "position": 0.4
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "0",
+     "w/2",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "h",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3"
+     },
+     {
+      "path": "M 4 5 L 2 3",
+      "style": {
+       "disabled": true
+      }
+     },
+     {
+      "path": "E 6 7 8 9 10"
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  }
+ ],
+ "avabodh.wireframe.slider": [
+  {
+   "params": {
+    "position indicator": "pointer",
+    "position": 0.4
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "0",
+     "w/2",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)-h/2",
+     "-h/2",
+     "d(6)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "h/2",
+     "d(6)+h",
+     "0",
+     "d(12)",
+     "-h/2"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3"
+     },
+     {
+      "path": "M 4 5 L 2 3",
+      "style": {
+       "disabled": true
+      }
+     },
+     {
+      "path": "M 6 7 L 8 9 L 10 11 L 12 13 L 14 15 Z"
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  },
+  {
+   "params": {
+    "position indicator": "pointer",
+    "position": 0.4
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "0",
+     "w/2",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)-h/2",
+     "-h/2",
+     "d(6)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "h/2",
+     "d(6)+h",
+     "0",
+     "d(12)",
+     "-h/2"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3"
+     },
+     {
+      "path": "M 4 5 L 2 3",
+      "style": {
+       "disabled": true
+      }
+     },
+     {
+      "path": "M 6 7 L 8 9 L 10 11 L 12 13 L 14 15 Z"
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  },
+  {
+   "params": {
+    "position indicator": "pointer",
+    "position": 0.4
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "0",
+     "w/2",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)-h/2",
+     "-h/2",
+     "d(6)",
+     "0",
+     "-w/2 + h/2 + 0.4*(w-h)",
+     "h/2",
+     "d(6)+h",
+     "0",
+     "d(12)",
+     "-h/2"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3"
+     },
+     {
+      "path": "M 4 5 L 2 3",
+      "style": {
+       "disabled": true
+      }
+     },
+     {
+      "path": "M 6 7 L 8 9 L 10 11 L 12 13 L 14 15 Z"
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  }
+ ]
+}

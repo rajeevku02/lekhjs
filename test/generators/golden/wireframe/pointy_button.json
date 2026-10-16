@@ -1,0 +1,178 @@
+{
+ "avabodh.wireframe.pointybutton": [
+  {
+   "params": {
+    "pointer": "left"
+   },
+   "text": "Button",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "-w/2+h*0.3",
+     "0",
+     "h*0.6",
+     "h*0.6",
+     "0",
+     "h*0.3",
+     "0",
+     "w-h*0.6",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       },
+       "strokewidth": 0
+      }
+     }
+    ],
+    "texts": [
+     {
+      "location": "13 14 15 16 17",
+      "text": "Button"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "location": "8 9 10 11 12",
+      "name": "avabodh.wireframe.icon_angle-left",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 50,
+    "minH": 22
+   }
+  },
+  {
+   "params": {
+    "pointer": "left"
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "-w/2+h*0.3",
+     "0",
+     "h*0.6",
+     "h*0.6",
+     "0",
+     "h*0.3",
+     "0",
+     "w-h*0.6",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       },
+       "strokewidth": 0
+      }
+     }
+    ],
+    "texts": [
+     {
+      "location": "13 14 15 16 17",
+      "text": ""
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "location": "8 9 10 11 12",
+      "name": "avabodh.wireframe.icon_angle-left",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 8,
+    "minH": 22
+   }
+  },
+  {
+   "params": {
+    "pointer": "left"
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "-w/2+h*0.3",
+     "0",
+     "h*0.6",
+     "h*0.6",
+     "0",
+     "h*0.3",
+     "0",
+     "w-h*0.6",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       },
+       "strokewidth": 0
+      }
+     }
+    ],
+    "texts": [
+     {
+      "location": "13 14 15 16 17",
+      "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "location": "8 9 10 11 12",
+      "name": "avabodh.wireframe.icon_angle-left",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 71,
+    "minH": 64
+   }
+  }
+ ]
+}

@@ -53,6 +53,8 @@ export interface WireframeOutput {
   images: ImageEntry[];
   embeds: EmbedEntry[];
   containers: string[];
+  /** `alignpoints`, when the script sets it (`tabs`, `vtabs`); C++ `clearTemplateData` keeps it otherwise. */
+  alignPoints?: string;
   minW: number;
   minH: number;
   /** Applied with `Style.setDisabled`. */

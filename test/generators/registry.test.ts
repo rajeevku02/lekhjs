@@ -54,8 +54,8 @@ describe('the id table (AC-GEN-05)', () => {
     );
   });
 
-  // A ratchet: passes once G2-G4 have ported all 33; `it.fails` must then be turned into `it`.
-  it.fails('the registry serves all 34 ids with 33 modules (completed by G2-G4)', () => {
+  // AC-GEN-05: all 33 are ported (G1-G4); this was an expected-to-fail ratchet until G4.
+  it('the registry serves all 34 ids with 33 modules', () => {
     expect(new Set(WIREFRAME_MODULES.map((m) => m.key)).size).toBe(33);
     expect(registry.wireframeById.size).toBe(34);
   });

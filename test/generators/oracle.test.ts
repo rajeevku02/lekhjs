@@ -139,6 +139,46 @@ describe('the Lua oracle (AC-GEN-06)', () => {
   }
 });
 
+/**
+ * Parameter values the stencil editors never produce but a stored board may hold: a `position`
+ * that is not a number (Lua 5.3 raises comparing it, so both sides fail) or absent (0), and a nil
+ * `corner radius` (spliced into the expressions as the name `nil`, which evaluates to 0).
+ */
+const ODD_PARAMS: readonly {
+  readonly id: string;
+  readonly params: Readonly<Record<string, number | string | boolean | null>>;
+}[] = [
+  ...['iospopover', 'tooltip', 'slider', 'vslider'].flatMap((id) =>
+    [null, '0.5', 'abc', true, -3, 7].map((position) => ({
+      id,
+      params: { position, pointer: 'right', 'position indicator': 'pointer' },
+    })),
+  ),
+  { id: 'tabshead', params: { 'corner radius': null } },
+  { id: 'tabshead', params: { 'corner radius': 'r' } },
+  { id: 'tabshead', params: { 'corner radius': 2.5 } },
+];
+
+describe('the Lua oracle on parameter values outside the editors', () => {
+  for (const { id, params } of ODD_PARAMS) {
+    const row = WIREFRAME_TEMPLATES.find((r) => r.id === `avabodh.wireframe.${id}`);
+    it(`${id} with ${JSON.stringify(params)}`, () => {
+      const script = row === undefined ? undefined : pack[row.scriptfile];
+      if (row === undefined || script === undefined) throw new Error(`missing ${id}`);
+      for (const text of ['', 'Home,*Products,About']) {
+        const c: OracleCase = { templateId: row.id, params, text, label: 'odd' };
+        const lua = new LuaGenerator(script, STUB_HOST).generate(params, text);
+        const ts = runTs(row.key, c);
+        if (!lua.ok || 'error' in ts) {
+          expect({ lua: lua.ok, ts: !('error' in ts) }).toEqual({ lua: false, ts: false });
+        } else {
+          expect(compareOutputs(lua, ts, params, stubMeasure)).toEqual([]);
+        }
+      }
+    });
+  }
+});
+
 describe('the oracle harness itself', () => {
   const row = WIREFRAME_TEMPLATES.find((r) => r.id === 'avabodh.wireframe.button');
   const script = row === undefined ? undefined : pack[row.scriptfile];

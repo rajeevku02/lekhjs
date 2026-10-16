@@ -1,0 +1,494 @@
+{
+ "avabodh.wireframe.tree": [
+  {
+   "params": {
+    "border": true
+   },
+   "text": "[folder]Item with closed folder icon\n[folder-open]Item with open folder icon\n[file]Item with file icon\n[+]You may also use this\n[-]and this\nor this\n[>]or even this\n[v]and this\n-[+]disabled tree item\n*[-]selected tree item\n [-]Add space for hierarchy\n  [+]another level of hierarchy",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "28.1",
+     "-h/2+17",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+17",
+     "12.6",
+     "12.6",
+     "0",
+     "28.1",
+     "-h/2+39",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+39",
+     "12.6",
+     "12.6",
+     "0",
+     "28.1",
+     "-h/2+61",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+61",
+     "12.6",
+     "12.6",
+     "0",
+     "28.1",
+     "-h/2+83",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+83",
+     "12.6",
+     "12.6",
+     "0",
+     "28.1",
+     "-h/2+105",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+105",
+     "12.6",
+     "12.6",
+     "0",
+     "28.1",
+     "-h/2+127",
+     "w",
+     "22",
+     "0",
+     "28.1",
+     "-h/2+149",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+149",
+     "12.6",
+     "12.6",
+     "0",
+     "28.1",
+     "-h/2+171",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+171",
+     "12.6",
+     "12.6",
+     "0",
+     "28.1",
+     "-h/2+193",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+193",
+     "12.6",
+     "12.6",
+     "0",
+     "-w/2",
+     "-h/2+204",
+     "-w/2",
+     "-h/2+226",
+     "w/2",
+     "-h/2+226",
+     "w/2",
+     "-h/2+204",
+     "28.1",
+     "-h/2+215",
+     "w",
+     "22",
+     "0",
+     "-w/2+18.3",
+     "-h/2+215",
+     "12.6",
+     "12.6",
+     "0",
+     "52.7",
+     "-h/2+237",
+     "w",
+     "22",
+     "0",
+     "-w/2+42.9",
+     "-h/2+237",
+     "12.6",
+     "12.6",
+     "0",
+     "77.3",
+     "-h/2+259",
+     "w",
+     "22",
+     "0",
+     "-w/2+67.5",
+     "-h/2+259",
+     "12.6",
+     "12.6",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 93 94 L 95 96 L 97 98 L 99 100  Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "8 9 10 11 12",
+      "text": "Item with closed folder icon"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "18 19 20 21 22",
+      "text": "Item with open folder icon"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "28 29 30 31 32",
+      "text": "Item with file icon"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "38 39 40 41 42",
+      "text": "You may also use this"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "48 49 50 51 52",
+      "text": "and this"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "58 59 60 61 62",
+      "text": "or this"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "63 64 65 66 67",
+      "text": "or even this"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "73 74 75 76 77",
+      "text": "and this"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "83 84 85 86 87",
+      "text": "disabled tree item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "101 102 103 104 105",
+      "text": "selected tree item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "111 112 113 114 115",
+      "text": "Add space for hierarchy"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "121 122 123 124 125",
+      "text": "another level of hierarchy"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_folder",
+      "location": "13 14 15 16 17",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_folder-open",
+      "location": "23 24 25 26 27",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_file",
+      "location": "33 34 35 36 37",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_plus-square-o",
+      "location": "43 44 45 46 47",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_minus-square-o",
+      "location": "53 54 55 56 57",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_caret-right",
+      "location": "68 69 70 71 72",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_caret-down",
+      "location": "78 79 80 81 82",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "name": "avabodh.wireframe.icon_plus-square-o",
+      "location": "88 89 90 91 92",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_minus-square-o",
+      "location": "106 107 108 109 110",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_minus-square-o",
+      "location": "116 117 118 119 120",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_plus-square-o",
+      "location": "126 127 128 129 130",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 271.3,
+    "minH": 276
+   }
+  },
+  {
+   "params": {
+    "border": true
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 0,
+    "minH": 12
+   }
+  },
+  {
+   "params": {
+    "border": true
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "-w/2",
+     "-h/2+6",
+     "-w/2",
+     "-h/2+28",
+     "w/2",
+     "-h/2+28",
+     "w/2",
+     "-h/2+6",
+     "28.1",
+     "-h/2+17",
+     "w",
+     "22",
+     "0",
+     "28.1",
+     "-h/2+39",
+     "w",
+     "22",
+     "0",
+     "-w/2",
+     "-h/2+50",
+     "-w/2",
+     "-h/2+72",
+     "w/2",
+     "-h/2+72",
+     "w/2",
+     "-h/2+50",
+     "28.1",
+     "-h/2+61",
+     "w",
+     "22",
+     "0",
+     "28.1",
+     "-h/2+83",
+     "w",
+     "22",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 8 9 L 10 11 L 12 13 L 14 15  Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 26 27 L 28 29 L 30 31 L 32 33  Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "16 17 18 19 20",
+      "text": "Selected"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "21 22 23 24 25",
+      "text": "Disabled"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "34 35 36 37 38",
+      "text": "Both"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "39 40 41 42 43",
+      "text": "*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 96.1,
+    "minH": 100
+   }
+  }
+ ]
+}

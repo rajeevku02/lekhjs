@@ -25,6 +25,7 @@ export function outputToTemplateJson(out: WireframeOutput): JsonObject {
     images: out.images.map(entry),
     embeds: out.embeds.map(entry),
     containers: out.containers.slice(),
+    ...(out.alignPoints !== undefined ? { alignpoints: out.alignPoints } : {}),
   };
 }
 

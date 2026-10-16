@@ -7,7 +7,12 @@ ts: "generators/wireframe-date.ts (task G2): the strings come from the local y/m
 user_visible: true
 fixture: parity/fixtures/DR-GEN-05/malformed-date.lekh
 rule:
-  json: []
+  json:
+    - path: '/**/template'
+      when:
+        cpp_id_in: [avabodh.wireframe.calendar, avabodh.wireframe.androiddatepicker]
+      op: normalise
+      normaliser: date-malformed
   image:
     attribute: { object_flag: wireframe-generator }
   perf: null

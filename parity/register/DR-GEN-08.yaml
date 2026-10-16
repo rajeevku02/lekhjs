@@ -7,7 +7,12 @@ ts: 'generators/wireframe/android-datepicker.ts (task G2): the weekday of the se
 user_visible: true
 fixture: parity/fixtures/DR-GEN-08/selected-weekday.lekh
 rule:
-  json: []
+  json:
+    - path: '/**/template'
+      when:
+        cpp_id_in: [avabodh.wireframe.androiddatepicker]
+      op: normalise
+      normaliser: datepicker-weekday
   image:
     attribute: { object_flag: wireframe-generator }
   perf: null

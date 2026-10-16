@@ -9,6 +9,10 @@ import { canonicalise, isArrayForm } from '../json/canon.mjs';
 import { diff, generalise } from '../json/diff.mjs';
 import { LNum, LenientParseError, lenientParse } from '../json/lenient-parse.mjs';
 import { attributeGaps, loadGaps } from '../json/gaps.mjs';
+import { luaDate } from '../json/normalisers/wireframe-date.mjs';
+import * as dateMalformed from '../json/normalisers/date-malformed.mjs';
+import * as datepickerWed from '../json/normalisers/datepicker-wed.mjs';
+import * as datepickerWeekday from '../json/normalisers/datepicker-weekday.mjs';
 import * as fontModifierSize from '../json/normalisers/font-modifier-size.mjs';
 import * as legacyConvert from '../json/normalisers/legacy-convert.mjs';
 import * as luaDataNumber from '../json/normalisers/lua-data-number.mjs';
@@ -293,6 +297,62 @@ describe('normalisers', () => {
       placeholderVerbatim.equal(cpp, L({ id: 'avabodh.wireframe.button', generator: gen }), L(stored)),
       null,
     );
+  });
+});
+
+describe('the date fixes (DR-GEN-05, -07, -08)', () => {
+  const DP = 'avabodh.wireframe.androiddatepicker';
+  const L = (/** @type {unknown} */ v) => lenientParse(JSON.stringify(v)).value;
+  /** A datepicker template whose header box is `w` wide (data entries 13 and 15). @param {number} w */
+  const picker = (w, extra = {}) => {
+    const data = Array.from({ length: 20 }, (_, i) => String(i));
+    data[13] = `-w/2+${String(14 + w / 2)}`;
+    data[15] = String(w);
+    return L({ id: DP, data, ...extra });
+  };
+  const input = (/** @type {string} */ text) => L({ id: DP, generator: { text } });
+
+  it('reads the date as the scripts did', () => {
+    assert.deepEqual(luaDate('2018/12/25'), { y: 2018, m: 12, d: 25, weekdayOfFirst: 6, weekdayOfSelected: 2 });
+    assert.equal(luaDate('2025/10/1')?.weekdayOfFirst, 3);
+    assert.equal(luaDate('2024/13/45')?.m, 1);
+    assert.equal(luaDate('2024/2/30')?.d, 2);
+    for (const bad of ['', 'A', '2022/3', 'alpha/3/4', '2022/x/4', '2022/3/y', '2023/7.5/9']) {
+      assert.equal(luaDate(bad), null, bad);
+    }
+  });
+
+  it('date-malformed: only for a text the scripts could not read, and only when TS drew the shape', () => {
+    const cal = (/** @type {string[]} */ data) => L({ id: 'avabodh.wireframe.calendar', data });
+    const inCal = (/** @type {string} */ text) => L({ id: 'avabodh.wireframe.calendar', generator: { text } });
+    assert.equal(dateMalformed.equal(cal([]), cal(['w', 'h']), inCal('A')), true);
+    assert.equal(dateMalformed.equal(cal([]), cal([]), inCal('A')), false);
+    assert.equal(dateMalformed.equal(cal([]), cal(['w']), inCal('2022/3/4')), null);
+    assert.equal(
+      dateMalformed.equal(cal([]), L({ id: 'avabodh.wireframe.calendar', data: ['w'], flags: 1 }), inCal('A')),
+      false,
+    );
+    assert.equal(dateMalformed.equal(L({ id: 'x.y', data: [] }), L({ id: 'x.y', data: ['w'] }), inCal('A')), null);
+  });
+
+  it('datepicker-wed and datepicker-weekday: the header box only, each for its own case', () => {
+    // 2025/10/1: a Wednesday 1st, selected: "Web" → "Wed" (DR-GEN-07)
+    assert.equal(datepickerWed.equal(picker(199.8), picker(200.6), input('2025/10/1')), true);
+    assert.equal(datepickerWeekday.equal(picker(199.8), picker(200.6), input('2025/10/1')), null);
+    // 2018/12/25: the 1st is a Saturday, the 25th a Tuesday (DR-GEN-08)
+    assert.equal(datepickerWeekday.equal(picker(186.5), picker(194.3), input('2018/12/25')), true);
+    assert.equal(datepickerWed.equal(picker(186.5), picker(194.3), input('2018/12/25')), null);
+    // neither applies when the header was already right
+    assert.equal(datepickerWed.equal(picker(1), picker(2), input('2018/12/1')), null);
+    assert.equal(datepickerWeekday.equal(picker(1), picker(2), input('2018/12/1')), null);
+    // x must move by half the width change; nothing else may differ
+    const moved = picker(194.3);
+    /** @type {any} */ (moved).data[13] = '-w/2+200';
+    assert.equal(datepickerWeekday.equal(picker(186.5), moved, input('2018/12/25')), false);
+    const other = picker(194.3);
+    /** @type {any} */ (other).data[3] = '-h/2';
+    assert.equal(datepickerWeekday.equal(picker(186.5), other, input('2018/12/25')), false);
+    assert.equal(datepickerWeekday.equal(picker(186.5), picker(194.3, { flags: 2 }), input('2018/12/25')), false);
   });
 });
 

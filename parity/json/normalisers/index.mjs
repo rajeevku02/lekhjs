@@ -4,6 +4,9 @@
 // A normaliser a rule applies with `op: normalise` exports `equal(cpp, ts) → boolean | null` over
 // the two subtrees at the matched path, with the input board's subtree there as a third argument
 // (null: not applicable; the next rule is tried).
+import * as dateMalformed from './date-malformed.mjs';
+import * as datepickerWed from './datepicker-wed.mjs';
+import * as datepickerWeekday from './datepicker-weekday.mjs';
 import * as generatorScript from './generator-script.mjs';
 import * as infoVersion from './info-version.mjs';
 import * as fontModifierSize from './font-modifier-size.mjs';
@@ -21,6 +24,9 @@ export const NORMALISERS = Object.freeze({
   [legacyConvert.name]: legacyConvert,
   [placeholderVerbatim.name]: placeholderVerbatim,
   [fontModifierSize.name]: fontModifierSize,
+  [dateMalformed.name]: dateMalformed,
+  [datepickerWed.name]: datepickerWed,
+  [datepickerWeekday.name]: datepickerWeekday,
 });
 
 /** The canonicalisation steps every comparison applies (no rule needed). */

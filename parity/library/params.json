@@ -1,0 +1,338 @@
+{
+  "_about": "The one non-default parameter set per generator template id for the library-shape test (verification 02 §C.2 step 5, spec 04 §13): numbers x1.5 rounded to the editor step (integers to 1, floats to 0.01) and clamped to min/max, booleans flipped, enumerations the next option, Hidden (editor type 255) parameters unchanged; for interpret_text generators an alternate text with one extra item or line (the date pickers take another date, single-label buttons a second word). Drafted by rule from lekhboard/stencils/v4 on 2026-10-16 and reviewed by eye; build-batches.mjs fails on a generator id with no entry.",
+  "avabodh.bpmn.activities.call": {
+    "params": {
+      "activity": "Task",
+      "marker1": "Sub-Process",
+      "marker2": "Sub-Process",
+      "tasktype": "Send"
+    }
+  },
+  "avabodh.bpmn.activities.subprocess": {
+    "params": {
+      "activity": "Call Activity",
+      "marker1": "Sub-Process",
+      "marker2": "Sub-Process",
+      "tasktype": "Send"
+    }
+  },
+  "avabodh.bpmn.activities.task": {
+    "params": {
+      "activity": "Transcation",
+      "marker1": "Sub-Process",
+      "marker2": "Sub-Process",
+      "tasktype": "Send"
+    }
+  },
+  "avabodh.bpmn.activities.transaction": {
+    "params": {
+      "activity": "Event Sub-Process",
+      "marker1": "Sub-Process",
+      "marker2": "Sub-Process",
+      "tasktype": "Send"
+    }
+  },
+  "avabodh.bpmn.choreography": {
+    "params": {
+      "activetop": false,
+      "choreography": "Sub-Choreography",
+      "input": true,
+      "marker": "Loop",
+      "participants": 3,
+      "response": true
+    }
+  },
+  "avabodh.bpmn.conversation": {
+    "params": {
+      "call": true,
+      "subconversation": true
+    }
+  },
+  "avabodh.bpmn.dataobject": {
+    "params": {
+      "type": "Collection"
+    }
+  },
+  "avabodh.bpmn.event.end": {
+    "params": {
+      "group": "Start",
+      "noninterrupting": true,
+      "throwing": true,
+      "type": "Message"
+    }
+  },
+  "avabodh.bpmn.event.intermediate": {
+    "params": {
+      "group": "End",
+      "noninterrupting": true,
+      "throwing": true,
+      "type": "Message"
+    }
+  },
+  "avabodh.bpmn.event.start": {
+    "params": {
+      "group": "Intermediate",
+      "noninterrupting": true,
+      "throwing": true,
+      "type": "Message"
+    }
+  },
+  "avabodh.bpmn.gateway": {
+    "params": {
+      "type": "Exclusive"
+    }
+  },
+  "avabodh.bpmn.hlanes": {
+    "params": {
+      "header_orientation": "Along Lane",
+      "ncols": 3
+    }
+  },
+  "avabodh.bpmn.vlanes": {
+    "params": {
+      "header_orientation": "Along Lane",
+      "ncols": 3
+    }
+  },
+  "avabodh.container.slh": {
+    "params": {
+      "header_orientation": "Along Lane",
+      "ncols": 3
+    }
+  },
+  "avabodh.container.slv": {
+    "params": {
+      "header_orientation": "Along Lane",
+      "ncols": 3
+    }
+  },
+  "avabodh.table.ct": {
+    "params": {
+      "col_header": false,
+      "ncols": 3,
+      "nrows": 3,
+      "show_col_lines": false,
+      "show_row_lines": false,
+      "table_header": true
+    }
+  },
+  "avabodh.table.ctnh": {
+    "params": {
+      "col_header": true,
+      "ncols": 3,
+      "nrows": 3,
+      "show_col_lines": false,
+      "show_row_lines": false,
+      "table_header": true
+    }
+  },
+  "avabodh.table.nh": {
+    "params": {
+      "col_header": true,
+      "ncols": 3,
+      "nrows": 3,
+      "show_col_lines": false,
+      "show_row_lines": false,
+      "table_header": true
+    }
+  },
+  "avabodh.table.std": {
+    "params": {
+      "col_header": false,
+      "ncols": 3,
+      "nrows": 3,
+      "show_col_lines": false,
+      "show_row_lines": false,
+      "table_header": true
+    }
+  },
+  "avabodh.wireframe.accordion": {
+    "params": {},
+    "text": "Item One\n*Item Two\nItem Three\nItem Four\nItem Five"
+  },
+  "avabodh.wireframe.androidactionbar": {
+    "params": {
+      "icon": "back",
+      "overflow": false
+    },
+    "text": "Title Two"
+  },
+  "avabodh.wireframe.androiddatepicker": {
+    "params": {},
+    "text": "2019/03/07"
+  },
+  "avabodh.wireframe.androidtabbar": {
+    "params": {},
+    "text": "Tab1,*Tab2,Tab3,Tab4,Tab5"
+  },
+  "avabodh.wireframe.breadcrumbs": {
+    "params": {},
+    "text": "Home,Product,Features,Pricing"
+  },
+  "avabodh.wireframe.button": {
+    "params": {
+      "menu": true,
+      "state": "disabled"
+    },
+    "text": "Button Two"
+  },
+  "avabodh.wireframe.buttonbar": {
+    "params": {},
+    "text": "One,*Two,Three,Four"
+  },
+  "avabodh.wireframe.calendar": {
+    "params": {},
+    "text": "2019/03/07"
+  },
+  "avabodh.wireframe.checkbox": {
+    "params": {
+      "checked": false,
+      "state": "disabled"
+    },
+    "text": "checkbox two"
+  },
+  "avabodh.wireframe.checkboxgroup": {
+    "params": {},
+    "text": "[ ]not selected\n[x]selected\n[-]indeterminate\n-[ ]disabled\n-[x]disabled selected\n-[-]disabled indeterminate\nA row without a checkbox\n[x]another row"
+  },
+  "avabodh.wireframe.datagrid": {
+    "params": {
+      "border": false,
+      "horizontal grid lines": false,
+      "min row height": 30,
+      "vertical grid lines": false
+    },
+    "text": "ID,Name & Job Title[V],Age,Nickname,Option\n1,Name 1\\nCEO,40,nick1,[O]\n2,Name 2\\nCTO,39,nick2,[X]\n*3,Name 3\\nEngineer,32,nick3,[-]\n4,Name 4\\nEngineer,35,nick4,[]\n5,Name 5\\nEngineer,28,nick5,[X]\n{0C, 45L, 0R, 15L, 0C}"
+  },
+  "avabodh.wireframe.iosactionsheet": {
+    "params": {},
+    "text": "Copy\nShare\nSend\nPrint\nCancel"
+  },
+  "avabodh.wireframe.ioscontextmenu": {
+    "params": {},
+    "text": "*Select All,Copy,Paste,Cut"
+  },
+  "avabodh.wireframe.iosmenu": {
+    "params": {
+      "border": false,
+      "corner radius": 2,
+      "min row height": 60
+    },
+    "text": "A text menu without icon\n[+]Add an Item[>]\n[-]Delete an item\n*Selected item,OK\n-Disabled Item[=]\n[x]Checkmark\n[O]Bullet item\nOn Button[on]\nOff Button[off]\n\n   Another item with spaces\nOne more item"
+  },
+  "avabodh.wireframe.iospagecontrol": {
+    "params": {
+      "current page": 3,
+      "number of pages": 8,
+      "radius": 6
+    }
+  },
+  "avabodh.wireframe.iospicker": {
+    "params": {
+      "border": true
+    },
+    "text": "7,59\n8,00\n9,01,PM\n10,02,AM\n11,03\n12,04\n1,05\n2,06"
+  },
+  "avabodh.wireframe.iospopover": {
+    "params": {
+      "pointer": "bottom",
+      "position": 0.3
+    }
+  },
+  "avabodh.wireframe.iossegmented": {
+    "params": {},
+    "text": "*First,Second,Third,Fourth"
+  },
+  "avabodh.wireframe.iosslider": {
+    "params": {
+      "position": 0.6,
+      "position indicator": "pointer"
+    }
+  },
+  "avabodh.wireframe.linkbar": {
+    "params": {
+      "separator line": false
+    },
+    "text": "Home,Product,Blog,Contact,About"
+  },
+  "avabodh.wireframe.listbox": {
+    "params": {
+      "border": false,
+      "min item height": 38
+    },
+    "text": "first item\n-disabled item\n*selected item\nanother item\nlast item"
+  },
+  "avabodh.wireframe.menu": {
+    "params": {},
+    "text": "Open,CTRL+O\n*Open Recent,>\n---\n[O]Option One\nOption Two\n=\n[x]Toggle Item\n-Disabled Item\nSave,CTRL+S\nExit,CTRL+Q"
+  },
+  "avabodh.wireframe.menubar": {
+    "params": {},
+    "text": "File,*Edit,-Window,Help,View"
+  },
+  "avabodh.wireframe.multilinebutton": {
+    "params": {},
+    "text": "Multiline Button\nsecond line of text\nthird line"
+  },
+  "avabodh.wireframe.pointybutton": {
+    "params": {
+      "pointer": "right"
+    },
+    "text": "Button Two"
+  },
+  "avabodh.wireframe.radiobutton": {
+    "params": {
+      "checked": false,
+      "state": "disabled"
+    },
+    "text": "radio button two"
+  },
+  "avabodh.wireframe.radiobuttongroup": {
+    "params": {},
+    "text": "[O]option 1 (selected)\n[( )]option2\n-[O]option 3 (selected and disabled)\n-[( )]option 4 (disabled)\nA row without radio button\n[( )]option 5"
+  },
+  "avabodh.wireframe.slider": {
+    "params": {
+      "position": 0.6,
+      "position indicator": "rectangular"
+    }
+  },
+  "avabodh.wireframe.tabs": {
+    "params": {
+      "align": "right",
+      "position": "bottom"
+    },
+    "text": "*One,Two,Three,Four"
+  },
+  "avabodh.wireframe.tabshead": {
+    "params": {
+      "corner radius": 18
+    },
+    "text": "Home,*Products,About,Contact,Blog"
+  },
+  "avabodh.wireframe.tooltip": {
+    "params": {
+      "pointer": "right"
+    },
+    "text": "Tooltip text\nsecond line"
+  },
+  "avabodh.wireframe.tree": {
+    "params": {
+      "border": false
+    },
+    "text": "[folder]Item with closed folder icon\n[folder-open]Item with open folder icon\n[file]Item with file icon\n[+]You may also use this\n[-]and this\nor this\n[>]or even this\n[v]and this\n-[+]disabled tree item\n*[-]selected tree item\n [-]Add space for hierarchy\n  [+]another level of hierarchy\n  [file]one more item"
+  },
+  "avabodh.wireframe.vslider": {
+    "params": {
+      "position": 0.6,
+      "position indicator": "rectangular"
+    }
+  },
+  "avabodh.wireframe.vtabs": {
+    "params": {
+      "align": "bottom",
+      "position": "right"
+    },
+    "text": "*One\nTwo\nThree\nFour"
+  }
+}

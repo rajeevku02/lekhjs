@@ -1,0 +1,17 @@
+id: DR-GEN-01
+title: 'A data expression that does not parse evaluates to 0 and the template loads'
+area: GEN
+kind: bug-fix
+cpp: 'DataExpression::parse returned null and the template dereferenced it (B18a, crash)'
+ts: 'template/ShapeTemplate: a null compiled expression evaluates to 0, expression_invalid warned once per template'
+user_visible: true
+fixture: test/template/shape-template.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 03 §14, §15 B18a; spec 04 §2'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

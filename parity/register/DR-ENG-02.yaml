@@ -1,0 +1,18 @@
+id: DR-ENG-02
+title: 'Duplicate JSON key: the last value wins (C++ kept the first and leaked the duplicate)'
+area: ENG
+kind: reader-quirk
+cpp: "JsonParser kept the first of duplicated keys and leaked the duplicate's value (B18d)"
+ts: 'io/ JSON reader: JSON.parse semantics, last duplicate wins; nothing leaks'
+user_visible: false
+# The fix lands with its module: io/ (task E7) owns the reader and its fixture. The fixture is added there.
+fixture: null
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 03 §10.1, §15 B18d, §16'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

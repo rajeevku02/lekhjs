@@ -1,0 +1,17 @@
+id: DR-ENG-18
+title: 'Queries no longer re-route connectors or rewrite stored automatic routes'
+area: ENG
+kind: bug-fix
+cpp: 'ConnectionObject::getSelectionRectangle, getDistanceFrom and canEditTextAt called connection_->update(), which re-routed and wrote the automatic directions into the stored segments (B9)'
+ts: 'model/ConnectionObject: the route is computed only in layout(); queries read the layout'
+user_visible: true
+fixture: test/model/connection.test.ts
+rule:
+  json: ['pages.*.objects.*.params (automatic connectors)']
+  image: null
+  perf: null
+evidence: 'spec 03 §3.1, §5.1, §15 B9'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

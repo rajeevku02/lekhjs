@@ -1,0 +1,18 @@
+id: DR-ENG-15
+title: 'A load frame with empty changes is rejected'
+area: ENG
+kind: bug-fix
+cpp: 'UpdateHandler dereferenced changes.begin() of an empty load frame (B3, crash)'
+ts: 'sync/ validation phase rejects it: nothing applied, version unchanged, frame_rejected'
+user_visible: true
+# The fix lands with its module: sync/ (task E8) owns the applier and its fixture. The fixture is added there.
+fixture: null
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 03 §11.2, §15 B3'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

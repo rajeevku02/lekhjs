@@ -1,0 +1,17 @@
+id: DR-ENG-08
+title: 'An erase batch lists its objects in store order'
+area: ENG
+kind: intended-change
+cpp: 'ObjectStore::getErasableObjects collected into a std::set of pointers: pointer-address order, unreproducible'
+ts: 'model/HitTester.erasableAt: near objects, then their connectors, each in store order'
+user_visible: false
+fixture: test/model/hit-tester.test.ts
+rule:
+  json: ['updates.changes (delete frame entry order)']
+  image: null
+  perf: null
+evidence: 'spec 03 §4 #6'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

@@ -1,0 +1,18 @@
+id: DR-ENG-14
+title: 'The sync version is initialised from the board source and reset on load'
+area: ENG
+kind: bug-fix
+cpp: 'UpdateManager::version_ was uninitialised until the first frame (B2)'
+ts: 'sync/SyncSession: version from BoardSource.version, reset by every load or reload'
+user_visible: true
+# The fix lands with its module: sync/ (task E8) owns SyncSession and its fixture. The fixture is added there.
+fixture: null
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 03 §11.2, §15 B2'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

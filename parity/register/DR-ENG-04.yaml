@@ -1,0 +1,18 @@
+id: DR-ENG-04
+title: 'Integers are not truncated to 32 bits on read (colours keep signed 32-bit)'
+area: ENG
+kind: reader-quirk
+cpp: 'atoi/int parsing truncated integer members to 32 bits (B13), e.g. large order values'
+ts: 'io/ JSON reader: plain doubles; colours only read as value | 0'
+user_visible: true
+# The fix lands with its module: io/ (task E7) owns the reader and its fixture. The fixture is added there.
+fixture: null
+rule:
+  json: ['pages.*.objects.*.order']
+  image: null
+  perf: null
+evidence: 'spec 03 §10.1, §15 B13, §16'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

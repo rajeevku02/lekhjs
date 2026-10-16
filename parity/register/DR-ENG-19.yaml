@@ -1,0 +1,18 @@
+id: DR-ENG-19
+title: "Embed and help ids colliding after '.'→'_' are written deterministically: sorted, first wins"
+area: ENG
+kind: bug-fix
+cpp: 'The serializer kept whichever colliding id the hash map iterated last (B14)'
+ts: 'io/ JSON writer: ids sorted by UTF-8 bytes, first wins'
+user_visible: false
+# The fix lands with its module: io/ (task E7) owns the writer and its fixture. The fixture is added there.
+fixture: null
+rule:
+  json: ['templates.*.embeds', 'help']
+  image: null
+  perf: null
+evidence: 'spec 03 §10.2, §15 B14'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

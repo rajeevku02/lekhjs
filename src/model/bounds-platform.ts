@@ -66,10 +66,13 @@ export class BoundsPlatform implements DrawingPlatform {
     this.pMaxY_ = -Infinity;
   }
 
-  startDrawing(pt: Point, style: Style): void {
+  /**
+   * The start point is not geometry: template paths start at (0, 0) and draw from their first
+   * command; every other caller moves or draws from the start point anyway.
+   */
+  startDrawing(_pt: Point, style: Style): void {
     this.resetPath();
     this.style_ = style;
-    this.pathPoint(pt);
   }
 
   endDrawing(): void {

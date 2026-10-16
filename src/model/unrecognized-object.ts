@@ -171,7 +171,8 @@ export class UnrecognizedObject extends TemplatedObject {
   protected override computeLayout(): LayoutGeometry {
     const visualBounds = this.getVisualBounds();
     const bp = new BoundsPlatform();
-    bp.addRect(visualBounds);
+    // The stroke's start point is not reported to the bounds platform: grow the box by the reach.
+    bp.addRect(visualBounds.inflate(this.drawingProfile.effectiveStrokeWidth() * 1.5));
     this.paintContent(bp);
     return { visualBounds, extent: bp.bounds() ?? visualBounds };
   }

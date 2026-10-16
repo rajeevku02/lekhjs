@@ -1,0 +1,17 @@
+id: DR-ENG-17
+title: "Page bounds include the first object's stroke"
+area: ENG
+kind: bug-fix
+cpp: "ObjectStore::getBoundsOfAll seeded the union with the first object's unstroked rect (B8)"
+ts: "model/HitTester.boundsOfAll: every object's visual bounds grown by half its stroke (fixed in E5)"
+user_visible: true
+fixture: test/model/hit-tester.test.ts
+rule:
+  json: ['canvas size of auto pages', 'export bounds']
+  image: null
+  perf: null
+evidence: 'spec 03 §4 #15, §15 B8; decision OQ-18'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

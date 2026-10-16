@@ -1,7 +1,7 @@
 // ObjectStore membership, order and lookup, ported from the C++ semantics (ObjectStore.cpp), plus
 // the spatial index and the dependency map it keeps.
 import { describe, expect, it } from 'vitest';
-import { EngineConfig } from '../../src/base';
+import { CONFIG_DEFAULTS, EngineConfig } from '../../src/base';
 import { Point, Rect } from '../../src/geometry';
 import { ConnectionDependencyMap, OrderAllocator, SpatialIndex } from '../../src/model';
 import { BoxShape, FakeConnector, FakeGroup, fixedClock, newStore } from './helpers';
@@ -152,7 +152,8 @@ describe('SpatialIndex', () => {
     expect(a.indexItem).toBeNull();
   });
 
-  it('verifyIndex is off by default in the engine config', () => {
-    expect(new EngineConfig().debug.verifyIndex).toBe(false);
+  it('verifyIndex is off by default in the engine config (the vitest setup turns it on, AC-ENG-03)', () => {
+    expect(CONFIG_DEFAULTS.debug.verifyIndex).toBe(false);
+    expect(new EngineConfig().debug.verifyIndex).toBe(true);
   });
 });

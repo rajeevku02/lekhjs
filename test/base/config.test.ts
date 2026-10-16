@@ -13,7 +13,9 @@ describe('EngineConfig', () => {
     expect(c.screenMode).toBe(ScreenMode.AsSystem);
     expect(c.pencilBehavior).toBe(PencilBehavior.SameAsTouch);
     expect(c.enableMultiStroke).toBe(false);
-    expect(c.debug.verifyIndex).toBe(false);
+    // The product default; the vitest setup turns the shadow check on for every suite (AC-ENG-03).
+    expect(CONFIG_DEFAULTS.debug.verifyIndex).toBe(false);
+    expect(c.debug.verifyIndex).toBe(true);
     expect(c.render).toEqual({ lowZoomSimplify: false, minGlyphPx: 2 });
   });
 
@@ -24,7 +26,7 @@ describe('EngineConfig', () => {
 
   it('carries all 129 C++ fields plus the debug and render groups', () => {
     expect(CONFIG_KEYS.length).toBe(131);
-    const c = new EngineConfig();
+    const c = new EngineConfig({ debug: { verifyIndex: false } });
     for (const k of CONFIG_KEYS) expect(c[k]).toEqual(CONFIG_DEFAULTS[k]);
   });
 

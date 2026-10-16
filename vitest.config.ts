@@ -5,6 +5,8 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['test/**/*.test.ts'],
+    // AC-ENG-03: the index shadow check is on in every suite.
+    setupFiles: ['test/setup/verify-index.ts'],
     exclude: ['test/lint/fixtures/**', 'node_modules/**', 'dist/**'],
     pool: 'forks',
     maxWorkers: 2,

@@ -22,7 +22,7 @@ function p95(samples: number[]): number {
 
 describe('hit-test latency with real objects (AC-ENG-05)', () => {
   it('p95 ≤ 1 ms for objectNear and objectForConnection on 5,000 objects', () => {
-    const env = kindsEnv(new EngineConfig());
+    const env = kindsEnv(new EngineConfig({ debug: { verifyIndex: false } }));
     const store = kindsStore(env);
     const r = rng(42);
     const shapes: TemplatedObject[] = [];

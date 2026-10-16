@@ -2,8 +2,16 @@
 // `serializeShapeTemplate` contracts, the resolve hook on every template parsed, the default
 // generators (generators/' converter), and the style read/write rules ported as is.
 import { describe, expect, it } from 'vitest';
-import { StoredNativeGenerator, UnknownGeneratorPlaceholder, WireframeGenerator } from '../../src/generators';
 import {
+  BpmnEventGenerator,
+  GeneratorRegistry,
+  LuaToJsConverter,
+  StoredNativeGenerator,
+  UnknownGeneratorPlaceholder,
+  WireframeGenerator,
+} from '../../src/generators';
+import {
+  converterHooks,
   parsePaint,
   parseStyle,
   parseStyleOrDrawingProfile,
@@ -111,9 +119,11 @@ describe('TemplateDataCodec.parse', () => {
     expect(stats.converted).toBe(1);
   });
 
-  it('a native generator not yet ported draws its stored members and writes back verbatim', () => {
+  it('a native generator the registry has no factory for draws its stored members and writes back verbatim', () => {
     const gen = { type: 'native', shape: 'bpmn.event', text: 'x', interprettext: true, embedrefs: ['b', 'a', 'a'] };
-    const io = testIo();
+    // The shipped registry runs it (spec 04 §6); one built without natives keeps the block as read.
+    expect(testIo().codec.templates.parse(body({ generator: gen }))?.generator).toBeInstanceOf(BpmnEventGenerator);
+    const io = testIo({ generators: converterHooks(new LuaToJsConverter(new GeneratorRegistry({ natives: {} }))) });
     const t = io.codec.templates.parse(body({ generator: gen, texts: [{ location: '0 1 2 3 4', text: 'kept' }] }));
     const g = t?.generator;
     expect(g).toBeInstanceOf(StoredNativeGenerator);

@@ -243,8 +243,8 @@ describe('placeholders (AC-GEN-16, DR-GEN-12)', () => {
     expect(io.codec.write(read.doc, { stamp: 'cloud' }).version).toBe('4.2');
   });
 
-  it('a known native shape whose port is not registered yet keeps its stored drawing', () => {
-    const io = testIo();
+  it('a known native shape the registry has no factory for keeps its stored drawing', () => {
+    const io = testIo({ generators: converterHooks(new LuaToJsConverter(new GeneratorRegistry({ natives: {} }))) });
     const t = io.codec.templates.parse(
       buttonBody({ type: 'native', shape: 'table-v1', text: '' }, { texts: [{ location: 'default', text: 'cell' }] }),
     );

@@ -7,9 +7,10 @@
 // built no generator and dropped the block on write). It never counts as JS-form, so it never
 // converts or stamps a board.
 //
-// `StoredNativeGenerator`: a known native generator (`bpmn.*`, `table-v1`) whose TS port is not in
-// the registry yet (task G5). Native output is serialized, so it draws the stored members as read
-// and writes its block back unchanged, as an `onParamChange` generator.
+// `StoredNativeGenerator`: a known native generator (`bpmn.*`, `table-v1`) that a registry built
+// without that factory (`GeneratorRegistryOptions.natives`) cannot run; the shipped registry has all
+// seven (`native/`). Native output is serialized, so it draws the stored members as read and writes
+// its block back unchanged, as an `onParamChange` generator.
 import type {
   DataStore,
   GeneratorBehavior,

@@ -18,12 +18,6 @@
         "avabodh.wireframe.vslider",
         "avabodh.wireframe.vtabs"
       ]
-    },
-    {
-      "owner": "G5",
-      "reason": "BPMN and table-v1 native generators not ported yet: placeholder (spec 04 §6, §7.4); C++ generates the shape and writes the BPMN symbol embed templates",
-      "native_shapes": ["bpmn.*", "table-v1"],
-      "root_templates": ["avabodh_bpmn_syms_*"]
     }
   ]
 }

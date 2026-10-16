@@ -22,6 +22,16 @@ export {
   type GeneratorFields,
 } from './wireframe-generator';
 export { StoredNativeGenerator, UnknownGeneratorPlaceholder } from './placeholder-generators';
+export {
+  BpmnChoreographyGenerator,
+  BpmnConversationGenerator,
+  BpmnDataObjectGenerator,
+  BpmnEventGenerator,
+  BpmnGatewayGenerator,
+  BpmnTaskGenerator,
+  NATIVE_GENERATORS,
+  TableGenerator,
+} from './native';
 export { outputToTemplateJson, placeholderOutput, type TemplateDataApplier } from './wireframe-output';
 export { TemplateGeneratorHost } from './template-generator-host';
 export { atoi, parseSizeSpec, split, splitByChar, splitLines, trimC, type SplitMeasure } from './wireframe-text';

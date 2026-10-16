@@ -7,10 +7,11 @@
 // one with `GeneratorRegistry.builtin()`, or a test one with `new GeneratorRegistry({...})`.
 import type { JsonObject, ShapeGenerator, WireframeKey, WireframeModule } from '../template';
 import scriptsJson from './scripts.generated.json' with { type: 'json' };
+import { NATIVE_GENERATORS } from './native';
 import { WIREFRAME_MODULES } from './wireframe';
 import { NATIVE_SHAPES, UNUSED_SCRIPTFILE, WIREFRAME_TEMPLATES, type WireframeTemplateRow } from './wireframe-ids';
 
-/** Builds a native generator from its stored block (task G5 registers the seven). */
+/** Builds a native generator from its stored block. */
 export type NativeGeneratorFactory = (generator: JsonObject) => ShapeGenerator;
 
 /** `module key → canonical JS text`, read-only (spec 02 `GeneratorScriptTable`). */
@@ -39,7 +40,7 @@ export class GeneratorScriptTable {
 export interface GeneratorRegistryOptions {
   /** The wireframe modules; default the ported ones. */
   readonly modules?: readonly WireframeModule[];
-  /** Native factories by `shape`. Default: none yet (G5). */
+  /** Native factories by `shape`. Default: the seven ports (`NATIVE_GENERATORS`, spec 04 §6). */
   readonly natives?: Readonly<Record<string, NativeGeneratorFactory>>;
   /** The canonical texts; default `scripts.generated.json`. */
   readonly scripts?: GeneratorScriptTable;
@@ -74,7 +75,7 @@ export class GeneratorRegistry {
     this.wireframeById = byId;
     this.keyById = keyById;
     this.legacyScriptfiles_ = legacy;
-    this.nativeByShape = new Map(Object.entries(opts.natives ?? {}));
+    this.nativeByShape = new Map(Object.entries(opts.natives ?? NATIVE_GENERATORS));
     Object.freeze(this);
   }
 

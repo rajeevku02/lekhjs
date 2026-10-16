@@ -99,6 +99,15 @@ describe('session contract', () => {
     expect(s.serialize({ stamp: 'offline' })).toContain('"5.0"');
   });
 
+  it("the root style is the session's current drawing style, C++'s default when nothing set it (spec 03 §10.2)", () => {
+    const s = BoardSession.empty(testRuntime(), { images: new FakeImagePort(), scheduler: new FakeScheduler() });
+    s.load('{"info":{"version":"4.2"},"style":{"strokewidth":7},"pages":{}}');
+    // The stored root style is read into the document, never written back (C++ wrote
+    // LekhGlobal::currentStyle, not the document's).
+    const root = JSON.parse(s.serialize({ stamp: 'offline' })) as { style?: unknown };
+    expect(root.style).toEqual({ fillpaint: { type: 1 }, strokepaint: { color: -16777216, type: 2 } });
+  });
+
   it('a cloud open starts the realtime session; edits go out with the board version', () => {
     const h = harness({ cloud: true });
     expect(h.session.sync.docid).toBe(DOCID);

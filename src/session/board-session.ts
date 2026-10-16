@@ -49,6 +49,7 @@ import {
   type TemplatedObject,
 } from '../model';
 import { Canvas2DDrawingPlatform, GridPainter, ImageCache, ViewTransform, type GridBackground } from '../render';
+import { Color, Style } from '../style';
 import { SyncSession, type ApplyResult, type ReceiveOutcome, type ServerMessage } from '../sync';
 import {
   CatalogOverlay,
@@ -99,6 +100,15 @@ interface Pending {
   readonly dialogs: DialogRequest[];
   readonly toasts: ToastRequest[];
   reopen: boolean;
+}
+
+/** C++ `LekhGlobal::LekhGlobal`: `setFillColor(white, alpha 0)`, `setNoFill()`, `setStrokeColor(black)`. */
+function defaultDrawingStyle(): Style {
+  const s = new Style();
+  s.setFillColor(new Color(255, 255, 255, 0));
+  s.setNoFill();
+  s.setStrokeColor(new Color(0, 0, 0, 0xff));
+  return s;
 }
 
 function newPending(): Pending {
@@ -166,6 +176,11 @@ export class BoardSession {
   private pendingConversion_: { readonly raw: JsonValue; readonly skip: ReadonlySet<string> } | null = null;
   /** The placeholder toast and usage event went out for this open. */
   private placeholdersReported_ = false;
+  /**
+   * The session's current drawing style (C++ `LekhGlobal::currentStyle`): what the writer emits as
+   * the root `style` (spec 03 §10.2). Its default is C++'s: no fill (white, alpha 0), black stroke.
+   */
+  readonly currentStyle: Style = defaultDrawingStyle();
 
   constructor(runtime: Runtime, opts: SessionOptions) {
     this.runtime = runtime;
@@ -341,6 +356,7 @@ export class BoardSession {
   serialize(opts: { stamp: 'offline' | 'cloud' }): string {
     return this.codec.serialize(this.doc_, {
       stamp: opts.stamp,
+      style: this.currentStyle,
       help: (id) => this.overlay.help(id) ?? this.docHelp_.get(id),
     });
   }

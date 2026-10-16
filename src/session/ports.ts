@@ -183,6 +183,7 @@ export type LoadResult =
 /** The read-only view of the document React and the semantic layer get. */
 export type ReadonlyDoc = Pick<
   LekhDocument,
+  | 'name'
   | 'info'
   | 'style'
   | 'grid'

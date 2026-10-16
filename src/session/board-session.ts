@@ -40,6 +40,7 @@ import {
   ImageRequests,
   LekhDocument,
   isTemplated,
+  settleLayout,
   type DocumentContext,
   type ImageLookup,
   type LekhObject,
@@ -49,6 +50,7 @@ import {
   type TemplatedObject,
 } from '../model';
 import { Canvas2DDrawingPlatform, GridPainter, ImageCache, ViewTransform, type GridBackground } from '../render';
+import type { SemanticContext } from '../semantic';
 import { Color, Style } from '../style';
 import { SyncSession, type ApplyResult, type ReceiveOutcome, type ServerMessage } from '../sync';
 import {
@@ -142,6 +144,8 @@ export class BoardSession {
   readonly converter: LuaToJsConverter;
   /** Unknown generators and the usage event (spec 04 §7.4). */
   readonly diagnostics: SessionDiagnostics;
+  /** Text measuring for templates and the semantic layer (C++ `Platform::getTextSize`). */
+  readonly text: TemplateTextService;
 
   private doc_: LekhDocument;
   private loaded_ = false;
@@ -187,6 +191,7 @@ export class BoardSession {
     this.options = opts;
     const config = runtime.config;
     const text = new TemplateTextService(runtime.textLayout, runtime.fontResolver);
+    this.text = text;
     this.imageCache = new ImageCache({ clock: runtime.clock, scheduler: opts.scheduler });
     this.lookup_ = { get: (url) => this.imageCache.get(url) ?? opts.images.get(url) };
 
@@ -361,12 +366,16 @@ export class BoardSession {
     });
   }
 
-  /** Lays out every dirty object of every page, or of one (replaces the projector's settle draw). */
+  /**
+   * Lays out every dirty object of every page, or of one (replaces the C++ projector's settle
+   * draw): routes, label centres and anchors exist afterwards, and `serialize` is unchanged
+   * (AC-BE-08, `settleLayout`).
+   */
   layoutAll(pageId?: string): void {
     for (const p of this.doc_.pages) {
       if (pageId !== undefined && p.id !== pageId) continue;
       this.budgetCheck();
-      p.objectStore.flushLayout();
+      settleLayout(p.objectStore);
     }
   }
 
@@ -375,9 +384,34 @@ export class BoardSession {
     const page = this.doc_.getPage(pageId);
     const obj = page?.objectStore.getObject(nodeId, true) ?? null;
     if (page === null || obj === null) return null;
-    page.objectStore.flushLayout();
-    page.objectStore.ensureLayout(obj);
+    settleLayout(page.objectStore);
     return obj.visualBounds();
+  }
+
+  /**
+   * What the semantic layer (`project`, `compile`, `generate`, `lint`) and `paintPage` read from
+   * this session: the document, the codec, the overlay (C++ `TemplateStore`), text measurement, ids
+   * and the budget (spec 10 §3). A new object per call; it holds the document current at the call.
+   */
+  semanticContext(): SemanticContext {
+    const runtime = this.runtime;
+    return Object.freeze({
+      doc: this.doc_,
+      codec: this.codec,
+      catalog: this.overlay,
+      arrows: this.overlay,
+      text: this.text,
+      config: runtime.config,
+      logger: runtime.logger,
+      images: this.lookup_,
+      newId: () => shortIdFromUuid(runtime.ids.next()),
+      budgetCheck: () => {
+        this.budgetCheck();
+      },
+      layoutAll: (pageId?: string) => {
+        this.layoutAll(pageId);
+      },
+    });
   }
 
   /** Adds template bodies to this session's overlay (copy-on-write; the runtime's base is untouched). */

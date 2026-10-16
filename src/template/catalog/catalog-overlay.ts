@@ -62,6 +62,14 @@ export class CatalogOverlay {
     return this.own_.arrows.get(id) ?? this.base_.arrowhead(id);
   }
 
+  /** Every arrowhead, overlay over base, ordered by id (C++ `TemplateStore::arrows()`, a `std::map`). */
+  arrowheads(): readonly TemplateDef[] {
+    const byId = new Map<string, TemplateDef>();
+    for (const d of this.base_.arrowheads()) byId.set(d.id, d);
+    for (const [id, d] of this.own_.arrows) byId.set(id, d);
+    return [...byId.values()].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  }
+
   help(id: string): string | undefined {
     return this.own_.help.get(id) ?? this.base_.help(id);
   }

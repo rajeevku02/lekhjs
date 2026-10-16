@@ -1,0 +1,2989 @@
+{
+ "about": "AC-TXT-05 golden, written by parity/tools/capture-word-wrap/regen.mjs: C++ TextUtil::getWidth line splits and TextUtil::getTextSize heights (the C++ web: font size per line, AC-TXT-30) over whitespace-only Latin fixtures, measured with `table` (Noto Sans Regular advances at 15 px).",
+ "fontPx": 15,
+ "table": {
+  "0": 8.58,
+  "1": 8.58,
+  "2": 8.58,
+  "3": 8.58,
+  "4": 8.58,
+  "5": 8.58,
+  "6": 8.58,
+  "7": 8.58,
+  "8": 8.58,
+  "9": 8.58,
+  " ": 3.9000000000000004,
+  "\t": 3.9000000000000004,
+  "\u000b": 3.9000000000000004,
+  "\f": 3.9000000000000004,
+  "\r": 3.9000000000000004,
+  "!": 4.035,
+  "\"": 6.119999999999999,
+  "#": 9.69,
+  "$": 8.58,
+  "%": 12.465,
+  "&": 10.98,
+  "'": 3.375,
+  "(": 4.5,
+  ")": 4.5,
+  "*": 8.265,
+  "+": 8.58,
+  ",": 4.0200000000000005,
+  "-": 4.83,
+  ".": 4.0200000000000005,
+  "/": 5.58,
+  ":": 4.0200000000000005,
+  ";": 4.0200000000000005,
+  "<": 8.58,
+  "=": 8.58,
+  ">": 8.58,
+  "?": 6.51,
+  "@": 13.485,
+  "A": 9.585,
+  "B": 9.75,
+  "C": 9.48,
+  "D": 10.95,
+  "E": 8.34,
+  "F": 7.785,
+  "G": 10.92,
+  "H": 11.115,
+  "I": 5.085,
+  "J": 4.095000000000001,
+  "K": 9.285,
+  "L": 7.86,
+  "M": 13.605,
+  "N": 11.4,
+  "O": 11.715,
+  "P": 9.075,
+  "Q": 11.715,
+  "R": 9.33,
+  "S": 8.235000000000001,
+  "T": 8.34,
+  "U": 10.965,
+  "V": 9,
+  "W": 13.950000000000001,
+  "X": 8.79,
+  "Y": 8.489999999999998,
+  "Z": 8.58,
+  "[": 4.9350000000000005,
+  "\\": 5.58,
+  "]": 4.9350000000000005,
+  "^": 8.58,
+  "_": 6.66,
+  "`": 4.215000000000001,
+  "a": 8.415000000000001,
+  "b": 9.225,
+  "c": 7.199999999999999,
+  "d": 9.225,
+  "e": 8.459999999999999,
+  "f": 5.159999999999999,
+  "g": 9.225,
+  "h": 9.27,
+  "i": 3.87,
+  "j": 3.87,
+  "k": 8.01,
+  "l": 3.87,
+  "m": 14.025,
+  "n": 9.27,
+  "o": 9.075,
+  "p": 9.225,
+  "q": 9.225,
+  "r": 6.194999999999999,
+  "s": 7.185,
+  "t": 5.415,
+  "u": 9.27,
+  "v": 7.62,
+  "w": 11.790000000000001,
+  "x": 7.9350000000000005,
+  "y": 7.65,
+  "z": 7.05,
+  "{": 5.7,
+  "|": 8.265,
+  "}": 5.7,
+  "~": 8.58
+ },
+ "fixtures": [
+  "proident",
+  "sit  W do aute Start \t exercitation sed  node, \t officia nisi amet \t qui culpa W Duis nulla   ex ad labore",
+  "ea labore cillum \t magna minim qui   Gateway\tQ ex\tad sed\tcillum Process consectetur \t non edge. id \t sed \t laboris   do in",
+  "magna mollit veniam W Ut\tcupidatat Start   exercitation eiusmod incididunt aute occaecat consectetur  velit anim   commodo proident nulla consectetur\nsed   A Excepteur  ullamco voluptate quis Gateway \t occaecat Database\tvelit voluptate dolore \t labore  nisi pariatur nisi culpa mollit edge.\nI mollit \t magna quis \t ipsum Lorem Excepteur\tex et  Ut mollit   Duis \t do\tin   Ut  commodo ea \t enim\tW\ncillum Ut Database irure\tquis  magna cupidatat   fugiat node, dolore   Duis   adipiscing   sint  est exercitation  Database\tvoluptate non\tofficia",
+  "enim   consequat W elit \t fugiat   occaecat",
+  "\tullamco officia\tenim commodo consectetur pariatur \t velit nisi est node,\tpariatur A\tirure",
+  "deserunt commodo et\tirure   sint   aliqua\tx velit ad Process aliquip\taliquip   id \t ea ut cupidatat id\tofficia magna minim mollit pariatur\tesse   Process   ",
+  "reprehenderit 2026 aliqua \t Q \t fugiat quis   cupidatat fugiat \t et I   tempor \t node, \t quis exercitation Gateway commodo eiusmod   ullamco node, pariatur ad I\n\nproident  nisi amet  do \t Gateway culpa ullamco nulla Excepteur nulla  sunt v4.3 do  enim \t culpa esse A  Duis \t mollit  ut\tut  aute\n\net   proident amet ex   sint x enim   est I  tempor veniam\texercitation\toccaecat dolore Ut Q aliqua \t do  Process I\telit\tcommodo",
+  "elit \t quis aliquip Database   Gateway Process est\tmagna \t cillum   labore \t in deserunt   ullamco eiusmod Q Q   qui\n",
+  "\nesse \t Ut  I sunt   qui aute ad  ipsum sit\tedge.\tlaborum est quis node,",
+  "Q",
+  "nisi sed  x esse Q nisi \t Q   cillum Lorem A \t Ut \t et consequat   qui\tin anim",
+  "aliquip ipsum   elit adipiscing reprehenderit esse nostrud do voluptate   Gateway \t Decision Excepteur  I tempor   aliquip  nisi   enim consectetur \t pariatur dolore deserunt \t cupidatat\tid",
+  "ut   adipiscing aute\tex Process\ndo adipiscing 2026  ipsum sunt\nlabore ullamco   proident Process cillum\nin  magna cupidatat  amet qui",
+  "proident   proident mollit Decision  deserunt quis Lorem sunt\tanim   Duis \t aliquip adipiscing 2026 occaecat   Duis   magna\tnulla commodo  ad sint \t pariatur mollit voluptate",
+  "\tdolore   consectetur ea Lorem Process  irure  ea\taliquip  eiusmod Q \t Excepteur   2026 nostrud ipsum dolore",
+  "amet  v4.3 \t magna\tipsum\tproident A  id\tofficia  pariatur mollit nulla deserunt   sint sint labore consequat  ",
+  "occaecat Q Q Lorem eiusmod   sunt\tnulla\tfugiat  consectetur\tanim \t velit amet\tW laborum Gateway ullamco velit\tex laborum Ut est\n\ncillum ut   in amet   node, velit\tdo Gateway sunt\tlaborum ea\tnisi  esse irure \t Duis fugiat voluptate \t ipsum   sunt   cupidatat  magna",
+  "aute Ut edge.   sed\n",
+  "\ndeserunt x\tI v4.3",
+  "est",
+  "eiusmod nostrud anim\tUt \t mollit",
+  "node, velit \t node, voluptate dolore v4.3 voluptate \t dolore\tStart \t nisi   laborum ut\tlaborum  Q \t mollit\taute ad",
+  "aute labore  elit A \t 2026 ullamco sit Excepteur sed \t mollit   quis\nnisi cupidatat\treprehenderit \t mollit et est culpa qui Ut voluptate\tanim\nreprehenderit ea commodo amet   irure laboris ad eiusmod   A ut ipsum",
+  "Gateway  eiusmod cillum   ex irure   Duis  esse   cupidatat pariatur x sed   deserunt proident \t ad\tadipiscing",
+  "\tsit \t culpa\tExcepteur fugiat \t in proident  irure nisi",
+  "aute est  incididunt\tsed \t culpa \t mollit mollit culpa enim A consequat \t esse occaecat   Gateway enim tempor Duis \t aliqua irure   ",
+  "x  Lorem  sed x\tdolore  officia\tullamco\tincididunt Gateway\tet  Duis eiusmod ad \t veniam   edge.  esse\ttempor   Gateway  v4.3 labore cillum et  aliquip mollit\n\noccaecat I \t culpa velit  Duis \t nostrud\teiusmod velit proident \t Decision Ut  consectetur  nulla aliquip  commodo\tcupidatat\tvoluptate occaecat quis adipiscing cillum\tI A fugiat\n\nvoluptate \t incididunt aliqua deserunt \t Q  enim  laborum I  minim\tlaborum Database \t mollit node, esse\tlaboris   Q  ex   sint \t labore occaecat\tdo  Q culpa \t mollit\n\nipsum dolor aliqua  incididunt elit minim proident nulla  officia W\tsit  labore et\tW \t ea   est\tnode,  aliqua\tnulla  proident  officia dolor\tmagna \t ut",
+  "cillum \t ad x velit  dolore labore reprehenderit adipiscing \t Duis incididunt ad nostrud   minim sit\n",
+  "\nex aliquip   Duis voluptate in Duis \t ipsum\tDuis   laboris   eiusmod edge.\tnostrud Gateway ut  v4.3 cupidatat Lorem   et voluptate Database   Duis v4.3\teiusmod \t sint",
+  "Process",
+  "pariatur eiusmod \t velit ullamco \t Duis   2026\tveniam ipsum",
+  "edge.\tesse nostrud\tex v4.3",
+  "ex  Ut\t2026  non quis\tsint culpa\nnon  2026 sed \t et  proident esse magna\nnulla consequat ullamco Excepteur \t Process\tStart \t adipiscing",
+  "sunt reprehenderit nostrud irure culpa ullamco  sit \t exercitation non proident do x",
+  "  sed\taute esse\tUt A \t culpa Process \t reprehenderit officia",
+  "laborum\tvoluptate   adipiscing\tullamco\tcillum   Start esse\tdolor\tveniam   consequat\tnostrud anim anim   consequat  ",
+  "voluptate \t fugiat  non ex consequat\n\nlaboris ut nisi  aliquip id\n\nStart  nulla  consectetur   quis dolore",
+  "dolor cupidatat\n",
+  "\nconsectetur  I  eiusmod   v4.3 minim\tanim consequat deserunt qui esse  2026 node, incididunt \t anim \t ipsum est Q deserunt \t aliqua culpa \t Process   cupidatat\tnostrud"
+ ],
+ "cases": [
+  {
+   "fixture": 0,
+   "width": 62.453125,
+   "height": 15,
+   "lines": [
+    "proident"
+   ]
+  },
+  {
+   "fixture": 0,
+   "width": 91.609375,
+   "height": 15,
+   "lines": [
+    "proident"
+   ]
+  },
+  {
+   "fixture": 0,
+   "width": 140.1875,
+   "height": 15,
+   "lines": [
+    "proident"
+   ]
+  },
+  {
+   "fixture": 0,
+   "width": 243.4375,
+   "height": 15,
+   "lines": [
+    "proident"
+   ]
+  },
+  {
+   "fixture": 0,
+   "width": 547.109375,
+   "height": 15,
+   "lines": [
+    "proident"
+   ]
+  },
+  {
+   "fixture": 1,
+   "width": 85.75,
+   "height": 150,
+   "lines": [
+    "sit  W do",
+    "aute Start",
+    "exercitation",
+    "sed  node,",
+    "officia nisi",
+    "amet \t qui",
+    "culpa W",
+    "Duis nulla",
+    "ex ad",
+    "labore"
+   ]
+  },
+  {
+   "fixture": 1,
+   "width": 125.875,
+   "height": 105,
+   "lines": [
+    "sit  W do aute",
+    "Start",
+    "exercitation sed",
+    "node, \t officia nisi",
+    "amet \t qui culpa",
+    "W Duis nulla   ex",
+    "ad labore"
+   ]
+  },
+  {
+   "fixture": 1,
+   "width": 192.734375,
+   "height": 60,
+   "lines": [
+    "sit  W do aute Start",
+    "exercitation sed  node,",
+    "officia nisi amet \t qui culpa",
+    "W Duis nulla   ex ad labore"
+   ]
+  },
+  {
+   "fixture": 1,
+   "width": 334.8125,
+   "height": 45,
+   "lines": [
+    "sit  W do aute Start \t exercitation sed  node,",
+    "officia nisi amet \t qui culpa W Duis nulla   ex ad",
+    "labore"
+   ]
+  },
+  {
+   "fixture": 1,
+   "width": 752.71875,
+   "height": 15,
+   "lines": [
+    "sit  W do aute Start \t exercitation sed  node, \t officia nisi amet \t qui culpa W Duis nulla   ex ad labore"
+   ]
+  },
+  {
+   "fixture": 2,
+   "width": 85.3125,
+   "height": 195,
+   "lines": [
+    "ea labore",
+    "cillum",
+    "magna",
+    "minim qui",
+    "Gateway\tQ",
+    "ex\tad sed",
+    "cillum",
+    "Process",
+    "consectetur",
+    "non edge.",
+    "id \t sed",
+    "laboris   do",
+    "in"
+   ]
+  },
+  {
+   "fixture": 2,
+   "width": 125.21875,
+   "height": 120,
+   "lines": [
+    "ea labore cillum",
+    "magna minim qui",
+    "Gateway\tQ ex\tad",
+    "sed\tcillum",
+    "Process",
+    "consectetur \t non",
+    "edge. id \t sed",
+    "laboris   do in"
+   ]
+  },
+  {
+   "fixture": 2,
+   "width": 191.734375,
+   "height": 75,
+   "lines": [
+    "ea labore cillum \t magna",
+    "minim qui   Gateway\tQ ex",
+    "ad sed\tcillum Process",
+    "consectetur \t non edge. id",
+    "sed \t laboris   do in"
+   ]
+  },
+  {
+   "fixture": 2,
+   "width": 333.078125,
+   "height": 45,
+   "lines": [
+    "ea labore cillum \t magna minim qui   Gateway",
+    "Q ex\tad sed\tcillum Process consectetur \t non",
+    "edge. id \t sed \t laboris   do in"
+   ]
+  },
+  {
+   "fixture": 2,
+   "width": 748.8125,
+   "height": 30,
+   "lines": [
+    "ea labore cillum \t magna minim qui   Gateway\tQ ex\tad sed\tcillum Process consectetur \t non edge. id \t sed",
+    "laboris   do in"
+   ]
+  },
+  {
+   "fixture": 3,
+   "width": 85.75,
+   "height": 840,
+   "lines": [
+    "magna",
+    "mollit",
+    "veniam W",
+    "Ut",
+    "cupidatat",
+    "Start",
+    "exercitation",
+    "eiusmod",
+    "incididunt",
+    "aute",
+    "occaecat",
+    "consectetur",
+    "velit anim",
+    "commodo",
+    "proident",
+    "nulla",
+    "consectetur",
+    "sed   A",
+    "Excepteur",
+    "ullamco",
+    "voluptate",
+    "quis",
+    "Gateway",
+    "occaecat",
+    "Database",
+    "velit",
+    "voluptate",
+    "dolore",
+    "labore  nisi",
+    "pariatur nisi",
+    "culpa mollit",
+    "edge.",
+    "I mollit",
+    "magna quis",
+    "ipsum",
+    "Lorem",
+    "Excepteur",
+    "ex et  Ut",
+    "mollit   Duis",
+    "do\tin   Ut",
+    "commodo",
+    "ea \t enim\tW",
+    "cillum Ut",
+    "Database",
+    "irure\tquis",
+    "magna",
+    "cupidatat",
+    "fugiat node,",
+    "dolore",
+    "Duis",
+    "adipiscing",
+    "sint  est",
+    "exercitation",
+    "Database",
+    "voluptate",
+    "non\tofficia"
+   ]
+  },
+  {
+   "fixture": 3,
+   "width": 125.875,
+   "height": 585,
+   "lines": [
+    "magna mollit",
+    "veniam W Ut",
+    "cupidatat Start",
+    "exercitation",
+    "eiusmod",
+    "incididunt aute",
+    "occaecat",
+    "consectetur  velit",
+    "anim   commodo",
+    "proident nulla",
+    "consectetur",
+    "sed   A Excepteur",
+    "ullamco",
+    "voluptate quis",
+    "Gateway",
+    "occaecat",
+    "Database\tvelit",
+    "voluptate dolore",
+    "labore  nisi",
+    "pariatur nisi",
+    "culpa mollit edge.",
+    "I mollit \t magna",
+    "quis \t ipsum",
+    "Lorem Excepteur",
+    "ex et  Ut mollit",
+    "Duis \t do\tin   Ut",
+    "commodo ea",
+    "enim\tW",
+    "cillum Ut",
+    "Database irure",
+    "quis  magna",
+    "cupidatat   fugiat",
+    "node, dolore",
+    "Duis   adipiscing",
+    "sint  est",
+    "exercitation",
+    "Database",
+    "voluptate non",
+    "officia"
+   ]
+  },
+  {
+   "fixture": 3,
+   "width": 192.734375,
+   "height": 345,
+   "lines": [
+    "magna mollit veniam W Ut",
+    "cupidatat Start",
+    "exercitation eiusmod",
+    "incididunt aute occaecat",
+    "consectetur  velit anim",
+    "commodo proident nulla",
+    "consectetur",
+    "sed   A Excepteur  ullamco",
+    "voluptate quis Gateway",
+    "occaecat Database\tvelit",
+    "voluptate dolore \t labore",
+    "nisi pariatur nisi culpa",
+    "mollit edge.",
+    "I mollit \t magna quis",
+    "ipsum Lorem Excepteur\tex",
+    "et  Ut mollit   Duis \t do\tin",
+    "Ut  commodo ea \t enim\tW",
+    "cillum Ut Database irure",
+    "quis  magna cupidatat",
+    "fugiat node, dolore   Duis",
+    "adipiscing   sint  est",
+    "exercitation  Database",
+    "voluptate non\tofficia"
+   ]
+  },
+  {
+   "fixture": 3,
+   "width": 334.8125,
+   "height": 210,
+   "lines": [
+    "magna mollit veniam W Ut\tcupidatat Start",
+    "exercitation eiusmod incididunt aute occaecat",
+    "consectetur  velit anim   commodo proident",
+    "nulla consectetur",
+    "sed   A Excepteur  ullamco voluptate quis",
+    "Gateway \t occaecat Database\tvelit voluptate",
+    "dolore \t labore  nisi pariatur nisi culpa mollit",
+    "edge.",
+    "I mollit \t magna quis \t ipsum Lorem Excepteur",
+    "ex et  Ut mollit   Duis \t do\tin   Ut  commodo ea",
+    "enim\tW",
+    "cillum Ut Database irure\tquis  magna cupidatat",
+    "fugiat node, dolore   Duis   adipiscing   sint  est",
+    "exercitation  Database\tvoluptate non\tofficia"
+   ]
+  },
+  {
+   "fixture": 3,
+   "width": 752.71875,
+   "height": 105,
+   "lines": [
+    "magna mollit veniam W Ut\tcupidatat Start   exercitation eiusmod incididunt aute occaecat consectetur",
+    "velit anim   commodo proident nulla consectetur",
+    "sed   A Excepteur  ullamco voluptate quis Gateway \t occaecat Database\tvelit voluptate dolore \t labore  nisi",
+    "pariatur nisi culpa mollit edge.",
+    "I mollit \t magna quis \t ipsum Lorem Excepteur\tex et  Ut mollit   Duis \t do\tin   Ut  commodo ea \t enim\tW",
+    "cillum Ut Database irure\tquis  magna cupidatat   fugiat node, dolore   Duis   adipiscing   sint  est",
+    "exercitation  Database\tvoluptate non\tofficia"
+   ]
+  },
+  {
+   "fixture": 4,
+   "width": 75.484375,
+   "height": 75,
+   "lines": [
+    "enim",
+    "consequat",
+    "W elit",
+    "fugiat",
+    "occaecat"
+   ]
+  },
+  {
+   "fixture": 4,
+   "width": 110.765625,
+   "height": 60,
+   "lines": [
+    "enim",
+    "consequat W",
+    "elit \t fugiat",
+    "occaecat"
+   ]
+  },
+  {
+   "fixture": 4,
+   "width": 169.578125,
+   "height": 30,
+   "lines": [
+    "enim   consequat W elit",
+    "fugiat   occaecat"
+   ]
+  },
+  {
+   "fixture": 4,
+   "width": 294.5625,
+   "height": 15,
+   "lines": [
+    "enim   consequat W elit \t fugiat   occaecat"
+   ]
+  },
+  {
+   "fixture": 4,
+   "width": 662.140625,
+   "height": 15,
+   "lines": [
+    "enim   consequat W elit \t fugiat   occaecat"
+   ]
+  },
+  {
+   "fixture": 5,
+   "width": 85.3125,
+   "height": 135,
+   "lines": [
+    "\tullamco",
+    "officia\tenim",
+    "commodo",
+    "consectetur",
+    "pariatur",
+    "velit nisi est",
+    "node,",
+    "pariatur A",
+    "irure"
+   ]
+  },
+  {
+   "fixture": 5,
+   "width": 125.21875,
+   "height": 90,
+   "lines": [
+    "\tullamco officia",
+    "enim commodo",
+    "consectetur",
+    "pariatur \t velit",
+    "nisi est node,",
+    "pariatur A\tirure"
+   ]
+  },
+  {
+   "fixture": 5,
+   "width": 191.734375,
+   "height": 60,
+   "lines": [
+    "\tullamco officia\tenim",
+    "commodo consectetur",
+    "pariatur \t velit nisi est",
+    "node,\tpariatur A\tirure"
+   ]
+  },
+  {
+   "fixture": 5,
+   "width": 333.078125,
+   "height": 30,
+   "lines": [
+    "\tullamco officia\tenim commodo consectetur",
+    "pariatur \t velit nisi est node,\tpariatur A\tirure"
+   ]
+  },
+  {
+   "fixture": 5,
+   "width": 748.8125,
+   "height": 15,
+   "lines": [
+    "\tullamco officia\tenim commodo consectetur pariatur \t velit nisi est node,\tpariatur A\tirure"
+   ]
+  },
+  {
+   "fixture": 6,
+   "width": 73.640625,
+   "height": 270,
+   "lines": [
+    "deserunt",
+    "commodo",
+    "et\tirure",
+    "sint",
+    "aliqua\tx",
+    "velit ad",
+    "Process",
+    "aliquip",
+    "aliquip   id",
+    "ea ut",
+    "cupidatat",
+    "id\tofficia",
+    "magna",
+    "minim",
+    "mollit",
+    "pariatur",
+    "esse",
+    "Process   "
+   ]
+  },
+  {
+   "fixture": 6,
+   "width": 108.046875,
+   "height": 180,
+   "lines": [
+    "deserunt",
+    "commodo et",
+    "irure   sint",
+    "aliqua\tx velit",
+    "ad Process",
+    "aliquip\taliquip",
+    "id \t ea ut",
+    "cupidatat id",
+    "officia magna",
+    "minim mollit",
+    "pariatur\tesse",
+    "Process   "
+   ]
+  },
+  {
+   "fixture": 6,
+   "width": 165.40625,
+   "height": 120,
+   "lines": [
+    "deserunt commodo et",
+    "irure   sint   aliqua\tx",
+    "velit ad Process aliquip",
+    "aliquip   id \t ea ut",
+    "cupidatat id\tofficia",
+    "magna minim mollit",
+    "pariatur\tesse",
+    "Process   "
+   ]
+  },
+  {
+   "fixture": 6,
+   "width": 287.296875,
+   "height": 60,
+   "lines": [
+    "deserunt commodo et\tirure   sint   aliqua",
+    "x velit ad Process aliquip\taliquip   id \t ea",
+    "ut cupidatat id\tofficia magna minim",
+    "mollit pariatur\tesse   Process   "
+   ]
+  },
+  {
+   "fixture": 6,
+   "width": 645.796875,
+   "height": 30,
+   "lines": [
+    "deserunt commodo et\tirure   sint   aliqua\tx velit ad Process aliquip\taliquip   id \t ea ut",
+    "cupidatat id\tofficia magna minim mollit pariatur\tesse   Process   "
+   ]
+  },
+  {
+   "fixture": 7,
+   "width": 101.171875,
+   "height": 555,
+   "lines": [
+    "reprehenderit",
+    "2026 aliqua",
+    "Q \t fugiat quis",
+    "cupidatat",
+    "fugiat \t et I",
+    "tempor",
+    "node, \t quis",
+    "exercitation",
+    "Gateway",
+    "commodo",
+    "eiusmod",
+    "ullamco node,",
+    "pariatur ad I",
+    "",
+    "proident  nisi",
+    "amet  do",
+    "Gateway",
+    "culpa ullamco",
+    "nulla",
+    "Excepteur",
+    "nulla  sunt",
+    "v4.3 do  enim",
+    "culpa esse A",
+    "Duis \t mollit",
+    "ut\tut  aute",
+    "",
+    "et   proident",
+    "amet ex   sint",
+    "x enim   est I",
+    "tempor",
+    "veniam",
+    "exercitation",
+    "occaecat",
+    "dolore Ut Q",
+    "aliqua \t do",
+    "Process I\telit",
+    "commodo"
+   ]
+  },
+  {
+   "fixture": 7,
+   "width": 148.546875,
+   "height": 375,
+   "lines": [
+    "reprehenderit 2026",
+    "aliqua \t Q \t fugiat",
+    "quis   cupidatat",
+    "fugiat \t et I   tempor",
+    "node, \t quis",
+    "exercitation Gateway",
+    "commodo eiusmod",
+    "ullamco node,",
+    "pariatur ad I",
+    "",
+    "proident  nisi amet",
+    "do \t Gateway culpa",
+    "ullamco nulla",
+    "Excepteur nulla  sunt",
+    "v4.3 do  enim \t culpa",
+    "esse A  Duis \t mollit",
+    "ut\tut  aute",
+    "",
+    "et   proident amet ex",
+    "sint x enim   est I",
+    "tempor veniam",
+    "exercitation",
+    "occaecat dolore Ut Q",
+    "aliqua \t do  Process I",
+    "elit\tcommodo"
+   ]
+  },
+  {
+   "fixture": 7,
+   "width": 227.515625,
+   "height": 270,
+   "lines": [
+    "reprehenderit 2026 aliqua \t Q",
+    "fugiat quis   cupidatat fugiat \t et",
+    "I   tempor \t node, \t quis",
+    "exercitation Gateway commodo",
+    "eiusmod   ullamco node,",
+    "pariatur ad I",
+    "",
+    "proident  nisi amet  do",
+    "Gateway culpa ullamco nulla",
+    "Excepteur nulla  sunt v4.3 do",
+    "enim \t culpa esse A  Duis \t mollit",
+    "ut\tut  aute",
+    "",
+    "et   proident amet ex   sint x",
+    "enim   est I  tempor veniam",
+    "exercitation\toccaecat dolore Ut",
+    "Q aliqua \t do  Process I\telit",
+    "commodo"
+   ]
+  },
+  {
+   "fixture": 7,
+   "width": 395.296875,
+   "height": 165,
+   "lines": [
+    "reprehenderit 2026 aliqua \t Q \t fugiat quis   cupidatat",
+    "fugiat \t et I   tempor \t node, \t quis exercitation Gateway",
+    "commodo eiusmod   ullamco node, pariatur ad I",
+    "",
+    "proident  nisi amet  do \t Gateway culpa ullamco nulla",
+    "Excepteur nulla  sunt v4.3 do  enim \t culpa esse A  Duis",
+    "mollit  ut\tut  aute",
+    "",
+    "et   proident amet ex   sint x enim   est I  tempor veniam",
+    "exercitation\toccaecat dolore Ut Q aliqua \t do  Process I",
+    "elit\tcommodo"
+   ]
+  },
+  {
+   "fixture": 7,
+   "width": 888.796875,
+   "height": 105,
+   "lines": [
+    "reprehenderit 2026 aliqua \t Q \t fugiat quis   cupidatat fugiat \t et I   tempor \t node, \t quis exercitation Gateway commodo",
+    "eiusmod   ullamco node, pariatur ad I",
+    "",
+    "proident  nisi amet  do \t Gateway culpa ullamco nulla Excepteur nulla  sunt v4.3 do  enim \t culpa esse A  Duis \t mollit  ut\tut",
+    "aute",
+    "",
+    "et   proident amet ex   sint x enim   est I  tempor veniam\texercitation\toccaecat dolore Ut Q aliqua \t do  Process I\telit\tcommodo"
+   ]
+  },
+  {
+   "fixture": 8,
+   "width": 68.3125,
+   "height": 210,
+   "lines": [
+    "elit \t quis",
+    "aliquip",
+    "Database",
+    "Gateway",
+    "Process",
+    "est",
+    "magna",
+    "cillum",
+    "labore",
+    "in",
+    "deserunt",
+    "ullamco",
+    "eiusmod",
+    "Q Q   qui"
+   ]
+  },
+  {
+   "fixture": 8,
+   "width": 100.21875,
+   "height": 165,
+   "lines": [
+    "elit \t quis",
+    "aliquip",
+    "Database",
+    "Gateway",
+    "Process est",
+    "magna",
+    "cillum   labore",
+    "in deserunt",
+    "ullamco",
+    "eiusmod Q Q",
+    "qui"
+   ]
+  },
+  {
+   "fixture": 8,
+   "width": 153.40625,
+   "height": 90,
+   "lines": [
+    "elit \t quis aliquip",
+    "Database   Gateway",
+    "Process est\tmagna",
+    "cillum   labore \t in",
+    "deserunt   ullamco",
+    "eiusmod Q Q   qui"
+   ]
+  },
+  {
+   "fixture": 8,
+   "width": 266.421875,
+   "height": 60,
+   "lines": [
+    "elit \t quis aliquip Database   Gateway",
+    "Process est\tmagna \t cillum   labore",
+    "in deserunt   ullamco eiusmod Q Q",
+    "qui"
+   ]
+  },
+  {
+   "fixture": 8,
+   "width": 598.8125,
+   "height": 30,
+   "lines": [
+    "elit \t quis aliquip Database   Gateway Process est\tmagna \t cillum   labore \t in deserunt",
+    "ullamco eiusmod Q Q   qui"
+   ]
+  },
+  {
+   "fixture": 9,
+   "width": 61.78125,
+   "height": 150,
+   "lines": [
+    "",
+    "esse \t Ut",
+    "I sunt",
+    "qui aute",
+    "ad",
+    "ipsum",
+    "sit\tedge.",
+    "laborum",
+    "est quis",
+    "node,"
+   ]
+  },
+  {
+   "fixture": 9,
+   "width": 90.609375,
+   "height": 120,
+   "lines": [
+    "",
+    "esse \t Ut  I",
+    "sunt   qui",
+    "aute ad",
+    "ipsum sit",
+    "edge.",
+    "laborum est",
+    "quis node,"
+   ]
+  },
+  {
+   "fixture": 9,
+   "width": 138.671875,
+   "height": 75,
+   "lines": [
+    "",
+    "esse \t Ut  I sunt",
+    "qui aute ad  ipsum",
+    "sit\tedge.\tlaborum",
+    "est quis node,"
+   ]
+  },
+  {
+   "fixture": 9,
+   "width": 240.796875,
+   "height": 60,
+   "lines": [
+    "",
+    "esse \t Ut  I sunt   qui aute ad",
+    "ipsum sit\tedge.\tlaborum est quis",
+    "node,"
+   ]
+  },
+  {
+   "fixture": 9,
+   "width": 541.171875,
+   "height": 30,
+   "lines": [
+    "",
+    "esse \t Ut  I sunt   qui aute ad  ipsum sit\tedge.\tlaborum est quis node,"
+   ]
+  },
+  {
+   "fixture": 10,
+   "width": 12.453125,
+   "height": 15,
+   "lines": [
+    "Q"
+   ]
+  },
+  {
+   "fixture": 10,
+   "width": 18.078125,
+   "height": 15,
+   "lines": [
+    "Q"
+   ]
+  },
+  {
+   "fixture": 10,
+   "width": 27.4375,
+   "height": 15,
+   "lines": [
+    "Q"
+   ]
+  },
+  {
+   "fixture": 10,
+   "width": 47.359375,
+   "height": 15,
+   "lines": [
+    "Q"
+   ]
+  },
+  {
+   "fixture": 10,
+   "width": 105.9375,
+   "height": 15,
+   "lines": [
+    "Q"
+   ]
+  },
+  {
+   "fixture": 11,
+   "width": 75.484375,
+   "height": 120,
+   "lines": [
+    "nisi sed  x",
+    "esse Q nisi",
+    "Q   cillum",
+    "Lorem A",
+    "Ut \t et",
+    "consequat",
+    "qui\tin",
+    "anim"
+   ]
+  },
+  {
+   "fixture": 11,
+   "width": 110.765625,
+   "height": 90,
+   "lines": [
+    "nisi sed  x esse",
+    "Q nisi \t Q",
+    "cillum Lorem A",
+    "Ut \t et",
+    "consequat   qui",
+    "in anim"
+   ]
+  },
+  {
+   "fixture": 11,
+   "width": 169.578125,
+   "height": 60,
+   "lines": [
+    "nisi sed  x esse Q nisi",
+    "Q   cillum Lorem A \t Ut",
+    "et consequat   qui\tin",
+    "anim"
+   ]
+  },
+  {
+   "fixture": 11,
+   "width": 294.5625,
+   "height": 30,
+   "lines": [
+    "nisi sed  x esse Q nisi \t Q   cillum Lorem A",
+    "Ut \t et consequat   qui\tin anim"
+   ]
+  },
+  {
+   "fixture": 11,
+   "width": 662.140625,
+   "height": 15,
+   "lines": [
+    "nisi sed  x esse Q nisi \t Q   cillum Lorem A \t Ut \t et consequat   qui\tin anim"
+   ]
+  },
+  {
+   "fixture": 12,
+   "width": 101.171875,
+   "height": 240,
+   "lines": [
+    "aliquip ipsum",
+    "elit adipiscing",
+    "reprehenderit",
+    "esse nostrud",
+    "do voluptate",
+    "Gateway",
+    "Decision",
+    "Excepteur  I",
+    "tempor",
+    "aliquip  nisi",
+    "enim",
+    "consectetur",
+    "pariatur",
+    "dolore",
+    "deserunt",
+    "cupidatat\tid"
+   ]
+  },
+  {
+   "fixture": 12,
+   "width": 148.546875,
+   "height": 165,
+   "lines": [
+    "aliquip ipsum   elit",
+    "adipiscing",
+    "reprehenderit esse",
+    "nostrud do voluptate",
+    "Gateway \t Decision",
+    "Excepteur  I tempor",
+    "aliquip  nisi   enim",
+    "consectetur",
+    "pariatur dolore",
+    "deserunt \t cupidatat",
+    "id"
+   ]
+  },
+  {
+   "fixture": 12,
+   "width": 227.515625,
+   "height": 90,
+   "lines": [
+    "aliquip ipsum   elit adipiscing",
+    "reprehenderit esse nostrud do",
+    "voluptate   Gateway \t Decision",
+    "Excepteur  I tempor   aliquip",
+    "nisi   enim consectetur \t pariatur",
+    "dolore deserunt \t cupidatat\tid"
+   ]
+  },
+  {
+   "fixture": 12,
+   "width": 395.296875,
+   "height": 60,
+   "lines": [
+    "aliquip ipsum   elit adipiscing reprehenderit esse",
+    "nostrud do voluptate   Gateway \t Decision Excepteur  I",
+    "tempor   aliquip  nisi   enim consectetur \t pariatur",
+    "dolore deserunt \t cupidatat\tid"
+   ]
+  },
+  {
+   "fixture": 12,
+   "width": 888.796875,
+   "height": 30,
+   "lines": [
+    "aliquip ipsum   elit adipiscing reprehenderit esse nostrud do voluptate   Gateway \t Decision Excepteur  I tempor   aliquip  nisi",
+    "enim consectetur \t pariatur dolore deserunt \t cupidatat\tid"
+   ]
+  },
+  {
+   "fixture": 13,
+   "width": 73.28125,
+   "height": 255,
+   "lines": [
+    "ut",
+    "adipiscing",
+    "aute\tex",
+    "Process",
+    "do",
+    "adipiscing",
+    "2026",
+    "ipsum",
+    "sunt",
+    "labore",
+    "ullamco",
+    "proident",
+    "Process",
+    "cillum",
+    "in  magna",
+    "cupidatat",
+    "amet qui"
+   ]
+  },
+  {
+   "fixture": 13,
+   "width": 107.53125,
+   "height": 180,
+   "lines": [
+    "ut   adipiscing",
+    "aute\tex",
+    "Process",
+    "do adipiscing",
+    "2026  ipsum",
+    "sunt",
+    "labore ullamco",
+    "proident",
+    "Process cillum",
+    "in  magna",
+    "cupidatat",
+    "amet qui"
+   ]
+  },
+  {
+   "fixture": 13,
+   "width": 164.609375,
+   "height": 135,
+   "lines": [
+    "ut   adipiscing aute\tex",
+    "Process",
+    "do adipiscing 2026",
+    "ipsum sunt",
+    "labore ullamco",
+    "proident Process",
+    "cillum",
+    "in  magna cupidatat",
+    "amet qui"
+   ]
+  },
+  {
+   "fixture": 13,
+   "width": 285.921875,
+   "height": 60,
+   "lines": [
+    "ut   adipiscing aute\tex Process",
+    "do adipiscing 2026  ipsum sunt",
+    "labore ullamco   proident Process cillum",
+    "in  magna cupidatat  amet qui"
+   ]
+  },
+  {
+   "fixture": 13,
+   "width": 642.6875,
+   "height": 60,
+   "lines": [
+    "ut   adipiscing aute\tex Process",
+    "do adipiscing 2026  ipsum sunt",
+    "labore ullamco   proident Process cillum",
+    "in  magna cupidatat  amet qui"
+   ]
+  },
+  {
+   "fixture": 14,
+   "width": 73.640625,
+   "height": 315,
+   "lines": [
+    "proident",
+    "proident",
+    "mollit",
+    "Decision",
+    "deserunt",
+    "quis",
+    "Lorem",
+    "sunt\tanim",
+    "Duis",
+    "aliquip",
+    "adipiscing",
+    "2026",
+    "occaecat",
+    "Duis",
+    "magna",
+    "nulla",
+    "commodo",
+    "ad sint",
+    "pariatur",
+    "mollit",
+    "voluptate"
+   ]
+  },
+  {
+   "fixture": 14,
+   "width": 108.046875,
+   "height": 225,
+   "lines": [
+    "proident",
+    "proident mollit",
+    "Decision",
+    "deserunt quis",
+    "Lorem sunt",
+    "anim   Duis",
+    "aliquip",
+    "adipiscing",
+    "2026 occaecat",
+    "Duis   magna",
+    "nulla",
+    "commodo  ad",
+    "sint \t pariatur",
+    "mollit",
+    "voluptate"
+   ]
+  },
+  {
+   "fixture": 14,
+   "width": 165.40625,
+   "height": 135,
+   "lines": [
+    "proident   proident",
+    "mollit Decision",
+    "deserunt quis Lorem",
+    "sunt\tanim   Duis",
+    "aliquip adipiscing 2026",
+    "occaecat   Duis   magna",
+    "nulla commodo  ad sint",
+    "pariatur mollit",
+    "voluptate"
+   ]
+  },
+  {
+   "fixture": 14,
+   "width": 287.296875,
+   "height": 75,
+   "lines": [
+    "proident   proident mollit Decision",
+    "deserunt quis Lorem sunt\tanim   Duis",
+    "aliquip adipiscing 2026 occaecat   Duis",
+    "magna\tnulla commodo  ad sint",
+    "pariatur mollit voluptate"
+   ]
+  },
+  {
+   "fixture": 14,
+   "width": 645.796875,
+   "height": 30,
+   "lines": [
+    "proident   proident mollit Decision  deserunt quis Lorem sunt\tanim   Duis \t aliquip",
+    "adipiscing 2026 occaecat   Duis   magna\tnulla commodo  ad sint \t pariatur mollit voluptate"
+   ]
+  },
+  {
+   "fixture": 15,
+   "width": 85.3125,
+   "height": 180,
+   "lines": [
+    "\tdolore",
+    "consectetur",
+    "ea Lorem",
+    "Process",
+    "irure  ea",
+    "aliquip",
+    "eiusmod Q",
+    "Excepteur",
+    "2026",
+    "nostrud",
+    "ipsum",
+    "dolore"
+   ]
+  },
+  {
+   "fixture": 15,
+   "width": 125.21875,
+   "height": 120,
+   "lines": [
+    "\tdolore",
+    "consectetur ea",
+    "Lorem Process",
+    "irure  ea\taliquip",
+    "eiusmod Q",
+    "Excepteur   2026",
+    "nostrud ipsum",
+    "dolore"
+   ]
+  },
+  {
+   "fixture": 15,
+   "width": 191.734375,
+   "height": 75,
+   "lines": [
+    "\tdolore   consectetur ea",
+    "Lorem Process  irure  ea",
+    "aliquip  eiusmod Q",
+    "Excepteur   2026 nostrud",
+    "ipsum dolore"
+   ]
+  },
+  {
+   "fixture": 15,
+   "width": 333.078125,
+   "height": 45,
+   "lines": [
+    "\tdolore   consectetur ea Lorem Process  irure",
+    "ea\taliquip  eiusmod Q \t Excepteur   2026",
+    "nostrud ipsum dolore"
+   ]
+  },
+  {
+   "fixture": 15,
+   "width": 748.8125,
+   "height": 30,
+   "lines": [
+    "\tdolore   consectetur ea Lorem Process  irure  ea\taliquip  eiusmod Q \t Excepteur   2026 nostrud ipsum",
+    "dolore"
+   ]
+  },
+  {
+   "fixture": 16,
+   "width": 75.484375,
+   "height": 180,
+   "lines": [
+    "amet  v4.3",
+    "magna",
+    "ipsum",
+    "proident A",
+    "id\tofficia",
+    "pariatur",
+    "mollit",
+    "nulla",
+    "deserunt",
+    "sint sint",
+    "labore",
+    "consequat  "
+   ]
+  },
+  {
+   "fixture": 16,
+   "width": 110.765625,
+   "height": 120,
+   "lines": [
+    "amet  v4.3",
+    "magna\tipsum",
+    "proident A  id",
+    "officia  pariatur",
+    "mollit nulla",
+    "deserunt   sint",
+    "sint labore",
+    "consequat  "
+   ]
+  },
+  {
+   "fixture": 16,
+   "width": 169.578125,
+   "height": 75,
+   "lines": [
+    "amet  v4.3 \t magna",
+    "ipsum\tproident A  id",
+    "officia  pariatur mollit",
+    "nulla deserunt   sint sint",
+    "labore consequat  "
+   ]
+  },
+  {
+   "fixture": 16,
+   "width": 294.5625,
+   "height": 45,
+   "lines": [
+    "amet  v4.3 \t magna\tipsum\tproident A  id",
+    "officia  pariatur mollit nulla deserunt",
+    "sint sint labore consequat  "
+   ]
+  },
+  {
+   "fixture": 16,
+   "width": 662.140625,
+   "height": 30,
+   "lines": [
+    "amet  v4.3 \t magna\tipsum\tproident A  id\tofficia  pariatur mollit nulla deserunt   sint sint labore",
+    "consequat  "
+   ]
+  },
+  {
+   "fixture": 17,
+   "width": 85.3125,
+   "height": 435,
+   "lines": [
+    "occaecat Q",
+    "Q Lorem",
+    "eiusmod",
+    "sunt\tnulla",
+    "fugiat",
+    "consectetur",
+    "anim \t velit",
+    "amet\tW",
+    "laborum",
+    "Gateway",
+    "ullamco",
+    "velit\tex",
+    "laborum Ut",
+    "est",
+    "",
+    "cillum ut",
+    "in amet",
+    "node, velit",
+    "do Gateway",
+    "sunt",
+    "laborum ea",
+    "nisi  esse",
+    "irure \t Duis",
+    "fugiat",
+    "voluptate",
+    "ipsum",
+    "sunt",
+    "cupidatat",
+    "magna"
+   ]
+  },
+  {
+   "fixture": 17,
+   "width": 125.21875,
+   "height": 255,
+   "lines": [
+    "occaecat Q Q",
+    "Lorem eiusmod",
+    "sunt\tnulla\tfugiat",
+    "consectetur\tanim",
+    "velit amet\tW",
+    "laborum Gateway",
+    "ullamco velit\tex",
+    "laborum Ut est",
+    "",
+    "cillum ut   in",
+    "amet   node, velit",
+    "do Gateway sunt",
+    "laborum ea\tnisi",
+    "esse irure \t Duis",
+    "fugiat voluptate",
+    "ipsum   sunt",
+    "cupidatat  magna"
+   ]
+  },
+  {
+   "fixture": 17,
+   "width": 191.734375,
+   "height": 195,
+   "lines": [
+    "occaecat Q Q Lorem",
+    "eiusmod   sunt\tnulla\tfugiat",
+    "consectetur\tanim \t velit",
+    "amet\tW laborum Gateway",
+    "ullamco velit\tex laborum",
+    "Ut est",
+    "",
+    "cillum ut   in amet   node,",
+    "velit\tdo Gateway sunt",
+    "laborum ea\tnisi  esse irure",
+    "Duis fugiat voluptate",
+    "ipsum   sunt   cupidatat",
+    "magna"
+   ]
+  },
+  {
+   "fixture": 17,
+   "width": 333.078125,
+   "height": 120,
+   "lines": [
+    "occaecat Q Q Lorem eiusmod   sunt\tnulla",
+    "fugiat  consectetur\tanim \t velit amet\tW",
+    "laborum Gateway ullamco velit\tex laborum Ut",
+    "est",
+    "",
+    "cillum ut   in amet   node, velit\tdo Gateway sunt",
+    "laborum ea\tnisi  esse irure \t Duis fugiat",
+    "voluptate \t ipsum   sunt   cupidatat  magna"
+   ]
+  },
+  {
+   "fixture": 17,
+   "width": 748.8125,
+   "height": 75,
+   "lines": [
+    "occaecat Q Q Lorem eiusmod   sunt\tnulla\tfugiat  consectetur\tanim \t velit amet\tW laborum Gateway",
+    "ullamco velit\tex laborum Ut est",
+    "",
+    "cillum ut   in amet   node, velit\tdo Gateway sunt\tlaborum ea\tnisi  esse irure \t Duis fugiat voluptate \t ipsum",
+    "sunt   cupidatat  magna"
+   ]
+  },
+  {
+   "fixture": 18,
+   "width": 40.671875,
+   "height": 60,
+   "lines": [
+    "aute",
+    "Ut",
+    "edge.",
+    "sed"
+   ]
+  },
+  {
+   "fixture": 18,
+   "width": 59.578125,
+   "height": 45,
+   "lines": [
+    "aute Ut",
+    "edge.",
+    "sed"
+   ]
+  },
+  {
+   "fixture": 18,
+   "width": 91.09375,
+   "height": 30,
+   "lines": [
+    "aute Ut",
+    "edge.   sed"
+   ]
+  },
+  {
+   "fixture": 18,
+   "width": 158.0625,
+   "height": 15,
+   "lines": [
+    "aute Ut edge.   sed"
+   ]
+  },
+  {
+   "fixture": 18,
+   "width": 355.015625,
+   "height": 15,
+   "lines": [
+    "aute Ut edge.   sed"
+   ]
+  },
+  {
+   "fixture": 19,
+   "width": 65.25,
+   "height": 45,
+   "lines": [
+    "",
+    "deserunt",
+    "x\tI v4.3"
+   ]
+  },
+  {
+   "fixture": 19,
+   "width": 95.71875,
+   "height": 45,
+   "lines": [
+    "",
+    "deserunt x\tI",
+    "v4.3"
+   ]
+  },
+  {
+   "fixture": 19,
+   "width": 146.5,
+   "height": 30,
+   "lines": [
+    "",
+    "deserunt x\tI v4.3"
+   ]
+  },
+  {
+   "fixture": 19,
+   "width": 254.421875,
+   "height": 30,
+   "lines": [
+    "",
+    "deserunt x\tI v4.3"
+   ]
+  },
+  {
+   "fixture": 19,
+   "width": 571.8125,
+   "height": 30,
+   "lines": [
+    "",
+    "deserunt x\tI v4.3"
+   ]
+  },
+  {
+   "fixture": 20,
+   "width": 21.984375,
+   "height": 15,
+   "lines": [
+    "est"
+   ]
+  },
+  {
+   "fixture": 20,
+   "width": 32.09375,
+   "height": 15,
+   "lines": [
+    "est"
+   ]
+  },
+  {
+   "fixture": 20,
+   "width": 48.9375,
+   "height": 15,
+   "lines": [
+    "est"
+   ]
+  },
+  {
+   "fixture": 20,
+   "width": 84.734375,
+   "height": 15,
+   "lines": [
+    "est"
+   ]
+  },
+  {
+   "fixture": 20,
+   "width": 190.046875,
+   "height": 15,
+   "lines": [
+    "est"
+   ]
+  },
+  {
+   "fixture": 21,
+   "width": 62.828125,
+   "height": 60,
+   "lines": [
+    "eiusmod",
+    "nostrud",
+    "anim\tUt",
+    "mollit"
+   ]
+  },
+  {
+   "fixture": 21,
+   "width": 92.171875,
+   "height": 60,
+   "lines": [
+    "eiusmod",
+    "nostrud",
+    "anim\tUt",
+    "mollit"
+   ]
+  },
+  {
+   "fixture": 21,
+   "width": 141.046875,
+   "height": 30,
+   "lines": [
+    "eiusmod nostrud",
+    "anim\tUt \t mollit"
+   ]
+  },
+  {
+   "fixture": 21,
+   "width": 244.9375,
+   "height": 15,
+   "lines": [
+    "eiusmod nostrud anim\tUt \t mollit"
+   ]
+  },
+  {
+   "fixture": 21,
+   "width": 550.484375,
+   "height": 15,
+   "lines": [
+    "eiusmod nostrud anim\tUt \t mollit"
+   ]
+  },
+  {
+   "fixture": 22,
+   "width": 68.59375,
+   "height": 225,
+   "lines": [
+    "node,",
+    "velit",
+    "node,",
+    "voluptate",
+    "dolore",
+    "v4.3",
+    "voluptate",
+    "dolore",
+    "Start",
+    "nisi",
+    "laborum",
+    "ut",
+    "laborum",
+    "Q \t mollit",
+    "aute ad"
+   ]
+  },
+  {
+   "fixture": 22,
+   "width": 100.640625,
+   "height": 135,
+   "lines": [
+    "node, velit",
+    "node,",
+    "voluptate",
+    "dolore v4.3",
+    "voluptate",
+    "dolore\tStart",
+    "nisi   laborum",
+    "ut\tlaborum  Q",
+    "mollit\taute ad"
+   ]
+  },
+  {
+   "fixture": 22,
+   "width": 154.0625,
+   "height": 90,
+   "lines": [
+    "node, velit \t node,",
+    "voluptate dolore v4.3",
+    "voluptate \t dolore",
+    "Start \t nisi   laborum",
+    "ut\tlaborum  Q \t mollit",
+    "aute ad"
+   ]
+  },
+  {
+   "fixture": 22,
+   "width": 267.5625,
+   "height": 60,
+   "lines": [
+    "node, velit \t node, voluptate dolore",
+    "v4.3 voluptate \t dolore\tStart \t nisi",
+    "laborum ut\tlaborum  Q \t mollit\taute",
+    "ad"
+   ]
+  },
+  {
+   "fixture": 22,
+   "width": 601.390625,
+   "height": 30,
+   "lines": [
+    "node, velit \t node, voluptate dolore v4.3 voluptate \t dolore\tStart \t nisi   laborum ut",
+    "laborum  Q \t mollit\taute ad"
+   ]
+  },
+  {
+   "fixture": 23,
+   "width": 101.171875,
+   "height": 255,
+   "lines": [
+    "aute labore",
+    "elit A \t 2026",
+    "ullamco sit",
+    "Excepteur sed",
+    "mollit   quis",
+    "nisi cupidatat",
+    "reprehenderit",
+    "mollit et est",
+    "culpa qui Ut",
+    "voluptate",
+    "anim",
+    "reprehenderit",
+    "ea commodo",
+    "amet   irure",
+    "laboris ad",
+    "eiusmod   A ut",
+    "ipsum"
+   ]
+  },
+  {
+   "fixture": 23,
+   "width": 148.546875,
+   "height": 195,
+   "lines": [
+    "aute labore  elit A",
+    "2026 ullamco sit",
+    "Excepteur sed",
+    "mollit   quis",
+    "nisi cupidatat",
+    "reprehenderit",
+    "mollit et est culpa",
+    "qui Ut voluptate",
+    "anim",
+    "reprehenderit ea",
+    "commodo amet",
+    "irure laboris ad",
+    "eiusmod   A ut ipsum"
+   ]
+  },
+  {
+   "fixture": 23,
+   "width": 227.515625,
+   "height": 135,
+   "lines": [
+    "aute labore  elit A \t 2026",
+    "ullamco sit Excepteur sed",
+    "mollit   quis",
+    "nisi cupidatat\treprehenderit",
+    "mollit et est culpa qui Ut",
+    "voluptate\tanim",
+    "reprehenderit ea commodo",
+    "amet   irure laboris ad eiusmod",
+    "A ut ipsum"
+   ]
+  },
+  {
+   "fixture": 23,
+   "width": 395.296875,
+   "height": 90,
+   "lines": [
+    "aute labore  elit A \t 2026 ullamco sit Excepteur sed",
+    "mollit   quis",
+    "nisi cupidatat\treprehenderit \t mollit et est culpa qui Ut",
+    "voluptate\tanim",
+    "reprehenderit ea commodo amet   irure laboris ad",
+    "eiusmod   A ut ipsum"
+   ]
+  },
+  {
+   "fixture": 23,
+   "width": 888.796875,
+   "height": 45,
+   "lines": [
+    "aute labore  elit A \t 2026 ullamco sit Excepteur sed \t mollit   quis",
+    "nisi cupidatat\treprehenderit \t mollit et est culpa qui Ut voluptate\tanim",
+    "reprehenderit ea commodo amet   irure laboris ad eiusmod   A ut ipsum"
+   ]
+  },
+  {
+   "fixture": 24,
+   "width": 73.28125,
+   "height": 180,
+   "lines": [
+    "Gateway",
+    "eiusmod",
+    "cillum   ex",
+    "irure",
+    "Duis  esse",
+    "cupidatat",
+    "pariatur x",
+    "sed",
+    "deserunt",
+    "proident",
+    "ad",
+    "adipiscing"
+   ]
+  },
+  {
+   "fixture": 24,
+   "width": 107.53125,
+   "height": 135,
+   "lines": [
+    "Gateway",
+    "eiusmod cillum",
+    "ex irure   Duis",
+    "esse",
+    "cupidatat",
+    "pariatur x sed",
+    "deserunt",
+    "proident \t ad",
+    "adipiscing"
+   ]
+  },
+  {
+   "fixture": 24,
+   "width": 164.609375,
+   "height": 90,
+   "lines": [
+    "Gateway  eiusmod",
+    "cillum   ex irure   Duis",
+    "esse   cupidatat",
+    "pariatur x sed",
+    "deserunt proident \t ad",
+    "adipiscing"
+   ]
+  },
+  {
+   "fixture": 24,
+   "width": 285.921875,
+   "height": 45,
+   "lines": [
+    "Gateway  eiusmod cillum   ex irure   Duis",
+    "esse   cupidatat pariatur x sed",
+    "deserunt proident \t ad\tadipiscing"
+   ]
+  },
+  {
+   "fixture": 24,
+   "width": 642.6875,
+   "height": 30,
+   "lines": [
+    "Gateway  eiusmod cillum   ex irure   Duis  esse   cupidatat pariatur x sed   deserunt",
+    "proident \t ad\tadipiscing"
+   ]
+  },
+  {
+   "fixture": 25,
+   "width": 72.40625,
+   "height": 75,
+   "lines": [
+    "\tsit \t culpa",
+    "Excepteur",
+    "fugiat \t in",
+    "proident",
+    "irure nisi"
+   ]
+  },
+  {
+   "fixture": 25,
+   "width": 106.25,
+   "height": 75,
+   "lines": [
+    "\tsit \t culpa",
+    "Excepteur",
+    "fugiat \t in",
+    "proident  irure",
+    "nisi"
+   ]
+  },
+  {
+   "fixture": 25,
+   "width": 162.65625,
+   "height": 45,
+   "lines": [
+    "\tsit \t culpa\tExcepteur",
+    "fugiat \t in proident",
+    "irure nisi"
+   ]
+  },
+  {
+   "fixture": 25,
+   "width": 282.5,
+   "height": 30,
+   "lines": [
+    "\tsit \t culpa\tExcepteur fugiat \t in proident",
+    "irure nisi"
+   ]
+  },
+  {
+   "fixture": 25,
+   "width": 635,
+   "height": 15,
+   "lines": [
+    "\tsit \t culpa\tExcepteur fugiat \t in proident  irure nisi"
+   ]
+  },
+  {
+   "fixture": 26,
+   "width": 75.484375,
+   "height": 240,
+   "lines": [
+    "aute est",
+    "incididunt",
+    "sed \t culpa",
+    "mollit",
+    "mollit",
+    "culpa",
+    "enim A",
+    "consequat",
+    "esse",
+    "occaecat",
+    "Gateway",
+    "enim",
+    "tempor",
+    "Duis",
+    "aliqua",
+    "irure   "
+   ]
+  },
+  {
+   "fixture": 26,
+   "width": 110.765625,
+   "height": 150,
+   "lines": [
+    "aute est",
+    "incididunt\tsed",
+    "culpa \t mollit",
+    "mollit culpa",
+    "enim A",
+    "consequat",
+    "esse occaecat",
+    "Gateway enim",
+    "tempor Duis",
+    "aliqua irure   "
+   ]
+  },
+  {
+   "fixture": 26,
+   "width": 169.578125,
+   "height": 90,
+   "lines": [
+    "aute est  incididunt\tsed",
+    "culpa \t mollit mollit",
+    "culpa enim A consequat",
+    "esse occaecat   Gateway",
+    "enim tempor Duis",
+    "aliqua irure   "
+   ]
+  },
+  {
+   "fixture": 26,
+   "width": 294.5625,
+   "height": 60,
+   "lines": [
+    "aute est  incididunt\tsed \t culpa \t mollit",
+    "mollit culpa enim A consequat \t esse",
+    "occaecat   Gateway enim tempor Duis",
+    "aliqua irure   "
+   ]
+  },
+  {
+   "fixture": 26,
+   "width": 662.140625,
+   "height": 30,
+   "lines": [
+    "aute est  incididunt\tsed \t culpa \t mollit mollit culpa enim A consequat \t esse occaecat",
+    "Gateway enim tempor Duis \t aliqua irure   "
+   ]
+  },
+  {
+   "fixture": 27,
+   "width": 85.3125,
+   "height": 1035,
+   "lines": [
+    "x  Lorem",
+    "sed x",
+    "dolore",
+    "officia",
+    "ullamco",
+    "incididunt",
+    "Gateway\tet",
+    "Duis",
+    "eiusmod ad",
+    "veniam",
+    "edge.  esse",
+    "tempor",
+    "Gateway",
+    "v4.3 labore",
+    "cillum et",
+    "aliquip",
+    "mollit",
+    "",
+    "occaecat I",
+    "culpa velit",
+    "Duis",
+    "nostrud",
+    "eiusmod",
+    "velit",
+    "proident",
+    "Decision Ut",
+    "consectetur",
+    "nulla",
+    "aliquip",
+    "commodo",
+    "cupidatat",
+    "voluptate",
+    "occaecat",
+    "quis",
+    "adipiscing",
+    "cillum\tI A",
+    "fugiat",
+    "",
+    "voluptate",
+    "incididunt",
+    "aliqua",
+    "deserunt",
+    "Q  enim",
+    "laborum I",
+    "minim",
+    "laborum",
+    "Database",
+    "mollit node,",
+    "esse\tlaboris",
+    "Q  ex   sint",
+    "labore",
+    "occaecat\tdo",
+    "Q culpa",
+    "mollit",
+    "",
+    "ipsum dolor",
+    "aliqua",
+    "incididunt",
+    "elit minim",
+    "proident",
+    "nulla  officia",
+    "W\tsit",
+    "labore et\tW",
+    "ea   est",
+    "node,",
+    "aliqua\tnulla",
+    "proident",
+    "officia dolor",
+    "magna \t ut"
+   ]
+  },
+  {
+   "fixture": 27,
+   "width": 125.21875,
+   "height": 720,
+   "lines": [
+    "x  Lorem  sed x",
+    "dolore  officia",
+    "ullamco",
+    "incididunt",
+    "Gateway\tet  Duis",
+    "eiusmod ad",
+    "veniam   edge.",
+    "esse\ttempor",
+    "Gateway  v4.3",
+    "labore cillum et",
+    "aliquip mollit",
+    "",
+    "occaecat I \t culpa",
+    "velit  Duis",
+    "nostrud\teiusmod",
+    "velit proident",
+    "Decision Ut",
+    "consectetur",
+    "nulla aliquip",
+    "commodo",
+    "cupidatat",
+    "voluptate",
+    "occaecat quis",
+    "adipiscing cillum",
+    "I A fugiat",
+    "",
+    "voluptate",
+    "incididunt aliqua",
+    "deserunt \t Q",
+    "enim  laborum I",
+    "minim\tlaborum",
+    "Database \t mollit",
+    "node, esse",
+    "laboris   Q  ex",
+    "sint \t labore",
+    "occaecat\tdo  Q",
+    "culpa \t mollit",
+    "",
+    "ipsum dolor",
+    "aliqua  incididunt",
+    "elit minim",
+    "proident nulla",
+    "officia W\tsit",
+    "labore et\tW \t ea",
+    "est\tnode,  aliqua",
+    "nulla  proident",
+    "officia dolor",
+    "magna \t ut"
+   ]
+  },
+  {
+   "fixture": 27,
+   "width": 191.734375,
+   "height": 450,
+   "lines": [
+    "x  Lorem  sed x\tdolore",
+    "officia\tullamco\tincididunt",
+    "Gateway\tet  Duis eiusmod",
+    "ad \t veniam   edge.  esse",
+    "tempor   Gateway  v4.3",
+    "labore cillum et  aliquip",
+    "mollit",
+    "",
+    "occaecat I \t culpa velit",
+    "Duis \t nostrud\teiusmod",
+    "velit proident \t Decision Ut",
+    "consectetur  nulla aliquip",
+    "commodo\tcupidatat",
+    "voluptate occaecat quis",
+    "adipiscing cillum\tI A fugiat",
+    "",
+    "voluptate \t incididunt",
+    "aliqua deserunt \t Q  enim",
+    "laborum I  minim\tlaborum",
+    "Database \t mollit node,",
+    "esse\tlaboris   Q  ex   sint",
+    "labore occaecat\tdo  Q",
+    "culpa \t mollit",
+    "",
+    "ipsum dolor aliqua",
+    "incididunt elit minim",
+    "proident nulla  officia W\tsit",
+    "labore et\tW \t ea   est\tnode,",
+    "aliqua\tnulla  proident",
+    "officia dolor\tmagna \t ut"
+   ]
+  },
+  {
+   "fixture": 27,
+   "width": 333.078125,
+   "height": 285,
+   "lines": [
+    "x  Lorem  sed x\tdolore  officia\tullamco",
+    "incididunt Gateway\tet  Duis eiusmod ad",
+    "veniam   edge.  esse\ttempor   Gateway  v4.3",
+    "labore cillum et  aliquip mollit",
+    "",
+    "occaecat I \t culpa velit  Duis \t nostrud\teiusmod",
+    "velit proident \t Decision Ut  consectetur  nulla",
+    "aliquip  commodo\tcupidatat\tvoluptate",
+    "occaecat quis adipiscing cillum\tI A fugiat",
+    "",
+    "voluptate \t incididunt aliqua deserunt \t Q  enim",
+    "laborum I  minim\tlaborum Database \t mollit",
+    "node, esse\tlaboris   Q  ex   sint \t labore",
+    "occaecat\tdo  Q culpa \t mollit",
+    "",
+    "ipsum dolor aliqua  incididunt elit minim",
+    "proident nulla  officia W\tsit  labore et\tW \t ea",
+    "est\tnode,  aliqua\tnulla  proident  officia dolor",
+    "magna \t ut"
+   ]
+  },
+  {
+   "fixture": 27,
+   "width": 748.8125,
+   "height": 165,
+   "lines": [
+    "x  Lorem  sed x\tdolore  officia\tullamco\tincididunt Gateway\tet  Duis eiusmod ad \t veniam   edge.  esse",
+    "tempor   Gateway  v4.3 labore cillum et  aliquip mollit",
+    "",
+    "occaecat I \t culpa velit  Duis \t nostrud\teiusmod velit proident \t Decision Ut  consectetur  nulla aliquip",
+    "commodo\tcupidatat\tvoluptate occaecat quis adipiscing cillum\tI A fugiat",
+    "",
+    "voluptate \t incididunt aliqua deserunt \t Q  enim  laborum I  minim\tlaborum Database \t mollit node, esse",
+    "laboris   Q  ex   sint \t labore occaecat\tdo  Q culpa \t mollit",
+    "",
+    "ipsum dolor aliqua  incididunt elit minim proident nulla  officia W\tsit  labore et\tW \t ea   est\tnode,  aliqua",
+    "nulla  proident  officia dolor\tmagna \t ut"
+   ]
+  },
+  {
+   "fixture": 28,
+   "width": 101.171875,
+   "height": 135,
+   "lines": [
+    "cillum \t ad x",
+    "velit  dolore",
+    "labore",
+    "reprehenderit",
+    "adipiscing",
+    "Duis",
+    "incididunt ad",
+    "nostrud",
+    "minim sit"
+   ]
+  },
+  {
+   "fixture": 28,
+   "width": 148.546875,
+   "height": 90,
+   "lines": [
+    "cillum \t ad x velit",
+    "dolore labore",
+    "reprehenderit",
+    "adipiscing \t Duis",
+    "incididunt ad",
+    "nostrud   minim sit"
+   ]
+  },
+  {
+   "fixture": 28,
+   "width": 227.515625,
+   "height": 60,
+   "lines": [
+    "cillum \t ad x velit  dolore labore",
+    "reprehenderit adipiscing \t Duis",
+    "incididunt ad nostrud   minim",
+    "sit"
+   ]
+  },
+  {
+   "fixture": 28,
+   "width": 395.296875,
+   "height": 30,
+   "lines": [
+    "cillum \t ad x velit  dolore labore reprehenderit",
+    "adipiscing \t Duis incididunt ad nostrud   minim sit"
+   ]
+  },
+  {
+   "fixture": 28,
+   "width": 888.796875,
+   "height": 15,
+   "lines": [
+    "cillum \t ad x velit  dolore labore reprehenderit adipiscing \t Duis incididunt ad nostrud   minim sit"
+   ]
+  },
+  {
+   "fixture": 29,
+   "width": 68.59375,
+   "height": 315,
+   "lines": [
+    "",
+    "ex aliquip",
+    "Duis",
+    "voluptate",
+    "in Duis",
+    "ipsum",
+    "Duis",
+    "laboris",
+    "eiusmod",
+    "edge.",
+    "nostrud",
+    "Gateway",
+    "ut  v4.3",
+    "cupidatat",
+    "Lorem",
+    "et",
+    "voluptate",
+    "Database",
+    "Duis v4.3",
+    "eiusmod",
+    "sint"
+   ]
+  },
+  {
+   "fixture": 29,
+   "width": 100.640625,
+   "height": 225,
+   "lines": [
+    "",
+    "ex aliquip",
+    "Duis",
+    "voluptate in",
+    "Duis \t ipsum",
+    "Duis   laboris",
+    "eiusmod",
+    "edge.\tnostrud",
+    "Gateway ut",
+    "v4.3 cupidatat",
+    "Lorem   et",
+    "voluptate",
+    "Database",
+    "Duis v4.3",
+    "eiusmod \t sint"
+   ]
+  },
+  {
+   "fixture": 29,
+   "width": 154.0625,
+   "height": 150,
+   "lines": [
+    "",
+    "ex aliquip   Duis",
+    "voluptate in Duis",
+    "ipsum\tDuis   laboris",
+    "eiusmod edge.",
+    "nostrud Gateway ut",
+    "v4.3 cupidatat Lorem",
+    "et voluptate",
+    "Database   Duis v4.3",
+    "eiusmod \t sint"
+   ]
+  },
+  {
+   "fixture": 29,
+   "width": 267.5625,
+   "height": 90,
+   "lines": [
+    "",
+    "ex aliquip   Duis voluptate in Duis",
+    "ipsum\tDuis   laboris   eiusmod edge.",
+    "nostrud Gateway ut  v4.3 cupidatat",
+    "Lorem   et voluptate Database   Duis",
+    "v4.3\teiusmod \t sint"
+   ]
+  },
+  {
+   "fixture": 29,
+   "width": 601.390625,
+   "height": 45,
+   "lines": [
+    "",
+    "ex aliquip   Duis voluptate in Duis \t ipsum\tDuis   laboris   eiusmod edge.\tnostrud",
+    "Gateway ut  v4.3 cupidatat Lorem   et voluptate Database   Duis v4.3\teiusmod \t sint"
+   ]
+  },
+  {
+   "fixture": 30,
+   "width": 55.96875,
+   "height": 15,
+   "lines": [
+    "Process"
+   ]
+  },
+  {
+   "fixture": 30,
+   "width": 82.0625,
+   "height": 15,
+   "lines": [
+    "Process"
+   ]
+  },
+  {
+   "fixture": 30,
+   "width": 125.5625,
+   "height": 15,
+   "lines": [
+    "Process"
+   ]
+  },
+  {
+   "fixture": 30,
+   "width": 218,
+   "height": 15,
+   "lines": [
+    "Process"
+   ]
+  },
+  {
+   "fixture": 30,
+   "width": 489.875,
+   "height": 15,
+   "lines": [
+    "Process"
+   ]
+  },
+  {
+   "fixture": 31,
+   "width": 62.828125,
+   "height": 120,
+   "lines": [
+    "pariatur",
+    "eiusmod",
+    "velit",
+    "ullamco",
+    "Duis",
+    "2026",
+    "veniam",
+    "ipsum"
+   ]
+  },
+  {
+   "fixture": 31,
+   "width": 92.171875,
+   "height": 90,
+   "lines": [
+    "pariatur",
+    "eiusmod",
+    "velit ullamco",
+    "Duis   2026",
+    "veniam",
+    "ipsum"
+   ]
+  },
+  {
+   "fixture": 31,
+   "width": 141.046875,
+   "height": 45,
+   "lines": [
+    "pariatur eiusmod",
+    "velit ullamco \t Duis",
+    "2026\tveniam ipsum"
+   ]
+  },
+  {
+   "fixture": 31,
+   "width": 244.9375,
+   "height": 30,
+   "lines": [
+    "pariatur eiusmod \t velit ullamco",
+    "Duis   2026\tveniam ipsum"
+   ]
+  },
+  {
+   "fixture": 31,
+   "width": 550.484375,
+   "height": 15,
+   "lines": [
+    "pariatur eiusmod \t velit ullamco \t Duis   2026\tveniam ipsum"
+   ]
+  },
+  {
+   "fixture": 32,
+   "width": 57.25,
+   "height": 60,
+   "lines": [
+    "edge.",
+    "esse",
+    "nostrud",
+    "ex v4.3"
+   ]
+  },
+  {
+   "fixture": 32,
+   "width": 83.953125,
+   "height": 45,
+   "lines": [
+    "edge.\tesse",
+    "nostrud\tex",
+    "v4.3"
+   ]
+  },
+  {
+   "fixture": 32,
+   "width": 128.453125,
+   "height": 30,
+   "lines": [
+    "edge.\tesse",
+    "nostrud\tex v4.3"
+   ]
+  },
+  {
+   "fixture": 32,
+   "width": 223.046875,
+   "height": 15,
+   "lines": [
+    "edge.\tesse nostrud\tex v4.3"
+   ]
+  },
+  {
+   "fixture": 32,
+   "width": 501.21875,
+   "height": 15,
+   "lines": [
+    "edge.\tesse nostrud\tex v4.3"
+   ]
+  },
+  {
+   "fixture": 33,
+   "width": 75.484375,
+   "height": 240,
+   "lines": [
+    "ex  Ut",
+    "2026  non",
+    "quis\tsint",
+    "culpa",
+    "non  2026",
+    "sed \t et",
+    "proident",
+    "esse",
+    "magna",
+    "nulla",
+    "consequat",
+    "ullamco",
+    "Excepteur",
+    "Process",
+    "Start",
+    "adipiscing"
+   ]
+  },
+  {
+   "fixture": 33,
+   "width": 110.765625,
+   "height": 180,
+   "lines": [
+    "ex  Ut\t2026",
+    "non quis\tsint",
+    "culpa",
+    "non  2026 sed",
+    "et  proident",
+    "esse magna",
+    "nulla",
+    "consequat",
+    "ullamco",
+    "Excepteur",
+    "Process\tStart",
+    "adipiscing"
+   ]
+  },
+  {
+   "fixture": 33,
+   "width": 169.578125,
+   "height": 120,
+   "lines": [
+    "ex  Ut\t2026  non quis",
+    "sint culpa",
+    "non  2026 sed \t et",
+    "proident esse magna",
+    "nulla consequat",
+    "ullamco Excepteur",
+    "Process\tStart",
+    "adipiscing"
+   ]
+  },
+  {
+   "fixture": 33,
+   "width": 294.5625,
+   "height": 60,
+   "lines": [
+    "ex  Ut\t2026  non quis\tsint culpa",
+    "non  2026 sed \t et  proident esse magna",
+    "nulla consequat ullamco Excepteur",
+    "Process\tStart \t adipiscing"
+   ]
+  },
+  {
+   "fixture": 33,
+   "width": 662.140625,
+   "height": 45,
+   "lines": [
+    "ex  Ut\t2026  non quis\tsint culpa",
+    "non  2026 sed \t et  proident esse magna",
+    "nulla consequat ullamco Excepteur \t Process\tStart \t adipiscing"
+   ]
+  },
+  {
+   "fixture": 34,
+   "width": 101.171875,
+   "height": 120,
+   "lines": [
+    "sunt",
+    "reprehenderit",
+    "nostrud irure",
+    "culpa ullamco",
+    "sit",
+    "exercitation",
+    "non proident",
+    "do x"
+   ]
+  },
+  {
+   "fixture": 34,
+   "width": 148.546875,
+   "height": 75,
+   "lines": [
+    "sunt reprehenderit",
+    "nostrud irure culpa",
+    "ullamco  sit",
+    "exercitation non",
+    "proident do x"
+   ]
+  },
+  {
+   "fixture": 34,
+   "width": 227.515625,
+   "height": 45,
+   "lines": [
+    "sunt reprehenderit nostrud",
+    "irure culpa ullamco  sit",
+    "exercitation non proident do x"
+   ]
+  },
+  {
+   "fixture": 34,
+   "width": 395.296875,
+   "height": 30,
+   "lines": [
+    "sunt reprehenderit nostrud irure culpa ullamco  sit",
+    "exercitation non proident do x"
+   ]
+  },
+  {
+   "fixture": 34,
+   "width": 888.796875,
+   "height": 15,
+   "lines": [
+    "sunt reprehenderit nostrud irure culpa ullamco  sit \t exercitation non proident do x"
+   ]
+  },
+  {
+   "fixture": 35,
+   "width": 101.171875,
+   "height": 75,
+   "lines": [
+    "  sed\taute",
+    "esse\tUt A",
+    "culpa Process",
+    "reprehenderit",
+    "officia"
+   ]
+  },
+  {
+   "fixture": 35,
+   "width": 148.546875,
+   "height": 45,
+   "lines": [
+    "  sed\taute esse\tUt A",
+    "culpa Process",
+    "reprehenderit officia"
+   ]
+  },
+  {
+   "fixture": 35,
+   "width": 227.515625,
+   "height": 30,
+   "lines": [
+    "  sed\taute esse\tUt A \t culpa",
+    "Process \t reprehenderit officia"
+   ]
+  },
+  {
+   "fixture": 35,
+   "width": 395.296875,
+   "height": 30,
+   "lines": [
+    "  sed\taute esse\tUt A \t culpa Process \t reprehenderit",
+    "officia"
+   ]
+  },
+  {
+   "fixture": 35,
+   "width": 888.796875,
+   "height": 15,
+   "lines": [
+    "  sed\taute esse\tUt A \t culpa Process \t reprehenderit officia"
+   ]
+  },
+  {
+   "fixture": 36,
+   "width": 75.484375,
+   "height": 180,
+   "lines": [
+    "laborum",
+    "voluptate",
+    "adipiscing",
+    "ullamco",
+    "cillum",
+    "Start esse",
+    "dolor",
+    "veniam",
+    "consequat",
+    "nostrud",
+    "anim anim",
+    "consequat  "
+   ]
+  },
+  {
+   "fixture": 36,
+   "width": 110.765625,
+   "height": 150,
+   "lines": [
+    "laborum",
+    "voluptate",
+    "adipiscing",
+    "ullamco\tcillum",
+    "Start esse\tdolor",
+    "veniam",
+    "consequat",
+    "nostrud anim",
+    "anim",
+    "consequat  "
+   ]
+  },
+  {
+   "fixture": 36,
+   "width": 169.578125,
+   "height": 90,
+   "lines": [
+    "laborum\tvoluptate",
+    "adipiscing\tullamco",
+    "cillum   Start esse\tdolor",
+    "veniam   consequat",
+    "nostrud anim anim",
+    "consequat  "
+   ]
+  },
+  {
+   "fixture": 36,
+   "width": 294.5625,
+   "height": 60,
+   "lines": [
+    "laborum\tvoluptate   adipiscing\tullamco",
+    "cillum   Start esse\tdolor\tveniam",
+    "consequat\tnostrud anim anim",
+    "consequat  "
+   ]
+  },
+  {
+   "fixture": 36,
+   "width": 662.140625,
+   "height": 30,
+   "lines": [
+    "laborum\tvoluptate   adipiscing\tullamco\tcillum   Start esse\tdolor\tveniam   consequat\tnostrud",
+    "anim anim   consequat  "
+   ]
+  },
+  {
+   "fixture": 37,
+   "width": 85.3125,
+   "height": 180,
+   "lines": [
+    "voluptate",
+    "fugiat  non",
+    "ex",
+    "consequat",
+    "",
+    "laboris ut",
+    "nisi  aliquip",
+    "id",
+    "",
+    "Start  nulla",
+    "consectetur",
+    "quis dolore"
+   ]
+  },
+  {
+   "fixture": 37,
+   "width": 125.21875,
+   "height": 150,
+   "lines": [
+    "voluptate \t fugiat",
+    "non ex",
+    "consequat",
+    "",
+    "laboris ut nisi",
+    "aliquip id",
+    "",
+    "Start  nulla",
+    "consectetur   quis",
+    "dolore"
+   ]
+  },
+  {
+   "fixture": 37,
+   "width": 191.734375,
+   "height": 105,
+   "lines": [
+    "voluptate \t fugiat  non ex",
+    "consequat",
+    "",
+    "laboris ut nisi  aliquip id",
+    "",
+    "Start  nulla  consectetur",
+    "quis dolore"
+   ]
+  },
+  {
+   "fixture": 37,
+   "width": 333.078125,
+   "height": 75,
+   "lines": [
+    "voluptate \t fugiat  non ex consequat",
+    "",
+    "laboris ut nisi  aliquip id",
+    "",
+    "Start  nulla  consectetur   quis dolore"
+   ]
+  },
+  {
+   "fixture": 37,
+   "width": 748.8125,
+   "height": 75,
+   "lines": [
+    "voluptate \t fugiat  non ex consequat",
+    "",
+    "laboris ut nisi  aliquip id",
+    "",
+    "Start  nulla  consectetur   quis dolore"
+   ]
+  },
+  {
+   "fixture": 38,
+   "width": 68.28125,
+   "height": 30,
+   "lines": [
+    "dolor",
+    "cupidatat"
+   ]
+  },
+  {
+   "fixture": 38,
+   "width": 100.171875,
+   "height": 30,
+   "lines": [
+    "dolor",
+    "cupidatat"
+   ]
+  },
+  {
+   "fixture": 38,
+   "width": 153.328125,
+   "height": 15,
+   "lines": [
+    "dolor cupidatat"
+   ]
+  },
+  {
+   "fixture": 38,
+   "width": 266.296875,
+   "height": 15,
+   "lines": [
+    "dolor cupidatat"
+   ]
+  },
+  {
+   "fixture": 38,
+   "width": 598.546875,
+   "height": 15,
+   "lines": [
+    "dolor cupidatat"
+   ]
+  },
+  {
+   "fixture": 39,
+   "width": 85.3125,
+   "height": 255,
+   "lines": [
+    "",
+    "consectetur",
+    "I  eiusmod",
+    "v4.3 minim",
+    "anim",
+    "consequat",
+    "deserunt",
+    "qui esse",
+    "2026 node,",
+    "incididunt",
+    "anim",
+    "ipsum est Q",
+    "deserunt",
+    "aliqua culpa",
+    "Process",
+    "cupidatat",
+    "nostrud"
+   ]
+  },
+  {
+   "fixture": 39,
+   "width": 125.21875,
+   "height": 195,
+   "lines": [
+    "",
+    "consectetur  I",
+    "eiusmod   v4.3",
+    "minim\tanim",
+    "consequat",
+    "deserunt qui esse",
+    "2026 node,",
+    "incididunt \t anim",
+    "ipsum est Q",
+    "deserunt \t aliqua",
+    "culpa \t Process",
+    "cupidatat",
+    "nostrud"
+   ]
+  },
+  {
+   "fixture": 39,
+   "width": 191.734375,
+   "height": 135,
+   "lines": [
+    "",
+    "consectetur  I  eiusmod",
+    "v4.3 minim\tanim",
+    "consequat deserunt qui",
+    "esse  2026 node,",
+    "incididunt \t anim \t ipsum",
+    "est Q deserunt \t aliqua",
+    "culpa \t Process   cupidatat",
+    "nostrud"
+   ]
+  },
+  {
+   "fixture": 39,
+   "width": 333.078125,
+   "height": 75,
+   "lines": [
+    "",
+    "consectetur  I  eiusmod   v4.3 minim\tanim",
+    "consequat deserunt qui esse  2026 node,",
+    "incididunt \t anim \t ipsum est Q deserunt",
+    "aliqua culpa \t Process   cupidatat\tnostrud"
+   ]
+  },
+  {
+   "fixture": 39,
+   "width": 748.8125,
+   "height": 45,
+   "lines": [
+    "",
+    "consectetur  I  eiusmod   v4.3 minim\tanim consequat deserunt qui esse  2026 node, incididunt \t anim",
+    "ipsum est Q deserunt \t aliqua culpa \t Process   cupidatat\tnostrud"
+   ]
+  }
+ ]
+}

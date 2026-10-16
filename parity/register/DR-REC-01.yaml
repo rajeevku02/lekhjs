@@ -1,0 +1,20 @@
+id: DR-REC-01
+title: Closed-shape detection takes the longest final candidate shape, not the last one with a perimeter
+area: REC
+kind: bug-fix
+cpp: 'ShapeColl::takeOut (recognizer/ShapeColl.cpp:79-95) takes the first final shape without recording its perimeter, so any later final shape with a perimeter attribute replaces it; the first final shape can never win when another exists'
+ts: 'recognizer/shapes/chooseFinalShape.ts: the final shape with the largest perimeter attribute wins (missing = 0), the first on ties; quirks.legacyTakeOut restores the C++ choice (test-only)'
+user_visible: true
+# A recognizer case, not a board: the fixture is the unit case set (spec 07 §4.2, AC-REC-10). The
+# stroke-level fixture lands with the parity corpus after the LineAggregator handoff (spec 07 §7.4).
+fixture: test/recognizer/shapes/chooseFinalShape.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+  recognizer: { quirk: legacyTakeOut }
+evidence: 'spec 07 §4.2; research 08 §3 (C1)'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

@@ -1,0 +1,20 @@
+id: DR-REC-02
+title: A poly's width is measured on x (C++ took maxx from y)
+area: REC
+kind: bug-fix
+cpp: 'CxPoly::computeBasicFeatures sets maxx = p.y (recognizer/CxPoly.cpp:455-456), so features.width is wrong; it feeds almostClosed, PolySplitter and Shape::tryClose'
+ts: 'recognizer/polys/CxPoly.ts computeBasicFeatures: maxx = p.x; quirks.legacyWidthBug restores the C++ value (test-only)'
+user_visible: true
+# Recognizer data, not a board: the ordered golden carries both variants (`fixed`, `legacy`) from
+# the C++ PolyColl built in doubles (parity/tools/cxpoly-golden); scribble12 shows a different split.
+fixture: test/recognizer/golden/cxpoly-order.json
+rule:
+  json: []
+  image: null
+  perf: null
+  recognizer: { quirk: legacyWidthBug }
+evidence: 'spec 07 §4.2; research 08 §3 (C2); AC-REC-11'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

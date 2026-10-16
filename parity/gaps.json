@@ -2,23 +2,6 @@
   "comment": "Owned gaps of the JSON comparison (json/gaps.mjs): differences a later task of Work 01M4X7TCHFB862XGT68GPY071C closes. Each owning task deletes its entry when it lands; a phase-exit run ignores this file. Filed by E11.",
   "gaps": [
     {
-      "owner": "G3",
-      "reason": "wireframe generators 12-22 of spec 04 §5.3 not ported yet: placeholder; C++ runs the Lua",
-      "template_ids": [
-        "avabodh.wireframe.iosactionsheet",
-        "avabodh.wireframe.ioscontextmenu",
-        "avabodh.wireframe.iosmenu",
-        "avabodh.wireframe.iospagecontrol",
-        "avabodh.wireframe.iospicker",
-        "avabodh.wireframe.iossegmented",
-        "avabodh.wireframe.linkbar",
-        "avabodh.wireframe.listbox",
-        "avabodh.wireframe.menu",
-        "avabodh.wireframe.menubar",
-        "avabodh.wireframe.multilinebutton"
-      ]
-    },
-    {
       "owner": "G4",
       "reason": "wireframe generators 23-33 of spec 04 §5.3 not ported yet: placeholder; C++ runs the Lua",
       "template_ids": [

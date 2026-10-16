@@ -105,7 +105,7 @@ export function diff(cpp, ts) {
         const eq = luaDataNumber.equal(a, b);
         if (eq === true) {
           const g = generalise(path);
-          tolerance.set(g, Math.max(tolerance.get(g) ?? 0, relativeDeviation(Number(a), Number(b))));
+          tolerance.set(g, Math.max(tolerance.get(g) ?? 0, luaDataNumber.deviation(a, b)));
           return;
         }
       }

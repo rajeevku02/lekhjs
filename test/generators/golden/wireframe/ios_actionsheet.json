@@ -1,0 +1,218 @@
+{
+ "avabodh.wireframe.iosactionsheet": [
+  {
+   "params": {},
+   "text": "Copy\nShare\nSend\nCancel",
+   "output": {
+    "data": [
+     "0",
+     "-h/2+3*0.5*(h-8)/4",
+     "w",
+     "3*(h-8)/4",
+     "6",
+     "6",
+     "0",
+     "0",
+     "h/2-0.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "6",
+     "6",
+     "0",
+     "0",
+     "-h/2+0.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "0",
+     "-w/2",
+     "-h/2+1*(h-8)/4",
+     "w/2",
+     "-h/2+1*(h-8)/4",
+     "0",
+     "-h/2+1.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "0",
+     "-w/2",
+     "-h/2+2*(h-8)/4",
+     "w/2",
+     "-h/2+2*(h-8)/4",
+     "0",
+     "-h/2+2.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "strokewidth": 0.4
+      }
+     },
+     {
+      "path": "R 7 8 9 10 11 12 13",
+      "style": {
+       "strokewidth": 0.4
+      }
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 19 20 L 21 22"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 28 29 L 30 31"
+     }
+    ],
+    "texts": [
+     {
+      "location": "7 8 9 10 13",
+      "text": "Cancel"
+     },
+     {
+      "location": "14 15 16 17 18",
+      "text": "Copy"
+     },
+     {
+      "location": "23 24 25 26 27",
+      "text": "Share"
+     },
+     {
+      "location": "32 33 34 35 36",
+      "text": "Send"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  },
+  {
+   "params": {},
+   "text": "",
+   "output": {
+    "data": [
+     "0",
+     "0",
+     "w",
+     "h",
+     "1",
+     "1",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6"
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  },
+  {
+   "params": {},
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "0",
+     "-h/2+3*0.5*(h-8)/4",
+     "w",
+     "3*(h-8)/4",
+     "6",
+     "6",
+     "0",
+     "0",
+     "h/2-0.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "6",
+     "6",
+     "0",
+     "0",
+     "-h/2+0.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "0",
+     "-w/2",
+     "-h/2+1*(h-8)/4",
+     "w/2",
+     "-h/2+1*(h-8)/4",
+     "0",
+     "-h/2+1.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "0",
+     "-w/2",
+     "-h/2+2*(h-8)/4",
+     "w/2",
+     "-h/2+2*(h-8)/4",
+     "0",
+     "-h/2+2.5*(h-8)/4",
+     "w",
+     "(h-8)/4",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "strokewidth": 0.4
+      }
+     },
+     {
+      "path": "R 7 8 9 10 11 12 13",
+      "style": {
+       "strokewidth": 0.4
+      }
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 19 20 L 21 22"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 28 29 L 30 31"
+     }
+    ],
+    "texts": [
+     {
+      "location": "7 8 9 10 13",
+      "text": "\\*Escaped"
+     },
+     {
+      "location": "14 15 16 17 18",
+      "text": "*Selected"
+     },
+     {
+      "location": "23 24 25 26 27",
+      "text": "-Disabled"
+     },
+     {
+      "location": "32 33 34 35 36",
+      "text": "*-Both"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": -1,
+    "minH": -1
+   }
+  }
+ ]
+}

@@ -1,6 +1,9 @@
 // Self-tests of the comparison tools (node:test; `npm test` in parity/). Synthetic inputs only.
 import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { describe, it } from 'node:test';
 import { canonicalise, isArrayForm } from '../json/canon.mjs';
 import { diff, generalise } from '../json/diff.mjs';
@@ -8,6 +11,7 @@ import { LNum, LenientParseError, lenientParse } from '../json/lenient-parse.mjs
 import { attributeGaps, loadGaps } from '../json/gaps.mjs';
 import * as fontModifierSize from '../json/normalisers/font-modifier-size.mjs';
 import * as legacyConvert from '../json/normalisers/legacy-convert.mjs';
+import * as luaDataNumber from '../json/normalisers/lua-data-number.mjs';
 import * as placeholderVerbatim from '../json/normalisers/placeholder-verbatim.mjs';
 import { applyRules, compileRules, cppFailEntry, matchPrefix } from '../json/rules.mjs';
 import { scanText, wordsOutsideVocabulary } from '../register/scan.mjs';
@@ -204,6 +208,22 @@ describe('customer-content scanner', () => {
 
 describe('normalisers', () => {
   const L = (/** @type {unknown} */ v) => lenientParse(JSON.stringify(v)).value;
+  it('lua-data-number: numbers, and the number literals of same-shaped expressions, within tolerance', () => {
+    const eq = luaDataNumber.equal;
+    assert.equal(eq('23.0', '23'), true);
+    assert.equal(eq('1e-05', '0.00001'), true);
+    assert.equal(eq('-28.680000305176+14.340000152588', '-28.68000030517578+14.34000015258789'), true);
+    assert.equal(eq('-80.5+69.0', '-80.5+ 69'), true);
+    assert.equal(eq('-0.0+12.0', '0+12'), true);
+    assert.equal(eq('-w/2 + 2.5', '-w/2 + 2.5000001'), true);
+    assert.equal(eq('d(14)+6.0', 'd(14)+6'), true);
+    assert.equal(eq('-80.5+69.0', '-80.5+70'), false);
+    assert.equal(eq('d(14)+6', 'd(15)+6'), false);
+    assert.equal(eq('w-3', 'h-3'), false);
+    assert.equal(eq('w-3', 'w+-3'), false);
+    assert.equal(eq('w', 'h'), null);
+    assert.ok(luaDataNumber.deviation('-28.680000305176+1', '-28.68000030517578+1') > 0);
+  });
   it('legacy-convert: the TS object is the conversion of the C++ legacy one', () => {
     const cpp = L({
       type: 'avabodh.basic.ellipse',
@@ -278,7 +298,20 @@ describe('normalisers', () => {
 
 describe('owned gaps', () => {
   it('attributes diffs under a gap template id, a native shape or a root template key', () => {
-    const gaps = loadGaps();
+    // A synthetic gaps file, so the test outlives the tasks that close the real entries.
+    const dir = mkdtempSync(path.join(tmpdir(), 'gaps-'));
+    const file = path.join(dir, 'gaps.json');
+    writeFileSync(
+      file,
+      JSON.stringify({
+        gaps: [
+          { owner: 'G3', reason: 'r', template_ids: ['avabodh.wireframe.iospagecontrol'] },
+          { owner: 'G5', reason: 'r', native_shapes: ['bpmn.*'], root_templates: ['avabodh_bpmn_syms_*'] },
+        ],
+      }),
+    );
+    const gaps = loadGaps(file);
+    rmSync(dir, { recursive: true });
     const cppT = lenientParse(
       JSON.stringify({
         pages: {

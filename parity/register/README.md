@@ -34,12 +34,12 @@ Format and workflow: verification 01 §9 (Work 01M4X7TCHFB862XGT68GPY071C). Chec
 | DR-FMT-01 | Phantom pages from the old empty-board bug are shown as recovered pages                                       | intended-change | proposed |            |
 | DR-GEN-01 | A data expression that does not parse evaluates to 0 and the template loads                                   | bug-fix         | proposed |            |
 | DR-GEN-03 | The generated minimum size starts at 0                                                                        | bug-fix         | proposed |            |
-| DR-GEN-04 | ios_picker no longer keeps a stale selected row                                                               | bug-fix         | proposed |            |
+| DR-GEN-04 | ios_picker has no selected-row state across generations                                                       | bug-fix         | proposed |            |
 | DR-GEN-05 | calendar and android_datepicker with a malformed date text draw the default date, not an empty or stale shape | bug-fix         | proposed |            |
 | DR-GEN-06 | Month info is time-zone independent                                                                           | bug-fix         | proposed |            |
 | DR-GEN-07 | android_datepicker writes Wednesday as Wed, not Web                                                           | bug-fix         | proposed |            |
 | DR-GEN-08 | The android_datepicker header names the weekday of the selected day, not of the 1st of the month              | bug-fix         | proposed |            |
-| DR-GEN-09 | Leaked Lua globals of button, calendar and datagrid are local in the TS ports                                 | bug-fix         | proposed |            |
+| DR-GEN-09 | Leaked Lua globals of button, calendar, datagrid and ios_picker are local in the TS ports                     | bug-fix         | proposed |            |
 | DR-GEN-10 | A generator failure warns; a first-generation failure shows the placeholder                                   | bug-fix         | proposed |            |
 | DR-GEN-12 | An unknown native shape or generator type is kept as a placeholder, not dropped                               | bug-fix         | proposed |            |
 | DR-GEN-13 | Wireframe data number formatting is JS shortest round trip, not Lua's %.14g                                   | intended-change | proposed |            |

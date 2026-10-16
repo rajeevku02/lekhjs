@@ -64,6 +64,46 @@ function field(L: LuaState, tableIdx: number, k: string): string | number | bool
   return v;
 }
 
+/**
+ * C++ `getLuaTableFloatField`: `lua_isnumber` (a number, or a string that converts to one) and
+ * `lua_tonumber`; anything else is no value.
+ */
+function numberField(L: LuaState, tableIdx: number, k: string): number | undefined {
+  lua.lua_getfield(L, tableIdx, S(k));
+  const v = lua.lua_isnumber(L, -1) ? lua.lua_tonumber(L, -1) : undefined;
+  lua.lua_pop(L, 1);
+  return v;
+}
+
+/**
+ * The template JSON as C++ `JsonParser` read it: standard JSON, plus a trailing comma before `}`
+ * or `]` (`parseObject` / `parseList` accept one; `menu_bar.lua` writes `{"disabled": true,}`).
+ */
+export function parseCppTemplateJson(text: string): JsonObject {
+  let out = '';
+  let inString = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charAt(i);
+    if (inString) {
+      out += c;
+      if (c === '\\') {
+        out += text.charAt(i + 1);
+        i++;
+      } else if (c === '"') inString = false;
+      continue;
+    }
+    if (c === '"') inString = true;
+    if (c === ',') {
+      let j = i + 1;
+      while (j < text.length && ' \t\r\n'.includes(text.charAt(j))) j++;
+      const next = text.charAt(j);
+      if (next === '}' || next === ']') continue;
+    }
+    out += c;
+  }
+  return JSON.parse(out) as JsonObject;
+}
+
 /** JSON string escaping for `escapeJson` (C++ `JsonParser::escapeString`). */
 function escapeJson(s: string): string {
   return JSON.stringify(s).slice(1, -1);
@@ -223,8 +263,8 @@ export class LuaGenerator {
       return { ok: false, error };
     }
     const tmpl = field(L, -1, 'template');
-    const minw = field(L, -1, 'minw');
-    const minh = field(L, -1, 'minh');
+    const minw = numberField(L, -1, 'minw');
+    const minh = numberField(L, -1, 'minh');
     const disabled = field(L, -1, 'disabled');
     lua.lua_settop(L, 0);
     if (typeof tmpl !== 'string' || typeof minw !== 'number' || typeof minh !== 'number') {
@@ -232,7 +272,7 @@ export class LuaGenerator {
     }
     let template: JsonObject;
     try {
-      template = JSON.parse(tmpl) as JsonObject;
+      template = parseCppTemplateJson(tmpl);
     } catch {
       // C++ had cleared the template data already: the shape is left empty.
       return { ok: false, error: 'template is not JSON' };

@@ -1,0 +1,136 @@
+{
+ "avabodh.wireframe.linkbar": [
+  {
+   "params": {
+    "separator line": true
+   },
+   "text": "Home,Product,Blog,Contact",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "-w/2+0+23",
+     "0",
+     "46",
+     "h",
+     "0",
+     "-w/2+46",
+     "-7",
+     "-w/2+46",
+     "7",
+     "-w/2+46+33.5",
+     "0",
+     "67",
+     "h",
+     "0",
+     "-w/2+113",
+     "-7",
+     "-w/2+113",
+     "7",
+     "-w/2+113+23",
+     "0",
+     "46",
+     "h",
+     "0",
+     "-w/2+159",
+     "-7",
+     "-w/2+159",
+     "7",
+     "-w/2+159+33.5",
+     "0",
+     "67",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 9 10 L 11 12"
+     },
+     {
+      "path": "M 18 19 L 20 21"
+     },
+     {
+      "path": "M 27 28 L 29 30"
+     }
+    ],
+    "texts": [
+     {
+      "location": "4 5 6 7 8",
+      "text": "Home"
+     },
+     {
+      "location": "13 14 15 16 17",
+      "text": "Product"
+     },
+     {
+      "location": "22 23 24 25 26",
+      "text": "Blog"
+     },
+     {
+      "location": "31 32 33 34 35",
+      "text": "Contact"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 226,
+    "minH": 14
+   }
+  },
+  {
+   "params": {
+    "separator line": true
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2"
+    ],
+    "draw": [],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 0,
+    "minH": 14
+   }
+  },
+  {
+   "params": {
+    "separator line": true
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "-w/2+0+40.5",
+     "0",
+     "81",
+     "h",
+     "0"
+    ],
+    "draw": [],
+    "texts": [
+     {
+      "location": "4 5 6 7 8",
+      "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 81,
+    "minH": 14
+   }
+  }
+ ]
+}

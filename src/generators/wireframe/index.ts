@@ -15,6 +15,17 @@ import calendar from './calendar';
 import checkbox from './checkbox';
 import checkboxGroup from './checkbox-group';
 import datagrid from './datagrid';
+import iosActionsheet from './ios-actionsheet';
+import iosContextmenu from './ios-contextmenu';
+import iosMenu from './ios-menu';
+import iosPagecontrol from './ios-pagecontrol';
+import iosPicker from './ios-picker';
+import iosSegmented from './ios-segmented';
+import linkBar from './link-bar';
+import listbox from './listbox';
+import menu from './menu';
+import menuBar from './menu-bar';
+import multilineButton from './multiline-button';
 
 /** In the order of spec 04 §5.3's table. */
 export const WIREFRAME_MODULES: readonly WireframeModule[] = Object.freeze([
@@ -29,4 +40,15 @@ export const WIREFRAME_MODULES: readonly WireframeModule[] = Object.freeze([
   checkbox,
   checkboxGroup,
   datagrid,
+  iosActionsheet,
+  iosContextmenu,
+  iosMenu,
+  iosPagecontrol,
+  iosPicker,
+  iosSegmented,
+  linkBar,
+  listbox,
+  menu,
+  menuBar,
+  multilineButton,
 ]);

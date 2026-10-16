@@ -1,0 +1,225 @@
+{
+ "avabodh.wireframe.ioscontextmenu": [
+  {
+   "params": {},
+   "text": "*Select All,Copy,Paste",
+   "output": {
+    "data": [
+     "-w/2 + 96.5",
+     "-6",
+     "193",
+     "h-12",
+     "4",
+     "4",
+     "0",
+     "-w/2 + 45",
+     "d(1)",
+     "90",
+     "d(3)",
+     "0",
+     "-w/2 +90",
+     "-h/2",
+     "-w/2+90",
+     "h/2",
+     "-w/2 + 45-12",
+     "h/2-12",
+     "d(16)+6",
+     "h/2",
+     "d(16)+12",
+     "h/2-12",
+     "-w/2 + 114",
+     "d(1)",
+     "48",
+     "d(3)",
+     "0",
+     "-w/2 +138",
+     "-h/2",
+     "-w/2+138",
+     "h/2",
+     "-w/2 + 165.5",
+     "d(1)",
+     "55",
+     "d(3)",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -11447725,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 12 13 L 14 15",
+      "style": {
+       "strokewidth": 2,
+       "strokepaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 16 17 L 18 19 L 20 21 Z",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -11447725,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 27 28 L 29 30",
+      "style": {
+       "strokewidth": 2,
+       "strokepaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textfill": {
+        "color": -1,
+        "type": 2
+       }
+      },
+      "location": "7 8 9 10 11",
+      "text": "Select All"
+     },
+     {
+      "style": {
+       "textfill": {
+        "color": -1,
+        "type": 2
+       }
+      },
+      "location": "22 23 24 25 26",
+      "text": "Copy"
+     },
+     {
+      "style": {
+       "textfill": {
+        "color": -1,
+        "type": 2
+       }
+      },
+      "location": "31 32 33 34 35",
+      "text": "Paste"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 193,
+    "minH": 14
+   }
+  },
+  {
+   "params": {},
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2 + 0",
+     "-6",
+     "0",
+     "h-12",
+     "4",
+     "4",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -11447725,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 0,
+    "minH": 14
+   }
+  },
+  {
+   "params": {},
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2 + 41.5",
+     "-6",
+     "83",
+     "h-12",
+     "4",
+     "4",
+     "0",
+     "-w/2 + 41.5",
+     "d(1)",
+     "83",
+     "d(3)",
+     "0",
+     "-w/2 + 41.5-12",
+     "h/2-12",
+     "d(12)+6",
+     "h/2",
+     "d(12)+12",
+     "h/2-12"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -11447725,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 12 13 L 14 15 L 16 17 Z",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -11447725,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textfill": {
+        "color": -1,
+        "type": 2
+       }
+      },
+      "location": "7 8 9 10 11",
+      "text": "Selected\n-Disabled\n*-Both\n\\*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 83,
+    "minH": 14
+   }
+  }
+ ]
+}

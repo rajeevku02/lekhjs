@@ -1,0 +1,289 @@
+{
+ "avabodh.wireframe.iospagecontrol": [
+  {
+   "params": {
+    "number of pages": 5,
+    "current page": 2,
+    "radius": 4
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2+0*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+2*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+4*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+6*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+8*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "E 0 1 2 3 4",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 5 6 7 8 9",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -436207616,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 10 11 12 13 14",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 15 16 17 18 19",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 20 21 22 23 24",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 80,
+    "minH": 8
+   }
+  },
+  {
+   "params": {
+    "number of pages": 5,
+    "current page": 2,
+    "radius": 4
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2+0*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+2*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+4*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+6*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+8*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "E 0 1 2 3 4",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 5 6 7 8 9",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -436207616,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 10 11 12 13 14",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 15 16 17 18 19",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 20 21 22 23 24",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 80,
+    "minH": 8
+   }
+  },
+  {
+   "params": {
+    "number of pages": 5,
+    "current page": 2,
+    "radius": 4
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2+0*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+2*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+4*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+6*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0",
+     "-w/2+8*8+8/2",
+     "0",
+     "8",
+     "8",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "E 0 1 2 3 4",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 5 6 7 8 9",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -436207616,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 10 11 12 13 14",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 15 16 17 18 19",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "E 20 21 22 23 24",
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -3026479,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 80,
+    "minH": 8
+   }
+  }
+ ]
+}

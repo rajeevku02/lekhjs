@@ -1,0 +1,382 @@
+{
+ "avabodh.wireframe.menu": [
+  {
+   "params": {},
+   "text": "Open,CTRL+O\n*Open Recent,>\n---\n[O]Option One\nOption Two\n=\n[x]Toggle Item\n-Disabled Item\nExit,CTRL+Q",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "14.799999999999999",
+     "-h/2+11",
+     "w-6",
+     "22",
+     "0",
+     "w/2-21-7",
+     "-h/2+11",
+     "44",
+     "16",
+     "0",
+     "-w/2",
+     "-h/2+22",
+     "-w/2",
+     "-h/2+44",
+     "w/2",
+     "-h/2+44",
+     "w/2",
+     "-h/2+22",
+     "14.799999999999999",
+     "-h/2+33",
+     "w-6",
+     "22",
+     "0",
+     "w/2-3.5-7",
+     "-h/2+33",
+     "9",
+     "16",
+     "0",
+     "-w/2",
+     "-h/2+44",
+     "w/2",
+     "-h/2+44",
+     "14.799999999999999",
+     "-h/2+55",
+     "w-6",
+     "22",
+     "0",
+     "-w/2+9.899999999999999",
+     "-h/2+55",
+     "5.6000000000000005",
+     "5.6000000000000005",
+     "0",
+     "14.799999999999999",
+     "-h/2+77",
+     "w-6",
+     "22",
+     "0",
+     "-w/2",
+     "-h/2+88",
+     "w/2",
+     "-h/2+88",
+     "14.799999999999999",
+     "-h/2+99",
+     "w-6",
+     "22",
+     "0",
+     "-w/2+9.899999999999999",
+     "-h/2+99",
+     "9.799999999999999",
+     "9.799999999999999",
+     "0",
+     "14.799999999999999",
+     "-h/2+121",
+     "w-6",
+     "22",
+     "0",
+     "14.799999999999999",
+     "-h/2+143",
+     "w-6",
+     "22",
+     "0",
+     "w/2-21-7",
+     "-h/2+143",
+     "44",
+     "16",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 18 19 L 20 21 L 22 23 L 24 25 Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 36 37 L 38 39"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 55 56 L 57 58"
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "8 9 10 11 12",
+      "text": "Open"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 3
+      },
+      "location": "13 14 15 16 17",
+      "text": "CTRL+O"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "26 27 28 29 30",
+      "text": "Open Recent"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 3
+      },
+      "location": "31 32 33 34 35",
+      "text": ">"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "40 41 42 43 44",
+      "text": "Option One"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "50 51 52 53 54",
+      "text": "Option Two"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "59 60 61 62 63",
+      "text": "Toggle Item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "69 70 71 72 73",
+      "text": "Disabled Item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "74 75 76 77 78",
+      "text": "Exit"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 3
+      },
+      "location": "79 80 81 82 83",
+      "text": "CTRL+Q"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_circle",
+      "location": "45 46 47 48 49",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_check",
+      "location": "64 65 66 67 68",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 118.8,
+    "minH": 162
+   }
+  },
+  {
+   "params": {},
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 27.799999999999997,
+    "minH": 8
+   }
+  },
+  {
+   "params": {},
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "-w/2",
+     "-h/2+0",
+     "-w/2",
+     "-h/2+22",
+     "w/2",
+     "-h/2+22",
+     "w/2",
+     "-h/2+0",
+     "14.799999999999999",
+     "-h/2+11",
+     "w-6",
+     "22",
+     "0",
+     "14.799999999999999",
+     "-h/2+33",
+     "w-6",
+     "22",
+     "0",
+     "-w/2",
+     "-h/2+44",
+     "-w/2",
+     "-h/2+66",
+     "w/2",
+     "-h/2+66",
+     "w/2",
+     "-h/2+44",
+     "14.799999999999999",
+     "-h/2+55",
+     "w-6",
+     "22",
+     "0",
+     "14.799999999999999",
+     "-h/2+77",
+     "w-6",
+     "22",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 8 9 L 10 11 L 12 13 L 14 15 Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 26 27 L 28 29 L 30 31 L 32 33 Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "16 17 18 19 20",
+      "text": "Selected"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "21 22 23 24 25",
+      "text": "Disabled"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "34 35 36 37 38",
+      "text": "Both"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "39 40 41 42 43",
+      "text": "*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 83.8,
+    "minH": 96
+   }
+  }
+ ]
+}

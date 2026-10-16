@@ -1,9 +1,9 @@
 id: DR-GEN-09
-title: 'Leaked Lua globals of button, calendar and datagrid are local in the TS ports'
+title: 'Leaked Lua globals of button, calendar, datagrid and ios_picker are local in the TS ports'
 area: GEN
 kind: bug-fix
-cpp: 'button, calendar and datagrid assigned globals (style, halfIconSize, halfTw, head, hprev, selDraw) before every use, so no stale value is known to show'
-ts: "generators/ wireframe modules use locals only (TS strict mode): button (G1), calendar and datagrid (G2; datagrid's four helper functions, which the script also defined as globals, are local closures); no visible change is expected"
+cpp: 'button, calendar and datagrid assigned globals (style, halfIconSize, halfTw, head, hprev, selDraw) before every use, and ios_picker redefined its global function generateItem on every call, so no stale value is known to show'
+ts: "generators/ wireframe modules use locals only (TS strict mode): button (G1), calendar and datagrid (G2; datagrid's four helper functions, which the script also defined as globals, are local closures), ios_picker (G3; generateItem is inlined); no visible change is expected"
 user_visible: false
 fixture: parity/fixtures/DR-GEN-09/leaked-globals.lekh
 rule:

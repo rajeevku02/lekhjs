@@ -1,0 +1,594 @@
+{
+ "avabodh.wireframe.iosmenu": [
+  {
+   "params": {
+    "min row height": 40,
+    "corner radius": 1,
+    "border": true
+   },
+   "text": "A text menu without icon\n[+]Add an Item[>]\n[-]Delete an item\n*Selected item,OK\n-Disabled Item[=]\n[x]Checkmark\n[O]Bullet item\nOn Button[on]\nOff Button[off]\n\n   Another item with spaces",
+   "output": {
+    "data": [
+     "0",
+     "0",
+     "w",
+     "h",
+     "1",
+     "d(4)",
+     "0",
+     "17.6",
+     "-h/2+20",
+     "w-6",
+     "40",
+     "0",
+     "-w/2",
+     "-h/2+40",
+     "w/2",
+     "-h/2+40",
+     "17.6",
+     "-h/2+60",
+     "w-6",
+     "40",
+     "0",
+     "-w/2+11.3",
+     "-h/2+60",
+     "12.6",
+     "12.6",
+     "0",
+     "w/2-9.899999999999999",
+     "-h/2+60",
+     "9.799999999999999",
+     "9.799999999999999",
+     "0",
+     "-w/2",
+     "-h/2+80",
+     "w/2",
+     "-h/2+80",
+     "17.6",
+     "-h/2+100",
+     "w-6",
+     "40",
+     "0",
+     "-w/2+11.3",
+     "-h/2+100",
+     "12.6",
+     "12.6",
+     "0",
+     "-w/2",
+     "-h/2+120",
+     "w/2",
+     "-h/2+120",
+     "-w/2",
+     "-h/2+120",
+     "-w/2",
+     "-h/2+160",
+     "w/2",
+     "-h/2+160",
+     "w/2",
+     "-h/2+120",
+     "17.6",
+     "-h/2+140",
+     "w-6",
+     "40",
+     "0",
+     "w/2-7-7",
+     "-h/2+140",
+     "16",
+     "16",
+     "0",
+     "-w/2",
+     "-h/2+160",
+     "w/2",
+     "-h/2+160",
+     "17.6",
+     "-h/2+180",
+     "w-6",
+     "40",
+     "0",
+     "w/2-9.899999999999999",
+     "-h/2+180",
+     "9.799999999999999",
+     "9.799999999999999",
+     "0",
+     "-w/2",
+     "-h/2+200",
+     "w/2",
+     "-h/2+200",
+     "17.6",
+     "-h/2+220",
+     "w-6",
+     "40",
+     "0",
+     "-w/2+11.3",
+     "-h/2+220",
+     "12.6",
+     "12.6",
+     "0",
+     "-w/2",
+     "-h/2+240",
+     "w/2",
+     "-h/2+240",
+     "17.6",
+     "-h/2+260",
+     "w-6",
+     "40",
+     "0",
+     "-w/2+11.3",
+     "-h/2+260",
+     "5.6000000000000005",
+     "5.6000000000000005",
+     "0",
+     "-w/2",
+     "-h/2+280",
+     "w/2",
+     "-h/2+280",
+     "17.6",
+     "-h/2+300",
+     "w-6",
+     "40",
+     "0",
+     "w/2-15.5",
+     "-h/2+300",
+     "21",
+     "42",
+     "0",
+     "-w/2",
+     "-h/2+320",
+     "w/2",
+     "-h/2+320",
+     "17.6",
+     "-h/2+340",
+     "w-6",
+     "40",
+     "0",
+     "w/2-15.5",
+     "-h/2+340",
+     "21",
+     "42",
+     "0",
+     "-w/2",
+     "-h/2+360",
+     "w/2",
+     "-h/2+360",
+     "17.6",
+     "-h/2+380",
+     "w-6",
+     "40",
+     "0",
+     "-w/2",
+     "-h/2+400",
+     "w/2",
+     "-h/2+400",
+     "17.6",
+     "-h/2+420",
+     "w-6",
+     "40",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 12 13 L 14 15"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 31 32 L 33 34"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 45 46 L 47 48"
+     },
+     {
+      "path": "M 49 50 L 51 52 L 53 54 L 55 56 Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 67 68 L 69 70"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 81 82 L 83 84"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 95 96 L 97 98"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 109 110 L 111 112"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 123 124 L 125 126"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 137 138 L 139 140"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 146 147 L 148 149"
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "7 8 9 10 11",
+      "text": "A text menu without icon"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "16 17 18 19 20",
+      "text": "Add an Item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "35 36 37 38 39",
+      "text": "Delete an item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "57 58 59 60 61",
+      "text": "Selected item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 3
+      },
+      "location": "62 63 64 65 66",
+      "text": "OK"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "71 72 73 74 75",
+      "text": "Disabled Item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "85 86 87 88 89",
+      "text": "Checkmark"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "99 100 101 102 103",
+      "text": "Bullet item"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "113 114 115 116 117",
+      "text": "On Button"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "127 128 129 130 131",
+      "text": "Off Button"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "141 142 143 144 145",
+      "text": ""
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "150 151 152 153 154",
+      "text": "   Another item with spaces"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_plus-circle",
+      "location": "21 22 23 24 25",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_chevron-right",
+      "location": "26 27 28 29 30",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_minus-circle",
+      "location": "40 41 42 43 44",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "name": "avabodh.wireframe.icon_bars",
+      "location": "76 77 78 79 80",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_check",
+      "location": "90 91 92 93 94",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_circle",
+      "location": "104 105 106 107 108",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_toggle-on",
+      "location": "118 119 120 121 122",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_toggle-off",
+      "location": "132 133 134 135 136",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 211.6,
+    "minH": 448
+   }
+  },
+  {
+   "params": {
+    "min row height": 40,
+    "corner radius": 1,
+    "border": true
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "0",
+     "0",
+     "w",
+     "h",
+     "1",
+     "d(4)",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 22.6,
+    "minH": 8
+   }
+  },
+  {
+   "params": {
+    "min row height": 40,
+    "corner radius": 1,
+    "border": true
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "0",
+     "0",
+     "w",
+     "h",
+     "1",
+     "d(4)",
+     "0",
+     "-w/2",
+     "-h/2+0",
+     "-w/2",
+     "-h/2+40",
+     "w/2",
+     "-h/2+40",
+     "w/2",
+     "-h/2+0",
+     "17.6",
+     "-h/2+20",
+     "w-6",
+     "40",
+     "0",
+     "-w/2",
+     "-h/2+40",
+     "w/2",
+     "-h/2+40",
+     "17.6",
+     "-h/2+60",
+     "w-6",
+     "40",
+     "0",
+     "-w/2",
+     "-h/2+80",
+     "w/2",
+     "-h/2+80",
+     "-w/2",
+     "-h/2+80",
+     "-w/2",
+     "-h/2+120",
+     "w/2",
+     "-h/2+120",
+     "w/2",
+     "-h/2+80",
+     "17.6",
+     "-h/2+100",
+     "w-6",
+     "40",
+     "0",
+     "-w/2",
+     "-h/2+120",
+     "w/2",
+     "-h/2+120",
+     "17.6",
+     "-h/2+140",
+     "w-6",
+     "40",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "R 0 1 2 3 4 5 6",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "path": "M 7 8 L 9 10 L 11 12 L 13 14 Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 20 21 L 22 23"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 29 30 L 31 32"
+     },
+     {
+      "path": "M 33 34 L 35 36 L 37 38 L 39 40 Z",
+      "style": {
+       "strokepaint": {
+        "color": 0,
+        "type": 2
+       },
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      }
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "path": "M 46 47 L 48 49"
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "15 16 17 18 19",
+      "text": "Selected"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "24 25 26 27 28",
+      "text": "Disabled"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "41 42 43 44 45",
+      "text": "Both"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "50 51 52 53 54",
+      "text": "*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 78.6,
+    "minH": 168
+   }
+  }
+ ]
+}

@@ -3,8 +3,7 @@
 // `@napi-rs/canvas` text measurement with the same catalogue the oracle has (lekhboard v4 stencils,
 // then `lekhjs/stencils/{core,builtin}`), `BoardSession.load` and `serialize({ stamp })`.
 //
-// Until `createNodeRuntime` exists (task B1) the runtime is `createRuntime` with the canvas
-// measurer of `lekhjs/testing`; once headless exports `createNodeRuntime`, that is used instead.
+// The runtime is kashi's: `createNodeRuntime` from `lekhjs/headless` over the canvas factory.
 // Ids are a counter restarted per board and the clock is fixed at 2026-01-15T00:00:00Z
 // (verification 02 §A.7 item 10). The test-only `lineSpacingCompat` and `fontFallbackCompat`
 // switches are on unless `compat: false` (G1 runs with both on, spec 11 §4; spec 06 §3.6).
@@ -49,26 +48,12 @@ async function init() {
     workerData.compat === false ? {} : { lineSpacingCompat: true, fontFallbackCompat: true },
   );
   const canvas = { createCanvas: (/** @type {number} */ w, /** @type {number} */ h) => createCanvas(w, h) };
-  if (typeof headless.createNodeRuntime === 'function') {
-    runtime = headless.createNodeRuntime({ catalog, clock: CLOCK, ids, testing: switches });
-  } else {
-    const measurer = testing.createTestRuntime({ canvas }).measurer;
-    runtime = headless.createRuntime({
-      measurer,
-      fonts: new testing.FakeFontLoader(),
-      catalog,
-      clock: CLOCK,
-      ids,
-      config: {},
-      host: 'backend',
-      testing: switches,
-    });
-  }
+  runtime = headless.createNodeRuntime({ canvas, catalog, clock: CLOCK, ids, testing: switches });
   const info = JSON.parse(readFileSync(path.join(PKG, 'dist', 'build-info.json'), 'utf8'));
   return {
     buildInfo: info,
     files: files.length,
-    nodeRuntime: typeof headless.createNodeRuntime === 'function',
+    nodeRuntime: true,
     compat: { lineSpacingCompat: switches.lineSpacingCompat, fontFallbackCompat: switches.fontFallbackCompat },
   };
 }

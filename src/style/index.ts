@@ -36,3 +36,4 @@ export {
 } from './style';
 export { Length, POINTS_PER_INCH, Scaling, Unit } from './units';
 export { FontSpec, effectiveFontPx } from './font-spec';
+export { BACKGROUND_COLORS, LEKH_COLORS } from './palette';

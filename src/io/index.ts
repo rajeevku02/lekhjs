@@ -16,9 +16,9 @@ export { FormatStamp, documentUsesTitle, type StampContent, type StampPolicy } f
 export { parseJsonText, parseLenientJson, type LenientParse } from './json/lenient-json';
 export { writeJsonText, type JsonTextStats } from './json/json-writer';
 export { byteOrderKeys, compareUtf8 } from './json/json-fields';
-export { JsonDocumentReader, type ReadResult } from './json/document-reader';
+export { JsonDocumentReader, parseBackground, type PageRead, type ReadResult } from './json/document-reader';
 export { JsonDocumentWriter, type WriteOptions, type WriteResult } from './json/document-writer';
-export { ObjectReader } from './json/object-reader';
+export { ObjectReader, parseConnectionParams, parsePoint, parsePoints } from './json/object-reader';
 export {
   TemplateDataCodec,
   parseTemplateParams,

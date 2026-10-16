@@ -59,6 +59,14 @@ export interface ReadResult {
   readonly warnings: readonly LoadWarning[];
 }
 
+/** What `readPage` produced. */
+export interface PageRead {
+  readonly page: Page;
+  /** Connectors dropped because an end is not on the page. */
+  readonly droppedConnectors: number;
+  readonly convertedLua: boolean;
+}
+
 const RECOVERED = 'Recovered';
 
 /** C++ `parseBackground`. */
@@ -149,6 +157,26 @@ export class JsonDocumentReader {
       recoveredPages: recovered,
       warnings: ctx.warnings(),
     };
+  }
+
+  /**
+   * One page entry on its own (a realtime `addpages` frame, `PageAddDeleteAction`): the page is
+   * parsed with id `id` against `doc`'s templates, and its connectors are fixed up within the page.
+   * A connector whose end is not on the page is dropped and counted. Throws `LoadError`.
+   */
+  readPage(node: JsonValue, id: string, doc: LekhDocument): PageRead {
+    const ctx = new LoadContext(this.env, doc);
+    const objects = new ObjectReader(ctx);
+    const page = new Page(id, '', doc.storeOptions);
+    this.parsePage(node, page, objects);
+    let droppedConnectors = 0;
+    for (const obj of [...page.objectStore.objects]) {
+      if (obj instanceof ConnectionObject && !objects.fixConnector(obj)) {
+        page.objectStore.remove(obj);
+        droppedConnectors++;
+      }
+    }
+    return { page, droppedConnectors, convertedLua: ctx.stats.converted > 0 };
   }
 
   /** C++ `parseMetaInfo`: `info` is required, and so is a readable version. */

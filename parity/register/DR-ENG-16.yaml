@@ -5,10 +5,9 @@ kind: bug-fix
 cpp: 'changeattr/addobjects applied entry by entry; a bad entry left the frame half applied (B4)'
 ts: 'sync/: phase 1 validates the whole frame into a plan, phase 2 applies it; any failure applies nothing'
 user_visible: true
-# The fix lands with its module: sync/ (task E8) owns the applier and its fixture (AC-ENG-13). The fixture is added there.
-fixture: null
+fixture: test/sync/register.test.ts
 rule:
-  json: []
+  json: ['frame-level: version and document after a realtime frame']
   image: null
   perf: null
 evidence: 'spec 03 §11.2, §15 B4'

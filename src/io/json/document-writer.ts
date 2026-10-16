@@ -137,7 +137,7 @@ export class JsonDocumentWriter {
   }
 
   /** C++ `serializeBackground`. */
-  private background(page: Page): JsonObject {
+  background(page: Page): JsonObject {
     const b = page.background;
     if (b.imageData !== '' && b.type === BackgroundType.Image) return { data: b.imageData };
     return { color: b.color.toInt() };

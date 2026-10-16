@@ -79,7 +79,7 @@ function parseBezier(node: JsonValue | undefined): BezierCurve | null {
 }
 
 /** C++ `parseConnectionParams`: one map (the 2.8.1 beta form) or a list of maps; numbers only. */
-function parseConnectionParams(params: JsonValue): Params | null {
+export function parseConnectionParams(params: JsonValue): Params | null {
   const map = (o: JsonValue | undefined): ParamMap => {
     const cp: ParamMap = {};
     for (const [k, v] of membersInByteOrder(o)) if (typeof v === 'number') cp[k] = v;

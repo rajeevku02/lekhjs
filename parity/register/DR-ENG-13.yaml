@@ -1,0 +1,17 @@
+id: DR-ENG-13
+title: 'No attribute update is sent for an object that is not on its page'
+area: ENG
+kind: bug-fix
+cpp: 'An attribute update (e.g. the undo of a change to an object a peer deleted) was sent for an absent id; the server $set it, creating a typeless stub object (the ~1,763 found by the census)'
+ts: 'sync/SyncSession.raise: keys of changeattr/changestyle/changearrow/changetemplateparams/changeconnection* frames that address an object not on its page are dropped; a frame left with none is not sent (E8)'
+user_visible: false
+fixture: test/sync/register.test.ts
+rule:
+  json: ['stored pages.*.objects.* without a type']
+  image: null
+  perf: null
+evidence: 'spec 03 §11.3, §16; AC-ENG-19'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

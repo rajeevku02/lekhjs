@@ -1,12 +1,13 @@
 // AC-ARC-08: no function exported from `lekhjs/headless` and no `BoardSession` method is `async`
-// or returns a thenable, over the fixture set. (`project`, `compile`, `generate`, `lint` and
-// `paintPage` join the exports, and this walk, with task B1.)
+// or returns a thenable, over the fixture set: load, serialize, layoutAll, visualBounds,
+// addTemplates, missingResources, project, compile, generate, lint, paintPage and the runtimes.
 import { createCanvas } from '@napi-rs/canvas';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Canvas2DLike } from '../../src/base';
 import * as headless from '../../src/headless';
+import { Canvas2DDrawingPlatform, compile, generate, lint, paintPage, project } from '../../src/headless';
 import { BoardSession } from '../../src/session';
 import { FakeImagePort, FakeScheduler, fakeImage } from '../../src/testing';
 import { CORE_FIXTURES, lekhFiles } from '../io/helpers';
@@ -63,6 +64,12 @@ describe('AC-ARC-08: the headless API is synchronous', () => {
       results.push(v);
       return v;
     };
+    // Semantic answers may be refusals (`ok: false`) for some boards; they are checked for thenables only.
+    const answers: unknown[] = [];
+    const ans = (v: unknown) => {
+      answers.push(v);
+      return v;
+    };
     /** Calls `o[name](...args)` and records the result (void results included). */
     const call = (o: object, name: string, ...args: unknown[]): unknown =>
       rec(Reflect.apply(Reflect.get(o, name) as Fn, o, args));
@@ -75,6 +82,22 @@ describe('AC-ARC-08: the headless API is synchronous', () => {
       rec(s.serialize({ stamp: 'cloud' }));
       call(s, 'addTemplates', []);
       rec(s.missingResources());
+      const pageId = s.document.pages[0]?.id ?? '';
+      ans(project(s, {}));
+      ans(project(s, JSON.stringify({ include_style: false, page: pageId })));
+      ans(lint(s, { page: pageId }));
+      ans(
+        compile(s, {
+          version: 1,
+          page: pageId,
+          ops: [{ op: 'add_node', shape: 'avabodh.basic.rectangle', cx: 50, cy: 50 }],
+        }),
+      );
+      const pctx = createCanvas(64, 64).getContext('2d') as unknown as Canvas2DLike;
+      ans(paintPage(s, { page: pageId }, new Canvas2DDrawingPlatform(pctx)));
+      const g = new BoardSession(runtime, { images: new FakeImagePort(), scheduler: new FakeScheduler() });
+      ans(generate(g, { name: 'g', nodes: [{ ref: 'a', shape: 'avabodh.basic.rectangle', texts: ['A'] }] }));
+      g.dispose();
       rec(s.view);
       call(s, 'dispatch', { type: 'imageLoaded', url: 'u', image: fakeImage() });
       call(s, 'dispatch', { type: 'command', origin: 'ui', command: { kind: 'view', canvasW: 64, canvasH: 64 } });
@@ -88,6 +111,15 @@ describe('AC-ARC-08: the headless API is synchronous', () => {
     }
     rec(BoardSession.empty(runtime, { images: new FakeImagePort(), scheduler: new FakeScheduler() }));
     rec(headless.createRuntime({ measurer: runtime.measurer, fonts: runtime.fontLoader, catalog: runtime.catalog }));
+    rec(
+      headless.createNodeRuntime({
+        canvas: { createCanvas: (w, h) => createCanvas(w, h) },
+        fontFiles: new Map(),
+        catalog: runtime.catalog,
+      }),
+    );
+    expect(answers.length).toBeGreaterThan(files.length * 5);
+    expect(answers.filter(isThenable)).toEqual([]);
     expect(results.filter(isThenable)).toEqual([]);
     expect(results.filter((r) => typeof r === 'object' && r !== null && 'ok' in r && r.ok === false)).toEqual([]);
   });

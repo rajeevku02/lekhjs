@@ -1,15 +1,19 @@
-// AC-ENG-14 (spec 03 §12.4): 32 headless-session operations on 8 boards, interleaved with seeded
-// random awaits between their synchronous calls, give exactly the results of the same operations
-// run one after another. All sessions share one runtime (as in a kashi pool worker); see `withOwnIds` for ids.
+// AC-ENG-14 (spec 03 §12.4): 64 headless-session operations on 8 boards (at least the 32 the
+// criterion asks for), interleaved with seeded random awaits between their synchronous calls, give
+// exactly the results of the same operations run one after another. All sessions share one runtime
+// (as in a kashi pool worker); see `withOwnIds` for ids.
 //
-// The operations available today are load, layoutAll, serialize (both stamps), visualBounds and
-// paint (a PNG through @napi-rs/canvas). `project` / `compile` / `lint` / `paintPage` join this
-// list when `semantic/` and `export/raster` exist (task B1).
+// The operations: load, layoutAll, serialize (both stamps), visualBounds, paint (a PNG through
+// @napi-rs/canvas), and the MCP's semantic calls `project`, `compile` and `lint` and the raster
+// export `paintPage` (task B1).
 import { createCanvas } from '@napi-rs/canvas';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Canvas2DLike } from '../../src/base';
+import { paintPage } from '../../src/export/raster';
+import { Canvas2DDrawingPlatform } from '../../src/render';
+import { compile, lint, project } from '../../src/semantic';
 import { BoardSession, type Runtime } from '../../src/session';
 import { FakeImagePort, FakeScheduler, sequentialIds } from '../../src/testing';
 import { CORE_FIXTURES } from '../io/helpers';
@@ -25,7 +29,16 @@ const BOARDS = Object.freeze([
   'format/04-group.lekh',
   'format/05-multi-page.lekh',
 ]);
-const KINDS = Object.freeze(['offline', 'cloud', 'bounds', 'paint'] as const);
+const KINDS = Object.freeze([
+  'offline',
+  'cloud',
+  'bounds',
+  'paint',
+  'project',
+  'compile',
+  'lint',
+  'paintPage',
+] as const);
 type Kind = (typeof KINDS)[number];
 
 /** mulberry32: a seeded PRNG, so a failing interleaving can be replayed. */
@@ -93,6 +106,35 @@ async function operation(runtime: Runtime, text: string, kind: Kind, pause: Paus
         session.paint('drawing', ctx);
         return Buffer.from(canvas.toBuffer('image/png')).toString('base64');
       }
+      case 'project':
+        return JSON.stringify(project(session, { include_style: true }));
+      case 'compile': {
+        const page = session.document.pages[0]?.id ?? '';
+        await pause();
+        return JSON.stringify(
+          compile(session, {
+            version: 1,
+            page,
+            ops: [{ op: 'add_node', ref: 'n', shape: 'avabodh.basic.rectangle', cx: 40, cy: 40, texts: ['x'] }],
+          }),
+        );
+      }
+      case 'lint': {
+        const out: string[] = [];
+        for (const p of session.document.pages) {
+          out.push(JSON.stringify(lint(session, { page: p.id })));
+          await pause();
+        }
+        return out.join('\n');
+      }
+      case 'paintPage': {
+        const canvas = createCanvas(320, 240);
+        const ctx = canvas.getContext('2d') as unknown as Canvas2DLike;
+        ctx.scale(0.5, 0.5);
+        const answer = paintPage(session, {}, new Canvas2DDrawingPlatform(ctx));
+        await pause();
+        return JSON.stringify(answer) + Buffer.from(canvas.toBuffer('image/png')).toString('base64');
+      }
     }
   } finally {
     session.dispose();
@@ -100,10 +142,10 @@ async function operation(runtime: Runtime, text: string, kind: Kind, pause: Paus
 }
 
 describe('AC-ENG-14: many sessions in one process', () => {
-  it('32 interleaved operations with random awaits equal the serial run', async () => {
+  it('64 interleaved operations with random awaits equal the serial run', async () => {
     const texts = BOARDS.map((b) => readFileSync(path.join(CORE_FIXTURES, b), 'utf8'));
     const ops = BOARDS.flatMap((_, bi) => KINDS.map((kind) => ({ bi, kind })));
-    expect(ops).toHaveLength(32);
+    expect(ops).toHaveLength(64);
 
     const serialRuntime = testRuntime();
     const serial: string[] = [];
@@ -112,6 +154,8 @@ describe('AC-ENG-14: many sessions in one process', () => {
     expect(serial.filter((s) => s.startsWith('load failed'))).toEqual([]);
     // The paints are real pictures of different boards, not one blank canvas.
     expect(new Set(serial.filter((_, i) => ops[i]?.kind === 'paint')).size).toBeGreaterThanOrEqual(6);
+    expect(new Set(serial.filter((_, i) => ops[i]?.kind === 'paintPage')).size).toBeGreaterThanOrEqual(6);
+    expect(new Set(serial.filter((_, i) => ops[i]?.kind === 'project')).size).toBe(8);
 
     for (const seed of [1, 2, 3]) {
       const rand = rng(seed);

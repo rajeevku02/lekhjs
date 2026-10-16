@@ -1,0 +1,24 @@
+id: DR-TXT-04
+title: 'fontmodifier (the face suffix) is honoured on every platform, not only iOS'
+area: TXT
+kind: intended-change
+cpp: 'Only iOS read fontmodifier (processFont); the web, Android and the backend measured and drew the regular face, so an iOS board with Black or DemiBold text looked lighter (and auto-sized narrower) elsewhere'
+ts: 'text/ font-modifier modifierToCss maps the suffix to CSS weight, style and stretch for every host (spec 06 §8.3); auto-sized text with such a modifier is measured with that face, so its stored width and height follow (E2)'
+user_visible: true
+fixture: parity/fixtures/DR-TXT-04/font-modifier.lekh
+rule:
+  json:
+    - path: '/pages/*/objects/*'
+      op: normalise
+      normaliser: font-modifier-size
+    - path: '/pages/*/objects/*/objects/*/object'
+      op: normalise
+      normaliser: font-modifier-size
+  image:
+    attribute: { object_flag: font-modifier }
+  perf: null
+evidence: 'spec 06 §8.3, §13; AC-TXT-16'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

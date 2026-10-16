@@ -1,0 +1,18 @@
+id: DR-TXT-07
+title: 'An unknown or platform-only font family draws in Noto Sans'
+area: TXT
+kind: intended-change
+cpp: "A family the platform lacked fell back to the platform sans-serif (the browser default, Roboto, the container's sans-serif)"
+ts: 'text/ FontNameResolver rule 6: the bundled default Noto Sans, keeping weight and italic (E2); the gate runs neutralise it with the fontFallbackCompat test switch'
+user_visible: true
+fixture: parity/fixtures/DR-TXT-07/unknown-family.lekh
+rule:
+  json: ['params.width/height of auto-sized text in an unknown family (switches-off runs only)']
+  image:
+    compat_switch: fontFallbackCompat
+  perf: null
+evidence: 'spec 06 §8.2 rule 6, §3.6, §13; AC-TXT-13'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

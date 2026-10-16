@@ -1,0 +1,18 @@
+id: DR-ENG-24
+title: 'A rounded legacy polygon is drawn as a rounded rectangle on the web and the backend'
+area: ENG
+kind: bug-fix
+cpp: "JsDrawingPlatform and kashi's BackendDrawingPlatform left addRoundedRect empty, so a rounded legacy polygon (the only caller) drew nothing on the web and in board_render; iOS and the SVG exporter drew it"
+ts: 'render/ Canvas2DDrawingPlatform draws addRoundedRect as iOS does; the legacy polygon itself is converted on load to a rounded templated rectangle (DR-ENG-12), so the shape shows everywhere (E3)'
+user_visible: true
+fixture: parity/fixtures/DR-ENG-24/rounded-polygon.lekh
+rule:
+  json: ['the JSON difference is the legacy conversion, explained by DR-ENG-12']
+  image:
+    attribute: { object_flag: legacy-type }
+  perf: null
+evidence: "spec 03 §10.4; render unit test 'a rounded rect has corners of min(w, h)/5 and ignores the angle'"
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

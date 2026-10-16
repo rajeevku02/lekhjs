@@ -1,0 +1,18 @@
+id: DR-TXT-01
+title: 'Line pitch is 1.18 x the effective font size everywhere'
+area: TXT
+kind: intended-change
+cpp: 'The web, the backend and SVG export packed lines at 1.00 x the font size (textBaseline top); iOS about 1.193 x, Android about 1.17 x plus first/last-line padding'
+ts: 'text/ TextLayout: LP = 1.18 x effectiveFontPx with the font box centred in each line, on every platform (E2); the gate runs neutralise it with the lineSpacingCompat test switch'
+user_visible: true
+fixture: parity/fixtures/DR-TXT-01/line-pitch.lekh
+rule:
+  json: ['params.height of auto-sized multi-line text (switches-off runs only; the gate runs use lineSpacingCompat)']
+  image:
+    compat_switch: lineSpacingCompat
+  perf: null
+evidence: 'spec 06 §3.3, §3.4, §3.6, §13; AC-TXT-01, AC-TXT-02'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

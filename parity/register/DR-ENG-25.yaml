@@ -1,0 +1,17 @@
+id: DR-ENG-25
+title: 'A cubic segment of a clip path is drawn as a cubic'
+area: ENG
+kind: bug-fix
+cpp: 'JsDrawingPlatform::clip passed a cubic segment to quadraticCurveTo (dropping one control point)'
+ts: 'render/ Canvas2DDrawingPlatform.clip draws it with bezierCurveTo; no engine object issues a clip with a cubic today, so nothing visible changes (E3)'
+user_visible: false
+fixture: test/render/canvas2d-drawing-platform.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: "render unit test 'clip: move, line, quad, cubic (as a cubic), close; arc skipped; empty clips nothing'"
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

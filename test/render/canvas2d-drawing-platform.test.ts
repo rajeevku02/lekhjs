@@ -237,6 +237,7 @@ describe('Canvas2DDrawingPlatform gradients', () => {
 });
 
 describe('Canvas2DDrawingPlatform clip, images, text, state', () => {
+  // DR-ENG-25: the web drew a clip path's cubic segment with quadraticCurveTo.
   it('clip: move, line, quad, cubic (as a cubic), close; arc skipped; empty clips nothing', () => {
     const { ctx, log } = recordingCanvas();
     const dp = new Canvas2DDrawingPlatform(ctx);

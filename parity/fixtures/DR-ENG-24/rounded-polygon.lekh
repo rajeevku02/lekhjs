@@ -1,0 +1,65 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Legacy",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "avabodh.basic.polygon",
+     "order": 1,
+     "closed": true,
+     "rounded": true,
+     "vertices": [
+      {
+       "x": 100,
+       "y": 100
+      },
+      {
+       "x": 260,
+       "y": 100
+      },
+      {
+       "x": 260,
+       "y": 200
+      },
+      {
+       "x": 100,
+       "y": 200
+      }
+     ],
+     "text": "Box",
+     "arrow": {
+      "atstart": false,
+      "atend": false
+     }
+    }
+   }
+  }
+ }
+}

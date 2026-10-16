@@ -1,0 +1,18 @@
+id: DR-GEN-04
+title: 'ios_picker no longer keeps a stale selected row'
+area: GEN
+kind: bug-fix
+cpp: 'The leaked global selectedRow (ios_picker.lua:49) survived across generations, so a picker whose text no longer marks a row kept highlighting the old one'
+ts: 'generators/ wireframe ios_picker (the TS port, task G3) computes the selected row per generation; until G3 lands the template is a placeholder in lekhjs (parity/gaps.json)'
+user_visible: true
+fixture: parity/fixtures/DR-GEN-04/ios-picker.lekh
+rule:
+  json: []
+  image:
+    attribute: { object_flag: wireframe-generator }
+  perf: null
+evidence: 'spec 04 §5.3 script bugs, §14'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

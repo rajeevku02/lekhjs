@@ -1,0 +1,98 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "",
+     "order": 1,
+     "params": {
+      "cx": 150,
+      "cy": 100,
+      "width": 10,
+      "height": 10,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.text",
+      "data": [],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "style": {
+       "fontsize": 24,
+       "fontfamily": "Sample Family"
+      },
+      "texts": [
+       {
+        "location": "default",
+        "text": "Sample label"
+       }
+      ]
+     }
+    },
+    "n2": {
+     "type": "templated",
+     "name": "",
+     "order": 2,
+     "params": {
+      "cx": 150,
+      "cy": 200,
+      "width": 10,
+      "height": 10,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.text",
+      "data": [],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "style": {
+       "fontsize": 24,
+       "fontfamily": "Avenir Next"
+      },
+      "texts": [
+       {
+        "location": "default",
+        "text": "Sample label"
+       }
+      ]
+     }
+    }
+   }
+  }
+ }
+}

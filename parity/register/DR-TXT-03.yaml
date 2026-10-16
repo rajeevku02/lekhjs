@@ -1,0 +1,18 @@
+id: DR-TXT-03
+title: 'CJK, hyphenated words, URLs and over-long words wrap on the web and the backend as they do natively'
+area: TXT
+kind: intended-change
+cpp: 'TextUtil::getWidth broke lines only at isspace, so on the web and the backend CJK and Thai text, URLs and long words never wrapped and overflowed their box; TextKit and StaticLayout broke them'
+ts: 'text/ WordWrapper rules 1-4 of spec 06 §3.2: break after white space and after a UAX 14 HY, BA or SY character (hyphen, slash) when a non-space follows; between graphemes of CJK/Thai with kinsoku; an over-long word at a grapheme boundary (E2). The native wrap dump (H-TXT-2, AC-TXT-31) may amend the rules; amendments and iOS/Android disagreements are listed here'
+user_visible: true
+fixture: parity/fixtures/DR-TXT-03/wrap-breaks.lekh
+rule:
+  json: ['params.height of auto-height wrapped text containing -, / or CJK']
+  image:
+    attribute: { object_flag: text-wrap }
+  perf: null
+evidence: 'spec 06 §3.2, §13; decision OQ-34; AC-TXT-05, AC-TXT-06, AC-TXT-28, AC-TXT-31'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

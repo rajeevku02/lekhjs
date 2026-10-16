@@ -1,0 +1,156 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Legacy",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "avabodh.basic.circle",
+     "order": 1,
+     "center": {
+      "x": 100,
+      "y": 80
+     },
+     "radius": 30,
+     "text": "Shape",
+     "style": {
+      "strokewidth": 3,
+      "fillpaint": {
+       "type": 2,
+       "color": -3355444
+      }
+     }
+    },
+    "n2": {
+     "type": "avabodh.basic.ellipse",
+     "order": 2,
+     "center": {
+      "x": 260,
+      "y": 90
+     },
+     "width": 120,
+     "height": 60,
+     "rotation": 0.3,
+     "text": "",
+     "style": {
+      "strokepaint": {
+       "type": 2,
+       "color": -13408615
+      }
+     }
+    },
+    "n3": {
+     "type": "avabodh.basic.polygon",
+     "order": 3,
+     "closed": true,
+     "rounded": false,
+     "vertices": [
+      {
+       "x": 300,
+       "y": 200
+      },
+      {
+       "x": 420,
+       "y": 200
+      },
+      {
+       "x": 420,
+       "y": 280
+      },
+      {
+       "x": 300,
+       "y": 280
+      }
+     ],
+     "text": "Box",
+     "arrow": {
+      "atstart": false,
+      "atend": false
+     }
+    },
+    "n4": {
+     "type": "avabodh.basic.curve",
+     "order": 4,
+     "curves": [
+      [
+       {
+        "x": 250,
+        "y": 450
+       },
+       {
+        "x": 280,
+        "y": 420
+       },
+       {
+        "x": 330,
+        "y": 500
+       },
+       {
+        "x": 360,
+        "y": 460
+       }
+      ]
+     ],
+     "text": "",
+     "arrow": {
+      "atend": true,
+      "solidatend": false
+     }
+    },
+    "n5": {
+     "type": "avabodh.basic.text",
+     "order": 5,
+     "center": {
+      "x": 400,
+      "y": 520
+     },
+     "rotation": 0.5,
+     "text": "Legacy note",
+     "style": {
+      "fontsize": 18
+     }
+    },
+    "n6": {
+     "type": "avabodh.basic.image",
+     "order": 6,
+     "center": {
+      "x": 520,
+      "y": 120
+     },
+     "width": 64,
+     "height": 48,
+     "rotation": 0.25,
+     "format": "png",
+     "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+     "text": ""
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "",
+     "order": 1,
+     "params": {
+      "cx": 150,
+      "cy": 100,
+      "width": 10,
+      "height": 10,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.text",
+      "data": [],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "style": {
+       "fontsize": 20
+      },
+      "texts": [
+       {
+        "location": "default",
+        "text": "One line\nTwo lines\nThree lines"
+       }
+      ]
+     }
+    },
+    "n2": {
+     "type": "templated",
+     "name": "Rectangle",
+     "order": 2,
+     "params": {
+      "cx": 150,
+      "cy": 300,
+      "width": 160,
+      "height": 120,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.rectangle",
+      "data": [
+       "-w/2",
+       "-h/2",
+       "-w/2",
+       "h/2",
+       "w/2",
+       "h/2",
+       "w/2",
+       "-h/2"
+      ],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z"
+       }
+      ],
+      "flags": 31,
+      "polygon": true,
+      "texts": [
+       {
+        "location": "default",
+        "text": "First line\nSecond line"
+       }
+      ],
+      "style": {
+       "fontsize": 16,
+       "fontmultiplier": 1.5
+      }
+     }
+    }
+   }
+  }
+ }
+}

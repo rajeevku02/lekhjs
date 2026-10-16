@@ -1,0 +1,24 @@
+id: DR-GEN-14
+title: 'A Lua generator under an unknown template id is kept verbatim as a placeholder (C++ ran it)'
+area: GEN
+kind: intended-change
+cpp: 'ShapeGenerator ran any Lua script it could resolve (an inline script or a scriptfile from the Lua pack) whatever the template id, and wrote the regenerated template back (data, default angle, editor display/order fields), dropping stored parts such as texts'
+ts: 'generators/ dispatch is by template id only (spec 04 §7.2): Lua under an id that is not one of the 34 wireframe ids is unknown (lua_unknown_id), drawn as the placeholder and written back byte-for-byte; it is never converted and never stamps 5.0 (spec 04 §7.4, AC-GEN-16) (G1)'
+user_visible: true
+fixture: parity/fixtures/DR-GEN-14/lua-unknown-id.lekh
+rule:
+  json:
+    - path: '/pages/*/objects/*/template'
+      op: normalise
+      normaliser: placeholder-verbatim
+    - path: '/pages/*/objects/*/objects/*/object/template'
+      op: normalise
+      normaliser: placeholder-verbatim
+  image:
+    attribute: { object_flag: placeholder }
+  perf: null
+evidence: 'spec 04 §7.2 step 6, §7.4, §12.1 (Lua under an unknown id); AC-GEN-16'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

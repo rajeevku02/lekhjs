@@ -105,3 +105,7 @@ wireframe
 generator
 container
 default
+rectangle
+# Non-Latin samples (E11: DR-TXT-03 CJK wrap, DR-TXT-09 paragraph direction)
+日本語の文字列です
+نص

@@ -1,0 +1,70 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Sample",
+     "order": 1,
+     "params": {
+      "cx": 150,
+      "cy": 150,
+      "width": 200,
+      "height": 210,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.wireframe.iospicker",
+      "name": "Sample",
+      "default": {
+       "width": 200,
+       "height": 210
+      },
+      "style": {
+       "strokewidth": 1.5
+      },
+      "generator": {
+       "script": "",
+       "scriptfile": "wireframe/ios_picker_min.lua",
+       "text": "7,59\n8,00\n9,01\n10,02",
+       "interprettext": true
+      },
+      "params": {
+       "border": {
+        "value": false
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

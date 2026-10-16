@@ -1,0 +1,132 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Button",
+     "order": 1,
+     "params": {
+      "cx": 100,
+      "cy": 50,
+      "width": 80,
+      "height": 28,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.wireframe.button",
+      "generator": {
+       "script": "",
+       "scriptfile": "wireframe/button_min.lua",
+       "text": "Button",
+       "interprettext": true
+      },
+      "default": {
+       "width": 80,
+       "height": 28
+      },
+      "name": "Button",
+      "params": {
+       "state": {
+        "value": "normal",
+        "editor": {
+         "type": 4,
+         "options": [
+          "normal",
+          "disabled",
+          "selected",
+          "in focus"
+         ]
+        }
+       },
+       "icon": {
+        "value": null,
+        "editor": {
+         "type": 255,
+         "optional": "no icon"
+        }
+       },
+       "icon size": {
+        "value": "propotional to font",
+        "editor": {
+         "type": 255,
+         "depends": "icon",
+         "options": [
+          "propotional to shape",
+          "propotional to font"
+         ]
+        }
+       },
+       "menu": {
+        "value": false
+       }
+      },
+      "style": {
+       "strokewidth": 1.5
+      }
+     }
+    },
+    "n2": {
+     "type": "templated",
+     "name": "Sample",
+     "order": 2,
+     "params": {
+      "cx": 300,
+      "cy": 300,
+      "width": 400,
+      "height": 400,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.wireframe.calendar",
+      "generator": {
+       "scriptfile": "wireframe/calendar_min.lua",
+       "text": "2018/12/25",
+       "embedrefs": [
+        "avabodh.wireframe.icon_chevron-left",
+        "avabodh.wireframe.icon_chevron-right"
+       ],
+       "interprettext": true
+      },
+      "name": "Sample",
+      "default": {
+       "width": 400,
+       "height": 400
+      },
+      "style": {
+       "strokewidth": 1.5
+      }
+     }
+    }
+   }
+  }
+ }
+}

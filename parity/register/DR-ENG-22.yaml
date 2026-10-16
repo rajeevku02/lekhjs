@@ -1,0 +1,18 @@
+id: DR-ENG-22
+title: 'Line join and cap come from the effective style on every platform'
+area: ENG
+kind: bug-fix
+cpp: 'The web asked isJoinStyleDefined()/isCapStyleDefined(), which is false for every templated shape whose style comes from its template, and drew miter and bevel joins (and butt/square caps) as round; kashi used the effective style (Work 01M3EX3A)'
+ts: 'render/ Canvas2DDrawingPlatform sets lineJoin/lineCap from effectiveJoinStyle/effectiveCapStyle, as kashi does: miter and bevel joins on templated shapes now show on the web (E3)'
+user_visible: true
+fixture: parity/fixtures/DR-ENG-22/join-cap.lekh
+rule:
+  json: []
+  image:
+    attribute: { object_flag: join-cap }
+  perf: null
+evidence: "spec 03 §5; render unit test 'join and cap come from the effective style' (test/render/canvas2d-drawing-platform.test.ts)"
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

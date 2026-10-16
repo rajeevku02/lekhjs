@@ -1,0 +1,84 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Sample",
+     "order": 1,
+     "params": {
+      "cx": 200,
+      "cy": 100,
+      "width": 80,
+      "height": 28,
+      "angle": 0
+     },
+     "template": {
+      "id": "test.sample.generator",
+      "generator": {
+       "script": "",
+       "scriptfile": "wireframe/button_min.lua",
+       "text": "Button",
+       "interprettext": true
+      },
+      "texts": [
+       {
+        "text": "Sample",
+        "external": "bottom",
+        "location": "default"
+       }
+      ],
+      "name": "Sample",
+      "default": {
+       "width": 80,
+       "height": 28
+      },
+      "params": {
+       "state": {
+        "value": "normal",
+        "editor": {
+         "type": 4,
+         "options": [
+          "normal",
+          "disabled"
+         ]
+        }
+       },
+       "menu": {
+        "value": false
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

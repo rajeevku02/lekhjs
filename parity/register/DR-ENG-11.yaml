@@ -1,0 +1,18 @@
+id: DR-ENG-11
+title: 'Objects with equal order are stacked by id bytes, stably'
+area: ENG
+kind: bug-fix
+cpp: 'The reader iterated objects in std::map (UTF-8 byte) order and then sorted by order with an unstable sort, so the z-order of exact order ties could change between loads and platforms'
+ts: 'io/ json document-reader: objects read in UTF-8 byte order of their ids, then a stable sort by order: ties keep byte order (E7)'
+user_visible: true
+fixture: parity/fixtures/DR-ENG-11/order-ties.lekh
+rule:
+  json: ['pages.*.objects.*.order ties (z-order only; order values are written unchanged)']
+  image:
+    attribute: { object_flag: order-tie }
+  perf: null
+evidence: 'spec 03 §10.1, §16'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

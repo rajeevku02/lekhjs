@@ -30,7 +30,8 @@ export interface GeneratorRef {
  * The marker every JS generator text starts with: `/*lekh-js:<abi>:<key>*\/` (spec 04 §7.2;
  * group 1 the host-API version, group 2 the module key).
  */
-export const JS_GENERATOR_MARKER = /^\/\*lekh-js:(\d+):([a-z0-9/_-]+)\*\//;
+// Frozen (AC-CLS-07): no global or sticky flag, so `exec` never writes `lastIndex`.
+export const JS_GENERATOR_MARKER: RegExp = Object.freeze(/^\/\*lekh-js:(\d+):([a-z0-9/_-]+)\*\//);
 
 export function classifyGenerator(gen: JsonObject): GeneratorRef {
   const type = stringField(gen, 'type');

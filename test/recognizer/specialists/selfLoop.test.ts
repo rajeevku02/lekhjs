@@ -1,4 +1,4 @@
-// AC-REC-12: the port of lekhcore test/recognizer/SelfLoopRecognizerTest.cpp (23 cases), driving
+// AC-REC-12: the port of the C++ SelfLoopRecognizerTest (23 cases), driving
 // SelfLoopRecognizer against SnapshotCanvasDelegate (wrapped in RecordingCanvasDelegate) over a
 // geometry SceneStore instead of LekhCanvasDelegate over the real ObjectStore. Same strokes, same
 // assertions, same tolerances. Config boundary moves go through recognizerConfigWith (cumulative

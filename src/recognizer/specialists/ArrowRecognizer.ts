@@ -2,7 +2,6 @@
 // arrowhead (open, or solid when the stroke closes), a stroke across an arrowhead erases it, and a
 // chevron between two parallel lines of about equal length turns them into a double-line arrow.
 import {
-  areaOfConvexPolygon,
   getAmplitudePointIndex,
   getAngle,
   getDistance,
@@ -23,147 +22,10 @@ import { FetchShapeType, type CanvasDelegate } from '../delegate/CanvasDelegate'
 import type { ObjectId } from '../delegate/RecMutation';
 import { Line2Line } from '../lines/Line2Line';
 import { areAlmostEqual, at, getErrSize2 } from '../lines/RecognizerUtil';
+import { PolyMatcher } from '../shapes/PolyMatcher';
 
 const maxArrowBoundLimit = 250;
 const maxEndPointDistForArrow = 50;
-
-/**
- * C++ `recognizer::PolyMatcher` (`PolyMatcher.cpp`): the few vertices that carry a polygon's shape.
- * Ported here, file-local, because `shapes/PolyMatcher.ts` (spec 07 §3.1) does not exist yet; to be
- * replaced by that one when it lands (same algorithm, PathProcessor and Recognizer use it too).
- */
-class PolyMatcher {
-  private readonly vertices_: readonly Point[];
-  private processed: Point[] = [];
-  private shapePoints: number[] = [];
-  private distFactor = 0.14;
-
-  constructor(pts: readonly Point[]) {
-    this.vertices_ = pts.slice();
-  }
-
-  vertices(): readonly Point[] {
-    return this.processed;
-  }
-
-  process(): void {
-    this.processGeneric();
-    if (this.processed.length === 5) this.processFor5Lines();
-    // Sometimes a rectangle reduces to a triangle: add points back while the area shrank too much.
-    if (this.processed.length < 4) this.coverUpArea();
-    // it is converting a poly into a line: not desired
-    if (this.processed.length < 3) this.processed = this.vertices_.slice();
-  }
-
-  private coverUpArea(): void {
-    const area = areaOfConvexPolygon(this.vertices_);
-    let newArea = areaOfConvexPolygon(this.processed);
-    if (area < 0.1) return;
-    while (newArea / area < 0.65) {
-      if (!this.addMorePoints(false)) break;
-      this.processed = this.shapePoints.map((idx) => at(this.vertices_, idx));
-      newArea = areaOfConvexPolygon(this.processed);
-    }
-  }
-
-  private processGeneric(): void {
-    const v = this.vertices_;
-    if (v.length < 3) {
-      this.processed = v.slice();
-      return;
-    }
-    let dist = 0;
-    let idx1 = 0;
-    let idx2 = 0;
-    for (let i = 0; i < v.length; i++) {
-      for (let j = i + 1; j < v.length; j++) {
-        const d = getDistance(at(v, i), at(v, j));
-        if (d > dist) {
-          dist = d;
-          idx1 = i;
-          idx2 = j;
-        }
-      }
-    }
-    if (idx1 === 0 && idx2 === 0) {
-      this.processed = v.slice();
-      return;
-    }
-    this.shapePoints.push(idx1, idx2);
-    while (this.addMorePoints(true)) {
-      /* until no point is added */
-    }
-    for (const idx of this.shapePoints) this.processed.push(at(v, idx));
-  }
-
-  private processFor5Lines(): void {
-    this.processed = [];
-    this.shapePoints = [];
-    const origFactor = this.distFactor;
-    this.distFactor = 0.18;
-    this.processGeneric();
-    this.distFactor = origFactor;
-  }
-
-  private addMorePoints(check: boolean): boolean {
-    const sp = this.shapePoints;
-    const v = this.vertices_;
-    let idx = 0;
-    let dist = 0;
-    let found = false;
-    // i1, i3 index shapePoints; i2 indexes the vertices (as C++).
-    const allowed = (i1: number, i2: number, i3: number): boolean => {
-      const a = at(v, at(sp, i1));
-      const c = at(v, at(sp, i3));
-      const baseDist = getDistance(a, c);
-      return LineEquation.through(a, c).getDistanceFrom(at(v, i2)) >= baseDist * this.distFactor;
-    };
-    for (let i = 0; i < sp.length; i++) {
-      const j = (i + 1) % sp.length;
-      const r = this.distFor(i, j);
-      if (!check || allowed(i, r.idx, j)) {
-        if (dist < r.dist) {
-          dist = r.dist;
-          idx = r.idx;
-          found = true;
-        }
-      }
-    }
-    if (!found || dist === 0) return false;
-    if (idx < at(sp, 0)) {
-      sp.unshift(idx);
-    } else if (idx > at(sp, sp.length - 1)) {
-      sp.push(idx);
-    } else {
-      for (let i = 0; i < sp.length - 1; i++) {
-        if (idx > at(sp, i) && idx < at(sp, i + 1)) {
-          sp.splice(i + 1, 0, idx);
-          break;
-        }
-      }
-    }
-    return true;
-  }
-
-  private distFor(s1: number, s2: number): { dist: number; idx: number } {
-    const v = this.vertices_;
-    const i1 = at(this.shapePoints, s1);
-    const i2 = at(this.shapePoints, s2);
-    let dist = 0;
-    let idx = i1;
-    const eq = LineEquation.through(at(v, i1), at(v, i2));
-    let i = (i1 + 1) % v.length;
-    while (i !== i2) {
-      const tmp = eq.getDistanceFrom(at(v, i));
-      if (tmp > dist) {
-        dist = tmp;
-        idx = i;
-      }
-      i = (i + 1) % v.length;
-    }
-    return { dist, idx };
-  }
-}
 
 interface LineInfo {
   line: LineSegment;

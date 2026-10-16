@@ -65,7 +65,7 @@ import {
   type ShapeTemplate,
   type TemplateParam,
 } from '../../template';
-import { consts } from '../../sync';
+import { FrameStamper, consts } from '../../sync';
 import type { JsonInput, SemanticContext } from '../context';
 import { KEY, StyleTarget, arrowIdFor, inertStyleReason, storedStyleKey, styleKeyMessage } from '../format';
 import { g6, isJsonObject, sortedKeys, type JsonObject, type JsonOut, type JsonValue } from '../json';
@@ -1026,11 +1026,18 @@ export abstract class CompilationBase {
 
     const frames: JsonValue[] = [];
     let frameIndex = 0;
+    // The realtime format stamp (spec 04 §9.3, spec 10 §6, AC-BE-14): the first frame that writes a
+    // template with a JS-form generator on a board below 5.0 also carries `"doc.info.version": "5.0"`,
+    // so the server's format gate sees it in the same frame; later frames carry none.
+    const stamper = new FrameStamper(this.ctx.doc.info.version);
     for (let i = 0; i < FRAME_COUNT; i++) {
       const f = this.frames[i] as Frame;
       if (f.changes.size === 0) continue;
+      const raw: Record<string, JsonValue> = {};
+      for (const [k, v] of f.changes) raw[k] = v ?? null;
+      const stamped = stamper.stamp(frameType(i as FrameKind), raw);
       const changes: JsonOut = {};
-      for (const k of [...f.changes.keys()].sort(byteOrder)) changes[k] = f.changes.get(k) ?? null;
+      for (const k of Object.keys(stamped).sort(byteOrder)) changes[k] = stamped[k] ?? null;
       f.changes.clear();
       const conditions: JsonOut = {};
       if (this.policy === ConflictPolicy.Strict) {

@@ -1,0 +1,225 @@
+{
+  "about": "AC-UI-03 synthetic gesture traces (verification 05 AC-UI-03). Each step is a pointer event (all points delivered together, as the hosts do) or a clock advance. Coordinates are view px; t is ms. kind: mouse | finger | pen. button: none | left | right. The capture harness (harness.cpp) and the TS replay (test/interaction/gesture-recognizer.parity.test.ts) both read this file.",
+  "traces": [
+    {
+      "name": "tap",
+      "canDoubleClick": false,
+      "canLongPress": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 100, "y": 100, "state": "down", "kind": "finger" }] },
+        { "t": 60, "points": [{ "id": 1, "x": 102, "y": 101, "state": "move", "kind": "finger" }] },
+        { "t": 120, "points": [{ "id": 1, "x": 102, "y": 101, "state": "up", "kind": "finger" }] },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "tap-waits-for-double",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 50, "y": 60, "state": "down", "kind": "mouse", "button": "left" }] },
+        { "t": 90, "points": [{ "id": 1, "x": 50, "y": 60, "state": "up", "kind": "mouse", "button": "left" }] },
+        { "advance": 400 }
+      ]
+    },
+    {
+      "name": "double-tap",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 200, "y": 200, "state": "down", "kind": "finger" }] },
+        { "t": 80, "points": [{ "id": 1, "x": 200, "y": 200, "state": "up", "kind": "finger" }] },
+        { "t": 160, "points": [{ "id": 2, "x": 210, "y": 205, "state": "down", "kind": "finger" }] },
+        { "t": 220, "points": [{ "id": 2, "x": 210, "y": 205, "state": "up", "kind": "finger" }] },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "two-taps-far-apart",
+      "canDoubleClick": true,
+      "canLongPress": false,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 10, "y": 10, "state": "down", "kind": "finger" }] },
+        { "t": 50, "points": [{ "id": 1, "x": 10, "y": 10, "state": "up", "kind": "finger" }] },
+        { "t": 120, "points": [{ "id": 2, "x": 200, "y": 10, "state": "down", "kind": "finger" }] },
+        { "t": 170, "points": [{ "id": 2, "x": 200, "y": 10, "state": "up", "kind": "finger" }] },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "long-press",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 300, "y": 120, "state": "down", "kind": "finger" }] },
+        { "advance": 520 },
+        { "t": 600, "points": [{ "id": 1, "x": 330, "y": 140, "state": "move", "kind": "finger" }] },
+        { "t": 700, "points": [{ "id": 1, "x": 330, "y": 140, "state": "up", "kind": "finger" }] },
+        { "advance": 300 }
+      ]
+    },
+    {
+      "name": "long-press-custom-duration",
+      "canDoubleClick": false,
+      "canLongPress": true,
+      "longPressMs": 200,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 40, "y": 40, "state": "down", "kind": "finger" }] },
+        { "advance": 250 },
+        { "t": 300, "points": [{ "id": 1, "x": 40, "y": 40, "state": "up", "kind": "finger" }] }
+      ]
+    },
+    {
+      "name": "pan",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 100, "y": 100, "state": "down", "kind": "mouse", "button": "left" }] },
+        { "t": 20, "points": [{ "id": 1, "x": 104, "y": 103, "state": "move", "kind": "mouse", "button": "left" }] },
+        { "t": 40, "points": [{ "id": 1, "x": 115, "y": 108, "state": "move", "kind": "mouse", "button": "left" }] },
+        { "t": 60, "points": [{ "id": 1, "x": 140, "y": 120, "state": "move", "kind": "mouse", "button": "left" }] },
+        { "t": 80, "points": [{ "id": 1, "x": 140, "y": 120, "state": "up", "kind": "mouse", "button": "left" }] },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "pinch",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 100, "y": 200, "state": "down", "kind": "finger" }] },
+        { "t": 5, "points": [{ "id": 2, "x": 200, "y": 200, "state": "down", "kind": "finger" }] },
+        {
+          "t": 30,
+          "points": [
+            { "id": 1, "x": 90, "y": 200, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 210, "y": 200, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 60,
+          "points": [
+            { "id": 1, "x": 80, "y": 200, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 220, "y": 200, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 90,
+          "points": [
+            { "id": 1, "x": 60, "y": 200, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 240, "y": 200, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 120,
+          "points": [
+            { "id": 1, "x": 60, "y": 200, "state": "up", "kind": "finger" },
+            { "id": 2, "x": 240, "y": 200, "state": "up", "kind": "finger" }
+          ]
+        },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "rotate",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "canRotate": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 100, "y": 200, "state": "down", "kind": "finger" }] },
+        { "t": 5, "points": [{ "id": 2, "x": 200, "y": 200, "state": "down", "kind": "finger" }] },
+        {
+          "t": 30,
+          "points": [
+            { "id": 1, "x": 100, "y": 210, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 200, "y": 190, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 60,
+          "points": [
+            { "id": 1, "x": 102, "y": 225, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 198, "y": 175, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 90,
+          "points": [
+            { "id": 1, "x": 106, "y": 240, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 194, "y": 160, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 120,
+          "points": [
+            { "id": 1, "x": 106, "y": 240, "state": "up", "kind": "finger" },
+            { "id": 2, "x": 194, "y": 160, "state": "up", "kind": "finger" }
+          ]
+        },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "two-finger-pan",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "steps": [
+        {
+          "t": 0,
+          "points": [
+            { "id": 1, "x": 100, "y": 100, "state": "down", "kind": "finger" },
+            { "id": 2, "x": 160, "y": 100, "state": "down", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 30,
+          "points": [
+            { "id": 1, "x": 106, "y": 112, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 166, "y": 112, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 60,
+          "points": [
+            { "id": 1, "x": 115, "y": 125, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 175, "y": 125, "state": "move", "kind": "finger" }
+          ]
+        },
+        {
+          "t": 90,
+          "points": [
+            { "id": 1, "x": 130, "y": 140, "state": "move", "kind": "finger" },
+            { "id": 2, "x": 190, "y": 140, "state": "move", "kind": "finger" }
+          ]
+        },
+        { "t": 120, "points": [{ "id": 1, "x": 130, "y": 140, "state": "up", "kind": "finger" }] },
+        { "t": 130, "points": [{ "id": 2, "x": 190, "y": 140, "state": "up", "kind": "finger" }] },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "cancel",
+      "canDoubleClick": true,
+      "canLongPress": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 100, "y": 100, "state": "down", "kind": "pen" }] },
+        { "t": 20, "points": [{ "id": 1, "x": 130, "y": 100, "state": "move", "kind": "pen" }] },
+        { "t": 40, "points": [{ "id": 1, "x": 150, "y": 110, "state": "move", "kind": "pen" }] },
+        { "t": 50, "reset": true },
+        { "advance": 600 }
+      ]
+    },
+    {
+      "name": "draw-only-pen",
+      "canDoubleClick": false,
+      "canLongPress": false,
+      "drawOnly": true,
+      "steps": [
+        { "t": 0, "points": [{ "id": 1, "x": 10, "y": 10, "state": "down", "kind": "pen" }] },
+        { "t": 10, "points": [{ "id": 1, "x": 11, "y": 12, "state": "move", "kind": "pen" }] },
+        { "t": 20, "points": [{ "id": 1, "x": 13, "y": 15, "state": "move", "kind": "pen" }] },
+        { "t": 30, "points": [{ "id": 1, "x": 13, "y": 15, "state": "up", "kind": "pen" }] }
+      ]
+    }
+  ]
+}

@@ -128,6 +128,10 @@ export const SRC_RESTRICTED_IMPORT_PATTERNS = Object.freeze([
     group: ['lekhjs', 'lekhjs/*'],
     message: 'inside lekhjs, import modules by relative path, not through the package name.',
   },
+  {
+    group: ['react', 'react/*', 'react-dom', 'react-dom/*'],
+    message: 'lekhjs has no React (spec 05 R2, AC-UI-01): the React board is lekhboard-capacitor.',
+  },
 ]);
 
 /** Globals that src/ may not touch (§3.2 rule 4, §3.3). */

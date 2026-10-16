@@ -6,6 +6,11 @@
 // The layout/paint split: C++ `drawArrows` regenerated the data and restyled the templates on every
 // draw; here `layout` does both and `paint` only draws. Indexing C++ read `pts[0]`/`pts[1]` of a
 // possibly shorter vector; here a missing end has no arrow.
+//
+// The restyle goes to a DRAWN copy of each arrowhead, never to the stored one (AC-BE-08: layout
+// does not change serialized state). C++ restyled the stored template itself, so a draw changed
+// what the next save wrote (the backend's projector snapshot-restored it around its settle draw);
+// the drawn look is the same, since every draw restyles from the owner's style.
 import { getPointAtDistance, type Point } from '../geometry';
 import type { DrawingPlatform } from '../render';
 import { Color, type Style } from '../style';
@@ -35,6 +40,9 @@ export class ArrowHeads {
   private end_: ShapeTemplate | null = null;
   readonly startDs = new DataStore();
   readonly endDs = new DataStore();
+  /** The restyled copies `layout` lays out and `paint` draws, and the stored template each was copied from. */
+  private readonly drawn_: (ShapeTemplate | null)[] = [null, null];
+  private readonly drawnFrom_: (ShapeTemplate | null)[] = [null, null];
 
   constructor(env: ObjectEnv) {
     this.env_ = env;
@@ -124,20 +132,32 @@ export class ArrowHeads {
    */
   layout(pts: readonly ArrowInfo[], style: Style): void {
     this.generateData(pts);
-    if (pts[0] !== undefined && this.start_ !== null) {
-      ArrowHeads.restyle(this.start_, style);
-      this.start_.layout(this.startDs);
+    for (const i of [0, 1] as const) {
+      const d = this.drawnCopy(i);
+      const ds = i === 0 ? this.startDs : this.endDs;
+      if (pts[i] === undefined || d === null) continue;
+      ArrowHeads.place(d, ds, pts[i]);
+      ArrowHeads.restyle(d, style);
+      d.layout(ds);
     }
-    if (pts[1] !== undefined && this.end_ !== null) {
-      ArrowHeads.restyle(this.end_, style);
-      this.end_.layout(this.endDs);
+  }
+
+  /** The drawn copy of end `i`, re-copied when the stored arrowhead was replaced. */
+  private drawnCopy(i: 0 | 1): ShapeTemplate | null {
+    const src = i === 0 ? this.start_ : this.end_;
+    if (this.drawnFrom_[i] !== src) {
+      this.drawnFrom_[i] = src;
+      this.drawn_[i] = ArrowHeads.copyOf(src);
     }
+    return this.drawn_[i] ?? null;
   }
 
   /** The drawing half of C++ `drawArrows`, from the last `layout`. */
   paint(dp: DrawingPlatform, pts: readonly ArrowInfo[]): void {
-    if (pts[0] !== undefined && this.start_ !== null) this.start_.paint(dp, this.startDs, -1);
-    if (pts[1] !== undefined && this.end_ !== null) this.end_.paint(dp, this.endDs, -1);
+    const start = this.drawnFrom_[0] === this.start_ ? this.drawn_[0] : this.start_;
+    const end = this.drawnFrom_[1] === this.end_ ? this.drawn_[1] : this.end_;
+    if (pts[0] !== undefined && start !== null && start !== undefined) start.paint(dp, this.startDs, -1);
+    if (pts[1] !== undefined && end !== null && end !== undefined) end.paint(dp, this.endDs, -1);
   }
 
   private static copyOf(tmpl: ShapeTemplate | null): ShapeTemplate | null {

@@ -28,7 +28,7 @@ import {
   type SimplePath,
 } from '../../geometry';
 import type { DrawingPlatform } from '../../render';
-import type { Style } from '../../style';
+import type { Paint, Style } from '../../style';
 import { layoutTextInBox, type ArrowInfo, type InterestingPoint } from '../../template';
 import { TextMeasureMemo } from '../../text';
 import { ArrowHeads } from '../arrow-heads';
@@ -62,6 +62,15 @@ const BPMN_CONVERSATION = 'avabodh.bpmn.conversation';
 export interface DrawCounters {
   migrations: number;
   endLayouts: number;
+}
+
+/** `ConnectionObject.settleSnapshot()`: the serialized state a layout may change. */
+export interface ConnectorSettleState {
+  readonly params: Params;
+  readonly texts: readonly ConnectorTextInfo[];
+  readonly legacyTexts: readonly string[];
+  readonly needParamFix: boolean;
+  readonly fill: Paint | null;
 }
 
 export class ConnectionObject extends LekhObjectBase implements RouteHost {
@@ -144,8 +153,9 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
     second: LekhObject,
     type: ConnectionType,
     params: Params,
+    id?: string,
   ): ConnectionObject {
-    const con = new ConnectionObject(env, first, second, type);
+    const con = new ConnectionObject(env, first, second, type, id);
     con.setParams(params);
     con.init();
     return con;
@@ -158,6 +168,7 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
     obj2: LekhObject,
     autoType: number,
     param?: number,
+    id?: string,
   ): ConnectionObject {
     let type = autoType;
     let tp = autoType;
@@ -174,7 +185,7 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
       p = Math.abs(p);
     }
     const ctype = type > 1 ? ConnectionType.MultiLine : ConnectionType.GenericLine;
-    const con = new ConnectionObject(env, obj1, obj2, ctype);
+    const con = new ConnectionObject(env, obj1, obj2, ctype, id);
     const pm: ParamMap = { [P.angle]: 0, [P.step]: p, [P.autotype]: type, [P.dx]: 0, [P.dy]: 0 };
     con.setParams([{ ...pm }, { ...pm }]);
     return con;
@@ -357,6 +368,39 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
 
   needsParamFix(): boolean {
     return this.needParamFix_;
+  }
+
+  /**
+   * What a layout may change of this connector's serialized form (the C++ projector's settle
+   * snapshot): the strategy's params (an automatic route is re-derived), the labels and the legacy
+   * content (migrated on the first layout), and the connector's own fill (cleared by layout).
+   */
+  settleSnapshot(): ConnectorSettleState {
+    return {
+      params: cloneParams(this.connection_.getParams()),
+      texts: this.texts.slice(),
+      legacyTexts: this.legacyTexts.slice(),
+      needParamFix: this.needParamFix_,
+      fill: this.drawingProfile.isFillPaintDefined() ? this.drawingProfile.effectiveFillPaint() : null,
+    };
+  }
+
+  /**
+   * Puts back what `settleSnapshot` recorded, WITHOUT invalidating the layout: the route and label
+   * positions the layout computed stay (they are what a read reports and a render draws), while
+   * `serialize` writes the board as it was loaded (AC-BE-08). A legacy label the layout migrated is
+   * dropped again, as the C++ restore dropped it.
+   */
+  restoreSettle(state: ConnectorSettleState): void {
+    this.conParams_ = cloneParams(state.params);
+    this.connection_.setParams(this.conParams_);
+    if (state.legacyTexts.length > 0 || state.needParamFix) {
+      this.texts.length = 0;
+      this.texts.push(...state.texts);
+      this.legacyTexts = state.legacyTexts.slice();
+      this.needParamFix_ = state.needParamFix;
+    }
+    if (state.fill !== null) this.drawingProfile.setFillPaint(state.fill);
   }
 
   /** C++ `migrateOldConnection`: once, then the legacy content is cleared on every path. */

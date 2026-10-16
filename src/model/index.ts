@@ -64,7 +64,8 @@ export {
   type RouteHost,
   type VertexEdit,
 } from './connection/types';
-export { ConnectionObject, type DrawCounters } from './connection/connection-object';
+export { ConnectionObject, type ConnectorSettleState, type DrawCounters } from './connection/connection-object';
+export { settleLayout } from './settle';
 export { Connection } from './connection/connection';
 export { LineConnection } from './connection/line-connection';
 export { GenericLineConnection } from './connection/generic-line-connection';

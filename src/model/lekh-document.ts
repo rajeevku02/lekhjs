@@ -17,6 +17,7 @@ import type { DocTemplates, TemplateDef } from '../template';
 import type { LayoutServices } from './lekh-object';
 import { DocumentInfo } from './document-info';
 import { OrderAllocator } from './order-allocator';
+import { settleLayout } from './settle';
 import { Page } from './page';
 import type { ObjectStoreOptions } from './object-store';
 
@@ -199,10 +200,10 @@ export class LekhDocument implements DocTemplates {
 
   // ---- layout ----
 
-  /** Flushes the layout of every page, or of one (`BoardSession.layoutAll`). */
+  /** Settles the layout of every page, or of one, keeping the serialized state (`settleLayout`). */
   layoutAll(pageId?: string): void {
     for (const p of this.pages_) {
-      if (pageId === undefined || p.id === pageId) p.objectStore.flushLayout();
+      if (pageId === undefined || p.id === pageId) settleLayout(p.objectStore);
     }
   }
 }

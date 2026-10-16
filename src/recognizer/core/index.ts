@@ -21,3 +21,12 @@ export {
   type RecognizerCounters,
   type RecognizerQuirks,
 } from './RecognizerContext';
+export { MAX_RECOGNIZED_LINES, Recognizer } from './Recognizer';
+export {
+  recognizeStroke,
+  strokePoints,
+  type RecognitionOutcome,
+  type RecognizeStrokeOptions,
+  type RecordingDelegate,
+  type StageDump,
+} from './recognizeStroke';

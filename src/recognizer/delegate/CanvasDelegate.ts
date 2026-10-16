@@ -44,7 +44,11 @@ export class ExistingShape {
 export type ParamMap = Record<string, number>;
 export type Params = ParamMap[];
 
-/** C++ `ConnectionDetail`. Params are in canvas units (the recognizer divides by the zoom). */
+/**
+ * C++ `ConnectionDetail`. Params are passed to the connection as the recognizer computed them:
+ * `SelfLoopRecognizer` divides lengths by the zoom (canvas units); `ConnectionRecognizer` does not
+ * (its lengths and `val` are view px), and C++ `addConnection` does not map them either.
+ */
 export interface ConnectionDetail {
   obj1: ObjectId | null;
   obj2: ObjectId | null;

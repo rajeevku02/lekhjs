@@ -1,0 +1,208 @@
+{
+  "templates": [
+      {
+        "id": "avabodh.basic.note",
+        "data": ["-w/2", "-h/2", "w/2 - min(w/6, h/6)", "-h/2", "w/2", "-h/2 + min(w/6, h/6)", "w/2", "h/2", "-w/2", "h/2", "d(2)", "d(5)", "min(w/6, h/6)", "0", "d(12)/2", "w", "h-d(12)", "0"],
+        "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 0 1", "M 2 3 L 10 11 L 4 5"],
+        "texts": [{"location": "13 14 15 16 17", "text": "A Comment"}],
+        "name": "Note",
+        "style":{"strokewidth":1.5,"fillpaint":{"color":-17879,"type":2},"strokepaint":{"color":-1,"type":2}, "textalignvertical":2},
+        "default": {"width": 104, "height": 112 },
+        "libraryview": {"scale": true, "width": 102, "height": 112 },
+        "aliases": "Comment"
+      }
+  ],
+  "library": [
+    {
+      "name": "Basic",
+      "id": "avabodh.basic",
+      "category": "Basic",
+      "group": "Standard",
+      "objects": [{
+        "template": {
+          "id": "avabodh.basic.circle",
+          "texts": "0 1 2 3 4",
+          "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_intersection": true,
+          "primitive_for_inside": true,
+          "data": ["0", "0", "w", "h", "0"],
+          "draw": ["E 0 1 2 3 4"],
+          "name": "Circle"
+        },
+        "params": {
+          "height": 100, "width": 100
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.ellipse",
+          "texts": "0 1 2 3 4",
+          "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_intersection": true,
+          "primitive_for_inside": true,
+          "data": ["0", "0", "w", "h", "0"],
+          "draw": ["E 0 1 2 3 4"],
+          "name": "Ellipse"
+        },
+        "params": {
+          "height": 50, "width": 150
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.rectangle",
+          "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "h/2", "w/2", "-h/2"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "rounded": false,
+          "text_at_centroid": true,
+          "polygon": true,
+          "name": "Rectangle"
+        },
+        "params": {
+          "height": 75, "width": 112
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.rounded_rectangle",
+          "data": ["0", "0", "w", "h", "0"],
+          "draw": ["R 0 1 2 3 4 4 4"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "rounded": true,
+          "text_at_centroid": true,
+          "polygon": true,
+          "name": "Rounded Rectangle"
+        },
+        "params": {
+          "height": 75, "width": 112
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.rounded_rectangle2",
+          "data": ["0", "0", "w", "h", "min(w,h)", "min(radius,d(4)/2)", "min(radius,d(4)/2)", "0"],
+          "draw": ["R 0 1 2 3 5 6 7"],
+          "texts": "default",
+          "name": "Rounded Rectangle 2",
+          "params": {
+            "radius": { "value": 10, "editor": { "type": 1, "min":1, "max":1000 }}
+        }
+        },
+        "params": {
+          "height": 75, "width": 112
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.triangle",
+          "data": ["0","-0.5*h","-0.5*w","0.5*h","0.5*w","0.5*h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "rounded": false,
+          "text_at_centroid": true,
+          "polygon": true,
+          "name": "Triangle"
+        },
+        "params": {
+          "height": 83, "width": 96
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.pentagon",
+          "data": ["0*w","-0.5*h","0.5*w","-0.118*h","0.309*w","0.5*h","-0.309*w","0.5*h","-0.5*w","-0.118*h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "closed": true, "rounded": false, "text_at_centroid": true, "polygon": true,
+          "name": "Pentagon"
+        },
+        "params": {
+          "height": 100, "width": 100
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.hexagon",
+          "data": ["0.25*w","-0.5*h","0.5*w","0*h","0.25*w","0.5*h","-0.25*w","0.5*h","-0.5*w","0*h","-0.25*w","-0.5*h"],
+          "draw": ["M  0 1 L  2 3 L  4 5 L  6 7 L  8 9 L  10 11 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "closed": true, "rounded": false, "text_at_centroid": true, "polygon": true,
+          "name": "Hexagon"
+        },
+        "params": {
+          "height": 100, "width": 100
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.octagon",
+          "data": ["-0.2071*w","-0.5*h","0.2071*w","-0.5*h","0.5*w","-0.2071*h","0.5*w","0.2071*h","0.2071*w","0.5*h","-0.2071*w","0.5*h","-0.5*w","0.2071*h","-0.5*w","-0.2071*h"],
+          "draw": ["M  0 1 L  2 3 L  4 5 L  6 7 L  8 9 L  10 11 L  12 13 L  14 15 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "closed": true, "rounded": false, "text_at_centroid": true, "polygon": true,
+          "name": "Octagon"
+        },
+        "params": {
+          "height": 100, "width": 100
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.hline",
+          "data": ["-w/2", "0", "w/2", "0"],
+          "draw": ["M 0 1 L 2 3"],
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "polygon": true,
+          "name": "Line"
+        },
+        "params": {
+          "height": 5, "width": 100
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.angle",
+          "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "h/2"],
+          "draw": ["M 0 1 L 2 3 L 4 5"],
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "polygon": true,
+          "name": "Two Line"
+        },
+        "params": {
+          "height": 100, "width": 100
+        }
+      },
+      {
+        "template":{
+          "data":["-0.5*w","0.5*h","-w/2","-0.833333*h","w/2","-0.833333*h","0.5*w","0.5*h"],
+          "draw":[{"path":"M 0 1 C 2 3 4 5 6 7"}],
+          "flags":7,
+          "name": "Curve",
+          "id":"avabodh.basic.curve"
+        },
+        "params": {
+          "height": 75, "width": 140
+        }
+      }
+      ]
+    }
+  ]
+}

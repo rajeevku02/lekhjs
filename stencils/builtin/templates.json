@@ -1,0 +1,24 @@
+{
+  "templates": [
+    {
+      "id": "avabodh.basic.image",
+      "texts": "",
+      "images": "0 1 2 3 4 0",
+      "primitive_for_distance": false,
+      "primitive_for_intersection": false,
+      "primitive_for_inside": false,
+      "data": ["0", "0", "w", "h", "0"],
+      "draw": []
+    },
+    {
+      "id": "avabodh.basic.text",
+      "texts": "default",
+      "images": "",
+      "primitive_for_distance": false,
+      "primitive_for_intersection": false,
+      "primitive_for_inside": false,
+      "data": [],
+      "draw": []
+    }
+  ]
+}

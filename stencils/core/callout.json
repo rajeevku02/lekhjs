@@ -1,0 +1,133 @@
+{
+  "library": [
+    {
+      "name": "Callout",
+      "id": "avabodh.callout",
+      "category": "Callout",
+      "group": "Standard",
+      "objects": [
+      {
+        "template": {
+          "id": "avabodh.callout.1",
+          "data": ["-0.5*w", "-0.5*h", "0.5*w", "-0.5*h", "0.5*w", "0.230812617616*h", "-0.083333396126*w",
+                   "0.230812617616*h", "-0.145270027464*w", "0.5*h", "-0.33333338203*w", "0.230812617616*h", "-0.5*w", "0.230812617616*h", "-0.5*w", "-0.5*h",
+                   "(d(0) + d(2))/2", "(d(5) + d(1))/2", "d(2)-d(0)", "d(5)-d(1)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "editable_vertices": "8 9",
+          "texts": "16 17 18 19 20", "images": "",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 1"
+        },
+        "params": {
+          "height": 80, "width": 160
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.callout.2",
+          "data": ["0.5*w","-0.5*h","-0.5*w","-0.5*h","-0.5*w","0.230813*h","0.0833333*w","0.230813*h","0.14527*w","0.5*h","0.333333*w","0.230813*h","0.5*w","0.230813*h","0.5*w","-0.5*h",
+                   "(d(0) + d(2))/2", "(d(1) + d(5))/2", "d(0)-d(2)", "d(5)-d(1)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "texts": "16 17 18 19 20", "images": "",
+          "editable_vertices": "8 9",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 2"
+        },
+        "params": {
+          "height": 80, "width": 160
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.callout.3",
+          "data": ["-0.5*w","0.5*h","0.5*w","0.5*h","0.5*w","-0.230813*h","-0.0833333*w","-0.230813*h","-0.14527*w","-0.5*h","-0.333333*w","-0.230813*h","-0.5*w","-0.230813*h","-0.5*w","0.5*h",
+                   "(d(0) + d(2))/2", "(d(1) + d(5))/2", "d(2)-d(0)", "d(1)-d(5)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "texts": "16 17 18 19 20", "images": "",
+          "editable_vertices": "8 9",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 3"
+        },
+        "params": {
+          "height": 80, "width": 160
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.callout.4",
+          "data": ["0.5*w","0.5*h","-0.5*w","0.5*h","-0.5*w","-0.230813*h","0.0833333*w","-0.230813*h","0.14527*w","-0.5*h","0.333333*w","-0.230813*h","0.5*w","-0.230813*h","0.5*w","0.5*h",
+                   "(d(0) + d(2))/2", "(d(1) + d(5))/2", "d(0)-d(2)", "d(1)-d(5)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "texts": "16 17 18 19 20", "images": "",
+          "editable_vertices": "8 9",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 4"
+        },
+        "params": {
+          "height": 80, "width": 160
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.callout.5",
+          "data": ["-0.5*w","0.5*h","-0.5*w","-0.5*h","0.230813*w","-0.5*h","0.230813*w","0.0833333*h","0.5*w","0.14527*h","0.230813*w","0.333333*h","0.230813*w","0.5*h","-0.5*w","0.5*h",
+                   "(d(0) + d(4))/2", "(d(1) + d(3))/2", "d(4)-d(0)", "d(1)-d(3)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "texts": "16 17 18 19 20", "images": "",
+          "editable_vertices": "8 9",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 5"
+        },
+        "params": {
+          "height": 160, "width": 80
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.callout.6",
+          "data": ["0.5*w","0.5*h","0.5*w","-0.5*h","-0.230813*w","-0.5*h","-0.230813*w","0.0833333*h","-0.5*w","0.14527*h","-0.230813*w","0.333333*h","-0.230813*w","0.5*h","0.5*w","0.5*h",
+                   "(d(0) + d(4))/2", "(d(1) + d(3))/2", "d(0)-d(4)", "d(1)-d(3)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "texts": "16 17 18 19 20", "images": "",
+          "editable_vertices": "8 9",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 6"
+        },
+        "params": {
+          "height": 160, "width": 80
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.callout.7",
+          "data": ["-0.5*w","-0.5*h","-0.499999*w","0.5*h","0.230813*w","0.5*h","0.230813*w","-0.0833333*h","0.5*w","-0.14527*h","0.230813*w","-0.333333*h","0.230813*w","-0.5*h","-0.5*w","-0.5*h",
+                   "(d(0) + d(4))/2", "(d(1) + d(3))/2", "d(4)-d(0)", "d(3)-d(1)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "texts": "16 17 18 19 20", "images": "",
+          "editable_vertices": "8 9",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 7"
+        },
+        "params": {
+          "height": 160, "width": 80
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.callout.8",
+          "data": ["0.5*w","-0.5*h","0.499999*w","0.5*h","-0.230813*w","0.5*h","-0.230813*w","-0.0833333*h","-0.5*w","-0.14527*h","-0.230813*w","-0.333333*h","-0.230813*w","-0.5*h","0.5*w","-0.5*h",
+                   "(d(0) + d(4))/2", "(d(1) + d(3))/2", "d(0)-d(4)", "d(3)-d(1)", "0"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15"],
+          "texts": "16 17 18 19 20", "images": "",
+          "editable_vertices": "8 9",
+          "primitive_for_distance": true, "primitive_for_inside": true, "primitive_for_intersection": true,
+          "name": "Callout 8"
+        },
+        "params": {
+          "height": 160, "width": 80
+        }
+      }
+      ]
+    }
+  ]
+}

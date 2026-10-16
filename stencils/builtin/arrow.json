@@ -1,0 +1,142 @@
+{
+  "library": [
+    {
+      "name": "Arrow",
+      "id": "avabodh.arrow",
+      "category": "Arrow",
+      "group": "Standard",
+      "objects": [{
+        "template": {
+          "id": "avabodh.basic.arrow_forward",
+          "data": ["-w/2", "-h*hparam", "w/2 - wparam*h", "d(1)", "d(2)", "-h/2", "w/2", "0", "d(2)", "h/2", "d(2)", "-d(1)", "d(0)", "-d(1)", "-w/2", "w/2", "0", "h/2", "(d(11) - y)/h", "(x + w/2 - d(10))/h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 0 1"],
+          "texts": "default",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "name": "Arrow Right",
+          "params": {
+            "hparam": { "value": 0.25, "editor": { "type": 255 } },
+            "wparam": {"value": 0.75, "editor": { "type": 255 } }
+          },
+          "pointattrs": ["10 11 14 15 16 17 hparam 18 wparam 19"]
+        },
+        "params": {
+          "angle": 0, "height": 64, "width": 224
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.arrow_forward",
+          "data": ["-w/2", "-h*hparam", "w/2 - wparam*h", "d(1)", "d(2)", "-h/2", "w/2", "0", "d(2)", "h/2", "d(2)", "-d(1)", "d(0)", "-d(1)", "-w/2", "w/2", "0", "h/2", "(d(11) - y)/h", "(x + w/2 - d(10))/h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "text_at_centroid": false,
+          "name": "Arrow Down",
+          "params": {
+            "hparam": { "value": 0.25, "editor": { "type": 255 } },
+            "wparam": {"value": 0.75, "editor": { "type": 255 } }
+          },
+          "pointattrs": ["10 11 14 15 16 17 hparam 18 wparam 19"]
+        },
+        "params": {
+          "angle": 1.57079, "height": 64, "width": 224
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.arrow_backward",
+          "data": ["w/2", "-h*hparam", "-w/2 + wparam*h", "d(1)", "d(2)", "-h/2", "-w/2", "0", "d(2)", "h/2", "d(2)", "-d(1)", "d(0)", "-d(1)", "-w/2", "w/2", "0", "h/2", "(d(11) - y)/h", "(-x + w/2 + d(10))/h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "text_at_centroid": false,
+          "name": "Arrow Left",
+          "params": {
+            "hparam": { "value": 0.25, "editor": { "type": 255 } },
+            "wparam": {"value": 0.75, "editor": { "type": 255 } }
+          },
+          "pointattrs": ["10 11 14 15 16 17 hparam 18 wparam 19"]
+        },
+        "params": {
+          "height": 64, "width": 224
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.arrow_forward",
+          "data": ["-w/2", "-h*hparam", "w/2 - wparam*h", "d(1)", "d(2)", "-h/2", "w/2", "0", "d(2)", "h/2", "d(2)", "-d(1)", "d(0)", "-d(1)", "-w/2", "w/2", "0", "h/2", "(d(11) - y)/h", "(x + w/2 - d(10))/h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "text_at_centroid": false,
+          "name": "Arrow Up",
+          "params": {
+            "hparam": { "value": 0.25, "editor": { "type": 255 } },
+            "wparam": {"value": 0.75, "editor": { "type": 255 } }
+          },
+          "pointattrs": ["10 11 14 15 16 17 hparam 18 wparam 19"]
+        },
+        "params": {
+          "angle": 4.71238, "height": 64, "width": 224
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.arrow_both_side",
+          "data": ["-w/2", "0", "-w/2 + wparam*h", "-h/2", "d(2)", "-h*hparam", "w/2-wparam*h", "d(5)", "d(6)",
+                   "-h/2", "w/2", "0", "d(6)", "h/2", "d(6)", "h*hparam", "d(2)", "h*hparam", "d(2)", "h/2", "0", "w/2", "0", "h/2", "(d(15) - y)/h", "(x + w/2 - d(14))/h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15 L 16 17 L 18 19 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "name": "Arrow Two Ways",
+          "params": {
+            "hparam": { "value": 0.25, "editor": { "type": 255 } },
+            "wparam": {"value": 0.75, "editor": { "type": 255 } }
+          },
+          "pointattrs": ["14 15 20 21 22 23 hparam 24 wparam 25"]
+        },
+        "params": {
+          "angle": 0, "height": 64, "width": 224
+        }
+      },
+      {
+        "template": {
+          "id": "avabodh.basic.arrow_both_side",
+          "data": ["-w/2", "0", "-w/2 + wparam*h", "-h/2", "d(2)", "-h*hparam", "w/2-wparam*h", "d(5)", "d(6)",
+                   "-h/2", "w/2", "0", "d(6)", "h/2", "d(6)", "h*hparam", "d(2)", "h*hparam", "d(2)", "h/2", "0", "w/2", "0", "h/2", "(d(15) - y)/h", "(x + w/2 - d(14))/h"],
+          "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11 L 12 13 L 14 15 L 16 17 L 18 19 L 0 1"],
+          "texts": "default", "images": "",
+          "primitive_for_distance": true,
+          "primitive_for_inside": true,
+          "primitive_for_intersection": true,
+          "closed": true,
+          "name": "Arrow Two Way Vertical",
+          "params": {
+            "hparam": { "value": 0.25, "editor": { "type": 255 } },
+            "wparam": {"value": 0.75, "editor": { "type": 255 } }
+          },
+          "pointattrs": ["14 15 20 21 22 23 hparam 24 wparam 25"]
+        },
+        "params": {
+          "angle": 4.71238, "height": 64, "width": 224
+        }
+      }
+      ]
+    }
+  ]
+}

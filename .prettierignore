@@ -3,3 +3,5 @@ dist/
 coverage/
 package-lock.json
 parity/package-lock.json
+stencils/
+fonts/fonts.json

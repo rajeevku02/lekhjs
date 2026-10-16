@@ -1,0 +1,145 @@
+{
+    "library": [
+      {
+        "name": "Table",
+        "id": "avabodh.table",
+        "category": "Table",
+        "group": "Standard",
+        "objects": [
+        {
+          "template": {
+            "id": "avabodh.table.std",
+            "name": "Table",
+            "data": [],
+            "draw": [],
+            "generator": {
+                "type": "native",
+                "shape": "table-v1"
+            },
+            "params": {
+                "ncols": {"value": 2, "order": 0, "display": "Columns", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "nrows": {"value": 2, "order": 1, "display": "Rows", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "header_orientation": {"value": "Normal", "order": 2, "editor": { "type": 255}},
+                "cell_type": {"value": "text", "order": 3, "editor": { "type": 255 }},
+                "line_below_header": {"value": true, "order": 4, "editor": { "type": 255 }},
+                "col_header": {"value": true, "order": 5, "display": "Column Header", "editor": { "type": 0 }},
+                "table_header": {"value": false, "display": "Table Header", "order": 6, "editor": { "type": 0 }},
+                "show_row_lines": {"value": true, "order": 7, "display": "Show Row Lines", "editor": { "type": 0 }},
+                "show_col_lines": {"value": true, "order": 8, "display": "Show Column Lines", "editor": { "type": 0 }},
+                "default_table_header": {"value": "Table Name", "order": 9, "editor": { "type": 255 }},
+                "default_col_header": {"value": "Column", "order": 10, "editor": { "type": 255 }},
+                "row0": {"value": 1.0, "order": 999, "editor": { "type": 255 }},
+                "col0": {"value": 0.5, "order": 999, "editor": { "type": 255 }},
+                "col1": {"value": 0.5, "order": 999, "editor": { "type": 255 }}
+            },
+            "style": { "strokewidth": 2, "fillpaint": {"type": 2, "color": -1}},
+            "libraryview": {"scale": true, "width":150, "height":150 }
+          },
+          "params": {
+            "width": 250, "height": 250
+          }
+        },
+        {
+          "template": {
+            "id": "avabodh.table.nh",
+            "name": "Table",
+            "data": [],
+            "draw": [],
+            "generator": {
+                "type": "native",
+                "shape": "table-v1"
+            },
+            "params": {
+                "ncols": {"value": 2, "order": 0, "display": "Columns", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "nrows": {"value": 2, "order": 1, "display": "Rows", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "header_orientation": {"value": "Normal", "order": 2, "editor": { "type": 255}},
+                "cell_type": {"value": "text", "order": 3, "editor": { "type": 255 }},
+                "line_below_header": {"value": true, "order": 4, "editor": { "type": 255 }},
+                "col_header": {"value": false, "order": 5, "display": "Column Header", "editor": { "type": 0 }},
+                "table_header": {"value": false, "display": "Table Header", "order": 6, "editor": { "type": 0 }},
+                "show_row_lines": {"value": true, "order": 7, "display": "Show Row Lines", "editor": { "type": 0 }},
+                "show_col_lines": {"value": true, "order": 8, "display": "Show Column Lines", "editor": { "type": 0 }},
+                "default_table_header": {"value": "Table Name", "order": 9, "editor": { "type": 255 }},
+                "default_col_header": {"value": "Column", "order": 10, "editor": { "type": 255 }},
+                "row0": {"value": 1.0, "order": 999, "editor": { "type": 255 }},
+                "col0": {"value": 0.5, "order": 999, "editor": { "type": 255 }},
+                "col1": {"value": 0.5, "order": 999, "editor": { "type": 255 }}
+            },
+            "style": { "strokewidth": 2, "fillpaint": {"type": 2, "color": -1}},
+            "libraryview": {"scale": true, "width":150, "height":150 }
+          },
+          "params": {
+            "width": 250, "height": 250
+          }
+        },
+        {
+          "template": {
+            "id": "avabodh.table.ct",
+            "name": "Container Table",
+            "data": [],
+            "draw": [],
+            "generator": {
+                "type": "native",
+                "shape": "table-v1"
+            },
+            "params": {
+                "ncols": {"value": 2, "order": 0, "display": "Columns", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "nrows": {"value": 2, "order": 1, "display": "Rows", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "header_orientation": {"value": "Normal", "order": 2, "editor": { "type": 255}},
+                "cell_type": {"value": "container", "order": 3, "editor": { "type": 255 }},
+                "line_below_header": {"value": true, "order": 4, "editor": { "type": 255 }},
+                "col_header": {"value": true, "order": 5, "display": "Column Header", "editor": { "type": 0 }},
+                "table_header": {"value": false, "display": "Table Header", "order": 6, "editor": { "type": 0 }},
+                "show_row_lines": {"value": true, "order": 7, "display": "Show Row Lines", "editor": { "type": 0 }},
+                "show_col_lines": {"value": true, "order": 8, "display": "Show Column Lines", "editor": { "type": 0 }},
+                "default_table_header": {"value": "Table Name", "order": 9, "editor": { "type": 255 }},
+                "default_col_header": {"value": "Column", "order": 10, "editor": { "type": 255 }},
+                "row0": {"value": 1.0, "order": 999, "editor": { "type": 255 }},
+                "col0": {"value": 0.5, "order": 999, "editor": { "type": 255 }},
+                "col1": {"value": 0.5, "order": 999, "editor": { "type": 255 }}
+            },
+            "style": { "strokewidth": 2, "fillpaint": {"type": 2, "color": -1}},
+            "libraryview": {"scale": true, "width":150, "height":150 }
+          },
+          "params": {
+            "width": 400, "height": 400
+          }
+        },
+        {
+          "template": {
+            "id": "avabodh.table.ctnh",
+            "name": "Container Table",
+            "data": [],
+            "draw": [],
+            "generator": {
+                "type": "native",
+                "shape": "table-v1"
+            },
+            "params": {
+                "ncols": {"value": 2, "order": 0, "display": "Columns", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "nrows": {"value": 2, "order": 1, "display": "Rows", "editor": { "type": 1, "min":1, "max": 5000 }},
+                "header_orientation": {"value": "Normal", "order": 2, "editor": { "type": 255}},
+                "cell_type": {"value": "container", "order": 3, "editor": { "type": 255 }},
+                "line_below_header": {"value": true, "order": 4, "editor": { "type": 255 }},
+                "col_header": {"value": false, "order": 5, "display": "Column Header", "editor": { "type": 0 }},
+                "table_header": {"value": false, "display": "Table Header", "order": 6, "editor": { "type": 0 }},
+                "show_row_lines": {"value": true, "order": 7, "display": "Show Row Lines", "editor": { "type": 0 }},
+                "show_col_lines": {"value": true, "order": 8, "display": "Show Column Lines", "editor": { "type": 0 }},
+                "default_table_header": {"value": "Table Name", "order": 9, "editor": { "type": 255 }},
+                "default_col_header": {"value": "Column", "order": 10, "editor": { "type": 255 }},
+                "row0": {"value": 1.0, "order": 999, "editor": { "type": 255 }},
+                "col0": {"value": 0.5, "order": 999, "editor": { "type": 255 }},
+                "col1": {"value": 0.5, "order": 999, "editor": { "type": 255 }}
+            },
+            "style": { "strokewidth": 2, "fillpaint": {"type": 2, "color": -1}},
+            "libraryview": {"scale": true, "width":150, "height":150 }
+          },
+          "params": {
+            "width": 400, "height": 400
+          }
+        }
+        ]
+      }
+    ]
+  }
+  

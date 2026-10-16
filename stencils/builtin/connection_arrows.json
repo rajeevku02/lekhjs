@@ -1,0 +1,217 @@
+{
+  "arrows": [
+    {
+      "id": "avabodh.arrow.ar",
+      "name": "open_v",
+      "data": ["-w/2", "-h/2", "w/2", "0", "-w/2", "h/2"],
+      "draw": ["M 0 1 L 2 3 L 4 5"],
+      "default": {"width": 6, "height": 12 },
+      "libraryview": {"priority": 1}
+    },
+    {
+      "id": "avabodh.arrow.str",
+      "name": "solid_triangle",
+      "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+      "draw": ["M 0 1 L 2 3 L 4 5 Z"],
+      "default": {"width": 6, "height": 9 },
+      "style":{"fillpaint":{"color":-1,"type":2}},
+      "libraryview": {"priority": 2}
+    },
+    {
+      "id": "avabodh.arrow.tr",
+      "name": "hollow_triangle",
+      "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5 Z", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 6, "height": 9 },
+      "libraryview": {"priority": 3}
+    },
+    {
+      "id": "avabodh.arrow.lar",
+      "name": "open_v_wide",
+      "data": ["-w/2", "-h/2", "w/2", "0", "-w/2", "h/2"],
+      "draw": ["M 0 1 L 2 3 L 4 5"],
+      "default": {"width": 16, "height": 12 },
+      "libraryview": {"priority": 4}
+    },
+    {
+      "id": "avabodh.arrow.lstr",
+      "name": "solid_triangle_wide",
+      "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+      "draw": ["M 0 1 L 2 3 L 4 5 Z"],
+      "default": {"width": 16, "height": 9 },
+      "style":{"fillpaint":{"color":-1,"type":2}},
+      "libraryview": {"priority": 5}
+    },
+    {
+      "id": "avabodh.arrow.ltr",
+      "name": "hollow_triangle_wide",
+      "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5 Z", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 16, "height": 9 },
+      "libraryview": {"priority": 6}
+    },
+    {
+      "id": "avabodh.arrow.ang1",
+      "name": "half_barb_upper",
+      "data": ["w/2", "0", "-w/2", "h/2"],
+      "draw": ["M 0 1 L 2 3"],
+      "default": {"width": 10, "height": 16 },
+      "libraryview": {"priority": 7}
+    },
+    {
+      "id": "avabodh.arrow.ang2",
+      "name": "half_barb_lower",
+      "data": ["w/2", "0", "-w/2", "-h/2"],
+      "draw": ["M 0 1 L 2 3"],
+      "default": {"width": 10, "height": 16 },
+      "libraryview": {"priority": 8}
+    },
+    {
+      "id": "avabodh.arrow.pl",
+      "name": "bar",
+      "data": ["w/2", "-h/2", "w/2", "h/2"],
+      "draw": ["M 0 1 L 2 3"],
+      "default": {"width": 1, "height": 8 },
+      "libraryview": {"priority": 9}
+    },
+    {
+      "id": "avabodh.arrow.bpl",
+      "name": "double_bar",
+      "data": ["w/2 - 12", "-h/2", "w/2 - 12", "h/2", "w/2-12", "0", "w/2", "0"],
+      "draw": ["M 0 1 L 2 3 M 4 5 L 6 7"],
+      "default": {"width": 8, "height": 8 },
+      "libraryview": {"priority": 10}
+    },
+    {
+      "id": "avabodh.arrow.dbpl",
+      "name": "triple_bar",
+      "data": ["w/2 - 12", "-h/2", "w/2 - 12", "h/2", "w/2-6", "-h/2", "w/2-6", "h/2", "w/2-12", "0", "w/2", "0"],
+      "draw": ["M 0 1 L 2 3", "M 4 5 L 6 7", "M 8 9 L 10 11"],
+      "default": {"width": 8, "height": 8 },
+      "libraryview": {"priority": 11}
+    },
+    {
+      "id": "avabodh.arrow.srect",
+      "name": "solid_square",
+      "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "h/2", "w/2", "-h/2"],
+      "draw": ["M 0 1 L 2 3 L 4 5 L 6 7 Z"],
+      "style":{"fillpaint":{"color":-1,"type":2}},
+      "default": {"width": 8, "height": 8 },
+      "libraryview": {"priority": 12}
+    },
+    {
+      "id": "avabodh.arrow.rect",
+      "name": "hollow_square",
+      "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "h/2", "w/2", "-h/2"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5 L 6 7 Z", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 8, "height": 8 },
+      "libraryview": {"priority": 13}
+    },
+    {
+      "id": "avabodh.arrow.dmd",
+      "name": "hollow_diamond",
+      "data": ["w/2", "0", "0", "-h/2", "-w/2", "0", "0", "h/2"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5 L 6 7 Z", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 14}
+    },
+    {
+      "id": "avabodh.arrow.sdmd",
+      "name": "solid_diamond",
+      "data": ["w/2", "0", "0", "-h/2", "-w/2", "0", "0", "h/2"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5 L 6 7 Z"}],
+      "style":{"fillpaint":{"color":-1,"type":2}},
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 15}
+    },
+    {
+      "id": "avabodh.arrow.scrcl",
+      "name": "solid_circle",
+      "data": ["0", "0", "w", "h", "0"],
+      "draw": [{"path": "E 0 1 2 3 4"}],
+      "style":{"fillpaint":{"color":-1,"type":2}},
+      "default": {"width": 12, "height": 12 },
+      "libraryview": {"priority": 18}
+    },
+    {
+      "id": "avabodh.arrow.crcl",
+      "name": "hollow_circle",
+      "data": ["0", "0", "w", "h", "0"],
+      "draw": [{"path": "E 0 1 2 3 4", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 12, "height": 12 },
+      "libraryview": {"priority": 19}
+    },
+    {
+      "id": "avabodh.arrow.pluscrcl",
+      "name": "circle_with_cross",
+      "data": ["0", "0", "w", "h", "0", "0", "-h/2", "0", "h/2", "-w/2", "0", "w/2", "0"],
+      "draw": [{"path": "E 0 1 2 3 4", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}, {"path": "M 5 6 L 7 8"}, {"path": "M 9 10 L 11 12"}],
+      "default": {"width": 12, "height": 12 },
+      "libraryview": {"priority": 20}
+    },
+    {
+      "id": "avabodh.arrow.slant",
+      "name": "slash",
+      "data": ["-w", "-h/2", "0", "h/2"],
+      "draw": [{"path": "M 0 1 L 2 3"}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 21}
+    },
+    {
+      "id": "avabodh.arrow.rarr",
+      "name": "crowsfoot_with_bar",
+      "data": ["w/2", "-h/2", "-w/2", "0", "w/2", "h/2", "-w/2", "0", "w/2", "0"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5"}, {"path": "M 6 7 L 8 9"}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 22}
+    },
+    {
+      "id": "avabodh.arrow.rarrfill",
+      "name": "crowsfoot_solid",
+      "data": ["w/2+sw(-1)", "-h/2", "-w/2", "0", "w/2+sw(-1)", "h/2"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 23}
+    },
+    {
+      "id": "avabodh.arrow.rarrpl",
+      "name": "crowsfoot_with_double_bar",
+      "data": ["w/2", "-h/2", "-w/2", "0", "w/2", "h/2", "-w/2", "-h/2", "-w/2", "h/2", "-w/2", "0", "w/2", "0"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5 "}, {"path": "M 6 7 L 8 9"}, {"path": "M 10 11 L 12 13"}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 24}
+    },
+    {
+      "id": "avabodh.arrow.rarrcrcl",
+      "name": "crowsfoot_with_circle",
+      "data": ["w/2", "-h/2", "-w/2", "0", "w/2", "h/2", "-w", "0", "w", "h", "0", "-w/2", "0", "w/2", "0"],
+      "draw": [{"path": "M 0 1 L 2 3 L 4 5 M 11 12 L 13 14"}, {"path": "E 6 7 8 9 10", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 25}
+    },
+    {
+      "id": "avabodh.arrow.crclpl",
+      "name": "circle_with_bar",
+      "data": ["w/2 - 12", "-h/2", "w/2 - 12", "h/2", "-24", "0", "w", "h", "0", "w/2 - 24", "0", "w/2", "0"],
+      "draw": [{"path": "M 0 1 L 2 3 M 9 10 L 11 12"}, {"path": "E 4 5 6 7 8", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 26}
+    },
+    {
+      "id": "avabodh.arrow.cross",
+      "name": "cross",
+      "data": ["-w", "-h/2", "0", "h/2", "-w", "h/2", "0", "-h/2"],
+      "draw": [{"path": "M 0 1 L 2 3"}, {"path": "M 4 5 L 6 7"}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 27}
+    },
+    {
+      "id": "avabodh.arrow.semicrcl",
+      "name": "half_circle",
+      "data": ["w/2 + sw(-1)", "-h/2", "-w*0.1", "-h/2", "-w*0.1", "h/2", "w/2 + sw(-1)", "h/2"],
+      "draw": [{"path": "M 0 1 C 2 3 4 5 6 7", "style": { "fillpaint": { "color": -1, "type": 2 }, "nonoverridables": ["fillPaint"]}}],
+      "default": {"width": 14, "height": 14 },
+      "libraryview": {"priority": 28}
+    }
+  ]
+}

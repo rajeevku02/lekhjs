@@ -18,7 +18,7 @@ const { withinTolerance } = /** @type {typeof import('./tolerance.cjs')} */ (req
  * @property {string[]} pattern
  * @property {'ignore' | 'tolerance' | 'normalise'} op
  * @property {Record<string, unknown[]>} when
- * @property {((a: any, b: any) => boolean | null) | null} equal
+ * @property {((a: any, b: any, input?: any) => boolean | null) | null} equal
  * @property {number | undefined} abs
  * @property {number | undefined} rel
  */
@@ -47,7 +47,7 @@ export function compileRules(entries) {
         out.errors.push(`${id}: a rule.json item needs a path starting with /`);
         continue;
       }
-      /** @type {((a: any, b: any) => boolean | null) | null} */
+      /** @type {((a: any, b: any, input?: any) => boolean | null) | null} */
       let equal = null;
       if (item.op === 'normalise') {
         const n = NORMALISERS[item.normaliser];
@@ -131,8 +131,9 @@ function whenHolds(when, cppAt, tsAt) {
  * @param {import('./diff.mjs').DiffEntry[]} diffs
  * @param {LValue} cpp
  * @param {LValue} ts
+ * @param {LValue} [input]  the parsed input board (normalisers may compare against what was stored)
  */
-export function applyRules(reg, diffs, cpp, ts) {
+export function applyRules(reg, diffs, cpp, ts, input) {
   /** @type {import('./diff.mjs').DiffEntry[]} */
   const unexplained = [];
   /** @type {Map<string, number>} */
@@ -146,13 +147,18 @@ export function applyRules(reg, diffs, cpp, ts) {
       const cAt = at(cpp, prefix);
       const tAt = at(ts, prefix);
       if (!whenHolds(r.when, cAt, tAt)) continue;
-      // First match wins: this rule decides the path, whether or not it explains it.
+      // First match wins: this rule decides the path, whether or not it explains it, unless its
+      // normaliser says it does not apply here (null): then the next rule is tried.
       if (r.op === 'ignore') explained = true;
       else if (r.op === 'tolerance') {
         const a = at(cpp, d.path);
         const b = at(ts, d.path);
         explained = a instanceof LNum && b instanceof LNum && withinTolerance(a.value, b.value, r.abs ?? 0, r.rel ?? 0);
-      } else if (r.equal !== null) explained = r.equal(cAt, tAt) === true;
+      } else if (r.equal !== null) {
+        const verdict = r.equal(cAt, tAt, input === undefined ? undefined : at(input, prefix));
+        if (verdict === null) continue;
+        explained = verdict === true;
+      }
       if (explained) applied.set(r.id, (applied.get(r.id) ?? 0) + 1);
       break;
     }

@@ -25,6 +25,7 @@ import { canonicalise } from './canon.mjs';
 import { diff } from './diff.mjs';
 import { LenientParseError, lenientParse } from './lenient-parse.mjs';
 import { report } from './report.mjs';
+import { attributeGaps, gapOwnerOfId, loadGaps } from './gaps.mjs';
 import { applyRules, compileRules, cppFailEntry } from './rules.mjs';
 import { activeEntries, loadRegister, REGISTER_DIR } from '../register/load.mjs';
 import { browserOracleStatus } from '../oracle/browser.mjs';
@@ -110,8 +111,9 @@ function errorClass(/** @type {string | undefined} */ msg) {
  * @param {import('./rules.mjs').CompiledRegister} a.reg
  * @param {Set<string>} a.filed
  * @param {boolean} a.customer
+ * @param {import('./gaps.mjs').Gap[]} [a.gaps]  owned gaps (`parity/gaps.json`); none by default
  */
-export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, customer }) {
+export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, customer, gaps = [] }) {
   /** @type {Record<string, any>} */
   const rec = {
     idx: board.idx,
@@ -153,7 +155,13 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
 
   let canon;
   try {
-    canon = canonicalise({ inputText, cppText: cpp.json, tsText: ts.json, stamp });
+    canon = canonicalise({
+      inputText,
+      cppText: cpp.json,
+      tsText: ts.json,
+      stamp,
+      unported: (id) => gapOwnerOfId(gaps, id) !== null,
+    });
   } catch (e) {
     if (!(e instanceof LenientParseError)) throw e;
     // Which side's output did not parse: each on its own. A C++ key with an unescaped `"` is
@@ -174,7 +182,9 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
     return rec;
   }
   const { diffs, tolerance } = diff(canon.cpp, canon.ts);
-  const { unexplained, applied } = applyRules(reg, diffs, canon.cpp, canon.ts);
+  const ruled = applyRules(reg, diffs, canon.cpp, canon.ts, canon.input ?? undefined);
+  const { applied } = ruled;
+  const { unexplained, gaps: gapCounts } = attributeGaps(gaps, ruled.unexplained, canon.cpp, canon.ts);
   rec.stamp = { ok: canon.stamp.ok, cpp: canon.stamp.cpp, ts: canon.stamp.ts, expected: canon.stamp.expected };
   rec.generator_parts = canon.generatorParts;
   rec.root_style_ok = canon.rootStyleOk;
@@ -182,6 +192,12 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
   rec.duplicate_keys = canon.duplicateKeys;
   if (tolerance.size > 0) rec.tolerance = Object.fromEntries(tolerance);
   if (applied.size > 0) rec.register = Object.fromEntries(applied);
+  // A stamp an unported generator kept below 5.0 is the gap's too (C++ ran that Lua).
+  for (const id of canon.stamp.gapLua) {
+    const owner = gapOwnerOfId(gaps, id);
+    if (owner !== null) gapCounts.set(owner, (gapCounts.get(owner) ?? 0) + 1);
+  }
+  if (gapCounts.size > 0) rec.gap = Object.fromEntries(gapCounts);
   if (unexplained.length > 0) {
     rec.status = 'differ';
     /** @type {Record<string, number>} */
@@ -192,7 +208,8 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
     }
     rec.paths = paths;
     if (!customer) rec.examples = unexplained.slice(0, 5).map((d) => `${d.kind} /${d.path.join('/')}`);
-  } else if (applied.size > 0) rec.status = 'equal_rules';
+  } else if (gapCounts.size > 0) rec.status = 'gap';
+  else if (applied.size > 0) rec.status = 'equal_rules';
   else if (tolerance.size > 0) rec.status = 'equal_tol';
   else rec.status = 'equal';
   return rec;
@@ -209,6 +226,7 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
  * @property {string} [registerDir]
  * @property {boolean} [acceptedOnly]
  * @property {boolean} [compat]  TS test switches lineSpacingCompat + fontFallbackCompat (default on)
+ * @property {boolean} [noGaps]  ignore `parity/gaps.json` (a phase-exit run: an owned gap is a differ)
  * @property {string} [label]
  * @property {(line: string) => void} [progress]
  */
@@ -244,6 +262,7 @@ export async function runComparison(o) {
   const entries = loadRegister(o.registerDir ?? REGISTER_DIR);
   const filed = new Set(entries.map((e) => String(e.data['id'])));
   const reg = compileRules(activeEntries(entries, { acceptedOnly: o.acceptedOnly === true }));
+  const gaps = o.noGaps === true ? [] : loadGaps();
   if (reg.errors.length > 0) throw new Error('compare: register rules do not compile:\n  ' + reg.errors.join('\n  '));
 
   const log = createWriteStream(path.join(o.out, 'engines.log'));
@@ -261,6 +280,7 @@ export async function runComparison(o) {
     oracle: await oracle.identity(),
     lekhjs: await ts.identity(),
     register: { entries: entries.length, json_rules: reg.json.length, accepted_only: o.acceptedOnly === true },
+    gaps: gaps.map((g) => g.owner),
     tz: 'UTC',
     clock: '2026-01-15T00:00:00Z',
   };
@@ -275,7 +295,7 @@ export async function runComparison(o) {
       const inputText = readFileSync(board.file, 'utf8');
       const cpp = await oracle.load(inputText, { stamp: o.stamp });
       const tsr = await ts.load(inputText, { stamp: o.stamp });
-      const rec = compareBoard({ board, inputText, cpp, ts: tsr, stamp: o.stamp, reg, filed, customer });
+      const rec = compareBoard({ board, inputText, cpp, ts: tsr, stamp: o.stamp, reg, filed, customer, gaps });
       appendFileSync(resultsFile, JSON.stringify(rec) + '\n');
       o.progress?.(`${rec.status.padEnd(11)} ${customer ? rec.idx : board.idx}`);
     }

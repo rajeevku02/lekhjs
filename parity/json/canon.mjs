@@ -30,8 +30,8 @@ export function isArrayForm(input) {
 
 /**
  * Renames the ids an engine minted (step 6): page keys to `#<pageOrder>`, object keys to
- * `#<pageOrder>/<n>`, by the order they appear in that engine's output, and every string equal to
- * a renamed id. Ids the input stores (any string the input text contains) are kept literally.
+ * `#<pageOrder>/<n>` and group members to `#<pageOrder>/<n>/<m>` (any depth), by the order they
+ * appear in that engine's output, and every string equal to a renamed id. Ids the input stores (any string the input text contains) are kept literally.
  * @param {LValue} tree
  * @param {string} inputText
  * @returns {number} how many ids were renamed
@@ -47,9 +47,10 @@ export function renameMintedIds(tree, inputText) {
     if (!inputText.includes(pid)) alias.set(pid, `#${pi}`);
     if (isObj(page) && isObj(page['objects'])) {
       let n = 0;
-      for (const oid of Object.keys(/** @type {LObj} */ (page['objects']))) {
+      for (const [oid, obj] of Object.entries(/** @type {LObj} */ (page['objects']))) {
         n++;
         if (!inputText.includes(oid)) alias.set(oid, `#${pi}/${n}`);
+        renameMembers(obj, `#${pi}/${n}`, inputText, alias);
       }
     }
   }
@@ -68,6 +69,25 @@ export function renameMintedIds(tree, inputText) {
   for (const k of Object.keys(tree)) Reflect.deleteProperty(tree, k);
   Object.assign(tree, renamed);
   return alias.size;
+}
+
+/**
+ * Group members (`objects: { <id>: { index, object } }`, any depth) are renamed too, to
+ * `<group's position alias>/<n>`, n by the order they appear (array-form groups mint member ids).
+ * @param {LValue} obj
+ * @param {string} base
+ * @param {string} inputText
+ * @param {Map<string, string>} alias
+ */
+function renameMembers(obj, base, inputText, alias) {
+  if (!isObj(obj) || !isObj(obj['objects'])) return;
+  let m = 0;
+  for (const [mid, member] of Object.entries(/** @type {LObj} */ (obj['objects']))) {
+    m++;
+    if (!inputText.includes(mid)) alias.set(mid, `${base}/${m}`);
+    const inner = isObj(member) ? /** @type {LObj} */ (member)['object'] : undefined;
+    if (inner !== undefined) renameMembers(inner, `${base}/${m}`, inputText, alias);
+  }
 }
 
 /** @param {LValue} v */
@@ -96,19 +116,21 @@ export function sortSets(v, parentKey = '') {
  * @typedef {object} CanonResult
  * @property {LValue} cpp
  * @property {LValue} ts
- * @property {{ cpp: string | undefined, ts: string | undefined, expected: string | undefined, ok: boolean }} stamp
+ * @property {{ cpp: string | undefined, ts: string | undefined, expected: string | undefined, ok: boolean, gapLua: string[] }} stamp
  * @property {{ ok: number, bad: number, parts: string[] }} generatorParts
  * @property {boolean} rootStyleOk
  * @property {number} renamedIds
  * @property {number} duplicateKeys
+ * @property {LValue | null} input  the parsed input board (null for XML or broken input)
  */
 
 /**
  * Parses and canonicalises one board's two outputs.
- * @param {{ inputText: string, cppText: string, tsText: string, stamp: 'app' | 'backend' }} a
+ * @param {{ inputText: string, cppText: string, tsText: string, stamp: 'app' | 'backend', unported?: (id: string) => boolean }} a
+ *   `unported`: wireframe ids lekhjs does not port yet (owned gaps): their Lua expects no 5.0
  * @returns {CanonResult}
  */
-export function canonicalise({ inputText, cppText, tsText, stamp }) {
+export function canonicalise({ inputText, cppText, tsText, stamp, unported }) {
   const c = lenientParse(cppText);
   const t = lenientParse(tsText);
   /** @type {LValue | null} */
@@ -127,8 +149,11 @@ export function canonicalise({ inputText, cppText, tsText, stamp }) {
   // 3. info.version
   const cppVersion = infoVersion.apply(cpp);
   const tsVersion = infoVersion.apply(ts);
-  const scripted = (input !== null && generatorScript.hasLua(input)) || gt.js > 0;
+  const scripted = (input !== null && generatorScript.hasLua(input, unported)) || gt.js > 0;
   const expected = infoVersion.expectedTsVersion(stamp, { cppVersion, generatorScripted: scripted });
+  // The unported Lua ids that lowered the expectation (reported as owned gaps).
+  const gapLua =
+    input !== null && unported !== undefined && !scripted ? [...generatorScript.luaIds(input)].filter(unported) : [];
   // 4. root style
   const rootStyleOk = rootStyle.check(rootStyle.apply(cpp), rootStyle.apply(ts));
   // 6. ids
@@ -144,7 +169,7 @@ export function canonicalise({ inputText, cppText, tsText, stamp }) {
   return {
     cpp,
     ts,
-    stamp: { cpp: cppVersion, ts: tsVersion, expected, ok: tsVersion === expected },
+    stamp: { cpp: cppVersion, ts: tsVersion, expected, ok: tsVersion === expected, gapLua },
     generatorParts: {
       ok: gc.partsOk + gt.partsOk,
       bad: gc.partsBad + gt.partsBad,
@@ -153,5 +178,6 @@ export function canonicalise({ inputText, cppText, tsText, stamp }) {
     rootStyleOk,
     renamedIds,
     duplicateKeys: c.duplicateKeys + t.duplicateKeys,
+    input,
   };
 }

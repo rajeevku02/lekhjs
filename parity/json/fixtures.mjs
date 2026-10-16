@@ -6,7 +6,8 @@
 //
 //   cd lekhjs && npm run build && cd parity && npm run fixtures [-- --build] [-- --keep-going]
 //
-// `--build` runs `npm run build` in lekhjs first (under the same lock). Takes the heavy-job lock.
+// `--build` runs `npm run build` in lekhjs first (under the same lock). `--no-gaps` ignores
+// `parity/gaps.json`, so an owned gap counts as `differ` (the phase-exit run). Takes the heavy-job lock.
 // Output: parity/out/fixtures/<date>/<pass>/ (gitignored); the merge-gate lines go to stdout.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -93,11 +94,18 @@ async function main() {
   let pass = true;
   for (const stamp of /** @type {const} */ (['app', 'backend'])) {
     const out = path.join(root, `p1-${stamp}`);
-    const s = await runComparison({ boards, pipeline: 'p1', stamp, out, label: 'T6 fixtures' });
+    const s = await runComparison({
+      boards,
+      pipeline: 'p1',
+      stamp,
+      out,
+      label: 'T6 fixtures',
+      noGaps: args.includes('--no-gaps'),
+    });
     lines.push(s.line);
     pass &&= s.pass;
-    if (!s.pass)
-      for (const x of /** @type {string[]} */ (s.summary['not_equal'] ?? []).slice(0, 40)) lines.push(`    ${x}`);
+    // Every board that is not equal is listed, including an owned gap (with its task).
+    for (const x of /** @type {string[]} */ (s.summary['not_equal'] ?? []).slice(0, 40)) lines.push(`    ${x}`);
   }
   const withText = boards.filter((b) => hasText(b.file));
   const st = browserOracleStatus();

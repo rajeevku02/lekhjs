@@ -27,6 +27,7 @@ export {
   type DebugConfig,
   type RenderConfig,
 } from './config';
+export { LekhError, isLekhError } from './errors';
 export { Lru } from './lru';
 export { Span } from './span';
 export {

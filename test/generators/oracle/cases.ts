@@ -30,6 +30,13 @@ export const TEXTS: readonly string[] = Object.freeze([
   'x,y,z\r\nCRLF line',
   '{10c, 20r, 30} col A, col B\nr1a, r1b\n# note',
   'é ünïcode 漢字',
+  // dates (calendar, android_datepicker): a leap day, a month starting on a Wednesday, spaces and
+  // an invalid day, Lua floats, and a fractional month
+  '2024/2/29',
+  '2025/10/1',
+  ' 1999 / 9 / 31',
+  '2020.0/2/3.0',
+  '2023/7.5/9',
 ]);
 
 /** A sample icon id for an icon-valued parameter. */

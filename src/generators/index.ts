@@ -26,6 +26,7 @@ export { outputToTemplateJson, placeholderOutput, type TemplateDataApplier } fro
 export { TemplateGeneratorHost } from './template-generator-host';
 export { atoi, parseSizeSpec, split, splitByChar, splitLines, trimC, type SplitMeasure } from './wireframe-text';
 export { isLeapYear, monthInfo, weekdayOf } from './month-info';
+export { luaNumberString, luaToNumber, parseWireframeDate, type LuaNumber, type WireframeDate } from './wireframe-date';
 export { indexList, num, str, truthy, type ParamValue } from './wireframe-lua';
 export { NATIVE_SHAPES, UNUSED_SCRIPTFILE, WIREFRAME_TEMPLATES, type WireframeTemplateRow } from './wireframe-ids';
 export { WIREFRAME_MODULES } from './wireframe';

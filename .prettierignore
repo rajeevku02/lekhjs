@@ -7,3 +7,4 @@ parity/out/
 stencils/
 fonts/fonts.json
 test/fixtures/golden/
+test/generators/golden/

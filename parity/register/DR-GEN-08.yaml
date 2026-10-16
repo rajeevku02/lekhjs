@@ -1,0 +1,18 @@
+id: DR-GEN-08
+title: 'The android_datepicker header names the weekday of the selected day, not of the 1st of the month'
+area: GEN
+kind: bug-fix
+cpp: 'android_datepicker.lua:25,37 took the header weekday from getMonthInfo''s weekday of the 1st, so 2018/12/25 read "Sat, Dec 2018" (1 December 2018 is a Saturday)'
+ts: 'generators/wireframe/android-datepicker.ts (task G2): the weekday of the selected day (after the out-of-range rule), so 2018/12/25 reads "Tue, Dec 2018" (owner, OQ-20). The header box width follows the measured weekday name, so template data can differ too'
+user_visible: true
+fixture: parity/fixtures/DR-GEN-08/selected-weekday.lekh
+rule:
+  json: []
+  image:
+    attribute: { object_flag: wireframe-generator }
+  perf: null
+evidence: 'spec 04 §5.3 script bugs, §14, OQ-20; AC-GEN-21; test/generators/wireframe-dates.test.ts'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

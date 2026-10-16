@@ -1,0 +1,18 @@
+id: DR-GEN-05
+title: 'calendar and android_datepicker with a malformed date text draw the default date, not an empty or stale shape'
+area: GEN
+kind: bug-fix
+cpp: 'The scripts set the year text in globals (ys, ms, ds) only when the text split into 3 "/" parts (calendar.lua:11-19, android_datepicker.lua:11-19): on a first generation with a malformed text head..ys raised and the shape stayed empty, and later a stale year from an earlier text was shown; a part tonumber did not read made m < 1 or d < 1 raise, a non-numeric year printed as "nil", and a fractional month inside 1..12 indexed no month name and raised'
+ts: "generators/wireframe-date.ts (task G2): the strings come from the local y/m/d; a part that does not parse keeps the scripts' default 2022/3/4; a fractional month is truncated as getMonthInfo truncated it; the range rules stay (month outside 1..12 is January, day outside the month is 2); nothing throws"
+user_visible: true
+fixture: parity/fixtures/DR-GEN-05/malformed-date.lekh
+rule:
+  json: []
+  image:
+    attribute: { object_flag: wireframe-generator }
+  perf: null
+evidence: 'spec 04 §5.3 script bugs, §14; AC-GEN-21; test/generators/wireframe-dates.test.ts'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

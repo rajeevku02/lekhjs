@@ -1,0 +1,69 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Sample",
+     "order": 1,
+     "params": {
+      "cx": 220,
+      "cy": 220,
+      "width": 400,
+      "height": 400,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.wireframe.androiddatepicker",
+      "name": "Sample",
+      "default": {
+       "width": 400,
+       "height": 400
+      },
+      "style": {
+       "strokewidth": 1.5
+      },
+      "generator": {
+       "script": "",
+       "scriptfile": "wireframe/android_datepicker_min.lua",
+       "text": "2018/12/25",
+       "embedrefs": [
+        "avabodh.wireframe.icon_chevron-left",
+        "avabodh.wireframe.icon_chevron-right"
+       ],
+       "interprettext": true
+      }
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,217 @@
+{
+ "avabodh.wireframe.androidactionbar": [
+  {
+   "params": {
+    "icon": "menu",
+    "overflow": true
+   },
+   "text": "Title",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "w/2",
+     "-h/2",
+     "w/2",
+     "h/2",
+     "-w/2",
+     "h/2",
+     "-w/2 + 5 + h/4",
+     "0",
+     "h/2",
+     "h/2",
+     "0",
+     "w/2 - 5 - h/4",
+     "0",
+     "h/2",
+     "h/2",
+     "0",
+     "-w/2 + 5 + h/2 + 10 + 18.5",
+     "0",
+     "37",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -2434342,
+        "type": 2
+       },
+       "strokewidth": 0
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "text": "Title",
+      "location": "18 19 20 21 22"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_bars",
+      "location": "8 9 10 11 12",
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_ellipsis-v",
+      "mode": "aspect",
+      "location": "13 14 15 16 17"
+     }
+    ],
+    "containers": [],
+    "minW": 69,
+    "minH": 22
+   }
+  },
+  {
+   "params": {
+    "icon": "menu",
+    "overflow": true
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "w/2",
+     "-h/2",
+     "w/2",
+     "h/2",
+     "-w/2",
+     "h/2",
+     "-w/2 + 5 + h/4",
+     "0",
+     "h/2",
+     "h/2",
+     "0",
+     "w/2 - 5 - h/4",
+     "0",
+     "h/2",
+     "h/2",
+     "0",
+     "-w/2 + 5 + h/2 + 10 + 1",
+     "0",
+     "2",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -2434342,
+        "type": 2
+       },
+       "strokewidth": 0
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "text": "",
+      "location": "18 19 20 21 22"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_bars",
+      "location": "8 9 10 11 12",
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_ellipsis-v",
+      "mode": "aspect",
+      "location": "13 14 15 16 17"
+     }
+    ],
+    "containers": [],
+    "minW": 34,
+    "minH": 22
+   }
+  },
+  {
+   "params": {
+    "icon": "menu",
+    "overflow": true
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "w/2",
+     "-h/2",
+     "w/2",
+     "h/2",
+     "-w/2",
+     "h/2",
+     "-w/2 + 5 + h/4",
+     "0",
+     "h/2",
+     "h/2",
+     "0",
+     "w/2 - 5 - h/4",
+     "0",
+     "h/2",
+     "h/2",
+     "0",
+     "-w/2 + 5 + h/2 + 10 + 32.5",
+     "0",
+     "65",
+     "h",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -2434342,
+        "type": 2
+       },
+       "strokewidth": 0
+      }
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+      "location": "18 19 20 21 22"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_bars",
+      "location": "8 9 10 11 12",
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_ellipsis-v",
+      "mode": "aspect",
+      "location": "13 14 15 16 17"
+     }
+    ],
+    "containers": [],
+    "minW": 97,
+    "minH": 64
+   }
+  }
+ ]
+}

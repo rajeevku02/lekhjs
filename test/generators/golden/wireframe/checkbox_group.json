@@ -1,0 +1,262 @@
+{
+ "avabodh.wireframe.checkboxgroup": [
+  {
+   "params": {},
+   "text": "[ ]not selected\n[x]selected\n[-]indeterminate\n-[ ]disabled\n-[x]disabled selected\n-[-]disabled indeterminate\nA row without a checkbox",
+   "output": {
+    "data": [
+     "14",
+     "-h/2+10",
+     "w",
+     "20",
+     "0",
+     "-w/2+7",
+     "-h/2+10",
+     "14",
+     "14",
+     "0",
+     "14",
+     "-h/2+30",
+     "w",
+     "20",
+     "0",
+     "-w/2+7",
+     "-h/2+30",
+     "14",
+     "14",
+     "0",
+     "14",
+     "-h/2+50",
+     "w",
+     "20",
+     "0",
+     "-w/2+7",
+     "-h/2+50",
+     "14",
+     "14",
+     "0",
+     "14",
+     "-h/2+70",
+     "w",
+     "20",
+     "0",
+     "-w/2+7",
+     "-h/2+70",
+     "14",
+     "14",
+     "0",
+     "14",
+     "-h/2+90",
+     "w",
+     "20",
+     "0",
+     "-w/2+7",
+     "-h/2+90",
+     "14",
+     "14",
+     "0",
+     "14",
+     "-h/2+110",
+     "w",
+     "20",
+     "0",
+     "-w/2+7",
+     "-h/2+110",
+     "14",
+     "14",
+     "0",
+     "0",
+     "-h/2+130",
+     "w",
+     "20",
+     "0"
+    ],
+    "draw": [],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "0 1 2 3 4",
+      "text": "not selected"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "10 11 12 13 14",
+      "text": "selected"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "20 21 22 23 24",
+      "text": "indeterminate"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "30 31 32 33 34",
+      "text": "disabled"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "40 41 42 43 44",
+      "text": "disabled selected"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "50 51 52 53 54",
+      "text": "disabled indeterminate"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "60 61 62 63 64",
+      "text": "A row without a checkbox"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_square-o",
+      "location": "5 6 7 8 9",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_check-square-o",
+      "location": "15 16 17 18 19",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_minus-square-o",
+      "location": "25 26 27 28 29",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "name": "avabodh.wireframe.icon_square-o",
+      "location": "35 36 37 38 39",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "name": "avabodh.wireframe.icon_check-square-o",
+      "location": "45 46 47 48 49",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "style": {
+       "disabled": true
+      },
+      "name": "avabodh.wireframe.icon_minus-square-o",
+      "location": "55 56 57 58 59",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 176,
+    "minH": 148
+   }
+  },
+  {
+   "params": {},
+   "text": "",
+   "output": {
+    "data": [],
+    "draw": [],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 8,
+    "minH": 8
+   }
+  },
+  {
+   "params": {},
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "0",
+     "-h/2+10",
+     "w",
+     "20",
+     "0",
+     "0",
+     "-h/2+30",
+     "w",
+     "20",
+     "0",
+     "0",
+     "-h/2+50",
+     "w",
+     "20",
+     "0",
+     "0",
+     "-h/2+70",
+     "w",
+     "20",
+     "0"
+    ],
+    "draw": [],
+    "texts": [
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "0 1 2 3 4",
+      "text": "*Selected"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2,
+       "disabled": true
+      },
+      "location": "5 6 7 8 9",
+      "text": "Disabled"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "10 11 12 13 14",
+      "text": "*-Both"
+     },
+     {
+      "style": {
+       "textalignhorizontal": 2
+      },
+      "location": "15 16 17 18 19",
+      "text": "*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 71,
+    "minH": 88
+   }
+  }
+ ]
+}

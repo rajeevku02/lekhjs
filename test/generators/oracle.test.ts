@@ -3,43 +3,81 @@
 // for the cases tagged with a difference-register id (spec 04 §13). The text measure is a
 // deterministic stub (7 per character of the longest line, 14 per line).
 import { describe, expect, it } from 'vitest';
-import {
-  WIREFRAME_MODULES,
-  WIREFRAME_TEMPLATES,
-  monthInfo,
-  outputToTemplateJson,
-  parseSizeSpec,
-  split,
-  splitLines,
-} from '../../src/generators';
-import type { GeneratorContext, WireframeKey } from '../../src/template';
+import { WIREFRAME_MODULES, WIREFRAME_TEMPLATES, luaToNumber, outputToTemplateJson } from '../../src/generators';
+import type { JsonObject, WireframeKey } from '../../src/template';
 import { casesFor, wireframeTemplates, type OracleCase } from './oracle/cases';
 import { compareOutputs, type Comparable } from './oracle/compare';
 import { LuaGenerator, luaPack } from './oracle/lua-oracle';
+import { STUB_HOST, stubMeasure } from './oracle/stub-host';
 
-/** The stub measure both sides use. */
-export function stubMeasure(s: string): { w: number; h: number } {
-  const lines = s.split('\n');
-  return { w: 7 * Math.max(...lines.map((l) => Array.from(l).length)), h: 14 * lines.length };
-}
-
-export const STUB_HOST: GeneratorContext = Object.freeze({
-  textSize: stubMeasure,
-  strokeWidth: () => 1.5,
-  splitLines,
-  split: (s: string, o: Parameters<GeneratorContext['split']>[1]) => split(s, o, stubMeasure),
-  parseSizeSpec,
-  monthInfo,
-});
-
-/** A case whose difference is a signed (or proposed) register entry. */
+/**
+ * A case whose difference is a signed (or proposed) register entry. Without `patch` the case is
+ * skipped; with it, the Lua output is rewritten to the fixed behaviour and then compared strictly,
+ * so the rest of the output is still checked.
+ */
 interface ExpectedDifference {
   readonly dr: string;
   readonly when: (c: OracleCase) => boolean;
+  readonly patch?: (lua: Comparable, c: OracleCase) => Comparable;
 }
 
+/**
+ * Whether `calendar.lua` / `android_datepicker.lua` read the text as a date the way the TS port
+ * does. They do not (DR-GEN-05) when the text has fewer than 3 `/` parts (`ys` is nil: an error),
+ * a part is not a Lua numeral (`m < 1` / `d < 1` on nil raise; a nil year prints as "nil"), or the
+ * month is fractional inside 1..12 (a nil month name: an error).
+ */
+function luaReadsDate(text: string): boolean {
+  const parts = STUB_HOST.split(text, { by: '/' }).map((p) => luaToNumber(p.word));
+  if (parts.length < 3) return false;
+  const [y, m, d] = parts;
+  if (y == null || m == null || d == null) return false;
+  return !(m.value >= 1 && m.value <= 12 && !Number.isInteger(m.value));
+}
+
+/** The weekday (0 = Sunday) of the day the date text selects, by `Date` in UTC (an independent check). */
+function selectedWeekday(text: string): number {
+  const [y, m, d] = STUB_HOST.split(text, { by: '/' }).map((p) => luaToNumber(p.word)?.value ?? Number.NaN);
+  const year = Math.trunc(y ?? Number.NaN);
+  let month = m ?? Number.NaN;
+  if (month < 1 || month > 12) month = 1;
+  month = Math.trunc(month);
+  const at = (day: number) => {
+    const t = new Date(0);
+    t.setUTCFullYear(year, month - 1, day);
+    return t;
+  };
+  // Day 32 rolls over into the next month by (32 - days in month).
+  const inMonth = 32 - at(32).getUTCDate();
+  let day = d ?? Number.NaN;
+  if (day < 1 || day > inMonth) day = 2;
+  return at(Math.trunc(day)).getUTCDay();
+}
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const MALFORMED_DATE: ExpectedDifference = { dr: 'DR-GEN-05', when: (c) => !luaReadsDate(c.text) };
+
 /** By module key; the ports (G2-G4) add their DR-GEN-04..9 cases here. */
-const EXPECTED_DIFFERENCES: Partial<Record<WireframeKey, readonly ExpectedDifference[]>> = {};
+const EXPECTED_DIFFERENCES: Partial<Record<WireframeKey, readonly ExpectedDifference[]>> = {
+  'wireframe/calendar': [MALFORMED_DATE],
+  'wireframe/android_datepicker': [
+    MALFORMED_DATE,
+    {
+      // 'Web' → 'Wed', and the header names the selected day's weekday, not the 1st's.
+      dr: 'DR-GEN-07, DR-GEN-08',
+      when: () => true,
+      patch: (lua, c) => {
+        const texts = (lua.template['texts'] as JsonObject[]).slice();
+        const head = texts[1];
+        if (head === undefined || typeof head['text'] !== 'string') throw new Error('no header text');
+        const fixed = `${WEEKDAYS[selectedWeekday(c.text)] ?? ''}${head['text'].slice(3)}`;
+        texts[1] = { ...head, text: fixed };
+        return { ...lua, template: { ...lua.template, texts } };
+      },
+    },
+  ],
+};
 
 function runTs(key: WireframeKey, c: OracleCase): Comparable | { error: string } {
   const m = WIREFRAME_MODULES.find((x) => x.key === key);
@@ -86,7 +124,9 @@ describe('the Lua oracle (AC-GEN-06)', () => {
             diffs = compareOutputs(lua, ts, c.params, stubMeasure);
           }
           const tag = expected.find((d) => d.when(c));
-          if (tag !== undefined) {
+          if (tag?.patch !== undefined && lua.ok && !('error' in ts)) {
+            diffs = compareOutputs(tag.patch(lua, c), ts, c.params, stubMeasure);
+          } else if (tag !== undefined) {
             tagged++;
             continue;
           }

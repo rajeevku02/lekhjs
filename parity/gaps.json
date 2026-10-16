@@ -2,22 +2,6 @@
   "comment": "Owned gaps of the JSON comparison (json/gaps.mjs): differences a later task of Work 01M4X7TCHFB862XGT68GPY071C closes. Each owning task deletes its entry when it lands; a phase-exit run ignores this file. Filed by E11.",
   "gaps": [
     {
-      "owner": "G2",
-      "reason": "wireframe generators 1-11 of spec 04 §5.3 not ported yet (button is ported by G1): the template stays a placeholder (spec 04 §7.4); C++ runs the Lua",
-      "template_ids": [
-        "avabodh.wireframe.accordion",
-        "avabodh.wireframe.androidactionbar",
-        "avabodh.wireframe.androiddatepicker",
-        "avabodh.wireframe.androidtabbar",
-        "avabodh.wireframe.breadcrumbs",
-        "avabodh.wireframe.buttonbar",
-        "avabodh.wireframe.calendar",
-        "avabodh.wireframe.checkbox",
-        "avabodh.wireframe.checkboxgroup",
-        "avabodh.wireframe.datagrid"
-      ]
-    },
-    {
       "owner": "G3",
       "reason": "wireframe generators 12-22 of spec 04 §5.3 not ported yet: placeholder; C++ runs the Lua",
       "template_ids": [

@@ -4,6 +4,29 @@
 // canonical JS text. The rest of the 33 are ported by tasks G2-G4: until a script's module is
 // listed here, a template that uses it loads as a placeholder (`lua_unknown_id`).
 import type { WireframeModule } from '../../template';
+import accordion from './accordion';
+import androidActionbar from './android-actionbar';
+import androidDatepicker from './android-datepicker';
+import androidTabbar from './android-tabbar';
+import breadcrumbs from './breadcrumbs';
 import button from './button';
+import buttonBar from './button-bar';
+import calendar from './calendar';
+import checkbox from './checkbox';
+import checkboxGroup from './checkbox-group';
+import datagrid from './datagrid';
 
-export const WIREFRAME_MODULES: readonly WireframeModule[] = Object.freeze([button]);
+/** In the order of spec 04 §5.3's table. */
+export const WIREFRAME_MODULES: readonly WireframeModule[] = Object.freeze([
+  accordion,
+  androidActionbar,
+  androidDatepicker,
+  androidTabbar,
+  breadcrumbs,
+  button,
+  buttonBar,
+  calendar,
+  checkbox,
+  checkboxGroup,
+  datagrid,
+]);

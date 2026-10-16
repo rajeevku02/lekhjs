@@ -1,0 +1,610 @@
+{
+ "avabodh.wireframe.datagrid": [
+  {
+   "params": {
+    "horizontal grid lines": true,
+    "vertical grid lines": true,
+    "min row height": 20,
+    "border": true
+   },
+   "text": "ID,Name & Job Title[V],Age,Nickname,Option\n1,Name 1\\nCEO,40,nick1,[O]\n2,Name 2\\nCTO,39,nick2,[X]\n*3,Name 3\\nEngineer,32,nick3,[-]\n4,Name 4\\nEngineer,35,nick4,[]\n{0C, 45L, 0R, 15L, 0C}",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "-w/2",
+     "-h/2 + 4.75+20+4.75",
+     "w/2",
+     "-h/2 + 4.75+20+4.75",
+     "-w/2 + 4.75+16+4.75",
+     "-h/2",
+     "-w/2 + 4.75+16+4.75",
+     "h/2",
+     "-w/2 + 4.75+16/2",
+     "-h/2 + 4.75+20/2",
+     "16",
+     "20",
+     "0",
+     "-w/2 + 14.25+16+0.75*(w-130.5)+4.75",
+     "-h/2",
+     "-w/2 + 14.25+16+0.75*(w-130.5)+4.75",
+     "h/2",
+     "-w/2 + 14.25+16+0.75*(w-130.5)/2+(0.75*(w-130.5))/2-6.3",
+     "-h/2 + 4.75+20/2",
+     "12.6",
+     "12.6",
+     "0",
+     "-w/2 + 14.25+16+0.75*(w-130.5)/2-7.3",
+     "-h/2 + 4.75+20/2",
+     "0.75*(w-130.5)-14.6",
+     "20",
+     "0",
+     "-w/2 + 23.75+16+0.75*(w-130.5)+23+4.75",
+     "-h/2",
+     "-w/2 + 23.75+16+0.75*(w-130.5)+23+4.75",
+     "h/2",
+     "-w/2 + 23.75+16+0.75*(w-130.5)+23/2",
+     "-h/2 + 4.75+20/2",
+     "23",
+     "20",
+     "0",
+     "-w/2 + 33.25+16+0.75*(w-130.5)+23+0.25*(w-130.5)+4.75",
+     "-h/2",
+     "-w/2 + 33.25+16+0.75*(w-130.5)+23+0.25*(w-130.5)+4.75",
+     "h/2",
+     "-w/2 + 33.25+16+0.75*(w-130.5)+23+0.25*(w-130.5)/2",
+     "-h/2 + 4.75+20/2",
+     "0.25*(w-130.5)",
+     "20",
+     "0",
+     "-w/2 + 42.75+16+0.75*(w-130.5)+23+0.25*(w-130.5)+44/2",
+     "-h/2 + 4.75+20/2",
+     "44",
+     "20",
+     "0",
+     "-w/2",
+     "-h/2 + 34.25+29+4.75",
+     "w/2",
+     "-h/2 + 34.25+29+4.75",
+     "-w/2 + 4.75+16/2",
+     "-h/2 + 34.25+29/2",
+     "16",
+     "29",
+     "0",
+     "-w/2 + 14.25+16+0.75*(w-130.5)/2",
+     "-h/2 + 34.25+29/2",
+     "0.75*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 23.75+16+0.75*(w-130.5)+23/2",
+     "-h/2 + 34.25+29/2",
+     "23",
+     "29",
+     "0",
+     "-w/2 + 33.25+16+0.75*(w-130.5)+23+0.25*(w-130.5)/2",
+     "-h/2 + 34.25+29/2",
+     "0.25*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 42.75+16+0.75*(w-130.5)+23+0.25*(w-130.5)+44/2",
+     "-h/2 + 34.25+29/2",
+     "12.6",
+     "12.6",
+     "0",
+     "-w/2",
+     "-h/2 + 72.75+29+4.75",
+     "w/2",
+     "-h/2 + 72.75+29+4.75",
+     "-w/2 + 4.75+16/2",
+     "-h/2 + 72.75+29/2",
+     "16",
+     "29",
+     "0",
+     "-w/2 + 14.25+16+0.75*(w-130.5)/2",
+     "-h/2 + 72.75+29/2",
+     "0.75*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 23.75+16+0.75*(w-130.5)+23/2",
+     "-h/2 + 72.75+29/2",
+     "23",
+     "29",
+     "0",
+     "-w/2 + 33.25+16+0.75*(w-130.5)+23+0.25*(w-130.5)/2",
+     "-h/2 + 72.75+29/2",
+     "0.25*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 42.75+16+0.75*(w-130.5)+23+0.25*(w-130.5)+44/2",
+     "-h/2 + 72.75+29/2",
+     "12.6",
+     "12.6",
+     "0",
+     "-w/2",
+     "-h/2 + 111.25+29+4.75",
+     "w/2",
+     "-h/2 + 111.25+29+4.75",
+     "-w/2",
+     "-h/2 + 72.75+29+4.75",
+     "-w/2",
+     "-h/2 + 111.25+29+4.75",
+     "w/2",
+     "-h/2 + 111.25+29+4.75",
+     "w/2",
+     "-h/2 + 72.75+29+4.75",
+     "-w/2 + 4.75+16/2",
+     "-h/2 + 111.25+29/2",
+     "16",
+     "29",
+     "0",
+     "-w/2 + 14.25+16+0.75*(w-130.5)/2",
+     "-h/2 + 111.25+29/2",
+     "0.75*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 23.75+16+0.75*(w-130.5)+23/2",
+     "-h/2 + 111.25+29/2",
+     "23",
+     "29",
+     "0",
+     "-w/2 + 33.25+16+0.75*(w-130.5)+23+0.25*(w-130.5)/2",
+     "-h/2 + 111.25+29/2",
+     "0.25*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 42.75+16+0.75*(w-130.5)+23+0.25*(w-130.5)+44/2",
+     "-h/2 + 111.25+29/2",
+     "12.6",
+     "12.6",
+     "0",
+     "-w/2 + 4.75+16/2",
+     "-h/2 + 149.75+29/2",
+     "16",
+     "29",
+     "0",
+     "-w/2 + 14.25+16+0.75*(w-130.5)/2",
+     "-h/2 + 149.75+29/2",
+     "0.75*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 23.75+16+0.75*(w-130.5)+23/2",
+     "-h/2 + 149.75+29/2",
+     "23",
+     "29",
+     "0",
+     "-w/2 + 33.25+16+0.75*(w-130.5)+23+0.25*(w-130.5)/2",
+     "-h/2 + 149.75+29/2",
+     "0.25*(w-130.5)",
+     "29",
+     "0",
+     "-w/2 + 42.75+16+0.75*(w-130.5)+23+0.25*(w-130.5)+44/2",
+     "-h/2 + 149.75+29/2",
+     "12.6",
+     "12.6",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      },
+      "path": "M 120 121 L 122 123 L 124 125 L 126 127 Z"
+     },
+     {
+      "path": "M8 9 L 10 11"
+     },
+     {
+      "path": "M12 13 L 14 15"
+     },
+     {
+      "path": "M21 22 L 23 24"
+     },
+     {
+      "path": "M35 36 L 37 38"
+     },
+     {
+      "path": "M44 45 L 46 47"
+     },
+     {
+      "path": "M58 59 L 60 61"
+     },
+     {
+      "path": "M87 88 L 89 90"
+     },
+     {
+      "path": "M116 117 L 118 119"
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "strokewidth": 0
+      },
+      "location": "16 17 18 19 20",
+      "text": "ID"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "30 31 32 33 34",
+      "text": "Name & Job Title"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 3
+      },
+      "location": "39 40 41 42 43",
+      "text": "Age"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "48 49 50 51 52",
+      "text": "Nickname"
+     },
+     {
+      "style": {
+       "strokewidth": 0
+      },
+      "location": "53 54 55 56 57",
+      "text": "Option"
+     },
+     {
+      "style": {
+       "strokewidth": 0
+      },
+      "location": "62 63 64 65 66",
+      "text": "1"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "67 68 69 70 71",
+      "text": "Name 1\nCEO"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 3
+      },
+      "location": "72 73 74 75 76",
+      "text": "40"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "77 78 79 80 81",
+      "text": "nick1"
+     },
+     {
+      "style": {
+       "strokewidth": 0
+      },
+      "location": "91 92 93 94 95",
+      "text": "2"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "96 97 98 99 100",
+      "text": "Name 2\nCTO"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 3
+      },
+      "location": "101 102 103 104 105",
+      "text": "39"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "106 107 108 109 110",
+      "text": "nick2"
+     },
+     {
+      "style": {
+       "strokewidth": 0
+      },
+      "location": "128 129 130 131 132",
+      "text": "3"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "133 134 135 136 137",
+      "text": "Name 3\nEngineer"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 3
+      },
+      "location": "138 139 140 141 142",
+      "text": "32"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "143 144 145 146 147",
+      "text": "nick3"
+     },
+     {
+      "style": {
+       "strokewidth": 0
+      },
+      "location": "153 154 155 156 157",
+      "text": "4"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "158 159 160 161 162",
+      "text": "Name 4\nEngineer"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 3
+      },
+      "location": "163 164 165 166 167",
+      "text": "35"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "168 169 170 171 172",
+      "text": "nick4"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_chevron-down",
+      "location": "25 26 27 28 29",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_dot-circle-o",
+      "location": "82 83 84 85 86",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_check-square-o",
+      "location": "111 112 113 114 115",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_minus-square-o",
+      "location": "148 149 150 151 152",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_square-o",
+      "location": "173 174 175 176 177",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 317.1,
+    "minH": 183.5
+   }
+  },
+  {
+   "params": {
+    "horizontal grid lines": true,
+    "vertical grid lines": true,
+    "min row height": 20,
+    "border": true
+   },
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    ],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 0,
+    "minH": 0
+   }
+  },
+  {
+   "params": {
+    "horizontal grid lines": true,
+    "vertical grid lines": true,
+    "min row height": 20,
+    "border": true
+   },
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "w/2",
+     "h/2",
+     "w/2",
+     "-h/2",
+     "-w/2",
+     "-h/2 + 4.75+20+4.75",
+     "w/2",
+     "-h/2 + 4.75+20+4.75",
+     "-w/2 + 4.75+1*(w-9.5)/2",
+     "-h/2 + 4.75+20/2",
+     "1*(w-9.5)",
+     "20",
+     "0",
+     "-w/2",
+     "-h/2 + 34.25+20+4.75",
+     "w/2",
+     "-h/2 + 34.25+20+4.75",
+     "-w/2 + 4.75+1*(w-9.5)/2",
+     "-h/2 + 34.25+20/2",
+     "1*(w-9.5)",
+     "20",
+     "0",
+     "-w/2",
+     "-h/2 + 63.75+20+4.75",
+     "w/2",
+     "-h/2 + 63.75+20+4.75",
+     "-w/2",
+     "-h/2 + 34.25+20+4.75",
+     "-w/2",
+     "-h/2 + 63.75+20+4.75",
+     "w/2",
+     "-h/2 + 63.75+20+4.75",
+     "w/2",
+     "-h/2 + 34.25+20+4.75",
+     "-w/2 + 4.75+1*(w-9.5)/2",
+     "-h/2 + 63.75+20/2",
+     "1*(w-9.5)",
+     "20",
+     "0",
+     "-w/2 + 4.75+1*(w-9.5)/2",
+     "-h/2 + 93.25+20/2",
+     "1*(w-9.5)",
+     "20",
+     "0"
+    ],
+    "draw": [
+     {
+      "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "fillpaint": {
+        "color": -10504995,
+        "type": 2
+       }
+      },
+      "path": "M 30 31 L 32 33 L 34 35 L 36 37 Z"
+     },
+     {
+      "path": "M8 9 L 10 11"
+     },
+     {
+      "path": "M17 18 L 19 20"
+     },
+     {
+      "path": "M26 27 L 28 29"
+     }
+    ],
+    "texts": [
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "12 13 14 15 16",
+      "text": "Selected"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "disabled": true,
+       "textalignhorizontal": 2
+      },
+      "location": "21 22 23 24 25",
+      "text": "Disabled"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "disabled": true,
+       "textalignhorizontal": 2
+      },
+      "location": "38 39 40 41 42",
+      "text": "Both"
+     },
+     {
+      "style": {
+       "strokewidth": 0,
+       "textalignhorizontal": 2
+      },
+      "location": "43 44 45 46 47",
+      "text": "*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 67.5,
+    "minH": 118
+   }
+  }
+ ]
+}

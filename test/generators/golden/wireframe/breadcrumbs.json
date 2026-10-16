@@ -1,0 +1,134 @@
+{
+ "avabodh.wireframe.breadcrumbs": [
+  {
+   "params": {},
+   "text": "Home,Product,Features",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "-w/2+0+20",
+     "0",
+     "40",
+     "h",
+     "0",
+     "-w/2+44.9",
+     "0",
+     "9.799999999999999",
+     "9.799999999999999",
+     "0",
+     "-w/2+49.8+30.5",
+     "0",
+     "61",
+     "h",
+     "0",
+     "-w/2+115.7",
+     "0",
+     "9.799999999999999",
+     "9.799999999999999",
+     "0",
+     "-w/2+120.6+34",
+     "0",
+     "68",
+     "h",
+     "0"
+    ],
+    "draw": [],
+    "texts": [
+     {
+      "location": "4 5 6 7 8",
+      "text": "Home"
+     },
+     {
+      "location": "14 15 16 17 18",
+      "text": "Product"
+     },
+     {
+      "style": {
+       "textfill": {
+        "color": -16777216,
+        "type": 2
+       }
+      },
+      "location": "24 25 26 27 28",
+      "text": "Features"
+     }
+    ],
+    "images": [],
+    "embeds": [
+     {
+      "name": "avabodh.wireframe.icon_chevron-right",
+      "location": "9 10 11 12 13",
+      "inheritstyle": true,
+      "mode": "aspect"
+     },
+     {
+      "name": "avabodh.wireframe.icon_chevron-right",
+      "location": "19 20 21 22 23",
+      "inheritstyle": true,
+      "mode": "aspect"
+     }
+    ],
+    "containers": [],
+    "minW": 198.4,
+    "minH": 14
+   }
+  },
+  {
+   "params": {},
+   "text": "",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2"
+    ],
+    "draw": [],
+    "texts": [],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 0,
+    "minH": 14
+   }
+  },
+  {
+   "params": {},
+   "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped",
+   "output": {
+    "data": [
+     "-w/2",
+     "-h/2",
+     "-w/2",
+     "h/2",
+     "-w/2+0+37.5",
+     "0",
+     "75",
+     "h",
+     "0"
+    ],
+    "draw": [],
+    "texts": [
+     {
+      "style": {
+       "textfill": {
+        "color": -16777216,
+        "type": 2
+       }
+      },
+      "location": "4 5 6 7 8",
+      "text": "*Selected\n-Disabled\n*-Both\n\\*Escaped"
+     }
+    ],
+    "images": [],
+    "embeds": [],
+    "containers": [],
+    "minW": 84.8,
+    "minH": 14
+   }
+  }
+ ]
+}

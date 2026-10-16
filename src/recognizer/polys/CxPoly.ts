@@ -305,7 +305,10 @@ export class CxPoly {
     }
 
     const lastPoly = new CxPoly(poly.env);
-    if (partsEnd < split.length - 1 && lastSplit !== undefined) lastPoly.push(lastSplit);
+    // C++ compares `int partsEnd < split.size() - 1` as unsigned (`CxPoly.cpp:335`): with
+    // partsEnd = -1 (one piece, joined to the next part) the test is false and that piece is
+    // dropped. Replicated: the TS signed test kept it, which changed PathAggregator's output.
+    if (partsEnd >= 0 && partsEnd < split.length - 1 && lastSplit !== undefined) lastPoly.push(lastSplit);
     for (let i = idx + 1; i < lines.length; i++) lastPoly.push(at(lines, i));
     if (lastPoly.lines.length > 0) {
       if (lastPoly.lines.length > 1) lastPoly.turnDir = poly.turnDir;

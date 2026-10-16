@@ -142,7 +142,7 @@ describe('TemplateCatalog.build', () => {
   });
 
   it.skipIf(!existsSync(V4))(
-    'every lekhboard/stencils/v4 template builds with no issue (AC-GEN-02; v5 once G6 publishes it)',
+    'every lekhboard/stencils/v4 template builds with no issue (AC-GEN-02; v5 in io/stencils-v5.test.ts)',
     () => {
       const c = TemplateCatalog.build(readDir(V4));
       expect(c.issues()).toEqual([]);

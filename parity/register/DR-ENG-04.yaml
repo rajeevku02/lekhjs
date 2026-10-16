@@ -3,10 +3,9 @@ title: 'Integers are not truncated to 32 bits on read (colours keep signed 32-bi
 area: ENG
 kind: reader-quirk
 cpp: 'atoi/int parsing truncated integer members to 32 bits (B13), e.g. large order values'
-ts: 'io/ JSON reader: plain doubles; colours only read as value | 0'
+ts: 'io/ JSON reader: plain doubles, any integer-valued number is an integer; colours only read as value | 0 (E7)'
 user_visible: true
-# The fix lands with its module: io/ (task E7) owns the reader and its fixture. The fixture is added there.
-fixture: null
+fixture: test/io/register.test.ts
 rule:
   json: ['pages.*.objects.*.order']
   image: null

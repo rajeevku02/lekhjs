@@ -3,10 +3,9 @@ title: "Embed and help ids colliding after '.'→'_' are written deterministical
 area: ENG
 kind: bug-fix
 cpp: 'The serializer kept whichever colliding id the hash map iterated last (B14)'
-ts: 'io/ JSON writer: ids sorted by UTF-8 bytes, first wins'
+ts: 'io/ JsonDocumentWriter: embed and help ids sorted by UTF-8 bytes, the first wins (E7)'
 user_visible: false
-# The fix lands with its module: io/ (task E7) owns the writer and its fixture. The fixture is added there.
-fixture: null
+fixture: test/io/register.test.ts
 rule:
   json: ['templates.*.embeds', 'help']
   image: null

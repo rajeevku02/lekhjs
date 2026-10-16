@@ -1,0 +1,17 @@
+id: DR-ENG-12
+title: 'Six JSON legacy object types are converted to templated objects on load'
+area: ENG
+kind: intended-change
+cpp: 'The JSON reader converted only freeform and curveconnection and kept circle, ellipse, polygon, curve, text and image as live legacy objects (drawn and saved as legacy); the XML reader converted all. Its curveconnection conversion returned a pointer its own Ptr had freed (a crash or a dangling connector)'
+ts: 'io/ LegacyConverter: every legacy type converted on every load path (file, cloud load, paste, library item, XML); none is ever held or written; a legacy image keeps its stored bytes (C++ re-encoded them) (E7)'
+user_visible: true
+fixture: test/io/legacy.test.ts
+rule:
+  json: ['pages.*.objects.* of a legacy type', 'template.images[].data of a converted image']
+  image: null
+  perf: null
+evidence: 'spec 03 §10.4, §16; decision OQ-14; AC-ENG-21, AC-ENG-35'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

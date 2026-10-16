@@ -1,0 +1,265 @@
+{
+ "info": {
+  "author": "",
+  "description": "Synthetic: every JSON legacy object type",
+  "platform": "1",
+  "title": "Legacy JSON types",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": true
+  },
+  "scaling": {
+   "scale": 1,
+   "unit": "point"
+  }
+ },
+ "pages": {
+  "c1ffffff-0000-4000-8000-000000000001": {
+   "name": "Legacy",
+   "order": 1,
+   "objects": {
+    "c1000000-0000-4000-8000-000000000001": {
+     "type": "avabodh.basic.circle",
+     "order": 100,
+     "center": {
+      "x": 100.5,
+      "y": 80
+     },
+     "radius": 30,
+     "text": "Circle",
+     "style": {
+      "strokewidth": 3,
+      "fillpaint": {
+       "type": 2,
+       "color": -3355444
+      }
+     }
+    },
+    "c1000000-0000-4000-8000-000000000002": {
+     "type": "avabodh.basic.ellipse",
+     "order": 101,
+     "center": {
+      "x": 260,
+      "y": 90
+     },
+     "width": 120,
+     "height": 60,
+     "rotation": 0.3,
+     "text": "",
+     "style": {
+      "strokepaint": {
+       "type": 2,
+       "color": -13408615
+      }
+     }
+    },
+    "c1000000-0000-4000-8000-000000000003": {
+     "type": "avabodh.basic.polygon",
+     "order": 102,
+     "closed": true,
+     "rounded": false,
+     "vertices": [
+      {
+       "x": 300,
+       "y": 200
+      },
+      {
+       "x": 420,
+       "y": 200
+      },
+      {
+       "x": 420,
+       "y": 280
+      },
+      {
+       "x": 300,
+       "y": 280
+      }
+     ],
+     "text": "Box",
+     "arrow": {
+      "atstart": false,
+      "atend": false
+     }
+    },
+    "c1000000-0000-4000-8000-000000000004": {
+     "type": "avabodh.basic.polygon",
+     "order": 103,
+     "closed": false,
+     "vertices": [
+      {
+       "x": 40,
+       "y": 320
+      },
+      {
+       "x": 120,
+       "y": 360
+      },
+      {
+       "x": 200,
+       "y": 320
+      }
+     ],
+     "text": "",
+     "arrow": {
+      "atstart": true,
+      "solidatstart": false,
+      "atend": true,
+      "solidatend": true
+     }
+    },
+    "c1000000-0000-4000-8000-000000000005": {
+     "type": "avabodh.basic.freeform",
+     "order": 104,
+     "points": [
+      {
+       "x": 30,
+       "y": 450
+      },
+      {
+       "x": 40,
+       "y": 460
+      },
+      {
+       "x": 55,
+       "y": 458
+      },
+      {
+       "x": 70,
+       "y": 470
+      },
+      {
+       "x": 90,
+       "y": 480
+      }
+     ],
+     "text": "",
+     "style": {
+      "strokewidth": 4
+     }
+    },
+    "c1000000-0000-4000-8000-000000000006": {
+     "type": "avabodh.basic.curve",
+     "order": 105,
+     "curves": [
+      [
+       {
+        "x": 250,
+        "y": 450
+       },
+       {
+        "x": 280,
+        "y": 420
+       },
+       {
+        "x": 330,
+        "y": 500
+       },
+       {
+        "x": 360,
+        "y": 460
+       }
+      ]
+     ],
+     "text": "",
+     "arrow": {
+      "atend": true,
+      "solidatend": false
+     }
+    },
+    "c1000000-0000-4000-8000-000000000007": {
+     "type": "avabodh.basic.text",
+     "order": 106,
+     "center": {
+      "x": 400,
+      "y": 520
+     },
+     "rotation": 0.5,
+     "text": "Free text",
+     "style": {
+      "fontsize": 18
+     }
+    },
+    "c1000000-0000-4000-8000-000000000008": {
+     "type": "avabodh.basic.image",
+     "order": 107,
+     "center": {
+      "x": 520,
+      "y": 120
+     },
+     "width": 64,
+     "height": 48,
+     "rotation": 0.25,
+     "format": "png",
+     "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+     "text": ""
+    },
+    "c1000000-0000-4000-8000-000000000009": {
+     "type": "avabodh.basic.curveconnection",
+     "order": 108,
+     "ctype": 0,
+     "source": "c1000000-0000-4000-8000-000000000001",
+     "target": "c1000000-0000-4000-8000-000000000003",
+     "angles": [
+      0.5,
+      -0.7
+     ],
+     "dfactors": [
+      1,
+      1.5
+     ],
+     "texts": [
+      "old label"
+     ],
+     "text": "",
+     "arrow": {
+      "atend": true,
+      "solidatend": true
+     },
+     "style": {
+      "strokewidth": 2.5
+     }
+    },
+    "c1000000-0000-4000-8000-000000000010": {
+     "type": "avabodh.basic.connection",
+     "order": 109,
+     "ctype": 1,
+     "source": "c1000000-0000-4000-8000-000000000002",
+     "target": "c1000000-0000-4000-8000-000000000007",
+     "params": [
+      {
+       "autotype": 1,
+       "step": 0,
+       "angle": 0,
+       "dx": 0,
+       "dy": 0
+      },
+      {
+       "autotype": 1,
+       "step": 0,
+       "angle": 0,
+       "dx": 0,
+       "dy": 0
+      }
+     ],
+     "texts": [
+      {
+       "text": "links",
+       "param": 0.5
+      }
+     ],
+     "text": ""
+    }
+   },
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   }
+  }
+ }
+}

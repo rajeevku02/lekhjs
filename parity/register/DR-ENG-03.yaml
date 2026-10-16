@@ -1,0 +1,17 @@
+id: DR-ENG-03
+title: 'An integer member written as 2.0 reads as 2'
+area: ENG
+kind: reader-quirk
+cpp: 'getField(int*) refused a FLOAT node, so an integer member written with a fraction part read as absent'
+ts: 'io/ json-fields intField: any integer-valued number (E7)'
+user_visible: false
+fixture: test/io/register.test.ts
+rule:
+  json: ['pages.*.objects.*.order', 'template.flags', 'texts[].row', 'texts[].col']
+  image: null
+  perf: null
+evidence: 'spec 03 §10.1, §16'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

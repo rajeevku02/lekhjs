@@ -3,10 +3,9 @@ title: 'Object keys are escaped on write'
 area: ENG
 kind: bug-fix
 cpp: 'JsonParser::store wrote object keys unescaped, so a key with a quote or backslash made invalid JSON (B18e)'
-ts: 'io/ JSON writer: JSON.stringify escapes every key'
+ts: 'io/ writeJsonText: every key and string escaped by JSON.stringify, keys in UTF-8 byte order (E7)'
 user_visible: false
-# The fix lands with its module: io/ (task E7) owns the writer and its fixture. The fixture is added there.
-fixture: null
+fixture: test/io/register.test.ts
 rule:
   json: []
   image: null

@@ -1,0 +1,17 @@
+id: DR-ENG-01
+title: '\u escapes in JSON load'
+area: ENG
+kind: reader-quirk
+cpp: 'JsonParser rejected a \u escape, so the whole load failed'
+ts: 'io/ JSON reader: JSON.parse (and LenientJson) read \u escapes (E7)'
+user_visible: true
+fixture: test/io/register.test.ts
+rule:
+  json: ['any string member']
+  image: null
+  perf: null
+evidence: 'spec 03 §10.1, §16'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

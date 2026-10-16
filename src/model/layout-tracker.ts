@@ -68,9 +68,10 @@ export class LayoutTracker {
     if (this.flushing_ || this.dirty_.size === 0) return 0;
     this.flushing_ = true;
     const before = this.layoutCalls_;
+    let batch: { obj: LekhObject; pos: number }[] = [];
     try {
       for (let round = 0; round < MAX_ROUNDS && this.dirty_.size > 0; round++) {
-        const batch: { obj: LekhObject; pos: number }[] = [];
+        batch = [];
         for (const obj of this.dirty_) {
           const pos = host.positionOf(obj);
           if (pos >= 0) batch.push({ obj, pos });
@@ -81,7 +82,13 @@ export class LayoutTracker {
         for (const { obj } of batch) if (obj.kind !== ObjectKind.Connector) this.ensure(obj, env);
         for (const { obj } of batch) if (obj.kind === ObjectKind.Connector) this.ensure(obj, env);
         host.commitLayout(batch.map((b) => b.obj));
+        batch = [];
       }
+    } catch (err) {
+      // A layout that throws (spec 03 §14, E-50) loses nothing: the batch goes back into the queue
+      // so the next flush lays out what is still dirty and re-keys what was laid out.
+      for (const { obj } of batch) this.dirty_.add(obj);
+      throw err;
     } finally {
       this.flushing_ = false;
     }

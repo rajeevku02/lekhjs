@@ -16,6 +16,12 @@ export interface UndoManagerOptions {
   readonly onUndo?: () => void;
 }
 
+/** What `UndoManager.checkpoint` captured. */
+export interface UndoCheckpoint {
+  readonly undo: readonly UserAction[];
+  readonly redo: readonly UserAction[];
+}
+
 export class UndoManager {
   private undoStack_: UserAction[] = [];
   private redoStack_: UserAction[] = [];
@@ -58,6 +64,24 @@ export class UndoManager {
     this.undoStack_ = [];
     this.redoStack_ = [];
     if (had) this.opts_.onStateChange?.();
+  }
+
+  /**
+   * The stacks as they are now, for `restore`: a session takes one before a command and restores
+   * it when the command throws, so a failed command leaves the undo and redo stacks as they were
+   * (spec 03 §14, E-52). Not a C++ member.
+   */
+  checkpoint(): UndoCheckpoint {
+    return Object.freeze({ undo: this.undoStack_.slice(), redo: this.redoStack_.slice() });
+  }
+
+  /** Puts the stacks back as `cp` captured them. */
+  restore(cp: UndoCheckpoint): void {
+    const undoFlag = this.canUndo();
+    const redoFlag = this.canRedo();
+    this.undoStack_ = cp.undo.slice();
+    this.redoStack_ = cp.redo.slice();
+    this.raiseStateChange(undoFlag, this.canUndo(), redoFlag, this.canRedo());
   }
 
   /** C++ `undo`. */

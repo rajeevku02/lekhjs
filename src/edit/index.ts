@@ -55,7 +55,7 @@ export {
   SetPageMarginAction,
   SetPageNameAction,
 } from './page-actions';
-export { UNDO_STACK_SIZE, UndoManager, type UndoManagerOptions } from './undo-manager';
+export { UNDO_STACK_SIZE, UndoManager, type UndoCheckpoint, type UndoManagerOptions } from './undo-manager';
 export { EditTransaction, TemplatedObjectsChangeAction } from './edit-transaction';
 export {
   MultiSelection,

@@ -3,3 +3,13 @@
 export { RecordedWidthMeasurer, type NativeWrapCase } from './recorded-width-measurer';
 export { setTestConfig, type TestConfig, type TestConfigOverrides } from './test-config';
 export { createTestTextStack, type TestTextStack, type TestTextStackOptions } from './text-stack';
+export {
+  createTestRuntime,
+  recordingLogger,
+  sequentialIds,
+  type LogEntry,
+  type TestRuntime,
+  type TestRuntimeOptions,
+} from './runtime';
+export { FakeFontLoader, FakeImagePort, FakeScheduler, FakeTransport, fakeImage, type FakeImage } from './fakes';
+export { createFixtureLoader, type FixtureLoader } from './fixtures';

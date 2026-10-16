@@ -1,2 +1,4 @@
-// The public `lekhjs` entry (spec 01 §4.2).
-export {};
+// The public `lekhjs` entry (spec 01 §4.2): the runtime, the board session and its contract, plus
+// the catalog a host builds the runtime with.
+export * from './session';
+export { TemplateCatalog } from './template';

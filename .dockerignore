@@ -1,5 +1,12 @@
+# The BuildKit named context `lekhjs` of lbs/deploy/build.sh (spec 01 §6.3,
+# spec 10 §10.2). A named context does not read lbs/.dockerignore, so this
+# file is what keeps the transfer small. The image copies only package.json,
+# dist/, fonts/ and stencils/; the sources are covered by dist/build-info.json's
+# files_sha256, which build.sh checks before docker runs.
 node_modules
 src
 test
 parity
 coverage
+*.log
+**/*.log

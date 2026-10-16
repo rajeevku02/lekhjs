@@ -5,11 +5,23 @@
 //
 // Order, as C++: `templates[]`, then `arrows[]`, then each `library[]` category. A category entry is
 // either a template id (resolved now, through the sink, objects first) or an object; a
-// templated object is keyed by its template's id, a group or multi object is kept in the
-// category without a key, and any other object is dropped (C++ kept only `TemplatedObject`s).
+// templated object is keyed by its template's id, a group, multi or free-hand object is kept in
+// the category without a key, and any other object is dropped (C++ kept only `TemplatedObject`s).
 import type { GeneratorResolveFn } from '../generator/classify';
 import { deepFreeze, isJsonObject, stringField, type JsonObject, type LibraryFileJson } from '../json';
 import { buildTemplateDef, isReferenceOnly, type CatalogIssue, type TemplateDef } from './template-def';
+
+/**
+ * Stored object types a category keeps without a template key: C++ kept every object that parsed
+ * as a `TemplatedObject`, and `GroupObject`, `MultiObjects` and `UnrecognizedObject` (a free-hand
+ * stroke, also what a legacy `freeform` converts to) all are one (`L/object/*.h`).
+ */
+const KEPT_WITHOUT_KEY: readonly string[] = Object.freeze([
+  'avabodh.basic.group',
+  'avabodh.basic.unrecognized',
+  'multi',
+  'group',
+]);
 
 /** One entry of a library category. */
 export interface CatalogItem {
@@ -92,7 +104,7 @@ function ingestObject(
   issues: CatalogIssue[],
 ): CatalogItem | null {
   const type = stringField(obj, 'type') ?? 'templated';
-  if (type === 'group' || type === 'multi') return { templateId: null, object: deepFreeze(obj) };
+  if (KEPT_WITHOUT_KEY.includes(type)) return { templateId: null, object: deepFreeze(obj) };
   if (type !== 'templated') return null;
   const tmpl = obj['template'];
   if (!isJsonObject(tmpl)) return null;

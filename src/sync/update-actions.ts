@@ -43,7 +43,6 @@ import {
 import { Length, Scaling } from '../style';
 import {
   buildTemplateDef,
-  classifyOnly,
   isJsonObject,
   type CatalogIssue,
   type JsonObject,
@@ -206,7 +205,7 @@ export class AddDelObjectsUpdateAction extends UpdateAction {
     if (this.delAll) return true;
 
     const issues: CatalogIssue[] = [];
-    const resolve = env.codec.env.generators?.resolve ?? classifyOnly;
+    const resolve = env.codec.templates.hooks.resolve;
     for (const body of this.templates) {
       const def = buildTemplateDef(body, resolve, issues);
       if (def === null) return false;

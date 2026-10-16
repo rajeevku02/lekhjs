@@ -40,6 +40,8 @@ export interface EmbedEntry {
   readonly param?: string;
   readonly location: string;
   readonly mode?: string;
+  /** Read, never written (OQ-13); default true. */
+  readonly inheritstyle?: boolean;
   readonly style?: JsonObject;
 }
 

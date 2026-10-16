@@ -1,9 +1,9 @@
 // The template and style codecs (spec 02 `TemplateDataCodec`): the C++ `parseShapeTemplate` /
-// `serializeShapeTemplate` contracts, the resolve hook on every template parsed, the raw-generator
-// fallback, and the style read/write rules ported as is.
+// `serializeShapeTemplate` contracts, the resolve hook on every template parsed, the default
+// generators (generators/' converter), and the style read/write rules ported as is.
 import { describe, expect, it } from 'vitest';
+import { StoredNativeGenerator, UnknownGeneratorPlaceholder, WireframeGenerator } from '../../src/generators';
 import {
-  RawGenerator,
   parsePaint,
   parseStyle,
   parseStyleOrDrawingProfile,
@@ -111,12 +111,12 @@ describe('TemplateDataCodec.parse', () => {
     expect(stats.converted).toBe(1);
   });
 
-  it('a generator becomes a RawGenerator by default and writes back verbatim', () => {
+  it('a native generator not yet ported draws its stored members and writes back verbatim', () => {
     const gen = { type: 'native', shape: 'bpmn.event', text: 'x', interprettext: true, embedrefs: ['b', 'a', 'a'] };
     const io = testIo();
     const t = io.codec.templates.parse(body({ generator: gen, texts: [{ location: '0 1 2 3 4', text: 'kept' }] }));
     const g = t?.generator;
-    expect(g).toBeInstanceOf(RawGenerator);
+    expect(g).toBeInstanceOf(StoredNativeGenerator);
     expect(g?.behavior).toBe('onParamChange');
     expect(g?.interpretText()).toBe(true);
     expect(g?.embedReferences()).toEqual(['a', 'b']);
@@ -125,12 +125,24 @@ describe('TemplateDataCodec.parse', () => {
     expect(out['generator']).toEqual(gen);
     // A native generator's generated parts are written; a script generator's are not.
     expect(out['texts']).toBeDefined();
-    const lua = io.codec.templates.parse(body({ generator: { script: 'x' }, texts: [{ location: '0', text: 't' }] }));
+    const lua = io.codec.templates.parse(
+      body({ id: 'avabodh.wireframe.button', generator: { script: 'x' }, texts: [{ location: '0', text: 't' }] }),
+    );
     if (lua === null) throw new Error('no template');
+    expect(lua.generator).toBeInstanceOf(WireframeGenerator);
     const luaOut = io.codec.templates.serialize(lua);
     expect(luaOut['texts']).toBeUndefined();
     expect(luaOut['draw']).toBeUndefined();
     expect(luaOut['data']).toBeDefined();
+  });
+
+  it('a script under an unknown id is a placeholder that writes the body back as read', () => {
+    const io = testIo();
+    const json = body({ generator: { script: 'x' }, texts: [{ location: '0', text: 't' }] });
+    const t = io.codec.templates.parse(json);
+    expect(t?.generator).toBeInstanceOf(UnknownGeneratorPlaceholder);
+    if (t === null) throw new Error('no template');
+    expect(io.codec.templates.serialize(t)).toEqual(json);
   });
 
   it('a build hook returning null drops the generator (C++ dropped an unknown one)', () => {

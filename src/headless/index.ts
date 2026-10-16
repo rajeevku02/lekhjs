@@ -3,4 +3,5 @@
 // functions and `paintPage` join these when `semantic/` and `export/raster` exist (task B1).
 export { BoardSession, DeadlineBudget, createRuntime, type Runtime, type RuntimeOptions } from '../session';
 export { TemplateCatalog } from '../template';
+export { GeneratorRegistry, buildCatalog } from '../generators';
 export { Canvas2DDrawingPlatform } from '../render';

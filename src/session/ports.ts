@@ -47,12 +47,20 @@ export interface ImagePort {
 /** A template body as a stencil file or a board carries it. */
 export type TemplateJson = JsonObject;
 
+/** What the user may do on a cloud board (the documents API's permission). */
+export type BoardPermission = 'write' | 'comment' | 'read';
+
 /** Where a board came from (`load`, the `open` event). */
 export interface BoardMeta {
   readonly kind: 'offline' | 'cloud';
   readonly docid?: string;
   readonly version?: number;
   readonly path?: string;
+  /**
+   * Cloud boards: the session's permission. Only a `write` session sends the conversion frame for
+   * Lua it converted on open (spec 04 §7.3); absent counts as not `write`.
+   */
+  readonly permission?: BoardPermission;
 }
 
 // ---- events in (dispatch) ----
@@ -81,7 +89,9 @@ export type SessionEvent =
       readonly docGeneration?: number;
     }
   /** Native: LekhPlugin lifecycle events; web: visibilitychange. */
-  | { readonly type: 'hostLifecycle'; readonly state: 'foreground' | 'background' };
+  | { readonly type: 'hostLifecycle'; readonly state: 'foreground' | 'background' }
+  /** A share change pushed by kashi raised or lowered the session's permission (spec 04 §7.3). */
+  | { readonly type: 'permissionChanged'; readonly permission: BoardPermission };
 
 // ---- notifications out (on) ----
 

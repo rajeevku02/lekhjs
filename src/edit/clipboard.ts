@@ -5,7 +5,7 @@
 // `serializeCopiedObject` payload (the templates plus one object, a `multi` for several), and
 // `load()` takes one back; Lua generators in it are converted on the way in (spec 04 §7.1).
 import { Point, Rect } from '../geometry';
-import { buildTemplateDef, classifyOnly, type CatalogIssue, type JsonObject, type ShapeTemplate } from '../template';
+import { buildTemplateDef, type CatalogIssue, type JsonObject, type ShapeTemplate } from '../template';
 import {
   ConnectionObject,
   GroupObject,
@@ -195,7 +195,7 @@ export class ClipboardService {
     const issues: CatalogIssue[] = [];
     for (const [id, t] of this.templates_) {
       if (catalog.getTemplate(id) !== null || doc.hasTemplate(id)) continue;
-      const def = buildTemplateDef(codec.templates.serialize(t), codec.env.generators?.resolve ?? classifyOnly, issues);
+      const def = buildTemplateDef(codec.templates.serialize(t), codec.templates.hooks.resolve, issues);
       if (def !== null) doc.addTemplate(def);
     }
     const center = this.pastePoint_;

@@ -1,0 +1,17 @@
+id: DR-GEN-10
+title: 'A generator failure warns; a first-generation failure shows the placeholder'
+area: GEN
+kind: bug-fix
+cpp: 'A Lua error was only logged and the previous output stayed silently; with none the shape was an empty box'
+ts: 'generators/WireframeGenerator: the previous output stays, generator_failed is warned, and with no previous output the placeholder is drawn until a later generation succeeds'
+user_visible: true
+fixture: test/generators/register.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 04 §5.1, §14; AC-GEN-22'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

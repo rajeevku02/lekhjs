@@ -1,7 +1,8 @@
 // Bundle audit (spec 01 §4.1, §5.3; AC-ARC-10). Part of `npm run check`.
 //
 // Every dist/node/*.js must contain:
-//   - no `pdfkit` or `fontkit` (export/pdf is a separate entry, never in the Node bundle);
+//   - no `pdfkit` or `fontkit` (export/pdf is a separate entry, never in the Node bundle), and no
+//     `fengari` (the Lua oracle is a test-only devDependency, AC-GEN-10);
 //   - no code from src/interaction/ (kashi never loads interaction code);
 //   - no reference to the globals `window` or `document`.
 // dist/node/index.js and dist/node/headless.js must also contain no code from src/testing/.
@@ -18,7 +19,7 @@ import * as walk from 'acorn-walk';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const NO_TESTING = Object.freeze(['index.js', 'headless.js']);
-const FORBIDDEN_LIBS = Object.freeze(['pdfkit', 'fontkit']);
+const FORBIDDEN_LIBS = Object.freeze(['pdfkit', 'fontkit', 'fengari']);
 const FORBIDDEN_GLOBALS = Object.freeze(['window', 'document']);
 const TESTING_NAMES = Object.freeze([
   'createTestRuntime',

@@ -38,6 +38,11 @@ export function structuralConfig(basePath) {
         'import-x/no-restricted-paths': ['error', { basePath, zones: boundaryZones() }],
         'no-restricted-imports': ['error', { patterns: [...SRC_RESTRICTED_IMPORT_PATTERNS] }],
         'lekhjs/no-module-state': ['error', { allow: [] }],
+        // A generator's script text is never evaluated (AC-GEN-09, spec 04 §5.2).
+        'no-eval': 'error',
+        'no-new-func': 'error',
+        '@typescript-eslint/no-implied-eval': 'off',
+        'no-implied-eval': 'error',
         'no-restricted-globals': [
           'error',
           ...RESTRICTED_GLOBALS.map((name) => ({

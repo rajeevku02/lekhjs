@@ -34,7 +34,12 @@ export {
   serializePaint,
   serializeStyle,
 } from './codec/style-codec';
-export { RawGenerator, type GeneratorHooks } from './codec/generator-hooks';
+export {
+  completeHooks,
+  converterHooks,
+  type CompleteGeneratorHooks,
+  type GeneratorHooks,
+} from './codec/generator-hooks';
 export {
   LEGACY_TYPES,
   LEGACY_TYPE_NAMES,

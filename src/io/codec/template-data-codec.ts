@@ -27,7 +27,7 @@ import {
   TextInfo,
   TextSide,
   TextTemplate,
-  classifyGenerator,
+  cloneJson,
   compiledDataOf,
   isJsonObject,
   templateClassOf,
@@ -50,7 +50,7 @@ import {
   strField,
   stringVal,
 } from '../json/json-fields';
-import { buildGenerator, isJsForm, resolveHook, type GeneratorHooks } from './generator-hooks';
+import { completeHooks, type CompleteGeneratorHooks, type GeneratorHooks } from './generator-hooks';
 import { parseStyle, parseStyleOrDrawingProfile, serializeStyleIfNeeded } from './style-codec';
 
 type Out = Record<string, JsonValue>;
@@ -171,11 +171,11 @@ export function serializeTemplateParams(params: readonly TemplateParam[]): JsonO
 
 export class TemplateDataCodec {
   readonly env: TemplateEnv;
-  readonly hooks: GeneratorHooks | undefined;
+  readonly hooks: CompleteGeneratorHooks;
 
   constructor(env: TemplateEnv, hooks?: GeneratorHooks) {
     this.env = env;
-    this.hooks = hooks;
+    this.hooks = completeHooks(hooks);
   }
 
   /** A codec like this one whose templates use `env` (a load's environment). */
@@ -194,7 +194,7 @@ export class TemplateDataCodec {
     if (tid === undefined) return null;
     if (Object.keys(json).length === 1) return this.env.resolver.getTemplate(tid);
 
-    const res = resolveHook(this.hooks)(json);
+    const res = this.hooks.resolve(json);
     if (res.converted && stats !== undefined) stats.converted++;
     const node = res.json;
     const klass = templateClassOf(node);
@@ -247,11 +247,24 @@ export class TemplateDataCodec {
 
     const gen = objField(node, 'generator');
     if (gen !== undefined) {
-      const ref = res.generator ?? classifyGenerator(gen);
-      const g = buildGenerator(this.hooks, gen, ref, tid);
+      const g = this.hooks.build(gen, res.generator, tid, {
+        template: node,
+        apply: (t, data) => {
+          this.applyTemplateData(data, t);
+        },
+      });
       if (g !== null) stl.generator = g;
     }
     return stl;
+  }
+
+  /**
+   * What a generator's output does to its template (C++ `LuaShapeGenerator::generate`:
+   * `clearTemplateData()` then `parseTemplateData` of the script's JSON; spec 01 C5).
+   */
+  applyTemplateData(data: JsonObject, stl: ShapeTemplate): void {
+    stl.clearTemplateData();
+    this.parseTemplateData(data, stl);
   }
 
   /** C++ `parseTemplateData`: the declarative members of `node` into `stl`. */
@@ -370,6 +383,11 @@ export class TemplateDataCodec {
 
   /** C++ `serializeShapeTemplate`. */
   serialize(stl: ShapeTemplate, opts: TemplateWriteOptions = {}): JsonObject {
+    const preserved = stl.generator?.preserved() ?? null;
+    if (preserved !== null) {
+      // A placeholder: the body as read, byte for byte (spec 04 §7.4); it is never JS-form.
+      return cloneJson(preserved.template);
+    }
     const tmpl: Out = { id: stl.templateId };
     serializeStyleIfNeeded(tmpl, stl.getStyle());
     if (stl.boundPathStr !== '') tmpl['bound'] = stl.boundPathStr;
@@ -386,7 +404,7 @@ export class TemplateDataCodec {
     const gen = stl.generator;
     if (gen !== null) {
       tmpl['generator'] = gen.toJSON();
-      if (opts.onJsGenerator !== undefined && isJsForm(this.hooks, gen)) opts.onJsGenerator();
+      if (opts.onJsGenerator !== undefined && this.hooks.isJsForm(gen)) opts.onJsGenerator();
     }
     if (gen === null || gen.behavior === 'onParamChange') {
       if (stl.textData.length > 0) {

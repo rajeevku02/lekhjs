@@ -31,19 +31,22 @@ import {
   type SelectionChange,
 } from '../edit';
 import type { Rect } from '../geometry';
-import { DocumentCodec, type IoEnv, type ReadResult } from '../io';
+import { LuaToJsConverter, TemplateGeneratorHost } from '../generators';
+import { DocumentCodec, converterHooks, type IoEnv, type ReadResult } from '../io';
 import {
   BackgroundType,
   CanvasSizeType,
   ImageRefs,
   ImageRequests,
   LekhDocument,
+  isTemplated,
   type DocumentContext,
   type ImageLookup,
   type LekhObject,
   type ObjectEnv,
   type Page,
   type PaintEnv,
+  type TemplatedObject,
 } from '../model';
 import { Canvas2DDrawingPlatform, GridPainter, ImageCache, ViewTransform, type GridBackground } from '../render';
 import { SyncSession, type ApplyResult, type ReceiveOutcome, type ServerMessage } from '../sync';
@@ -53,13 +56,15 @@ import {
   TemplateTextService,
   type JsonValue,
   type TemplateEnv,
+  type UnknownGeneratorReason,
 } from '../template';
 import type { CommandContext, CommandHandler, EditCommand } from './commands';
-import { basicGeneratorContext } from './generator-context';
+import { SessionDiagnostics } from './diagnostics';
 import { PaintRequests } from './paint-requests';
 import type {
   AbortSignalLike,
   BoardMeta,
+  BoardPermission,
   Canvas2DLike,
   LoadResult,
   PaintLayer,
@@ -123,6 +128,10 @@ export class BoardSession {
   readonly clipboard: ClipboardService;
   readonly sync: SyncSession;
   readonly imageCache: ImageCache;
+  /** Lua → JS conversion and generator construction over the runtime's registry (spec 04 §7). */
+  readonly converter: LuaToJsConverter;
+  /** Unknown generators and the usage event (spec 04 §7.4). */
+  readonly diagnostics: SessionDiagnostics;
 
   private doc_: LekhDocument;
   private loaded_ = false;
@@ -148,6 +157,15 @@ export class BoardSession {
   private readonly docHelp_ = new Map<string, string>();
   private readonly unsubscribe_: (() => void)[] = [];
   private readonly lookup_: ImageLookup;
+  private permission_: BoardPermission | null = null;
+  /**
+   * The stored document of the last open or reload while it still holds Lua this session converted
+   * in memory: what a writer's conversion frame is built from. Cleared once the frame is sent (or
+   * dropped: there is no retry, spec 04 §7.3).
+   */
+  private pendingConversion_: { readonly raw: JsonValue; readonly skip: ReadonlySet<string> } | null = null;
+  /** The placeholder toast and usage event went out for this open. */
+  private placeholdersReported_ = false;
 
   constructor(runtime: Runtime, opts: SessionOptions) {
     this.runtime = runtime;
@@ -162,7 +180,10 @@ export class BoardSession {
       if (holder.codec === null) throw new Error('session codec not ready');
       return holder.codec;
     };
+    this.converter = new LuaToJsConverter(runtime.generators);
+    this.diagnostics = new SessionDiagnostics(runtime.logger);
     this.overlay = new CatalogOverlay(opts.catalog ?? runtime.catalog, {
+      resolve: this.converter.resolve,
       instantiate: (def) => codec().templates.instantiate(def),
     });
     const resolver = new CatalogTemplateResolver(this.overlay, (def) => codec().embedFactory()(def));
@@ -172,7 +193,7 @@ export class BoardSession {
       text,
       resolver,
       image: (key) => this.lookup_.get(key),
-      generatorContext: (t) => basicGeneratorContext(t, text),
+      generatorContext: (t) => new TemplateGeneratorHost(t, text),
       warn: (code, details) => {
         logger.warn(code, details);
       },
@@ -196,7 +217,7 @@ export class BoardSession {
         if (this.overlay.help(id) === undefined && !this.docHelp_.has(id)) this.docHelp_.set(id, t);
       },
       logger,
-      generators: runtime.generators,
+      generators: converterHooks(this.converter),
     };
     this.codec = new DocumentCodec(env);
     holder.codec = this.codec;
@@ -218,6 +239,7 @@ export class BoardSession {
       scheduler: opts.scheduler,
       logger,
       docid: '',
+      isJsForm: this.converter.jsFormTest,
       ...(opts.transport !== undefined ? { transport: opts.transport } : {}),
     });
     this.sync.attach(
@@ -305,9 +327,12 @@ export class BoardSession {
       throw err;
     }
     for (let i = 0; i < read.doc.pages.length; i++) this.budgetCheck();
+    this.placeholdersReported_ = false;
+    this.permission_ = meta?.kind === 'cloud' ? (meta.permission ?? null) : null;
     this.adopt(read);
     if (meta?.kind === 'cloud' && meta.docid !== undefined) {
       this.sync.start(meta.docid, meta.version ?? 0, read.doc.info.version);
+      this.sendPendingConversion();
     }
     return { ok: true };
   }
@@ -433,6 +458,11 @@ export class BoardSession {
     }
   }
 
+  /** The session's permission on a cloud board (`null` offline or when the host gave none). */
+  get permission(): BoardPermission | null {
+    return this.permission_;
+  }
+
   /** Subscribes to a notification; `signal` (an `AbortSignal`) unsubscribes. */
   on<K extends keyof SessionEvents>(k: K, fn: Listener<K>, signal?: AbortSignalLike): void {
     if (this.disposed_ || signal?.aborted === true) return;
@@ -512,6 +542,8 @@ export class BoardSession {
     this.unsubscribe_.length = 0;
     this.sync.dispose();
     this.listeners_.clear();
+    this.diagnostics.clear();
+    this.pendingConversion_ = null;
     this.commandHandlers_.clear();
     this.recognitionApplier_ = null;
     this.outbox_.clear();
@@ -556,6 +588,11 @@ export class BoardSession {
         else if (d?.kind === 'reopen') this.pending_.reopen = true;
         return;
       }
+      case 'permissionChanged':
+        this.permission_ = ev.permission;
+        // Raised to write: the conversion frame a writer sends on open, once (AC-FMT-24).
+        this.sendPendingConversion();
+        return;
       case 'imageLoaded':
         this.imageCache.put(ev.url, ev.image);
         this.requestPaint('drawing');
@@ -670,7 +707,15 @@ export class BoardSession {
   private onFrame(outcome: ReceiveOutcome): void {
     if (outcome.kind !== 'applied') return;
     const result: ApplyResult = outcome.result;
-    if (result.reloaded) return; // `adopt` recorded it
+    if (result.reloaded) {
+      // `adopt` recorded it; a reload is an open of the stored board.
+      this.sendPendingConversion();
+      return;
+    }
+    if (result.convertedLua && this.permission_ === 'write') {
+      // An old peer's frame brought Lua (it raced the gate): a writer converts those objects.
+      this.sync.sendFrames(this.sync.framesOf(this.sync.conversionEntriesFor(result.changedIds)));
+    }
     const pd = this.pending_;
     for (const id of result.changedIds) pd.changed.add(id);
     for (const id of result.removedIds) pd.removed.add(id);
@@ -686,6 +731,7 @@ export class BoardSession {
       }
     }
     this.imageRequests_.scheduleFor(objs);
+    this.reportPlaceholders(objs);
   }
 
   /** A read document becomes the session's: a load, an `open`, a `load` frame (reload). */
@@ -701,10 +747,61 @@ export class BoardSession {
     this.viewState_ = null;
     for (const p of this.doc_.pages) p.objectStore.markAllDirty();
     this.imageRequests_.schedule(ImageRefs.document(this.doc_));
+    // Conversion is in memory: the document is not dirty, and only a writer's conversion frame
+    // (or the next save) persists it (spec 04 §7.3).
+    this.pendingConversion_ =
+      read.convertedLua && read.source !== null ? { raw: read.source, skip: new Set(read.recoveredPages) } : null;
     const pd = this.pending_;
     pd.reloaded = true;
     pd.selection = true;
     pd.view = true;
+    this.reportPlaceholders(this.doc_.pages.flatMap((p) => p.objectStore.objects));
+  }
+
+  // ---- generators (spec 04 §7.3, §7.4) ----
+
+  /**
+   * A writer sends the conversion frame for the Lua it converted on open, once: when the open or
+   * reload finished, or when its permission was raised to `write` while the converted templates
+   * are still held. A chunk the transport does not take is not retried (AC-FMT-25).
+   */
+  private sendPendingConversion(): void {
+    const pc = this.pendingConversion_;
+    if (pc === null || this.permission_ !== 'write' || this.sync.docid === '') return;
+    this.pendingConversion_ = null;
+    const sent = this.sync.sendConversion(pc.raw, pc.skip);
+    this.runtime.logger.debug('conversion_sent', { chunks: sent });
+  }
+
+  /**
+   * Reports the placeholders among `objs` (group members included): one `unknown_generator`
+   * diagnostic each, and, the first time in this open that any exists, the toast and the
+   * `unknown_generator_seen` usage event (counts and reasons only).
+   */
+  private reportPlaceholders(objs: readonly LekhObject[]): void {
+    const found: { templateId: string; objectId: string; reason: UnknownGeneratorReason }[] = [];
+    const visit = (o: LekhObject): void => {
+      if (isTemplated(o)) {
+        const t = (o as TemplatedObject).shapeTemplate();
+        const p = t?.generator?.preserved() ?? null;
+        if (t !== null && p !== null) found.push({ templateId: t.templateId, objectId: o.id, reason: p.reason });
+      }
+      for (const m of o.members()) visit(m);
+    };
+    for (const o of objs) visit(o);
+    if (found.length === 0) return;
+    for (const f of found) {
+      this.runtime.logger.warn('unknown_generator', { templateId: f.templateId, reason: f.reason });
+      this.diagnostics.emit('unknown_generator', f);
+    }
+    if (this.placeholdersReported_) return;
+    this.placeholdersReported_ = true;
+    this.pending_.toasts.push({
+      kind: 'warn',
+      message: "Some shapes on this board can't be shown by this version of Lekh. They are kept unchanged.",
+    });
+    const reasons = [...new Set(found.map((f) => f.reason))].sort();
+    this.diagnostics.emit('usage', { name: 'unknown_generator_seen', count: found.length, reasons });
   }
 
   // ---- commands ----

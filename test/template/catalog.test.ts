@@ -337,9 +337,9 @@ describe('classifyGenerator', () => {
     ],
     [
       { type: 'native', shape: '' },
-      { kind: 'unknown', key: '' },
+      { kind: 'unknown', key: '', reason: 'unknown_native_shape' },
     ],
-    [{ type: 'python' }, { kind: 'unknown', key: '' }],
+    [{ type: 'python' }, { kind: 'unknown', key: '', reason: 'unknown_type' }],
   ])('%j', (gen, expected) => {
     expect(classifyGenerator(gen)).toEqual(expected);
   });

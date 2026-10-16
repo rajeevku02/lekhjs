@@ -116,6 +116,7 @@ export class XmlDocumentReader {
       currentStyle,
       help: new Map(),
       recoveredPages: [],
+      source: null,
       warnings: ctx.warnings(),
     };
   }

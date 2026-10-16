@@ -8,10 +8,11 @@ export type { CommandContext, CommandHandler, EditCommand } from './commands';
 export { DeadlineBudget } from './budget';
 export { PaintRequests } from './paint-requests';
 export { styleSnapshotOf } from './style-snapshot';
-export { basicGeneratorContext } from './generator-context';
+export { SessionDiagnostics, type DiagnosticEvents } from './diagnostics';
 export type {
   AbortSignalLike,
   BoardMeta,
+  BoardPermission,
   Budget,
   Canvas2DLike,
   CanvasFactory,

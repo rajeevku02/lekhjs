@@ -134,21 +134,19 @@ describe('FormatStamp (AC-ENG-20)', () => {
     expect(versionOf(doc({ a: titled() }, '5.0'), 'cloud')).toBe('4.3');
   });
 
-  it('a Lua generator does not count; a converting resolve hook makes it JS', () => {
-    expect(versionOf(doc({ a: luaGenerated() }), 'cloud')).toBe('4.2');
-    const io = testIo({
-      generators: {
-        resolve: (json) => {
-          const gen = json['generator'] as JsonObject | undefined;
-          if (gen === undefined) return { json, generator: null, converted: false };
-          const out = { ...json, generator: { ...gen, script: '/*lekh-js:1:wireframe/button*/' } };
-          return { json: out, generator: { kind: 'js', key: 'wireframe/button' }, converted: true };
-        },
-      },
-    });
+  it('known Lua is converted on read and counts as JS; Lua under an unknown id is a placeholder and does not', () => {
+    const io = testIo();
     const res = io.codec.read(doc({ a: luaGenerated() }));
     expect(res.convertedLua).toBe(true);
     expect(io.codec.write(res.doc, { stamp: 'cloud' }).version).toBe('5.0');
+    const unknown = rect({ id: 'avabodh.wireframe.nosuch', generator: { script: 'return {}', text: 'OK' } });
+    expect(versionOf(doc({ a: unknown }), 'cloud')).toBe('4.2');
+  });
+
+  it('a resolve hook decides what is converted', () => {
+    const io = testIo({ generators: { resolve: (json) => ({ json, generator: null, converted: false }) } });
+    const res = io.codec.read(doc({ a: luaGenerated() }));
+    expect(res.convertedLua).toBe(false);
   });
 
   it('a placeholder never counts as JS (the isJsForm hook)', () => {

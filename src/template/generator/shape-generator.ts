@@ -9,6 +9,7 @@ import type { Point } from '../../geometry';
 import type { DataStore } from '../expr/data-store';
 import type { JsonObject } from '../json';
 import type { InterestingPoint, ShapeTemplate } from '../model/shape-template';
+import type { UnknownGeneratorReason } from './classify';
 import type { GeneratorContext } from './generator-context';
 
 /** C++ `ShapeGenerator::Behavior`: wireframe generators `generateAlways`, native ones `onParamChange`. */
@@ -16,6 +17,16 @@ export type GeneratorBehavior = 'generateAlways' | 'onParamChange';
 
 /** What the serializer writes as `template.generator`. */
 export type GeneratorJson = JsonObject;
+
+/**
+ * What a placeholder for an unknown generator keeps (spec 04 §7.4): the template body exactly as
+ * read, which the serializer writes back instead of the live template.
+ */
+export interface PreservedTemplate {
+  readonly reason: UnknownGeneratorReason;
+  /** The template body as read (deep-frozen). */
+  readonly template: JsonObject;
+}
 
 export abstract class ShapeGenerator {
   abstract readonly behavior: GeneratorBehavior;
@@ -48,6 +59,13 @@ export abstract class ShapeGenerator {
   /** Moves vertex `index` to `to`; returns where it went (C++ `out`). */
   moveVertexTo(_t: ShapeTemplate, _ds: DataStore, _index: number, to: Point): Point {
     return to;
+  }
+  /**
+   * Non-null only for the placeholder of an unknown generator: the template is written back
+   * verbatim, text editing and the property panel are off, and it never counts as JS-form.
+   */
+  preserved(): PreservedTemplate | null {
+    return null;
   }
   /* eslint-enable @typescript-eslint/no-unused-vars */
 }

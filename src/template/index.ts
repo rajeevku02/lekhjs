@@ -114,7 +114,12 @@ export {
   type TemplateResolver,
 } from './catalog/template-resolver';
 
-export { ShapeGenerator, type GeneratorBehavior, type GeneratorJson } from './generator/shape-generator';
+export {
+  ShapeGenerator,
+  type GeneratorBehavior,
+  type GeneratorJson,
+  type PreservedTemplate,
+} from './generator/shape-generator';
 export type { GeneratorContext, SizeSpec, SizeSpecItem, SplitItem, SplitOptions } from './generator/generator-context';
 export type {
   DrawEntry,
@@ -134,4 +139,5 @@ export {
   type GeneratorRef,
   type GeneratorResolution,
   type GeneratorResolveFn,
+  type UnknownGeneratorReason,
 } from './generator/classify';

@@ -26,7 +26,7 @@ import {
 } from '../../template';
 import { LoadError } from '../errors';
 import { FormatVersion } from '../format/format-version';
-import { resolveHook } from '../codec/generator-hooks';
+import { completeHooks } from '../codec/generator-hooks';
 import { parseStyleOrDrawingProfile } from '../codec/style-codec';
 import { LoadContext, type IoEnv, type LoadWarning } from '../load-context';
 import {
@@ -57,6 +57,11 @@ export interface ReadResult {
   /** Ids of the phantom pages kept as "Recovered" (DR-FMT-01). */
   readonly recoveredPages: readonly string[];
   readonly warnings: readonly LoadWarning[];
+  /**
+   * The parsed JSON document as stored (never modified; `null` for XML). A writer session reads
+   * which stored templates held Lua from it (the conversion frame, spec 04 §9.4).
+   */
+  readonly source: JsonValue | null;
 }
 
 /** What `readPage` produced. */
@@ -156,6 +161,7 @@ export class JsonDocumentReader {
       help,
       recoveredPages: recovered,
       warnings: ctx.warnings(),
+      source: root,
     };
   }
 
@@ -212,7 +218,7 @@ export class JsonDocumentReader {
     if (isJsonObject(templates)) bodies = membersInByteOrder(templates).map(([, v]) => v);
     else if (Array.isArray(templates)) bodies = (templates as readonly JsonValue[]).slice();
     const issues: CatalogIssue[] = [];
-    const resolve = resolveHook(this.env.generators);
+    const resolve = this.env.generators?.resolve ?? completeHooks(undefined).resolve;
     for (const body of bodies) {
       if (!isJsonObject(body) || typeof body['id'] !== 'string') {
         ctx.note('template_skipped');

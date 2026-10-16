@@ -1,5 +1,7 @@
 {
-  "comment": "The C++-written fixture sets the io suites read in place (AC-FMT-02). Paths are relative to the lekhjs package root; test/ may not name these repositories itself (AC-ARC-12).",
+  "comment": "The C++-written fixture sets and sources the suites read in place (AC-FMT-02; the Lua sources and the v4 stencils for the generator oracle, spec 04 §13). Paths are relative to the lekhjs package root; test/ may not name these repositories itself (AC-ARC-12).",
   "core": "../lekhcore/test/fixtures",
-  "backend": "../lbs/kashi/test/core/fixtures"
+  "backend": "../lbs/kashi/test/core/fixtures",
+  "lua": "../lekhcore/stencils/lua",
+  "stencilsV4": "../lekhboard/stencils/v4"
 }

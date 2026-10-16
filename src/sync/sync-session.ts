@@ -351,9 +351,13 @@ export class SyncSession {
    * a `load` carried): every document template that held Lua, then every top-level object whose
    * stored template held a Lua generator and whose live template is now JS-form, in page order and
    * then object order. Group members are not listed (their template keys are deeper than a TS
-   * receiver applies; they convert in memory on every open).
+   * receiver applies; they convert in memory on every open). Pages in `skipPages` (the phantom
+   * pages kept as "Recovered", which no open may write: AC-FMT-29) are not listed either.
    */
-  conversionEntries(raw: JsonValue): { templates: ConversionEntry[]; objects: ConversionEntry[] } {
+  conversionEntries(
+    raw: JsonValue,
+    skipPages?: ReadonlySet<string>,
+  ): { templates: ConversionEntry[]; objects: ConversionEntry[] } {
     const doc = this.opts_.host.document();
     const codec = this.opts_.host.codec;
     const templates: ConversionEntry[] = [];
@@ -364,6 +368,7 @@ export class SyncSession {
     const objects: ConversionEntry[] = [];
     const pages = isJsonObject(raw) ? raw['pages'] : undefined;
     for (const page of doc.pages) {
+      if (skipPages?.has(page.id) === true) continue;
       const rawPage = isJsonObject(pages) ? pages[page.id] : undefined;
       const rawObjects = isJsonObject(rawPage) ? rawPage['objects'] : undefined;
       if (!isJsonObject(rawObjects)) continue;
@@ -380,24 +385,54 @@ export class SyncSession {
     return { templates, objects };
   }
 
+  /**
+   * The conversion entries for objects a realtime frame brought with Lua (an old peer's frame
+   * that raced the gate, spec 04 §7.3): each listed top-level object whose live template is now
+   * JS-form. Re-sending a template that was JS already is idempotent.
+   */
+  conversionEntriesFor(ids: readonly string[]): { templates: ConversionEntry[]; objects: ConversionEntry[] } {
+    const doc = this.opts_.host.document();
+    const codec = this.opts_.host.codec;
+    const objects: ConversionEntry[] = [];
+    for (const page of doc.pages) {
+      for (const id of ids) {
+        const obj = page.objectStore.getObject(id);
+        if (obj === null) continue;
+        const written = codec.writeObject(obj)['template'];
+        if (written === undefined || !this.stamper.containsJs(written)) continue;
+        objects.push({ key: objectTemplateKey(page.id, obj.id), template: written });
+      }
+    }
+    return { templates: [], objects };
+  }
+
   /** The conversion frame's chunks as frame texts (`changeattr`, no conditions, each stamped). */
-  conversionFrames(raw: JsonValue): string[] {
+  conversionFrames(raw: JsonValue, skipPages?: ReadonlySet<string>): string[] {
+    return this.framesOf(this.conversionEntries(raw, skipPages));
+  }
+
+  /** `entries` as conversion-frame texts (none without a docid). */
+  framesOf(entries: { templates: ConversionEntry[]; objects: ConversionEntry[] }): string[] {
     if (this.docid_ === '') return [];
-    const { templates, objects } = this.conversionEntries(raw);
     const envelope = (changes: Readonly<Record<string, JsonValue>>) =>
       FrameCodec.encode(this.version_, this.docid_, { type: updatetypes.changeAttr, changes });
-    const chunks = this.stamper.conversionChunks(templates, objects, (c) => utf8Length(envelope(c)));
+    const chunks = this.stamper.conversionChunks(entries.templates, entries.objects, (c) => utf8Length(envelope(c)));
     return chunks.map((c) => envelope(c));
   }
 
   /**
-   * Sends the conversion frame for a writer's open (no retry: a chunk the transport does not take
-   * is dropped, and the next writer open converts again). Returns the chunks sent.
+   * Sends conversion-frame texts (no retry: a chunk the transport does not take is dropped, and
+   * the next writer open converts again). Returns the chunks sent.
    */
-  sendConversion(raw: JsonValue): number {
+  sendFrames(texts: readonly string[]): number {
     let sent = 0;
-    for (const text of this.conversionFrames(raw)) if (this.send(text)) sent++;
+    for (const text of texts) if (this.send(text)) sent++;
     return sent;
+  }
+
+  /** Sends the conversion frame for a writer's open of `raw`. Returns the chunks sent. */
+  sendConversion(raw: JsonValue, skipPages?: ReadonlySet<string>): number {
+    return this.sendFrames(this.conversionFrames(raw, skipPages));
   }
 
   /** The board's format is at least 5.0 (spec 04 §9.3). */

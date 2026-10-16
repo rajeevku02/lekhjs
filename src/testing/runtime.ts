@@ -4,7 +4,7 @@
 // sequential uuids, the log is recorded, fonts come from a `FakeFontLoader`, and the test-only
 // text switches (`setTestConfig`, with `linePitch`) are applied to the runtime's text stack.
 import type { Clock, ConfigOverrides, IdSource, Logger } from '../base';
-import type { GeneratorHooks } from '../io';
+import type { GeneratorRegistry } from '../generators';
 import { createRuntime, type Runtime } from '../session';
 import { TemplateCatalog } from '../template';
 import { CanvasTextMeasurer, type CanvasFactory, type FontHost, type TextMeasurer } from '../text';
@@ -27,7 +27,8 @@ export interface TestRuntimeOptions {
   readonly advance?: number;
   /** Default: an empty catalog. */
   readonly catalog?: TemplateCatalog;
-  readonly generators?: GeneratorHooks;
+  /** Default: the built-in registry. */
+  readonly generators?: GeneratorRegistry;
   /** The test-only switches (`lineSpacingCompat`, `fontFallbackCompat`, `linePitch`). */
   readonly testing?: TestConfigOverrides;
   readonly clock?: Clock;

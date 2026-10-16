@@ -17,6 +17,7 @@ import {
   type TemplateDef,
   type TemplateFactory,
 } from '../template';
+import { completeHooks } from './codec/generator-hooks';
 import { TemplateDataCodec } from './codec/template-data-codec';
 import { JsonDocumentReader, type ReadResult } from './json/document-reader';
 import { JsonDocumentWriter, type WriteOptions, type WriteResult } from './json/document-writer';
@@ -32,8 +33,9 @@ export class DocumentCodec {
   readonly templates: TemplateDataCodec;
 
   constructor(env: IoEnv) {
-    this.env = env;
-    this.templates = new TemplateDataCodec(env.templates, env.generators);
+    // Every reader and writer of this codec shares one set of complete generator hooks.
+    this.env = { ...env, generators: completeHooks(env.generators) };
+    this.templates = new TemplateDataCodec(env.templates, this.env.generators);
   }
 
   /** A file's or a stored board's text → document. Throws `LoadError`. */

@@ -1,0 +1,17 @@
+id: DR-GEN-13
+title: "Wireframe data number formatting is JS shortest round trip, not Lua's %.14g"
+area: GEN
+kind: intended-change
+cpp: "Lua tostring wrote %.14g with '.0' on integral floats, and text sizes were float32 widened (7.0999999046326)"
+ts: 'generators/num: String(x) with -0 as 0; the JSON comparison evaluates the data expressions on a grid instead of comparing text'
+user_visible: false
+fixture: test/generators/register.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 04 §5.5, §14; research 03 §3'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

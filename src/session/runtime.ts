@@ -1,11 +1,11 @@
 // `Runtime`: one per JS realm — one per page in the browser, one per kashi pool worker (spec 01
 // §4.2, spec 03 §12.4). Shared by every session on it and holding no per-board state: the
-// immutable base catalog, the bundled font registry (owner of `fontEpoch`), the value-keyed
+// immutable base catalog, the generator registry, the bundled font registry (owner of `fontEpoch`), the value-keyed
 // line-width cache, the text layout over the host's measurer, the configuration and the
 // clock / id / log ports. Replaces the C++ singletons `LekhGlobal`, `Platform::currentPlatform`,
 // `TemplateStore::instance` and `Config::instance` (spec 01 C12).
 import { EngineConfig, type Clock, type Config, type ConfigOverrides, type IdSource, type Logger } from '../base';
-import type { GeneratorHooks } from '../io';
+import { GeneratorRegistry } from '../generators';
 import type { TemplateCatalog } from '../template';
 import {
   FontNameResolver,
@@ -29,11 +29,8 @@ export interface RuntimeOptions {
   readonly fonts: FontLoader;
   /** Immutable base: front end = stencils v5 + core + builtin; kashi = per worker (spec 10 §5). */
   readonly catalog: TemplateCatalog;
-  /**
-   * The generator hooks (Lua → JS conversion and generator construction). Spec 01 names a
-   * `GeneratorRegistry` here; until `generators/` exists the io hooks are what a session needs.
-   */
-  readonly generators?: GeneratorHooks;
+  /** Default: the built-in registry (spec 04 §5.2); tests may inject one. */
+  readonly generators?: GeneratorRegistry;
   readonly clock?: Clock;
   readonly ids?: IdSource;
   readonly logger?: Logger;
@@ -55,7 +52,8 @@ export interface Runtime {
   /** Owns `fontEpoch`; its `fontsChanged` is delivered to every live session on this runtime. */
   readonly fonts: FontRegistry;
   readonly lineWidths: LineWidthCache;
-  readonly generators: GeneratorHooks;
+  /** `template.id` → generator, and the canonical JS texts; immutable, shared by every session. */
+  readonly generators: GeneratorRegistry;
   readonly measurer: TextMeasurer;
   readonly config: Config;
   readonly clock: Clock;
@@ -112,7 +110,7 @@ export function createRuntime(opts: RuntimeOptions): Runtime {
     catalog: opts.catalog,
     fonts,
     lineWidths,
-    generators: opts.generators ?? {},
+    generators: opts.generators ?? GeneratorRegistry.builtin(),
     measurer: opts.measurer,
     config,
     clock: opts.clock ?? SYSTEM_CLOCK,

@@ -198,9 +198,11 @@ describe('no legacy type is held or written, by every load path (AC-ENG-35)', ()
       const norm = lib.normalize(blob);
       expect(JSON.stringify(blob)).toBe(before);
       expect(typesIn(norm as JsonValue).filter((t) => LEGACY_TYPE_NAMES.includes(t))).toEqual([]);
-      // The catalog keeps templated items; a free-hand stroke has no template to key it by.
+      // The catalog keeps every item C++ kept (each a `TemplatedObject` there, a converted
+      // free-hand stroke included: it is listed without a template key).
       const categs = lib.ingest(blob, io.overlay);
-      expect(categs[0]?.items.length).toBe(item['type'] === 'avabodh.basic.freeform' ? 0 : 1);
+      expect(categs[0]?.items.length).toBe(1);
+      if (item['type'] === 'avabodh.basic.freeform') expect(categs[0]?.items[0]?.templateId).toBeNull();
     },
   );
 

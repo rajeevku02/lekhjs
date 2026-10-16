@@ -1,0 +1,17 @@
+id: DR-GEN-03
+title: 'The generated minimum size starts at 0'
+area: GEN
+kind: bug-fix
+cpp: 'LuaShapeGenerator left savedw_/savedh_ uninitialised (LuaShapeGenerator.cpp:534); a first generation that failed enforced a garbage minimum size'
+ts: 'generators/WireframeGenerator: minW/minH start at 0 and are set only by a successful generation'
+user_visible: false
+fixture: test/generators/register.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 04 §5.1, §14'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

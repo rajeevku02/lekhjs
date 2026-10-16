@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lekhjs-parity/register/schema.json",
+  "title": "Difference-register entry (verification 01 §9.2, spec 11 §7)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "area",
+    "kind",
+    "cpp",
+    "ts",
+    "user_visible",
+    "fixture",
+    "rule",
+    "evidence",
+    "status",
+    "signed_off_by",
+    "signed_off_at",
+    "review"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^DR-(ENG|GEN|FMT|UI|TXT|REC|EXP|PLT|BE|PERF)-\\d{2}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "area": { "enum": ["ENG", "GEN", "FMT", "UI", "TXT", "REC", "EXP", "PLT", "BE", "PERF"] },
+    "kind": { "enum": ["bug-fix", "intended-change", "reader-quirk", "accepted-perf"] },
+    "cpp": { "type": "string", "minLength": 1 },
+    "ts": { "type": "string", "minLength": 1 },
+    "user_visible": { "type": "boolean" },
+    "fixture": { "type": "string", "minLength": 1 },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["json"],
+      "properties": {
+        "json": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Descriptive only: a path the entry explains, not applied by the tools"
+              },
+              { "$ref": "#/definitions/jsonRule" }
+            ]
+          }
+        },
+        "cpp_fail": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input_matches"],
+          "description": "Ties a cpp_fail (C++ refuses, TS loads) to this entry when the input matches",
+          "properties": { "input_matches": { "type": "string", "minLength": 1 } }
+        },
+        "image": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "attribute": { "type": "object" },
+                "compat_switch": { "enum": ["lineSpacingCompat", "fontFallbackCompat"] },
+                "mask": { "type": "string" },
+                "cells": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          ]
+        },
+        "perf": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["metric", "ratio_max"],
+              "properties": {
+                "metric": { "type": "string" },
+                "device": { "type": "string" },
+                "ratio_max": { "type": "number", "exclusiveMinimum": 0 },
+                "measured": { "type": "number" }
+              }
+            }
+          ]
+        },
+        "recognizer": { "type": ["object", "null"] }
+      }
+    },
+    "evidence": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["proposed", "accepted", "rejected"] },
+    "signed_off_by": { "type": ["string", "null"] },
+    "signed_off_at": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "review": { "type": ["string", "null"] },
+    "fixed_by": { "type": ["string", "null"], "description": "rejected entries: the commit that fixed the bug" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "accepted" } } },
+      "then": {
+        "properties": {
+          "signed_off_by": { "type": "string", "minLength": 1 },
+          "signed_off_at": { "type": "string" },
+          "review": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "accepted-perf" } } },
+      "then": { "properties": { "rule": { "properties": { "perf": { "type": "object" } } } } }
+    }
+  ],
+  "definitions": {
+    "jsonRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "op"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^/",
+          "description": "JSON-pointer glob: * one segment, ** any depth; matches the subtree under it"
+        },
+        "when": {
+          "type": "object",
+          "description": "cpp_<field>_in / ts_<field>_in: the value of <field> in the object at the matched path is one of the list",
+          "patternProperties": { "^(cpp|ts)_[a-z_]+_in$": { "type": "array" } },
+          "additionalProperties": false
+        },
+        "op": { "enum": ["ignore", "tolerance", "normalise"] },
+        "normaliser": { "type": "string" },
+        "abs": { "type": "number", "minimum": 0 },
+        "rel": { "type": "number", "minimum": 0 }
+      },
+      "allOf": [
+        { "if": { "properties": { "op": { "const": "normalise" } } }, "then": { "required": ["normaliser"] } },
+        {
+          "if": { "properties": { "op": { "const": "tolerance" } } },
+          "then": { "anyOf": [{ "required": ["abs"] }, { "required": ["rel"] }] }
+        }
+      ]
+    }
+  }
+}

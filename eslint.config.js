@@ -87,9 +87,16 @@ export default defineConfig(
   ...structuralConfig(root),
   {
     // Tooling (config files, tools/, parity/) runs on Node and is plain JS: no type-aware rules.
-    files: ['**/*.js', '**/*.mjs'],
+    files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: { globals: globals.node },
+  },
+  {
+    // CommonJS tooling (parity/json/tolerance.cjs, which kashi's Jest suites require; the oracle
+    // drivers over kashi's CommonJS modules).
+    files: ['**/*.cjs'],
+    languageOptions: { sourceType: 'commonjs' },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
   {
     files: ['test/**/*.ts', '*.ts'],

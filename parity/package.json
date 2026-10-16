@@ -6,5 +6,19 @@
   "type": "module",
   "engines": {
     "node": ">=24"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "fixtures": "node json/fixtures.mjs",
+    "compare": "node json/compare.mjs",
+    "report": "node json/report.mjs",
+    "scrub-check": "node json/scrub-check.mjs",
+    "register:check": "node register/check.mjs",
+    "register:index": "node tools/register-index.mjs",
+    "lock": "node tools/lock.mjs"
+  },
+  "dependencies": {
+    "ajv": "8.17.1",
+    "yaml": "2.8.1"
   }
 }

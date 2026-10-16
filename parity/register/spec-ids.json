@@ -1,0 +1,306 @@
+{
+  "comment": "The difference-register ids the Work's specs propose (verification 01 §9.1: final; a new entry takes the next free number in its area). register:check reports a cited id that is in this list but not yet filed as pending (an error under --strict), and any other unfiled id as an error. Snapshot of the proposal, 2026-10-16.",
+  "ids": [
+    {
+      "id": "DR-BE-01",
+      "title": "Backend measures/draws \"\" and unknown families in Noto Sans instead of DejaVu",
+      "defined_in": "spec/10-backend.md"
+    },
+    {
+      "id": "DR-ENG-01",
+      "title": "`\\u` escapes in JSON load (C++ failed the load)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-02",
+      "title": "Duplicate JSON key: last wins (C++: first)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-03",
+      "title": "An integer member written as `2.0` reads as 2 (C++: absent)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-04",
+      "title": "Integers not truncated to 32 bits (colours excepted)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-05",
+      "title": "Empty text measures as one empty line everywhere",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-06",
+      "title": "Non-finite numbers written as 0",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-07",
+      "title": "Object keys escaped on write",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-08",
+      "title": "Erase batch in store order",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-09",
+      "title": "Equal-distance alignment snaps: stable, store order",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-10",
+      "title": "Object-issued clip/save/restore/translate now honoured",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-11",
+      "title": "Equal `order` ties sorted by id bytes, stable",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-12",
+      "title": "Six JSON legacy object types converted to templated on load",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-13",
+      "title": "No attribute update sent for an absent object",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-14",
+      "title": "`UpdateSession.version` initialised from the board source and reset on load (B2)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-15",
+      "title": "A `load` frame with empty `changes` is rejected (B3)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-16",
+      "title": "Realtime frames apply transactionally: validate all, then mutate (B4)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-17",
+      "title": "Page bounds include the first object's stroke",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-18",
+      "title": "Queries no longer rewrite auto routes",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-19",
+      "title": "Deterministic embed/help id collision winner",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-20",
+      "title": "`LineConnection::getParams` on an empty route returns empty params (B18b)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-ENG-21",
+      "title": "`getConnections` includes edges attached to a group itself (B18c)",
+      "defined_in": "spec/03-engine-core.md"
+    },
+    {
+      "id": "DR-EXP-01",
+      "title": "Web PDF is vector (today one 72 dpi JPEG per page)",
+      "defined_in": "spec/08-export-and-pdf.md"
+    },
+    {
+      "id": "DR-EXP-02",
+      "title": "PDF (and SVG) gradients use all stops",
+      "defined_in": "spec/08-export-and-pdf.md"
+    },
+    {
+      "id": "DR-EXP-03",
+      "title": "SVG export honours clip, translate and save/restore",
+      "defined_in": "spec/08-export-and-pdf.md"
+    },
+    {
+      "id": "DR-EXP-04",
+      "title": "The 50 MP / 100 MP raster cap applies on every platform",
+      "defined_in": "spec/08-export-and-pdf.md"
+    },
+    {
+      "id": "DR-EXP-05",
+      "title": "A hand-off reached in the background waits for `to_foreground` instead of being dropped (Android)",
+      "defined_in": "spec/08-export-and-pdf.md"
+    },
+    {
+      "id": "DR-EXP-06",
+      "title": "A page whose computed size is below 1 unit is skipped (filed only if AC-EXP-03 golden differs)",
+      "defined_in": "spec/08-export-and-pdf.md"
+    },
+    {
+      "id": "DR-FMT-01",
+      "title": "Phantom pages from the old empty-board bug are shown as a recovered page",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-FMT-02",
+      "title": "Old clients can no longer download a 5.0 board's content or co-edit a 5.0 board",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-01",
+      "title": "An unparseable data expression evaluates to 0 with a warning, instead of a null dereference",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-02",
+      "title": "`libnames.json` is loaded on Android too (search finds not-yet-downloaded shapes)",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-03",
+      "title": "Generator minimum size starts at 0, not garbage",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-04",
+      "title": "`ios_picker` no longer keeps a stale selected row",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-05",
+      "title": "`calendar`/`android_datepicker` with malformed text draw the default date, not an empty/stale shape",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-06",
+      "title": "Month info is timezone-independent",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-07",
+      "title": "`android_datepicker` \"Web\" -> \"Wed\"",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-08",
+      "title": "`android_datepicker` header weekday (fixed, OQ-20)",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-09",
+      "title": "Leaked globals made local (no visible change expected)",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-10",
+      "title": "Generator failures warn; a first-generation failure shows the placeholder",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-11",
+      "title": "Templates regenerate once when a late font finishes loading",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-12",
+      "title": "Unknown native shape or generator type is preserved as a placeholder, not dropped",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-GEN-13",
+      "title": "Wireframe `data` number formatting differs from Lua's `%.14g` (doubles; no float32)",
+      "defined_in": "spec/04-templates-generators-and-format.md"
+    },
+    {
+      "id": "DR-PLT-01",
+      "title": "Silent reconnect after background (withdrawn by OQ-58; today's Reload dialog kept)",
+      "defined_in": "spec/09-platforms-and-native.md",
+      "withdrawn": true
+    },
+    {
+      "id": "DR-REC-01",
+      "title": "C1: ShapeColl::takeOut picks max-perimeter final shape (first on ties)",
+      "defined_in": "spec/07-recognizer.md"
+    },
+    {
+      "id": "DR-REC-02",
+      "title": "C2: CxPoly::computeBasicFeatures maxx = p.x (was p.y)",
+      "defined_in": "spec/07-recognizer.md"
+    },
+    {
+      "id": "DR-REC-03",
+      "title": "Parity differences traced to tie-prone sorts made total (B8)",
+      "defined_in": "spec/07-recognizer.md"
+    },
+    {
+      "id": "DR-REC-04",
+      "title": "Borderline discrete flips from doubles instead of float32 / Math.PI (<=0.5% of corpus)",
+      "defined_in": "spec/07-recognizer.md"
+    },
+    {
+      "id": "DR-TXT-01",
+      "title": "Line pitch is 1.18 x effective font size everywhere, font box centred in each line",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-02",
+      "title": "`fontmultiplier != 1` now scales the line pitch too on web (today only the glyphs)",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-03",
+      "title": "CJK/Thai, hyphenated words, URLs and over-long words wrap on web/backend as natively",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-04",
+      "title": "`fontmodifier` (face suffix) is honoured on every platform, not only iOS",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-05",
+      "title": "The web text editor uses the object's text colour instead of black",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-06",
+      "title": "New shapes get `fontfamily: \"Noto Sans\"`",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-07",
+      "title": "Unknown or platform-only family draws in Noto Sans instead of platform `sans-serif`/Roboto",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-08",
+      "title": "Family names are always quoted in font strings (fixes `Bodoni 72`-style invalid fonts)",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-09",
+      "title": "Paragraph base direction is its first strong character on web and backend too",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-TXT-10",
+      "title": "First of one-per-family entries for Apple families the WKWebView spike (H-TXT-1) finds not rendering",
+      "defined_in": "spec/06-text-and-fonts.md"
+    },
+    {
+      "id": "DR-UI-01",
+      "title": "Canvas layers re-size on a DPR change (crisp after monitor change)",
+      "defined_in": "spec/05-interaction-and-react-ui.md"
+    },
+    {
+      "id": "DR-UI-02",
+      "title": "Board UI icons are look-alike react-icons glyphs, not the C++ SVGs (OQ-06)",
+      "defined_in": "spec/05-interaction-and-react-ui.md"
+    }
+  ]
+}

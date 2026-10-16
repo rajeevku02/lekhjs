@@ -11,3 +11,4 @@ export { PathComponent, PathStepType, SimplePath, pathStep, type PathStep } from
 export { SimplePolygon, type CPoint, type TrimInfo } from './simplePolygon';
 export { Size, type Range } from './size';
 export { Vector } from './vector';
+export * from './fit';

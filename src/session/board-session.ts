@@ -49,7 +49,15 @@ import {
   type PaintEnv,
   type TemplatedObject,
 } from '../model';
-import { Canvas2DDrawingPlatform, GridPainter, ImageCache, ViewTransform, type GridBackground } from '../render';
+import {
+  Canvas2DDrawingPlatform,
+  GridPainter,
+  ImageCache,
+  ViewTransform,
+  type DrawingPlatform,
+  type ExportView,
+  type GridBackground,
+} from '../render';
 import type { SemanticContext } from '../semantic';
 import { Color, Style } from '../style';
 import { SyncSession, type ApplyResult, type ReceiveOutcome, type ServerMessage } from '../sync';
@@ -437,6 +445,36 @@ export class BoardSession {
     if (page === null || obj === null) return null;
     settleLayout(page.objectStore);
     return obj.visualBounds();
+  }
+
+  /**
+   * The engine's single export draw (C++ `LekhCore::drawForExporting`, spec 08 §4): lays out the
+   * page, then paints every object of `pageIndex` (no culling, no margin box, zoom 1) through
+   * `view`, applied by the platform's `applyExportView` (or `translate` at scale 1) inside a
+   * save/restore pair. The visible viewport and the selection are untouched: selection handles
+   * are the interaction overlay's, never part of a page paint. The page background is the
+   * exporter's (the JPEG fill, the SVG root style), as every C++ host's `setBackground` was a
+   * no-op; `includeBackground` is accepted for the C++ signature.
+   */
+  drawForExport(platform: DrawingPlatform, pageIndex: number, _includeBackground: boolean, view: ExportView): void {
+    this.budgetCheck();
+    const page = this.doc_.pages[pageIndex];
+    if (page === undefined) return;
+    settleLayout(page.objectStore);
+    const env: PaintEnv = { config: this.runtime.config, zoom: 1, forExport: true, images: this.lookup_ };
+    platform.saveContext();
+    if (platform.applyExportView !== undefined) platform.applyExportView(view);
+    else if (view.tx !== 0 || view.ty !== 0) platform.translate(view.tx, view.ty);
+    try {
+      page.paint(platform, { env });
+    } finally {
+      platform.restoreContext();
+    }
+  }
+
+  /** Whether the session's image cache or its image port holds `url` decoded (export, spec 08 §4). */
+  hasImage(url: string): boolean {
+    return this.imageCache.has(url) || this.options.images.get(url) !== undefined;
   }
 
   /**

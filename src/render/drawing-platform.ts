@@ -50,6 +50,13 @@ export interface PathPaint {
   readonly fillGradient?: ComputedGradient | null;
 }
 
+/** The view an export draw maps document points through: `scale × (p + (tx, ty))` (spec 08 §4). */
+export interface ExportView {
+  readonly scale: number;
+  readonly tx: number;
+  readonly ty: number;
+}
+
 export interface DrawingPlatform {
   /** Begins a path at `pt`, painted with `style` at `endDrawing`. */
   startDrawing(pt: Point, style: Style, paint?: PathPaint): void;
@@ -76,4 +83,10 @@ export interface DrawingPlatform {
   restoreContext(): void;
   translate(x: number, y: number): void;
   clip(path: readonly PathStep[]): void;
+  /**
+   * Export only (`BoardSession.drawForExport`, inside a `saveContext`/`restoreContext` pair):
+   * maps document points through `view`. A platform without it gets `translate(tx, ty)`, which
+   * is only right at scale 1. Replaces C++ `TranslatedDrawingPlatform`.
+   */
+  applyExportView?(view: ExportView): void;
 }

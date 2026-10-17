@@ -6,6 +6,7 @@ export type {
   ComputedLinearGradient,
   ComputedRadialGradient,
   DrawingPlatform,
+  ExportView,
   PathPaint,
 } from './drawing-platform';
 export type { DecodedImage, ImageCodec, ImageFormat } from './ports';

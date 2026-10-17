@@ -1,0 +1,45 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+	"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg  width="348.984" height="648.993" viewBox="0 0 348.984 648.993" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  version="1.1">
+  <desc>Lekh Diagram</desc>
+  <text  x="138.394" y="25.0004" style="font-family:monospace; font-size:22;  fill:rgb(73, 138, 85);  stroke:rgb(73, 138, 85);  dominant-baseline: central; text-anchor: middle;">Lekh Diagram</text>
+  <text  x="63.7495" y="78.809" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">draw shapes</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 21.7347,137.877  L 21.7347,105.393  L 51.219,105.393  L 51.219,137.877  L 21.7347,137.877 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 81.3034,122.131  L 110.867,136.913  L 140.431,122.131  L 110.867,107.349  L 81.3034,122.131 "/>
+  <ellipse  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" cx="188.921" cy="121.635"  rx="17.5" ry="17.5"/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 35.0206,170.683  L 17.2313,201.495  L 52.81,201.495  L 35.0206,170.683 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 263.734,107.349  C 266.956,107.349 269.569,109.961 269.569,113.184  L 269.569,130.689  C 269.569,133.911 266.956,136.524 263.734,136.524  L 246.229,136.524  C 243.006,136.524 240.394,133.911 240.394,130.689  L 240.394,113.184  C 240.394,109.961 243.006,107.349 246.229,107.349  L 263.734,107.349  Z "/>
+  <ellipse  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" cx="114.828" cy="192.015"  rx="28.2761" ry="9.42535"/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(169, 90, 116)" fill="none" d=" M 14.4348,91.4922  L 282.183,92.0582 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(169, 90, 116)" fill="none" d=" M 14.4343,315.812  L 282.184,316.379 "/>
+  <text  x="78.0307" y="303.127" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">connect shapes</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 24.1064,362.262  L 24.1064,341.009  L 54.3554,341.009  L 54.3554,362.262  L 24.1064,362.262 "/>
+  <ellipse  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" cx="124.16" cy="351.635"  rx="18.5" ry="18.5"/>
+  <text  x="124.16" y="351.635" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">hh</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 58.3554,351.635  L 101.66,351.635 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 91.66,343.635  L 101.66,351.635  L 91.66,359.635 "/>
+  <text  x="138.894" y="551.848" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">-add text by double tapping</text>
+  <text  x="152.429" y="577.215" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">-scroll by two fingers panning</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 209.934,180.732  L 194.152,185.501  L 190.391,169.449  L 186.63,185.501  L 170.85,180.732  L 182.87,192.015  L 170.85,203.299  L 186.63,198.529  L 190.391,214.581  L 194.152,198.529  L 209.934,203.299  L 197.914,192.015  L 209.934,180.732 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 20.8007,270.446  C 23.5391,227.774 49.7518,227.774 52.8099,270.446 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 244.227,169.799  L 244.227,201.495  L 273.561,201.495 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 82.6311,246.451  L 121.441,246.451  L 121.441,238.456  L 147.025,254.446  L 121.441,270.437  L 121.441,262.441  L 82.6311,262.441  L 82.6311,246.451 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 172.381,254.445  L 215.923,254.445 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 276.894,270.437  C 201.778,216.314 310.274,200.539 243.321,274.016 "/>
+  <ellipse  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" cx="186.63" cy="351.635"  rx="18.5" ry="18.5"/>
+  <ellipse  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" cx="269.002" cy="402.175"  rx="18.5" ry="18.5"/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 209.13,351.635  L 269.002,351.635  L 269.002,379.675 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 275.502,369.675  L 262.502,369.675  L 269.002,379.675  Z "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 50.3751,421.891  L 56.9473,402.175  L 28.0301,402.175  L 20.8008,421.891  L 50.3751,421.891 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 106.158,469.394  L 113.078,448.635  L 82.6313,448.635  L 75.0197,469.394  L 106.158,469.394 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 59.4241,407.393  C 81.2506,414.669 96.1287,421.628 96.1287,444.635 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 102.629,434.635  L 89.6287,434.635  L 96.1287,444.635  Z "/>
+  <ellipse  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" cx="166.13" cy="448.894"  rx="20.5" ry="20.5"/>
+  <ellipse  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" cx="269.002" cy="448.635"  rx="20.5" ry="20.5"/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 166.13,473.394  L 166.13,530.394  L 269.002,530.394  L 269.002,473.135 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 262.502,483.135  L 275.502,483.135  L 269.002,473.135  Z "/>
+  <text  x="177.234" y="601.875" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">-many more shapes and connections..</text>
+  <text  x="121.441" y="627.243" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">-see help for more info</text>
+</svg>

@@ -25,7 +25,7 @@ import type { Color, Style } from '../style';
 import { CapStyle, JoinStyle, PaintType } from '../style';
 import type { LaidOutText } from '../text';
 import { TextPainter } from '../text';
-import type { ComputedGradient, DrawingPlatform, PathPaint } from './drawing-platform';
+import type { ComputedGradient, DrawingPlatform, ExportView, PathPaint } from './drawing-platform';
 import type { DecodedImage } from './ports';
 import type { ViewTransform } from './view-transform';
 
@@ -75,6 +75,16 @@ export class Canvas2DDrawingPlatform implements DrawingPlatform {
 
   setViewScale(scale: number): void {
     this.viewScale_ = scale;
+  }
+
+  /**
+   * Export (spec 08 §5): multiplies the context's transform by `scale × (p + (tx, ty))`, so a
+   * band or page transform the caller set first still applies; the decoration minimum follows.
+   */
+  applyExportView(view: ExportView): void {
+    const s = view.scale;
+    this.ctx_.transform(s, 0, 0, s, s * view.tx, s * view.ty);
+    this.viewScale_ *= s;
   }
 
   /** Applies the view's document transform to the context and adopts its scale. */

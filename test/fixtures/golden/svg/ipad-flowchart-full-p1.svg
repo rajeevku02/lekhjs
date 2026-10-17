@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+	"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg  width="612" height="792" viewBox="0 0 612 792" style="background-color: rgb(255, 255, 255)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  version="1.1">
+  <desc>Lekh Diagram</desc>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 143.993,95.8962  L 215.017,95.8962  Q 235.505,95.8962 235.505,116.384  Q 235.505,136.872 215.017,136.872  L 143.993,136.872  Q 123.505,136.872 123.505,116.384  Q 123.505,95.8962 143.993,95.8962 "/>
+  <text  x="179.505" y="116.384" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">Start</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 140.42,633.17  L 221.59,633.17  Q 245.005,633.17 245.005,656.585  Q 245.005,680 221.59,680  L 140.42,680  Q 117.005,680 117.005,656.585  Q 117.005,633.17 140.42,633.17 "/>
+  <text  x="181.005" y="656.585" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">End</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 132.505,227.8  L 276.505,227.8  L 228.505,266.2  L 84.505,266.2  L 132.505,227.8 "/>
+  <text  x="180.505" y="247" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">Input X</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 181.005,329.286  L 269.005,367  L 181.005,404.714  L 93.005,367  L 181.005,329.286 "/>
+  <text  x="181.005" y="367" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">
+    <tspan  x="181.005" dy="-7.5">X &gt;</tspan>
+    <tspan  x="181.005" dy="15"> 0 ?</tspan>
+  </text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 101.005,498.643  L 101.005,544.357  L 261.005,544.357  L 261.005,498.643  L 101.005,498.643 "/>
+  <text  x="181.005" y="521.5" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">Print negative</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 384,346.429  L 384,387.571  L 528,387.571  L 528,346.429  L 384,346.429 "/>
+  <text  x="456" y="367" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">Print positive</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 179.692,140.872  L 180.327,223.8 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 186.751,213.751  L 173.751,213.85  L 180.327,223.8  Z "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 180.602,270.2  L 180.988,325.286 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 187.418,315.24  L 174.418,315.332  L 180.988,325.286  Z "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 181.005,408.714  L 181.005,419.571  M 181.005,444.571  L 181.005,494.643 "/>
+  <text  x="181.005" y="432.071" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">No</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 187.505,484.643  L 174.505,484.643  L 181.005,494.643  Z "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 181.005,548.357  L 181.005,629.17 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 187.505,619.17  L 174.505,619.17  L 181.005,629.17  Z "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 273.005,367  L 289.328,367  M 326.328,367  L 380,367 "/>
+  <text  x="307.828" y="367" style="font-size:15;  fill:rgb(0, 0, 0);  stroke:rgb(0, 0, 0);  dominant-baseline: central; text-anchor: middle;">Yes</text>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 370,360.5  L 370,373.5  L 380,367  Z "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="none" d=" M 456,391.571  L 456,656.585  L 249.005,656.585 "/>
+  <path  stroke-linecap="round"  stroke-width="2" stroke="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" d=" M 259.005,663.085  L 259.005,650.085  L 249.005,656.585  Z "/>
+</svg>

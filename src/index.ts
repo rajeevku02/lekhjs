@@ -3,3 +3,5 @@
 export * from './session';
 export { TemplateCatalog } from './template';
 export { GeneratorRegistry, buildCatalog } from './generators';
+// Export (spec 08): the job, its plan and policy, the encoders. PDF stays the `lekhjs/export/pdf` entry.
+export * from './export';

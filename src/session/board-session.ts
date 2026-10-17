@@ -329,7 +329,8 @@ export class BoardSession {
         this.pending_.errors.push({ code: e.code, eventType: 'remoteFrame' });
       }),
       this.sync.on('serverMessage', (m) => {
-        this.pending_.dialogs.push(dialogForMessage(m));
+        const d = dialogForMessage(m);
+        if (d !== null) this.pending_.dialogs.push(d);
       }),
       this.sync.on('permission', (e) => {
         // Inside the `remoteFrame` event that carries the `load` frame: the reload that follows
@@ -1244,9 +1245,27 @@ function gridBackgroundOf(page: Page): GridBackground {
   return { type: 'default' };
 }
 
-function dialogForMessage(m: ServerMessage): DialogRequest {
+/**
+ * The dialog of a server `message` frame (C++ `CoreIO::readBackendMessage` /
+ * `processBackendMessage`; KB websocket-protocol §6.2-§6.3): nothing for an empty text;
+ * `upgrade: true` → the "Read-only board" paywall (Upgrade / Keep viewing, trigger
+ * `readonly_open`); `reload: true` → Reload (the format gate's code keeps its own dialog, spec
+ * 04 §10.1); otherwise the text with OK.
+ */
+export function dialogForMessage(m: ServerMessage): DialogRequest | null {
   if (m.code === 'board_requires_newer_app') {
     return { kind: 'gate', code: 'board_requires_newer_app', message: m.message, reload: true };
   }
+  if (m.message === '') return null;
+  if (m.upgrade) {
+    return {
+      kind: 'paywall',
+      trigger: 'readonly_open',
+      title: 'Read-only board',
+      message: m.message,
+      dismiss: 'Keep viewing',
+    };
+  }
+  if (m.reload) return { kind: 'reload', message: m.message };
   return { kind: 'info', title: '', message: m.message };
 }

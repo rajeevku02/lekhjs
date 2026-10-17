@@ -69,6 +69,24 @@ export type DialogRequest =
       readonly code: 'board_requires_newer_app';
       readonly message: string;
       readonly reload: true;
+    }
+  /**
+   * A server `message` with `reload: true` (C++ `CoreIO::showReloadOption`): blocking, with
+   * Reload (the web) or Reload / Go Back (native hosts).
+   */
+  | { readonly kind: 'reload'; readonly message: string }
+  /**
+   * A paywall dialog (C++ `LekhUtil::showPaywallDialog`): `title`, `message`, Upgrade and
+   * `dismiss`. Upgrade answers `ok`; the host reports `upgrade_clicked{source: trigger}` and opens
+   * the upgrade for `trigger`. The server `message` with `upgrade: true` is one (trigger
+   * `readonly_open`, "Read-only board", Keep viewing); the doc server sends its `paywall_shown`.
+   */
+  | {
+      readonly kind: 'paywall';
+      readonly trigger: string;
+      readonly title: string;
+      readonly message: string;
+      readonly dismiss: string;
     };
 
 export interface DialogResponse {

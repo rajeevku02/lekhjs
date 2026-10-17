@@ -229,6 +229,26 @@ export class CommandDispatcher {
     o.overlay.deselect();
   }
 
+  /**
+   * Android back on the board (`on_back_button`; spec 05 §3.4, spec 09 §8, AC-UI-11; C++
+   * `LekhCore::onBackButton`): close the top popover or panel → finish text editing → clear the
+   * selection or vertex handle. Returns the step taken, or `leave` when none applied: the host
+   * then closes the board.
+   */
+  back(): 'popover' | 'text' | 'selection' | 'leave' {
+    const o = this.o_;
+    if (o.closeTopPopover?.() === true) return 'popover';
+    if (o.textEdit.active) {
+      o.textEdit.finish();
+      return 'text';
+    }
+    if (o.overlay.isSelectionActive() || o.overlay.vertex.isActive()) {
+      o.overlay.deselect();
+      return 'selection';
+    }
+    return 'leave';
+  }
+
   private del(): void {
     this.selectionCommand((ctx, t) => ctx.clipboard.del(t));
   }

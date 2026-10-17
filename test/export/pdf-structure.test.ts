@@ -105,9 +105,9 @@ describe('PDF structure (AC-EXP-08, AC-EXP-09)', () => {
     const s = boardSession(
       textBoard([
         [
-          { text: 'Left aligned', cx: 200, cy: 60, align: 0 },
+          { text: 'Left aligned', cx: 200, cy: 60, align: 2 },
           { text: 'Centred text', cx: 200, cy: 140, align: 1 },
-          { text: 'Right aligned', cx: 200, cy: 220, align: 2 },
+          { text: 'Right aligned', cx: 200, cy: 220, align: 3 },
           { text: 'two\nlines', cx: 200, cy: 320 },
         ],
       ]),

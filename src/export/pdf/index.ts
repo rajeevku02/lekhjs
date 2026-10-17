@@ -47,7 +47,7 @@ export { TextRunSplitter, isEmojiCluster, scriptOf, type ClusterSpan, type TextC
 export { BidiResolver } from './bidi-resolver';
 export { TextCollectingPlatform, type CollectedText } from './text-collecting-platform';
 export { RUN_IMAGE_SCALE, RunImageFallback, scaledFont, type RunImage } from './run-image-fallback';
-export { BundledFontSource, type BundledFontSourceOptions } from './bundled-font-source';
+export { BundledFontSource, type BundledFontCache, type BundledFontSourceOptions } from './bundled-font-source';
 export {
   PDF_FONT_CACHE,
   WebScriptFontProvider,

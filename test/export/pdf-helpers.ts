@@ -86,7 +86,7 @@ export interface TextSpec {
   readonly family?: string;
   readonly bold?: boolean;
   readonly italic?: boolean;
-  /** 0 left, 1 centre, 2 right (C++ `TextAlignHorizontal`). */
+  /** 0 default, 1 centre, 2 left, 3 right (C++ `Style::TextAlignHorizontal`, lekhjs `TextAlignHorizontal`). */
   readonly align?: number;
   /** Signed ARGB. */
   readonly color?: number;

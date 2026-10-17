@@ -15,9 +15,10 @@ import { describe, expect, it } from 'vitest';
 import { planExportDetail, type ExportOptions, type ExportPagePlan } from '../../src/export';
 import { Rect } from '../../src/geometry';
 import { BoardSession } from '../../src/session';
+import { TemplateCatalog, type LibraryFileJson } from '../../src/template';
 import { FakeImagePort, FakeScheduler } from '../../src/testing';
 import { fontPx, type TextMeasurer } from '../../src/text';
-import { CORE_FIXTURES } from '../io/helpers';
+import { CORE_FIXTURES, STENCILS } from '../io/helpers';
 import { PKG_ROOT } from '../lint/eslint-helpers';
 import { testRuntime } from '../session/helpers';
 import { env, recordingSink, run } from './helpers';
@@ -71,7 +72,30 @@ const cppMeasurer: TextMeasurer = {
     return { width: Array.from(text).length * 0.6 * px, ascent: 0.8 * px, descent: 0.2 * px };
   },
 };
-const cppRuntime = testRuntime({ measurer: cppMeasurer, testing: { linePitch: 1 } });
+/**
+ * The C++ host build's compiled-in catalog: lekhcore/stencils/core, which also holds
+ * `wireframe.json` (byte-identical to lekhboard/stencils/v4's). lekhjs/stencils/core leaves the
+ * wireframe file out (the apps and the backend read it from the v4/v5 stencil sets), so it is read
+ * from the v4 set here; without it a template that embeds a wireframe icon by name (the iPhone
+ * fixture's search field and its magnifier) has nothing to draw.
+ */
+function cppHostCatalog(): TemplateCatalog {
+  const sets = JSON.parse(readFileSync(path.join(PKG_ROOT, 'parity', 'fixture-sets.json'), 'utf8')) as {
+    stencilsV4: string;
+  };
+  const read = (dir: string): LibraryFileJson[] =>
+    readdirSync(dir)
+      .filter((f) => f.endsWith('.json') && f !== 'libnames.json')
+      .sort()
+      .map((f) => JSON.parse(readFileSync(path.join(dir, f), 'utf8')) as LibraryFileJson);
+  const wireframe = path.join(path.resolve(PKG_ROOT, sets.stencilsV4), 'wireframe.json');
+  return TemplateCatalog.build([
+    ...read(path.join(STENCILS, 'builtin')),
+    ...read(path.join(STENCILS, 'core')),
+    JSON.parse(readFileSync(wireframe, 'utf8')) as LibraryFileJson,
+  ]);
+}
+const cppRuntime = testRuntime({ catalog: cppHostCatalog(), measurer: cppMeasurer, testing: { linePitch: 1 } });
 
 function sessionFor(fixture: string, docName: string): BoardSession {
   const s = new BoardSession(cppRuntime, { images: new FakeImagePort(), scheduler: new FakeScheduler() });
@@ -195,24 +219,11 @@ function elements(svg: string): Element[] {
   return out;
 }
 
-/**
- * Engine differences outside export, reported to the owner, not hidden: the iPhone wireframe's
- * search field draws its magnifier glyph in C++ (a quadratic path at 180, 342) and not in TS — a
- * template/generator gap found by this golden (task W7 summary).
- */
-const KNOWN_ENGINE_GAPS: ReadonlySet<string> = new Set([
-  'iphone-wireframe-full-p1.svg',
-  'iphone-wireframe-drawing-p1.svg',
-]);
-
-const SVG_CASES = readdirSync(path.join(GOLDEN_DIR, 'svg')).filter(
-  (f) => f.endsWith('.svg') && !KNOWN_ENGINE_GAPS.has(f),
-);
+const SVG_CASES = readdirSync(path.join(GOLDEN_DIR, 'svg')).filter((f) => f.endsWith('.svg'));
 
 describe('SVG element coordinates equal the C++ exporter (AC-EXP-29)', () => {
   it('has the goldens', () => {
     expect(SVG_CASES.length).toBeGreaterThanOrEqual(30);
-    expect(KNOWN_ENGINE_GAPS.size).toBe(2);
   });
 
   for (const file of SVG_CASES) {

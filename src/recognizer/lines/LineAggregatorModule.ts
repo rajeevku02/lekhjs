@@ -4,8 +4,8 @@
 // hand-translated by the owner into `lines/LineAggregatorImpl.ts`, which exports a
 // `LineAggregatorModule`. Nothing else in the recognizer imports a concrete aggregator: the module
 // reaches the pipeline through `RecognizerContext.lineAggregator` (AC-REC-06), and
-// `lines/index.ts` binds `defaultLineAggregatorModule` to the stub until the handoff (a one-line
-// change afterwards).
+// `lines/index.ts` binds `defaultLineAggregatorModule` to it (the stub before the handoff; the
+// owner's `LineAggregatorImpl` since M1).
 //
 // C++ origin: `recognizer/LineAggreagtor.{h,cpp}` (file name misspelt in C++), class
 // `recognizer::LineAggregator`. Its C++ instance API maps to `LineAggregator` below; its two C++

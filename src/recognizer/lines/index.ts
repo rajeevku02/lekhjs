@@ -1,8 +1,9 @@
 // recognizer/lines: stroke lines, their collection and relations, and the LineAggregator seam.
+import { lineAggregatorImplModule } from './LineAggregatorImpl';
 import type { LineAggregatorModule } from './LineAggregatorModule';
-import { stubLineAggregatorModule } from './StubLineAggregator';
 
 export type { LineAggregator, LineAggregatorModule } from './LineAggregatorModule';
+export { LineAggregatorImpl, lineAggregatorImplModule } from './LineAggregatorImpl';
 export { StubLineAggregator, stubLineAggregatorModule } from './StubLineAggregator';
 export { ConnectionInfo, Line2Line } from './Line2Line';
 export { LineColl, lineBit, MAX_LINES } from './LineColl';
@@ -34,7 +35,7 @@ export {
 } from './StrokeLine';
 
 /**
- * The aggregator the recognizer uses when the job does not inject one. Bound to the stub until
- * the owner's `LineAggregatorImpl` lands (H-REC-1); then this line changes to that module.
+ * The aggregator the recognizer uses when the job does not inject one: the owner's
+ * `LineAggregatorImpl` (H-REC-1, M1). The stub stays exported for tests that need no lines.
  */
-export const defaultLineAggregatorModule: LineAggregatorModule = stubLineAggregatorModule;
+export const defaultLineAggregatorModule: LineAggregatorModule = lineAggregatorImplModule;

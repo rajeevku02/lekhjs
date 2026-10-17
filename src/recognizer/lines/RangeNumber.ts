@@ -51,23 +51,28 @@ export class RangeNumber {
   }
 
   greaterThan(other: RangeNumber): Probability {
-    return new Probability(this.mid() > other.mid() ? 1 : 0);
+    return new Probability(midOf(this) > midOf(other) ? 1 : 0);
   }
 
   lessThan(other: RangeNumber): Probability {
-    return new Probability(this.mid() < other.mid() ? 1 : 0);
+    return new Probability(midOf(this) < midOf(other) ? 1 : 0);
   }
 
   equalsTo(other: RangeNumber): Probability {
-    return new Probability(this.mid() === other.mid() ? 1 : 0);
+    return new Probability(midOf(this) === midOf(other) ? 1 : 0);
   }
 
   /** C++ `isZero`: 1 when `end` is 0 (the start is not looked at, as in C++). */
   isZero(): Probability {
     return new Probability(this.end !== 0 ? 0 : 1);
   }
+}
 
-  private mid(): number {
-    return (this.start + this.end) / 2;
-  }
+/**
+ * The mid-point of a cost interval. Read through the public `start`/`end` only, so a cost made by
+ * the owner's line aggregator (`LineMerger.js`, which carries its own structurally identical
+ * range class) compares the same as a `RangeNumber`.
+ */
+function midOf(r: Pick<RangeNumber, 'start' | 'end'>): number {
+  return (r.start + r.end) / 2;
 }

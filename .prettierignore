@@ -8,3 +8,7 @@ stencils/
 fonts/fonts.json
 test/fixtures/golden/
 test/generators/golden/
+
+# The owner's proprietary line aggregator (Work 01M4X7TCHFB862XGT68GPY071C, M1): obfuscated
+# on purpose and kept byte-identical; never reformat it.
+src/recognizer/lines/LineMerger.js

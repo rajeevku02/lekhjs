@@ -58,6 +58,7 @@ export {
 } from './worker/protocol';
 export {
   defaultLineAggregatorModule,
+  lineAggregatorImplModule,
   stubLineAggregatorModule,
   type LineAggregator,
   type LineAggregatorModule,

@@ -1,5 +1,6 @@
 // The LineAggregator seam (spec 07 §5.1-§5.2): the stub module finds no lines, never returns null,
-// and is the default binding until the owner's handoff.
+// and stays exported for tests that need no lines (the default binding since M1 is the owner's
+// module, test/recognizer/lines/impl.test.ts).
 import { describe, expect, it } from 'vitest';
 import { Span } from '../../../src/base';
 import { Point } from '../../../src/geometry';
@@ -13,8 +14,8 @@ import {
 } from '../../../src/recognizer/lines';
 
 describe('StubLineAggregator', () => {
-  it('is the default module until the handoff', () => {
-    expect(defaultLineAggregatorModule).toBe(stubLineAggregatorModule);
+  it('is no longer the default module (M1), and keeps its id', () => {
+    expect(defaultLineAggregatorModule).not.toBe(stubLineAggregatorModule);
     expect(stubLineAggregatorModule.id).toBe('stub');
   });
 

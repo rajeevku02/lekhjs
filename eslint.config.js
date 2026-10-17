@@ -69,7 +69,17 @@ export function structuralConfig(basePath) {
 }
 
 export default defineConfig(
-  globalIgnores(['node_modules/', 'dist/', 'coverage/', 'test/lint/fixtures/', 'parity/node_modules/']),
+  globalIgnores([
+    'node_modules/',
+    'dist/',
+    'coverage/',
+    'test/lint/fixtures/',
+    'parity/node_modules/',
+    // The owner's proprietary line aggregator (Work 01M4X7TCHFB862XGT68GPY071C, M1), obfuscated on
+    // purpose: it is never linted or rewritten (no-module-state, layers, any fixer). Its API is
+    // typed and linted through LineMerger.d.ts and LineAggregatorImpl.ts.
+    'src/recognizer/lines/LineMerger.js',
+  ]),
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   {

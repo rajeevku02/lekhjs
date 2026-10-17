@@ -52,3 +52,14 @@ export { XmlTokenizer, XmlTokenType, unescapeXml, type XmlToken } from './xml/xm
 export { STENCIL_LIB_VERSION, StencilSource } from './library/stencil-source';
 export { StencilSetLoader, type StencilCategoryRef, type StencilFetchPlan } from './library/stencil-set-loader';
 export { LibraryItemCodec } from './library/library-item-codec';
+export {
+  BASIC_CATEGORY_ID,
+  LibraryCategory,
+  ShapeLibraryStore,
+  makeLibraryKeys,
+  type DisplaySetting,
+  type LibraryEntry,
+  type ShapeLibraryStoreOptions,
+  type TemplateInfo,
+} from './library/shape-library-store';
+export { THUMBNAIL_INSET, drawLibraryThumbnail, type LibraryThumbnailOptions } from './library/library-thumbnail';

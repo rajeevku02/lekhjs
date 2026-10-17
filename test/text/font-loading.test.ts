@@ -4,6 +4,7 @@
 // that does not ask (backend, test fakes) never makes layout wait.
 import { describe, expect, it } from 'vitest';
 import { BoardSession, createRuntime } from '../../src/session';
+import type { LekhDocument } from '../../src/model';
 import { documentFontRequests } from '../../src/session/font-requests';
 import { FakeImagePort, FakeScheduler, RecordedWidthMeasurer } from '../../src/testing';
 import type { FontFaceRequest, FontLoader, LineMetrics, TextMeasurer } from '../../src/text';
@@ -159,7 +160,11 @@ describe('fonts before the first layout (AC-TXT-07)', () => {
     const loader = new DeferredLoader();
     const r = rig(loader);
     r.session.dispatch({ type: 'open', raw: fixtureJson('format/03-connector.lekh'), meta: { kind: 'offline' } });
-    const { requests } = documentFontRequests(r.session.document, r.runtime.fontResolver);
+    const { requests } = documentFontRequests(
+      // The session exposes its document read-only; the collector only walks `pages`.
+      r.session.document as LekhDocument,
+      r.runtime.fontResolver,
+    );
     const keys = requests.map((q) => q.fontKey);
     expect(new Set(keys).size).toBe(keys.length);
     expect(requests.every((q) => q.family !== '')).toBe(true);

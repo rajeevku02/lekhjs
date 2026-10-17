@@ -135,6 +135,11 @@ export class FontNameResolver {
       case 'mac':
         return this.make([...fb, '-apple-system', 'system-ui'], weight, style, stretch, 'platform-default', '');
       case 'backend':
+        // Under fontFallbackCompat, the C++ backend's `sans-serif` (neutralises DR-BE-01 for the
+        // kashi MCP oracle parity test, spec 10 §11).
+        if (this.testing.fontFallbackCompat) {
+          return this.make([...fb, 'sans-serif'], weight, style, stretch, 'platform-default', '');
+        }
         return this.named(DEFAULT_FONT_FAMILY, 'sans-serif', weight, style, stretch, 'platform-default');
       default:
         return this.make([...fb, 'sans-serif'], weight, style, stretch, 'platform-default', '');

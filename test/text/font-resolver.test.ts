@@ -195,4 +195,14 @@ describe('fontFallbackCompat (spec 06 §3.6)', () => {
     expect(on.resolve(s).families).toEqual(['sans-serif']);
     expect(on.resolve({ ...s, family: 'Noto Serif' }).families).toEqual(['"Noto Serif"', 'serif']);
   });
+
+  it('on the backend, on, "" (the platform default) is sans-serif as the C++ backend drew it (DR-BE-01)', () => {
+    const s = { family: '', modifier: '', weight: FontWeight.Normal, style: FontStyle.Normal };
+    const off = new FontNameResolver('backend', registry, platform);
+    const on = new FontNameResolver('backend', registry, platform, {
+      testing: setTestConfig({ fontFallbackCompat: true }),
+    });
+    expect(off.resolve(s).families[0]).toBe('"Noto Sans"');
+    expect(on.resolve(s).families).toEqual(['sans-serif']);
+  });
 });

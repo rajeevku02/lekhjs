@@ -1,0 +1,22 @@
+id: DR-REC-04
+title: Borderline recognition outcomes flip because TS computes in doubles (and Math.PI), not float32
+area: REC
+kind: intended-change
+cpp: 'The web wasm computes the recognizer in float32 (number_t) with PI = 3.14159265 (base/Const.h:10); a stroke on a threshold can land either way'
+ts: 'lekhjs/src/recognizer computes in JS doubles with Math.PI (OQ-46); a stroke on a threshold may land on the other side'
+user_visible: true
+# Recognizer data, not a board. The borderline cases are the corpus cases whose wasm outcome itself
+# flips under 8 seeded +-0.01 px jitters (test/recognizer/parity/reference/<case>.json `jitter`,
+# spec 07 §7.4.2); the strict run lists them in parity/out/rec-parity/report.json.
+# Task R5 (2026-10-17, wasm fa71c40, 362 cases): 14 proven-borderline cases (3.9 %, over the
+# 0.5 % bar of OQ-42): 10 spirals, 2 cloud loops, 1 overtrace, 1 self-loop at zoom 0.5.
+fixture: test/recognizer/parity/parity.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 07 §7.4.2, OQ-42, OQ-46; task R5 strict parity run'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

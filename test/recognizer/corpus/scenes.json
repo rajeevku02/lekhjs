@@ -1,0 +1,345 @@
+{
+ "about": "Scene boards of the recognizer parity corpus, written by parity/tools/rec-parity/corpus.mjs.",
+ "origin": "synthetic",
+ "scenes": {
+  "empty": {
+   "attributes": {
+    "grid": {
+     "present": true
+    },
+    "scaling": {
+     "scale": 1,
+     "unit": "point"
+    }
+   },
+   "info": {
+    "author": "",
+    "description": "",
+    "platform": "1",
+    "title": "",
+    "version": "4.2"
+   },
+   "pages": {
+    "p1": {
+     "background": {
+      "color": -1
+     },
+     "canvasname": "Infinite",
+     "canvassizetype": "infinite",
+     "name": "Page 1",
+     "objects": {},
+     "order": 1
+    }
+   }
+  },
+  "twoBoxes": {
+   "attributes": {
+    "grid": {
+     "present": true
+    },
+    "scaling": {
+     "scale": 1,
+     "unit": "point"
+    }
+   },
+   "info": {
+    "author": "",
+    "description": "",
+    "platform": "1",
+    "title": "",
+    "version": "4.2"
+   },
+   "pages": {
+    "p1": {
+     "background": {
+      "color": -1
+     },
+     "canvasname": "Infinite",
+     "canvassizetype": "infinite",
+     "name": "Page 1",
+     "objects": {
+      "a1": {
+       "name": "",
+       "order": 1,
+       "params": {
+        "angle": 0,
+        "cx": 250,
+        "cy": 300,
+        "height": 100,
+        "width": 160
+       },
+       "template": {
+        "data": [
+         "-w/2",
+         "-h/2",
+         "-w/2",
+         "h/2",
+         "w/2",
+         "h/2",
+         "w/2",
+         "-h/2"
+        ],
+        "default": {
+         "angle": 0,
+         "height": 10,
+         "width": 10
+        },
+        "draw": [
+         {
+          "path": "M 0 1 L 2 3 L 4 5 L 6 7 L 0 1"
+         }
+        ],
+        "flags": 31,
+        "id": "avabodh.basic.rectangle",
+        "polygon": true
+       },
+       "type": "templated"
+      },
+      "b1": {
+       "name": "",
+       "order": 2,
+       "params": {
+        "angle": 0,
+        "cx": 750,
+        "cy": 300,
+        "height": 100,
+        "width": 160
+       },
+       "template": {
+        "data": [
+         "-w/2",
+         "-h/2",
+         "-w/2",
+         "h/2",
+         "w/2",
+         "h/2",
+         "w/2",
+         "-h/2"
+        ],
+        "default": {
+         "angle": 0,
+         "height": 10,
+         "width": 10
+        },
+        "draw": [
+         {
+          "path": "M 0 1 L 2 3 L 4 5 L 6 7 L 0 1"
+         }
+        ],
+        "flags": 31,
+        "id": "avabodh.basic.rectangle",
+        "polygon": true
+       },
+       "type": "templated"
+      }
+     },
+     "order": 1
+    }
+   }
+  },
+  "diagonal": {
+   "attributes": {
+    "grid": {
+     "present": true
+    },
+    "scaling": {
+     "scale": 1,
+     "unit": "point"
+    }
+   },
+   "info": {
+    "author": "",
+    "description": "",
+    "platform": "1",
+    "title": "",
+    "version": "4.2"
+   },
+   "pages": {
+    "p1": {
+     "background": {
+      "color": -1
+     },
+     "canvasname": "Infinite",
+     "canvassizetype": "infinite",
+     "name": "Page 1",
+     "objects": {
+      "a1": {
+       "name": "",
+       "order": 1,
+       "params": {
+        "angle": 0,
+        "cx": 200,
+        "cy": 180,
+        "height": 90,
+        "width": 140
+       },
+       "template": {
+        "data": [
+         "-w/2",
+         "-h/2",
+         "-w/2",
+         "h/2",
+         "w/2",
+         "h/2",
+         "w/2",
+         "-h/2"
+        ],
+        "default": {
+         "angle": 0,
+         "height": 10,
+         "width": 10
+        },
+        "draw": [
+         {
+          "path": "M 0 1 L 2 3 L 4 5 L 6 7 L 0 1"
+         }
+        ],
+        "flags": 31,
+        "id": "avabodh.basic.rectangle",
+        "polygon": true
+       },
+       "type": "templated"
+      },
+      "b1": {
+       "name": "",
+       "order": 2,
+       "params": {
+        "angle": 0,
+        "cx": 700,
+        "cy": 520,
+        "height": 90,
+        "width": 140
+       },
+       "template": {
+        "data": [
+         "-w/2",
+         "-h/2",
+         "-w/2",
+         "h/2",
+         "w/2",
+         "h/2",
+         "w/2",
+         "-h/2"
+        ],
+        "default": {
+         "angle": 0,
+         "height": 10,
+         "width": 10
+        },
+        "draw": [
+         {
+          "path": "M 0 1 L 2 3 L 4 5 L 6 7 L 0 1"
+         }
+        ],
+        "flags": 31,
+        "id": "avabodh.basic.rectangle",
+        "polygon": true
+       },
+       "type": "templated"
+      },
+      "e1": {
+       "name": "",
+       "order": 3,
+       "params": {
+        "angle": 0,
+        "cx": 700,
+        "cy": 180,
+        "height": 100,
+        "width": 150
+       },
+       "template": {
+        "default": {
+         "angle": 0,
+         "height": 10,
+         "width": 10
+        },
+        "draw": [
+         {
+          "ellipse": {
+           "cx": "0",
+           "cy": "0",
+           "rx": "w/2",
+           "ry": "h/2"
+          }
+         }
+        ],
+        "flags": 31,
+        "id": "avabodh.basic.ellipse"
+       },
+       "type": "templated"
+      }
+     },
+     "order": 1
+    }
+   }
+  },
+  "container": {
+   "attributes": {
+    "grid": {
+     "present": true
+    },
+    "scaling": {
+     "scale": 1,
+     "unit": "point"
+    }
+   },
+   "info": {
+    "author": "",
+    "description": "",
+    "platform": "1",
+    "title": "",
+    "version": "4.2"
+   },
+   "pages": {
+    "p1": {
+     "background": {
+      "color": -1
+     },
+     "canvasname": "Infinite",
+     "canvassizetype": "infinite",
+     "name": "Page 1",
+     "objects": {
+      "c1": {
+       "name": "",
+       "order": 1,
+       "params": {
+        "angle": 0,
+        "cx": 600,
+        "cy": 400,
+        "height": 500,
+        "width": 700
+       },
+       "template": {
+        "data": [
+         "-w/2",
+         "-h/2",
+         "-w/2",
+         "h/2",
+         "w/2",
+         "h/2",
+         "w/2",
+         "-h/2"
+        ],
+        "default": {
+         "angle": 0,
+         "height": 10,
+         "width": 10
+        },
+        "draw": [
+         {
+          "path": "M 0 1 L 2 3 L 4 5 L 6 7 L 0 1"
+         }
+        ],
+        "flags": 31,
+        "id": "avabodh.basic.rectangle",
+        "polygon": true
+       },
+       "type": "templated"
+      }
+     },
+     "order": 1
+    }
+   }
+  }
+ }
+}

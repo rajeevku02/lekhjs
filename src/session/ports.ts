@@ -91,7 +91,13 @@ export type SessionEvent =
   /** Native: LekhPlugin lifecycle events; web: visibilitychange. */
   | { readonly type: 'hostLifecycle'; readonly state: 'foreground' | 'background' }
   /** A share change pushed by kashi raised or lowered the session's permission (spec 04 §7.3). */
-  | { readonly type: 'permissionChanged'; readonly permission: BoardPermission };
+  | { readonly type: 'permissionChanged'; readonly permission: BoardPermission }
+  /**
+   * A cloud board whose content arrives as the socket's first `load` frame (C++ `openRemoteDoc`):
+   * the realtime session starts for `docid` at `version` with no document read yet; the `load`
+   * frame then brings the document and its `permission`.
+   */
+  | { readonly type: 'connect'; readonly docid: string; readonly version?: number };
 
 // ---- notifications out (on) ----
 
@@ -166,6 +172,11 @@ export interface SessionOptions {
   /** PDF only (spec 08 §6). */
   readonly fontData?: FontDataProvider;
   readonly storage?: SettingsStore;
+  /**
+   * `env.autoReconnect` (spec 09 §7): a foreground close of a cloud board's socket reopens it.
+   * False on Mac. Default true.
+   */
+  readonly autoReconnect?: boolean;
   /** Cooperative deadline; lekhjs calls `check()` at safe points (spec 03 §12.4). */
   readonly budget?: Budget;
 }

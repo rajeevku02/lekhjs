@@ -15,6 +15,8 @@ export interface StyleSnapshot {
     readonly color: OrMixed<string>;
     readonly width: OrMixed<number>;
     readonly dash: OrMixed<'solid' | 'dash' | 'dot'>;
+    /** The dash pattern (the stroke panel's Line Dash cell); empty for solid. */
+    readonly dashArray?: readonly number[];
   };
   readonly fill: { readonly color: OrMixed<OrNone<string>> };
   readonly text: {
@@ -26,6 +28,8 @@ export interface StyleSnapshot {
     readonly strike: OrMixed<boolean>;
     readonly color: OrMixed<string>;
     readonly align: OrMixed<'left' | 'center' | 'right'>;
+    /** The text panel's second alignment row. */
+    readonly verticalAlign?: OrMixed<'top' | 'center' | 'bottom'>;
   };
   readonly connection?: {
     readonly kind: OrMixed<'line' | 'curve' | 'multi'>;
@@ -43,7 +47,19 @@ export type DialogRequest =
       readonly ok?: string;
       readonly cancel?: string;
     }
-  | { readonly kind: 'text_input'; readonly title: string; readonly value: string; readonly placeholder?: string }
+  | {
+      readonly kind: 'text_input';
+      readonly title: string;
+      readonly value: string;
+      readonly placeholder?: string;
+      /** C++ `DialogInput::message` (e.g. "Enter Page Name"). */
+      readonly message?: string;
+      /** C++ `allowEmpty` (default true). */
+      readonly allowEmpty?: boolean;
+      /** C++ `okText` / `cancelText` (default OK / Cancel). */
+      readonly ok?: string;
+      readonly cancel?: string;
+    }
   | { readonly kind: 'info' | 'error' | 'warn'; readonly title: string; readonly message: string }
   /** "Disconnected from server" with Reload (spec 09 §7, `ReconnectPolicy`). */
   | { readonly kind: 'disconnected' }

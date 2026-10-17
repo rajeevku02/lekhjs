@@ -5,6 +5,7 @@ import {
   FontWeight,
   PaintType,
   TextAlignHorizontal,
+  TextAlignVertical,
   TextDecoration,
   type Paint,
   type Style,
@@ -28,6 +29,12 @@ function alignOf(a: TextAlignHorizontal): 'left' | 'center' | 'right' {
   return 'center';
 }
 
+function valignOf(a: TextAlignVertical): 'top' | 'center' | 'bottom' {
+  if (a === TextAlignVertical.Top) return 'top';
+  if (a === TextAlignVertical.Bottom) return 'bottom';
+  return 'center';
+}
+
 export function styleSnapshotOf(style: Style): StyleSnapshot {
   const deco = style.effectiveTextDecoration();
   const stroke = paintCss(style.effectiveStrokePaint());
@@ -36,6 +43,7 @@ export function styleSnapshotOf(style: Style): StyleSnapshot {
       color: stroke === 'none' ? 'transparent' : stroke,
       width: style.effectiveStrokeWidth(),
       dash: dashOf(style),
+      dashArray: Object.freeze(style.effectiveDashArray().slice()),
     }),
     fill: Object.freeze({ color: paintCss(style.effectiveFillPaint()) }),
     text: Object.freeze({
@@ -45,8 +53,10 @@ export function styleSnapshotOf(style: Style): StyleSnapshot {
       italic: style.effectiveFontStyle() === FontStyle.Italic || style.effectiveFontStyle() === FontStyle.Oblique,
       underline: (deco & TextDecoration.UnderLine) !== 0,
       strike: (deco & TextDecoration.StrikeThrough) !== 0,
-      color: style.effectiveTextStroke().solidColor.toCss(),
+      // The colour text is drawn with (`Canvas2DDrawingPlatform`: the text fill; C++ `setFontColor`).
+      color: style.effectiveTextFill().solidColor.toCss(),
       align: alignOf(style.effectiveTextAlignHorizontal()),
+      verticalAlign: valignOf(style.effectiveTextAlignVertical()),
     }),
   });
 }

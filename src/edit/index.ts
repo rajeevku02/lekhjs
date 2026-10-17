@@ -70,6 +70,7 @@ export { EditorContext, type EditorContextOptions } from './editor-context';
 export { addMultiToCanvas, cloneObjects, cloneWithConnections, performGroupClone, type CloneResult } from './clone';
 export { ClipboardService, multiOf, type ClipboardPayload } from './clipboard';
 export { EditCommands } from './commands';
+export { IMAGE_TEMPLATE_ID, insertImageObject, insertedImageSize, type InsertImageInput } from './insert-image';
 export {
   ColorEditor,
   ColorType,

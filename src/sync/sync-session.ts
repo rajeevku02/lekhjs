@@ -64,6 +64,11 @@ export interface SyncEvents {
   /** A stamp above this engine's latest format arrived: reload (it then fails `format_too_new`). */
   formatTooNew: { readonly version: string };
   reconnect: ReconnectDecision;
+  /**
+   * The `permission` a `load` frame carried (kashi `document.js`: `updates.permission`), emitted
+   * before the frame is applied, so the reload that follows already runs with it.
+   */
+  permission: { readonly permission: 'write' | 'comment' | 'read' };
 }
 
 /** What `receive` did with one frame. */
@@ -249,6 +254,7 @@ export class SyncSession {
       this.presence.updatePointer(frame.user.id, u.pointers);
       return { kind: 'presence' };
     }
+    if (u.type === updatetypes.load) this.readPermission(frame.raw);
     const stampEntry = u.changes.find(([k]) => k === FORMAT_STAMP_KEY);
     const changes = stampEntry === undefined ? u.changes : u.changes.filter(([k]) => k !== FORMAT_STAMP_KEY);
     const action = UpdateDecoder.decode(u, changes);
@@ -282,6 +288,13 @@ export class SyncSession {
     }
     this.emit('applied', result);
     return { kind: 'applied', result };
+  }
+
+  /** A `load` frame's `updates.permission`, when it is one of the three. */
+  private readPermission(raw: JsonObject): void {
+    const ups = raw['updates'];
+    const p = isJsonObject(ups) ? ups['permission'] : undefined;
+    if (p === 'write' || p === 'comment' || p === 'read') this.emit('permission', { permission: p });
   }
 
   private observeStamp(v: JsonValue | undefined): void {

@@ -20,12 +20,13 @@ const EVENT_TYPES = [
   'command',
   'hostLifecycle',
   'permissionChanged',
+  'connect',
 ] as const;
 
 describe('session contract', () => {
-  it('SessionEvent has exactly the 11 events of spec 01 §4.2, plus permissionChanged (spec 04 §7.3)', () => {
+  it('SessionEvent has exactly the 11 events of spec 01 §4.2, plus permissionChanged (spec 04 §7.3) and connect', () => {
     expectTypeOf<SessionEvent['type']>().toEqualTypeOf<(typeof EVENT_TYPES)[number]>();
-    expect(new Set(EVENT_TYPES).size).toBe(12);
+    expect(new Set(EVENT_TYPES).size).toBe(13);
   });
 
   it('every event type is handled without an error', () => {
@@ -45,6 +46,7 @@ describe('session contract', () => {
       { type: 'hostLifecycle', state: 'background' },
       { type: 'hostLifecycle', state: 'foreground' },
       { type: 'permissionChanged', permission: 'write' },
+      { type: 'connect', docid: DOCID, version: 0 },
     ];
     for (const e of events) h.dispatch(e);
     expect(h.seen.filter((s) => s.k === 'error')).toEqual([]);

@@ -297,6 +297,7 @@ export class BoardSession {
       logger,
       docid: '',
       isJsForm: this.converter.jsFormTest,
+      autoReconnect: opts.autoReconnect ?? true,
       ...(opts.transport !== undefined ? { transport: opts.transport } : {}),
     });
     this.sync.attach(
@@ -313,6 +314,11 @@ export class BoardSession {
       }),
       this.sync.on('serverMessage', (m) => {
         this.pending_.dialogs.push(dialogForMessage(m));
+      }),
+      this.sync.on('permission', (e) => {
+        // Inside the `remoteFrame` event that carries the `load` frame: the reload that follows
+        // (and its writer-only conversion frame) runs with this permission.
+        this.permission_ = e.permission;
       }),
       this.sync.on('formatTooNew', () => {
         this.pending_.errors.push({ code: 'format_too_new', eventType: 'remoteFrame' });
@@ -737,6 +743,12 @@ export class BoardSession {
         else if (d?.kind === 'reopen') this.pending_.reopen = true;
         return;
       }
+      case 'connect':
+        // A cloud board opened from its socket: no content yet, no permission until the `load`
+        // frame says (C++ `openRemoteDoc` before `loadDoc`).
+        this.permission_ = null;
+        this.sync.start(ev.docid, ev.version ?? 0);
+        return;
       case 'permissionChanged':
         this.permission_ = ev.permission;
         // Raised to write: the conversion frame a writer sends on open, once (AC-FMT-24).

@@ -56,7 +56,7 @@ export {
   ScrollRecognizer,
 } from './multi-touch';
 export { BaseDragger, NoOpDragger, type DragHandler } from './drag-handler';
-export { DESKTOP_WEB, isSmallScreen, type HostEnvironment } from './env';
+export { DESKTOP_WEB, autoReconnectFor, isSmallScreen, type HostEnvironment } from './env';
 export { InputMode, InputModeState, defaultInputMode } from './input-mode';
 export { CursorState, cursorForMode, type CursorKind } from './cursor';
 export {
@@ -142,7 +142,31 @@ export {
 export { KeyMap, type KeyChord, type KeyCommandId, type ShortcutRow } from './key-map';
 export { CommandDispatcher, type CommandDispatcherOptions } from './commands';
 export { ShapeInteractionLayer, type ShapeLayerOptions } from './shape-layer';
-export { TextEditSession } from './text-edit-session';
+export { TextEditSession, type TextEditHost } from './text-edit-session';
+export {
+  BoardEditors,
+  ColorPickerApi,
+  ConnectionApi,
+  PAGE_SIZES,
+  PageApi,
+  PropertyApi,
+  SetSizeApi,
+  SettingsApi,
+  StyleApi,
+  convertUnitSize,
+  parseCssColor,
+  type ColorKind,
+  type ColorPickerState,
+  type ConnectionState,
+  type EditorHost,
+  type PageRow,
+  type PropertyRow,
+  type SetSizeValues,
+  type SettingName,
+  type StyleTarget,
+  type TextStyleChange,
+  type UnitSize,
+} from './editor-api';
 export { LibraryDropHandler } from './library-drop';
 export {
   RecognitionController,

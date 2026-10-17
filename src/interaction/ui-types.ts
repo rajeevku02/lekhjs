@@ -50,6 +50,13 @@ export interface TextEditView {
   readonly lineHeight: number;
   readonly text: string;
   readonly placeholder?: string;
+  /** C++ `TextEditParam` (spec 06 §6.1): a textarea, bordered on the web, growing with the text. */
+  readonly multiLine?: boolean;
+  readonly showBorder?: boolean;
+  readonly variableWidth?: boolean;
+  readonly variableHeight?: boolean;
+  /** An interpreted-text template edits left-aligned (`defaultAlignAlways`). */
+  readonly defaultAlignAlways?: boolean;
 }
 
 /** The `Config` values the panels show (read-only). */
@@ -97,7 +104,9 @@ export interface BoardUiState {
     readonly canDelete: boolean;
     readonly formatVersion: string;
   };
-  readonly pages: { readonly ids: readonly string[]; readonly active: number };
+  readonly pages: { readonly ids: readonly string[]; readonly names: readonly string[]; readonly active: number };
+  /** The canvas style new strokes and shapes take (C++ `LekhGlobal::currentStyle`; the pen popup edits it). */
+  readonly drawingStyle: StyleSnapshot;
   readonly undo: { readonly canUndo: boolean; readonly canRedo: boolean };
   /** `blockView`. */
   readonly busy: null | {

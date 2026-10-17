@@ -28,6 +28,16 @@ export {
   type RenderConfig,
 } from './config';
 export { LekhError, isLekhError } from './errors';
+export { LiveConfig } from './live-config';
+export {
+  SHAPE_CONNECTION_DEFAULT_GAP,
+  USER_SETTINGS_FILE,
+  USER_SETTINGS_KEYS,
+  isValidConnectionType,
+  parseUserSettings,
+  serializeUserSettings,
+  type UserSettingKey,
+} from './user-settings';
 export { Lru } from './lru';
 export { Span } from './span';
 export {

@@ -4,7 +4,15 @@
 // line-width cache, the text layout over the host's measurer, the configuration and the
 // clock / id / log ports. Replaces the C++ singletons `LekhGlobal`, `Platform::currentPlatform`,
 // `TemplateStore::instance` and `Config::instance` (spec 01 C12).
-import { EngineConfig, type Clock, type Config, type ConfigOverrides, type IdSource, type Logger } from '../base';
+import {
+  EngineConfig,
+  LiveConfig,
+  type Clock,
+  type Config,
+  type ConfigOverrides,
+  type IdSource,
+  type Logger,
+} from '../base';
 import { GeneratorRegistry } from '../generators';
 import type { TemplateCatalog } from '../template';
 import {
@@ -55,7 +63,13 @@ export interface Runtime {
   /** `template.id` → generator, and the canonical JS texts; immutable, shared by every session. */
   readonly generators: GeneratorRegistry;
   readonly measurer: TextMeasurer;
+  /**
+   * The configuration: the defaults, the host's overrides and the user's settings. Its fields read
+   * the current value of `settings`, so a settings change reaches every holder (C++ `Config::instance`).
+   */
   readonly config: Config;
+  /** The user's settings over `config` (spec 05 §6.3 `SettingsApi`): change, observe. */
+  readonly settings: LiveConfig;
   readonly clock: Clock;
   readonly ids: IdSource;
   readonly logger: Logger;
@@ -96,7 +110,8 @@ export const RANDOM_IDS: IdSource = Object.freeze({
 });
 
 export function createRuntime(opts: RuntimeOptions): Runtime {
-  const config = new EngineConfig(opts.config ?? {});
+  const settings = new LiveConfig(new EngineConfig(opts.config ?? {}));
+  const config = settings.asConfig();
   const fonts = opts.fontRegistry ?? new FontRegistry();
   fonts.attachLoader(opts.fonts);
   const testing = opts.testing ?? TEXT_SWITCHES_OFF;
@@ -113,6 +128,7 @@ export function createRuntime(opts: RuntimeOptions): Runtime {
     generators: opts.generators ?? GeneratorRegistry.builtin(),
     measurer: opts.measurer,
     config,
+    settings,
     clock: opts.clock ?? SYSTEM_CLOCK,
     ids: opts.ids ?? RANDOM_IDS,
     logger: opts.logger ?? SILENT_LOGGER,

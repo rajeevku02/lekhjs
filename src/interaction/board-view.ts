@@ -5,8 +5,16 @@
 // No DOM: the host hands it `Canvas2DLike` contexts, `InputEvent`s, key chords and a
 // `FrameScheduler`; `dispose()` drops every listener and timer it made.
 import type { Canvas2DLike } from '../base';
-import { SelectionActionCatalog, isMulti, type EditTarget, type SelectionActionId, type SelectionPanel } from '../edit';
-import { Point, Rect, getPointsBound } from '../geometry';
+import {
+  SelectionActionCatalog,
+  insertImageObject,
+  isMulti,
+  type EditTarget,
+  type InsertImageInput,
+  type SelectionActionId,
+  type SelectionPanel,
+} from '../edit';
+import { Point, Rect } from '../geometry';
 import { GroupObject, TemplatedObject, isConnector } from '../model';
 import { Canvas2DDrawingPlatform } from '../render';
 import { styleSnapshotOf, type BoardSession, type PaintLayer } from '../session';
@@ -33,8 +41,9 @@ import { RecognitionController } from './recognition-controller';
 import type { OverlayTextPainter } from './selection/types';
 import { MapShapeInteractionRegistry, type ShapeInteractionRegistry } from './shape-interaction';
 import { ShapeInteractionLayer } from './shape-layer';
+import { BoardEditors } from './editor-api';
 import { TextEditSession } from './text-edit-session';
-import type { BoardUiState, SelectionAction, SelectionState, Store } from './ui-types';
+import type { BoardUiState, ConfigSnapshot, SelectionAction, SelectionState, Store, TextEditView } from './ui-types';
 
 export interface BoardViewOptions {
   readonly session: BoardSession;
@@ -105,6 +114,8 @@ export class BoardView {
   readonly layers: LayerScheduler;
   readonly registry: ShapeInteractionRegistry;
   readonly catalog = new SelectionActionCatalog();
+  /** What the panels call (spec 05 §6.3 `StyleEditorApi`, `SettingsApi`, …). */
+  readonly editors: BoardEditors;
   private readonly store_: UiStore;
   private readonly opts_: BoardViewOptions;
   private readonly contexts_ = new Map<PaintLayer, Canvas2DLike>();
@@ -132,6 +143,10 @@ export class BoardView {
     this.registry = opts.registry ?? new MapShapeInteractionRegistry();
     this.view = new CanvasView(this.board);
     this.textEdit = new TextEditSession(this.board);
+    this.textEdit.setHost({
+      fontResolver: opts.session.runtime.fontResolver,
+      measure: (text, style, constraint) => opts.session.text.measure(text, style, constraint),
+    });
     this.recognition = new RecognitionController({
       board: this.board,
       view: this.view,
@@ -212,6 +227,17 @@ export class BoardView {
       ...(opts.save !== undefined ? { save: opts.save } : {}),
       ...(opts.insertImage !== undefined ? { insertImage: opts.insertImage } : {}),
     });
+    this.editors = new BoardEditors({
+      board: this.board,
+      editor: this.session.editor,
+      overlay: this.overlay,
+      settings: this.session.runtime.settings,
+      arrowheads: () => this.session.overlay.arrowheads().map((d) => this.session.overlay.instantiate(d)),
+      changed: () => {
+        this.overlay.refreshSelection();
+        this.scheduleUi();
+      },
+    });
     this.store_ = new UiStore(this.computeUi());
     const signal = {
       get aborted(): boolean {
@@ -267,6 +293,12 @@ export class BoardView {
       this.textEdit.subscribe(() => {
         this.scheduleUi();
       }),
+      // A settings change (any session on this runtime, or the settings file read late).
+      this.session.runtime.settings.onChange(() => {
+        this.overlay.refreshSelection();
+        this.layers.invalidateAll();
+        this.scheduleUi();
+      }),
     );
   }
 
@@ -316,6 +348,21 @@ export class BoardView {
   /** The canvas context menu's choice. */
   runContextAction(id: ContextActionId): void {
     this.commands.runContextAction(id);
+  }
+
+  /**
+   * Inserts a picked image (C++ `CoreIO::insertImage` / `insertImageWithResource`): an
+   * `avabodh.basic.image` shape of `input`'s size centred at `at` (document units), default the
+   * centre of the visible canvas; one undo step. Returns the new object's id ('' when none).
+   */
+  insertImage(input: InsertImageInput, at?: Point): string {
+    const center = at ?? this.view.insertLocation();
+    let id = '';
+    this.board.edit((ctx) => {
+      id = insertImageObject(ctx.editor, center, input)?.id ?? '';
+    });
+    this.board.requestPaint('drawing');
+    return id;
   }
 
   /** A selection-menu item (spec 05 §8). */
@@ -422,35 +469,29 @@ export class BoardView {
     const v = s.view;
     const perm = s.permission;
     const sel = this.selectionState();
-    const te = this.textEdit.object();
-    const textEdit =
-      te === null
-        ? null
-        : {
-            objectId: te.id,
-            rect: getPointsBound(
-              te
-                .selectionRect()
-                .getPoints()
-                .map((p) => this.view.toView(p)),
-            ),
-            rotation: te.rotation(),
-            font: '',
-            color: '',
-            align: 'center' as const,
-            lineHeight: 0,
-            text: te.getTextForEditing(),
-          };
+    const textEdit: TextEditView | null = this.textEdit.view(this.view);
     const cfg = this.board.config;
-    const settings: BoardUiState['settings'] = {
+    const settings: ConfigSnapshot = {
       gridOn: doc.grid.present,
       snapToGrid: cfg.snapToGrid,
-      darkMode: 'system',
+      darkMode: cfg.screenMode === 1 ? 'light' : cfg.screenMode === 2 ? 'dark' : 'system',
       onlyDrawWithPencil: cfg.onlyDrawWithPencil,
       recognizeShape: this.modes.get() === InputMode.SmartDraw,
-      keepScreenOn: false,
+      keepScreenOn: cfg.preventScreenToTurnOff,
       autoConnect: false,
       showRulers: false,
+      screenMode: cfg.screenMode,
+      recognizeConnection: cfg.recognizeConnection,
+      resizeInsertedImage: cfg.resizeInsertedImage,
+      shapeConnectionGap: cfg.connectionLineSeparationFromObject > 0,
+      resizeShapeByZoomGesture: cfg.resizeShapeByZoomGesture,
+      shouldShowInfoButton: cfg.shouldShowInfoButton,
+      preventScreenToTurnOff: cfg.preventScreenToTurnOff,
+      defaultFontSize: cfg.defaultFontSize,
+      defaultArrowType: cfg.defaultArrowType,
+      defaultConnectionType: cfg.defaultConnectionType,
+      showConnectionHandles: cfg.showConnectionHandles,
+      enableAirGesture: cfg.enableAirGesture,
     };
     const next: BoardUiState = {
       inputMode: this.modes.get(),
@@ -468,7 +509,8 @@ export class BoardView {
         canDelete: perm === null,
         formatVersion: doc.info.version,
       },
-      pages: { ids: doc.pages.map((p) => p.id), active: doc.activePageIndex },
+      pages: { ids: doc.pages.map((p) => p.id), names: doc.pages.map((p) => p.name), active: doc.activePageIndex },
+      drawingStyle: styleSnapshotOf(this.board.currentStyle()),
       undo: { canUndo: s.editor.undo.canUndo(), canRedo: s.editor.undo.canRedo() },
       busy: prev?.busy ?? null,
       textEdit,
@@ -519,7 +561,9 @@ function sameUi(a: BoardUiState, b: BoardUiState): boolean {
     a.undo.canUndo === b.undo.canUndo &&
     a.undo.canRedo === b.undo.canRedo &&
     a.pages.active === b.pages.active &&
-    a.pages.ids.length === b.pages.ids.length &&
+    a.pages.ids.join('\u0000') === b.pages.ids.join('\u0000') &&
+    a.pages.names.join('\u0000') === b.pages.names.join('\u0000') &&
+    JSON.stringify(a.drawingStyle) === JSON.stringify(b.drawingStyle) &&
     a.doc.name === b.doc.name &&
     a.doc.permission === b.doc.permission &&
     JSON.stringify(a.selection) === JSON.stringify(b.selection) &&

@@ -10,7 +10,7 @@ rule:
   json: []
   image: null
   perf: null
-evidence: "spec 08 §1, §7; test/export/pdf-structure.test.ts (labels in getTextContent, no image XObject, MediaBox = size / 2)"
+evidence: 'spec 08 §1, §7; test/export/pdf-structure.test.ts (labels in getTextContent, no image XObject, MediaBox = size / 2)'
 status: proposed
 signed_off_by: null
 signed_off_at: null

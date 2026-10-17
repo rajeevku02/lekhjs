@@ -11,7 +11,7 @@ rule:
   image:
     attribute: { object_flag: gradient-fill }
   perf: null
-evidence: "spec 08 §7; test/export/pdf-primitives.test.ts (a 5-stop linear shading with a 4-part stitching function, a focal radial shading)"
+evidence: 'spec 08 §7; test/export/pdf-primitives.test.ts (a 5-stop linear shading with a 4-part stitching function, a focal radial shading)'
 status: proposed
 signed_off_by: null
 signed_off_at: null

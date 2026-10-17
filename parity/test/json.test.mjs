@@ -402,3 +402,24 @@ describe('owned gaps', () => {
     assert.deepEqual(Object.fromEntries(r.gaps), { G3: 1, G5: 2 });
   });
 });
+
+describe('customer report', () => {
+  it('counts C++ outputs with raw control characters, and scrub-check passes gap owners', async () => {
+    const { RAW_CTRL } = await import('../json/compare.mjs');
+    const { report } = await import('../json/report.mjs');
+    assert.equal(RAW_CTRL.test('{"a":"x\u0001y"}'), true);
+    assert.equal(RAW_CTRL.test('{"a":"x\n\r\t\b\fy"}'), false);
+    const dir = mkdtempSync(path.join(tmpdir(), 'report-'));
+    writeFileSync(path.join(dir, 'run.json'), JSON.stringify({ pipeline: 'p1', stamp: 'app', customer: true }));
+    const recs = [
+      { idx: 'b000001', status: 'equal', cpp_raw_ctrl: true },
+      { idx: 'b000002', status: 'gap', gap: { G3: 2 } },
+      { idx: 'b000003', status: 'equal' },
+    ];
+    writeFileSync(path.join(dir, 'results.jsonl'), recs.map((r) => JSON.stringify(r)).join('\n') + '\n');
+    const r = report(dir);
+    rmSync(dir, { recursive: true });
+    assert.equal(r.summary['cpp_raw_ctrl'], 1);
+    assert.deepEqual(r.summary['gap_owners'], { G3: 1 });
+  });
+});

@@ -40,6 +40,10 @@ export const PARITY = path.resolve(HERE, '..');
 
 /** @typedef {{ idx: string, file: string }} BoardInput */
 
+/** A control character JSON requires escaped and the C++ writer leaves raw (not \n \r \t \b \f). */
+// eslint-disable-next-line no-control-regex
+export const RAW_CTRL = /[\x00-\x07\x0b\x0e-\x1f]/;
+
 /**
  * The customer corpus `file` lies in, or null: a `corpus/` directory at a workspace root (the
  * directory holding `ecosystem.config.js`, spec 11 §8). Other folders named `corpus` (kashi's
@@ -152,6 +156,10 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
     if (!customer) rec.ts_error = ts.error;
     return rec;
   }
+
+  // Raw control characters other than \n \r \t \b \f in the C++ output (E7: the C++ writer
+  // emits them unescaped; lekhjs's reader rejects them with json_parse). A flag, never the bytes.
+  if (typeof cpp.json === 'string' && RAW_CTRL.test(cpp.json)) rec.cpp_raw_ctrl = true;
 
   let canon;
   try {

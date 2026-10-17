@@ -67,6 +67,7 @@ export function report(dir) {
   let partsBad = 0;
   let rootStyleWrong = 0;
   let unescapedKey = 0;
+  let cppRawCtrl = 0;
   let cppFailUntied = 0;
   /** @type {string[]} */
   const notEqual = [];
@@ -87,6 +88,7 @@ export function report(dir) {
       partsBad += r.generator_parts.bad;
     }
     if (r.root_style_ok === false) rootStyleWrong++;
+    if (r.cpp_raw_ctrl === true) cppRawCtrl++;
     if (r.status === 'cpp_fail' && r.register === undefined) cppFailUntied++;
     if (!run.customer && !['equal', 'equal_tol', 'equal_rules'].includes(r.status))
       notEqual.push(`${r.status} ${r.idx}${r.gap !== undefined ? ` (${Object.keys(r.gap).join(', ')})` : ''}`);
@@ -138,6 +140,7 @@ export function report(dir) {
     generator_parts_bad: partsBad,
     root_style_wrong: rootStyleWrong,
     json_unescaped_key: unescapedKey,
+    cpp_raw_ctrl: cppRawCtrl,
     ts_fail_codes: tsCodes,
     register,
     gap_owners: gapOwners,
@@ -156,7 +159,7 @@ export function report(dir) {
     '|---|---|',
     ...STATUSES.map((s) => `| ${s} | ${st(s)} |`),
     '',
-    `stamp_ok ${stampOk}, stamp_wrong ${stampWrong}; generator_parts_ok ${partsOk}, bad ${partsBad}; root style wrong ${rootStyleWrong}; json_unescaped_key ${unescapedKey}`,
+    `stamp_ok ${stampOk}, stamp_wrong ${stampWrong}; generator_parts_ok ${partsOk}, bad ${partsBad}; root style wrong ${rootStyleWrong}; json_unescaped_key ${unescapedKey}; cpp_raw_ctrl ${cppRawCtrl}`,
     '',
     failures.length > 0
       ? `**FAIL:** ${failures.join('; ')}`

@@ -19,6 +19,8 @@ const ALLOWED_TOP = new Set([
   'generator_parts_bad',
   'root_style_wrong',
   'json_unescaped_key',
+  'cpp_raw_ctrl',
+  'gap_owners',
   'ts_fail_codes',
   'register',
   'top_paths',
@@ -43,6 +45,9 @@ export function scrubCheck(dir) {
     if (!PATH_KEY.test(k)) bad.push(`summary.json: path ${JSON.stringify(k.slice(0, 40))} is not a generalised path`);
   for (const k of Object.keys(s.register ?? {}))
     if (!/^DR-[A-Z]+-\d+$/.test(k)) bad.push(`summary.json: ${k} is not a register id`);
+  for (const k of Object.keys(s.gap_owners ?? {}))
+    if (!/^[A-Z]+\d+[a-z]?$/.test(k))
+      bad.push(`summary.json: gap owner ${JSON.stringify(k.slice(0, 40))} is not a task key`);
   return bad;
 }
 

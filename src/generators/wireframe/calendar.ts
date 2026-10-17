@@ -7,7 +7,7 @@
 //   - DR-GEN-09: the leaked global `head` is a local (assigned before its read: no visible change).
 import type { DrawEntry, EmbedEntry, TextEntry, WireframeModule } from '../../template';
 import { MONTHS, drawMonthGrid, parseWireframeDate } from '../wireframe-date';
-import { num } from '../wireframe-lua';
+import { int, num } from '../wireframe-lua';
 
 const calendar: WireframeModule = Object.freeze<WireframeModule>({
   key: 'wireframe/calendar',
@@ -28,9 +28,9 @@ const calendar: WireframeModule = Object.freeze<WireframeModule>({
     data.push('0', `-h/2 + ${num(yh + ch / 2)}`, 'w', num(ch), '0');
     texts.push({ text: head, location: '8 9 10 11 12' });
 
-    data.push(`-w/2+${num(gap)}+ ${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
+    data.push(`-w/2+${int(gap)}+ ${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
     embeds.push({ name: 'avabodh.wireframe.icon_chevron-left', location: '13 14 15 16 17', mode: 'aspect' });
-    data.push(`w/2-${num(gap)}-${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
+    data.push(`w/2-${int(gap)}-${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
     embeds.push({ name: 'avabodh.wireframe.icon_chevron-right', location: '18 19 20 21 22', mode: 'aspect' });
     yh = yh + ch + gap;
 

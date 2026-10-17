@@ -3,7 +3,7 @@
 // with rounded corners; the selected one (`*`) is filled blue with white text. No or one segment
 // draws a single rounded rectangle.
 import type { DrawEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, int, num } from '../wireframe-lua';
 
 const RAD = 6;
 const K = 0.4477152502;
@@ -12,7 +12,7 @@ const SELECTED = -16745729;
 const iosSegmented: WireframeModule = Object.freeze<WireframeModule>({
   key: 'wireframe/ios_segmented',
   generate({ text }, h) {
-    const rads = num(RAD);
+    const rads = int(RAD);
     const radk = num(RAD * K);
     let data: string[] = [
       `-w/2+${radk}`,

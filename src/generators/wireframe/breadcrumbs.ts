@@ -2,7 +2,7 @@
 // `avabodh.wireframe.breadcrumbs`). Comma-separated crumbs with a chevron between each pair; the
 // last crumb is black. A leading `-` is stripped (the script parses it and draws nothing for it).
 import type { EmbedEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, lnum, num } from '../wireframe-lua';
 
 const breadcrumbs: WireframeModule = Object.freeze<WireframeModule>({
   key: 'wireframe/breadcrumbs',
@@ -17,7 +17,7 @@ const breadcrumbs: WireframeModule = Object.freeze<WireframeModule>({
     let dataEnd = 4;
     arr.forEach((it, i) => {
       const last = i === arr.length - 1;
-      data.push(`-w/2+${num(sum)}+${num(it.width / 2)}`, '0', num(it.width), 'h', '0');
+      data.push(`-w/2+${lnum(sum, i === 0)}+${num(it.width / 2)}`, '0', num(it.width), 'h', '0');
       texts.push({
         ...(last ? { style: { textfill: { color: -16777216, type: 2 } } } : {}),
         location: indexList(dataEnd, 5),

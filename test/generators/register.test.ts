@@ -1,12 +1,14 @@
 // The difference-register fixtures of the generator framework (spec 04 §14), one minimal case each,
 // built from scratch: DR-GEN-03 (minimum size starts at 0), DR-GEN-06 (month info without a time
 // zone), DR-GEN-10 (a failing generation warns, and the first one shows the placeholder), DR-GEN-12
-// (an unknown generator is kept, not dropped) and DR-GEN-13 (numbers in data strings).
+// (an unknown generator is kept, not dropped), and the Lua number text of data strings (DR-GEN-13,
+// withdrawn).
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { WireframeGenerator } from '../../src/generators';
 import { GeneratorRegistry, GeneratorScriptTable, LuaToJsConverter, monthInfo, num } from '../../src/generators';
+import { int, lnum, pnum } from '../../src/generators/wireframe-lua';
 import { converterHooks } from '../../src/io';
 import { DataStore, type WireframeModule } from '../../src/template';
 import { testIo } from '../io/helpers';
@@ -73,14 +75,28 @@ describe('DR-GEN-12: an unknown generator is kept', () => {
   });
 });
 
-describe('DR-GEN-13: numbers in data strings are JS shortest round trip', () => {
+describe('numbers in data strings are written as Lua 5.3 tostring did (DR-GEN-13 withdrawn)', () => {
+  // The B4 decision: the ports' data text stays byte-compatible with the C++ (Lua) output stored in
+  // boards. A float prints with `%.14g` and `.0` when whole; a value Lua held as an integer prints
+  // as digits (`int`), and a parameter is an integer when it is integral (C++ `pushParamsTable`).
   it.each([
     [7.1, '7.1'],
-    [60, '60'],
-    [-0, '0'],
-    [0.1 + 0.2, '0.30000000000000004'],
+    [60, '60.0'],
+    [-0, '-0.0'],
+    [0.1 + 0.2, '0.3'],
+    [Math.fround(28.68), '28.680000305176'],
     [1e21, '1e+21'],
-  ])('%d → %s (Lua wrote %%.14g and float32 sizes)', (x, s) => {
+    [1e-5, '1e-05'],
+  ])('num(%d) → %s', (x, s) => {
     expect(num(x)).toBe(s);
+  });
+
+  it('integers and parameters', () => {
+    expect(int(14)).toBe('14');
+    expect(int(-0)).toBe('0');
+    expect(lnum(0, true)).toBe('0');
+    expect(lnum(0, false)).toBe('0.0');
+    expect(pnum(25)).toBe('25');
+    expect(pnum(0.5)).toBe('0.5');
   });
 });

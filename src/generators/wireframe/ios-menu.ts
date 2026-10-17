@@ -5,7 +5,7 @@
 // Kept as the script had it: the row height is at least `min row height` (24 when unset), and the
 // minimum width adds the widest row's text (or its end icon only, when it has one).
 import type { DrawEntry, EmbedEntry, JsonObject, TextEntry, WireframeModule } from '../../template';
-import { indexList, num, str, truthy } from '../wireframe-lua';
+import { indexList, int, lnum, num, str, truthy } from '../wireframe-lua';
 
 const SELECTED = -10504995;
 const LEFT_PAD = 5;
@@ -46,6 +46,10 @@ const iosMenu: WireframeModule = Object.freeze<WireframeModule>({
     const icw = lineHeight * 0.9;
     let sum = 0;
     let prevSum = 0;
+    // Lua integer or float: a default 24 or an integral parameter height is an integer, a measured
+    // one a float, and a sum stays an integer until a float joins it.
+    let sumInt = true;
+    let prevInt = true;
     let dataEnd = 7;
     let maxw = 0;
     const minParam = params['min row height'];
@@ -53,17 +57,19 @@ const iosMenu: WireframeModule = Object.freeze<WireframeModule>({
 
     arr.forEach((it, i) => {
       if (i > 0) {
-        data.push('-w/2', `-h/2+${num(sum)}`, 'w/2', `-h/2+${num(sum)}`);
+        data.push('-w/2', `-h/2+${lnum(sum, sumInt)}`, 'w/2', `-h/2+${lnum(sum, sumInt)}`);
         draw.push({ style: { disabled: true }, path: `M ${indexList(dataEnd, 2)} L ${indexList(dataEnd + 2, 2)}` });
         dataEnd += 4;
       }
       if (typeof minHeight !== 'number') throw new TypeError(`attempt to compare number with ${typeof minHeight}`);
       const height = it.height < minHeight ? minHeight : it.height;
+      const heightInt = it.height < minHeight && Number.isInteger(minHeight);
       sum += height;
+      sumInt = sumInt && heightInt;
       const cy = `-h/2+${num(prevSum + height / 2)}`;
       if (it.selected) {
-        const top = `-h/2+${num(prevSum)}`;
-        const bottom = `-h/2+${num(prevSum + height)}`;
+        const top = `-h/2+${lnum(prevSum, prevInt)}`;
+        const bottom = `-h/2+${lnum(prevSum + height, prevInt && heightInt)}`;
         data.push('-w/2', top, '-w/2', bottom, 'w/2', bottom, 'w/2', top);
         draw.push({
           path: `M ${indexList(dataEnd, 2)} L ${indexList(dataEnd + 2, 2)} L ${indexList(dataEnd + 4, 2)} L ${indexList(dataEnd + 6, 2)} Z`,
@@ -71,7 +77,7 @@ const iosMenu: WireframeModule = Object.freeze<WireframeModule>({
         });
         dataEnd += 8;
       }
-      const textBox = [num(icw + LEFT_PAD), cy, `w-${num(LEFT_PAD + 1)}`, num(height), '0'];
+      const textBox = [num(icw + LEFT_PAD), cy, `w-${int(LEFT_PAD + 1)}`, lnum(height, heightInt), '0'];
       let dc: number;
       if (it.startIcon !== undefined) {
         let actualIcw = icw;
@@ -132,7 +138,7 @@ const iosMenu: WireframeModule = Object.freeze<WireframeModule>({
       } else if (it.endText !== undefined) {
         const sz = h.textSize(it.endText);
         linew += sz.w;
-        data.push(`w/2-${num(sz.w / 2)}-${num(LEFT_PAD + 2)}`, cy, num(sz.w + 2), num(sz.h + 2), '0');
+        data.push(`w/2-${num(sz.w / 2)}-${int(LEFT_PAD + 2)}`, cy, num(sz.w + 2), num(sz.h + 2), '0');
         texts.push({
           style: it.disabled ? { textalignhorizontal: 3, disabled: true } : { textalignhorizontal: 3 },
           location: indexList(dataEnd, 5),
@@ -141,6 +147,7 @@ const iosMenu: WireframeModule = Object.freeze<WireframeModule>({
         dataEnd += 5;
       }
       prevSum = sum;
+      prevInt = sumInt;
       if (maxw < linew) maxw = linew;
     });
     return {

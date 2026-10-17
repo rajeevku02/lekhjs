@@ -3,7 +3,7 @@
 // button at the bottom (the cancel button), the others share a rounded box with separator lines.
 // One line draws a single filled rectangle whose text is the whole shape text, as the script did.
 import type { DrawEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, int, num } from '../wireframe-lua';
 
 const GAP = 8;
 
@@ -24,12 +24,12 @@ const iosActionsheet: WireframeModule = Object.freeze<WireframeModule>({
       };
     }
     const n = arr.length;
-    const ht = `(h-${num(GAP)})/${num(n)}`;
+    const ht = `(h-${int(GAP)})/${int(n)}`;
     const data: string[] = [
       '0',
-      `-h/2+${num(n - 1)}*0.5*${ht}`,
+      `-h/2+${int(n - 1)}*0.5*${ht}`,
       'w',
-      `${num(n - 1)}*${ht}`,
+      `${int(n - 1)}*${ht}`,
       '6',
       '6',
       '0',
@@ -52,7 +52,7 @@ const iosActionsheet: WireframeModule = Object.freeze<WireframeModule>({
       texts.push({ location: indexList(dataEnd, 5), text: arr[id - 1] ?? '' });
       dataEnd += 5;
       if (id < n - 1) {
-        data.push('-w/2', `-h/2+${num(id)}*${ht}`, 'w/2', `-h/2+${num(id)}*${ht}`);
+        data.push('-w/2', `-h/2+${int(id)}*${ht}`, 'w/2', `-h/2+${int(id)}*${ht}`);
         draw.push({ style: { disabled: true }, path: `M ${indexList(dataEnd, 2)} L ${indexList(dataEnd + 2, 2)}` });
         dataEnd += 4;
       }

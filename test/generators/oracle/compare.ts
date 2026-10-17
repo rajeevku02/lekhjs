@@ -1,7 +1,7 @@
 // The structural comparison of a Lua script's output with its TS port's (spec 04 §13): entries in
 // order; draw paths, locations and index lists by token; styles and other members by value; and
-// the data expressions by evaluating them, in order, on a grid of boxes with a 1e-6 tolerance (the
-// text differs by design: Lua's `%.14g` against JS's shortest round trip, DR-GEN-13). `minW`,
+// the data expressions by evaluating them, in order, on a grid of boxes with a 1e-6 tolerance, and
+// then by text (the ports write numbers as Lua's `tostring` did; DR-GEN-13 is withdrawn). `minW`,
 // `minH`, `disabled` and `alignpoints` are compared too.
 import { Size } from '../../../src/geometry';
 import {
@@ -136,6 +136,12 @@ export function compareOutputs(
         break;
       }
     }
+  }
+  // The data TEXT too (B4 decision: the ports write numbers as Lua's `tostring` did, so the stored
+  // strings are byte-compatible with the C++ output; DR-GEN-13 is withdrawn).
+  if (diffs.length === 0) {
+    const bad = ldata.findIndex((v, i) => v !== tdata[i]);
+    if (bad >= 0) diffs.push(`data[${String(bad)}] text: ${ldata[bad] ?? ''} vs ${tdata[bad] ?? ''}`);
   }
   for (const kind of ['draw', 'texts', 'images', 'embeds'] as const) {
     const a = list(lt[kind]).map((v) => entryKey(kind, v));

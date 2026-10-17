@@ -2,7 +2,7 @@
 // `avabodh.wireframe.ioscontextmenu`). A dark bar of comma-separated items with white separators;
 // the selected item (`*`) gets a pointer triangle below it.
 import type { DrawEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, int, lnum, num } from '../wireframe-lua';
 
 const DARK = -11447725;
 const PS = 12;
@@ -20,7 +20,15 @@ const iosContextmenu: WireframeModule = Object.freeze<WireframeModule>({
     const th = h.textSize('AA').h;
     let sum = 0;
     for (const it of arr) sum += it.width;
-    const data: string[] = [`-w/2 + ${num(sum / 2)}`, `-${num(PS / 2)}`, num(sum), `h-${num(PS)}`, '4', '4', '0'];
+    const data: string[] = [
+      `-w/2 + ${num(sum / 2)}`,
+      `-${num(PS / 2)}`,
+      lnum(sum, arr.length === 0),
+      `h-${int(PS)}`,
+      '4',
+      '4',
+      '0',
+    ];
     const draw: DrawEntry[] = [
       { path: 'R 0 1 2 3 4 5 6', style: { strokewidth: 0, fillpaint: { color: DARK, type: 2 } } },
     ];
@@ -44,12 +52,12 @@ const iosContextmenu: WireframeModule = Object.freeze<WireframeModule>({
       if (it.selected) {
         const d = `d(${String(dataEnd)})`;
         data.push(
-          `-w/2 + ${num(xc - w / 2)}-${num(PS)}`,
-          `h/2-${num(PS)}`,
+          `-w/2 + ${num(xc - w / 2)}-${int(PS)}`,
+          `h/2-${int(PS)}`,
           `${d}+${num(PS / 2)}`,
           'h/2',
-          `${d}+${num(PS)}`,
-          `h/2-${num(PS)}`,
+          `${d}+${int(PS)}`,
+          `h/2-${int(PS)}`,
         );
         draw.push({
           path: `M ${indexList(dataEnd, 2)} L ${indexList(dataEnd + 2, 2)} L ${indexList(dataEnd + 4, 2)} Z`,

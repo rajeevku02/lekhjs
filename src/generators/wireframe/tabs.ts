@@ -4,7 +4,7 @@
 // panel, the selected one (`*`) opens into it, and `-` disables a tab. The panel below the tabs is
 // a container, and the first point is the shape's align point.
 import type { DrawEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, lnum, num } from '../wireframe-lua';
 
 const PANEL = -637534209;
 const UNSELECTED = -1184275;
@@ -21,13 +21,15 @@ const tabs: WireframeModule = Object.freeze<WireframeModule>({
     const tabHeight = 30 + lineHeight * 0.2;
     let sum = 0;
     for (const it of arr) sum += it.width;
+    // With no tab the sum is still Lua's integer 0 (and `-sum` an integer, so no `-0.0`).
+    const sumInt = arr.length === 0;
     let startx = '-w/2';
-    let endx = `-w/2+${num(sum)}`;
+    let endx = `-w/2+${lnum(sum, sumInt)}`;
     if (params['align'] === 'center') {
-      startx = num(-sum / 2);
+      startx = num(sumInt ? 0 - sum / 2 : -sum / 2);
       endx = num(sum / 2);
     } else if (params['align'] === 'right') {
-      startx = `w/2 - ${num(sum)}`;
+      startx = `w/2 - ${lnum(sum, sumInt)}`;
       endx = 'w/2';
     }
     const bottom = params['position'] === 'bottom';

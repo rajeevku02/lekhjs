@@ -3,7 +3,7 @@
 // short vertical line between two when `separator line` is set. As the script had it, `-` is
 // parsed (and removed from the text) but not drawn differently.
 import type { DrawEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num, truthy } from '../wireframe-lua';
+import { indexList, lnum, num, truthy } from '../wireframe-lua';
 
 const linkBar: WireframeModule = Object.freeze<WireframeModule>({
   key: 'wireframe/link_bar',
@@ -16,7 +16,7 @@ const linkBar: WireframeModule = Object.freeze<WireframeModule>({
     let sum = 0;
     let dataEnd = 4;
     arr.forEach((it, i) => {
-      data.push(`-w/2+${num(sum)}+${num(it.width / 2)}`, '0', num(it.width), 'h', '0');
+      data.push(`-w/2+${lnum(sum, i === 0)}+${num(it.width / 2)}`, '0', num(it.width), 'h', '0');
       texts.push({ location: indexList(dataEnd, 5), text: it.word });
       dataEnd += 5;
       sum += it.width;

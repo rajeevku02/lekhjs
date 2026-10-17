@@ -3,7 +3,7 @@
 // unset): `*` selects (filled), `-` disables, `[name]` draws that icon before the text, and when
 // any item has an icon the others are indented to match.
 import type { DrawEntry, EmbedEntry, JsonObject, TextEntry, WireframeModule } from '../../template';
-import { indexList, num, truthy } from '../wireframe-lua';
+import { indexList, int, lnum, num, truthy } from '../wireframe-lua';
 
 const SELECTED = -10504995;
 const LEFT_PAD = 4;
@@ -29,6 +29,10 @@ const listbox: WireframeModule = Object.freeze<WireframeModule>({
     const iconGap = arr.some((it) => it.startIcon !== undefined);
     let sum = 0;
     let prevSum = 0;
+    // Lua integer or float (`tostring` prints `.0` only on a float): a default 24 or an integral
+    // parameter is an integer, a measured height a float, and a sum is an integer until a float joins.
+    let sumInt = true;
+    let prevInt = true;
     let dataEnd = 8;
     let maxw = 0;
     const minParam = params['min item height'];
@@ -36,13 +40,15 @@ const listbox: WireframeModule = Object.freeze<WireframeModule>({
     for (const it of arr) {
       if (typeof minHeight !== 'number') throw new TypeError(`attempt to compare number with ${typeof minHeight}`);
       const height = it.height < minHeight ? minHeight : it.height;
+      const heightInt = it.height < minHeight && Number.isInteger(minHeight);
       sum += height;
+      sumInt = sumInt && heightInt;
       if (it.width > maxw) maxw = it.width;
       const icw = height * 0.7;
       const cy = `-h/2+${num(prevSum + height / 2)}`;
       if (it.selected) {
-        const top = `-h/2+${num(prevSum)}`;
-        const bottom = `-h/2+${num(prevSum + height)}`;
+        const top = `-h/2+${lnum(prevSum, prevInt)}`;
+        const bottom = `-h/2+${lnum(prevSum + height, prevInt && heightInt)}`;
         data.push('-w/2', top, '-w/2', bottom, 'w/2', bottom, 'w/2', top);
         draw.push({
           path: `M ${indexList(dataEnd, 2)} L ${indexList(dataEnd + 2, 2)} L ${indexList(dataEnd + 4, 2)} L ${indexList(dataEnd + 6, 2)} Z`,
@@ -52,7 +58,7 @@ const listbox: WireframeModule = Object.freeze<WireframeModule>({
       }
       let dc: number;
       if (it.startIcon !== undefined) {
-        data.push(num(icw + LEFT_PAD), cy, `w-${num(icw + LEFT_PAD)}`, num(height), '0');
+        data.push(num(icw + LEFT_PAD), cy, `w-${num(icw + LEFT_PAD)}`, lnum(height, heightInt), '0');
         data.push(`-w/2+${num(LEFT_PAD + icw / 2)}`, cy, num(icw), num(icw), '0');
         dc = 10;
         embeds.push({
@@ -63,8 +69,8 @@ const listbox: WireframeModule = Object.freeze<WireframeModule>({
           mode: 'aspect',
         });
       } else {
-        if (iconGap) data.push(num(icw + LEFT_PAD), cy, `w-${num(icw + LEFT_PAD)}`, num(height), '0');
-        else data.push(num(LEFT_PAD), cy, `w-${num(LEFT_PAD)}`, num(height), '0');
+        if (iconGap) data.push(num(icw + LEFT_PAD), cy, `w-${num(icw + LEFT_PAD)}`, lnum(height, heightInt), '0');
+        else data.push(int(LEFT_PAD), cy, `w-${int(LEFT_PAD)}`, lnum(height, heightInt), '0');
         dc = 5;
       }
       texts.push({
@@ -74,6 +80,7 @@ const listbox: WireframeModule = Object.freeze<WireframeModule>({
       });
       dataEnd += dc;
       prevSum = sum;
+      prevInt = sumInt;
     }
     return {
       data,

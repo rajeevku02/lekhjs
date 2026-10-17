@@ -1,7 +1,7 @@
 // The rounded box with a pointer that `popover.lua` and `tooltip.lua` both draw (spec 04 §5.3 rows
 // 24 and 30): the same 40 data values in both scripts, with the corner radius and pointer size
 // their only difference. Shared by the two hand-ported modules and bundled into each one's text.
-import { num } from './wireframe-lua';
+import { int, num, pnum } from './wireframe-lua';
 
 /** The scripts' Bézier circle constant. */
 const K = 0.5522847498;
@@ -16,14 +16,15 @@ export const BUBBLE_PATH =
  * size.
  */
 export function bubbleData(pointer: unknown, pos: number, rad: number, ps: number): string[] {
-  const r = num(rad);
+  // `rad` and `ps` are Lua integer literals; `pos` a parameter (or the clamp's integer 0/1).
+  const r = int(rad);
   const k = num(rad * (1 - K));
-  const span = num(-2 * rad - ps);
+  const span = int(-2 * rad - ps);
   if (pointer === 'left' || pointer === 'right') {
     const right = pointer === 'right';
     const topx = right ? 'w/2' : '-w/2';
-    const boxx = right ? `w/2 - ${num(ps)}` : `-w/2 + ${num(ps)}`;
-    const starty = `-h/2 +${r}+${num(pos)}*(h ${span})`;
+    const boxx = right ? `w/2 - ${int(ps)}` : `-w/2 + ${int(ps)}`;
+    const starty = `-h/2 +${r}+${pnum(pos)}*(h ${span})`;
     const data = [
       boxx,
       `-h/2+${r}`,
@@ -32,7 +33,7 @@ export function bubbleData(pointer: unknown, pos: number, rad: number, ps: numbe
       topx,
       `${starty}+${num(ps / 2)}`,
       boxx,
-      `${starty}+${num(ps)}`,
+      `${starty}+${int(ps)}`,
       boxx,
       `h/2 - ${r}`,
     ];
@@ -107,8 +108,8 @@ export function bubbleData(pointer: unknown, pos: number, rad: number, ps: numbe
   }
   const bottom = pointer === 'bottom';
   const topy = bottom ? 'h/2' : '-h/2';
-  const boxy = bottom ? `h/2 - ${num(ps)}` : `-h/2 + ${num(ps)}`;
-  const startx = `-w/2 +${r}+${num(pos)}*(w ${span})`;
+  const boxy = bottom ? `h/2 - ${int(ps)}` : `-h/2 + ${int(ps)}`;
+  const startx = `-w/2 +${r}+${pnum(pos)}*(w ${span})`;
   const data = [
     `-w/2+${r}`,
     boxy,
@@ -116,7 +117,7 @@ export function bubbleData(pointer: unknown, pos: number, rad: number, ps: numbe
     boxy,
     `${startx}+${num(ps / 2)}`,
     topy,
-    `${startx}+${num(ps)}`,
+    `${startx}+${int(ps)}`,
     boxy,
     `w/2-${r}`,
     boxy,

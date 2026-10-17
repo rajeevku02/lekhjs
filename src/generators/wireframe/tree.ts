@@ -3,7 +3,7 @@
 // `>`, `v`, `folder`, `folder-open`, `file`, or any icon name); `*` highlights the item and `-`
 // disables it. `border` false drops the box outline.
 import type { DrawEntry, EmbedEntry, JsonObject, TextEntry, WireframeModule } from '../../template';
-import { indexList, num, truthy } from '../wireframe-lua';
+import { indexList, lnum, num, truthy } from '../wireframe-lua';
 
 /** The script's icon shorthands; any other name is used as is (own keys only: `constructor` is a name). */
 const ICONS: Readonly<Record<string, string>> = Object.freeze({
@@ -50,13 +50,15 @@ const tree: WireframeModule = Object.freeze<WireframeModule>({
     let maxw = 0;
     let dataEnd = 8;
     let prevSum = UP_PAD;
+    // `prevSum` is Lua's integer `upPad` until the first measured (float) height is added.
+    let prevInt = true;
     for (const it of arr) {
       sum += it.height;
       const indentGap = it.indent * (icw + LEFT_PAD);
       const linew = LEFT_PAD + indentGap + icw + gap + it.width + LEFT_PAD;
       if (linew > maxw) maxw = linew;
       if (it.selected) {
-        const top = `-h/2+${num(prevSum)}`;
+        const top = `-h/2+${lnum(prevSum, prevInt)}`;
         const bottom = `-h/2+${num(prevSum + it.height)}`;
         data.push('-w/2', top, '-w/2', bottom, 'w/2', bottom, 'w/2', top);
         draw.push({
@@ -86,6 +88,7 @@ const tree: WireframeModule = Object.freeze<WireframeModule>({
       });
       dataEnd += dc;
       prevSum = sum + UP_PAD;
+      prevInt = false;
     }
     return { data, draw, texts, images: [], embeds, containers: [], minW: maxw, minH: sum + 2 * UP_PAD };
   },

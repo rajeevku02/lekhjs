@@ -5,7 +5,7 @@
 // parsed is a separator. As the script had it, the leading `-` of a separator line is the disabled
 // marker, so a single `-` line is an empty disabled item and `--` is the shortest separator.
 import type { DrawEntry, EmbedEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, int, lnum, num } from '../wireframe-lua';
 
 const SELECTED = -10504995;
 const LEFT_PAD = 5;
@@ -31,22 +31,26 @@ const menu: WireframeModule = Object.freeze<WireframeModule>({
     const icw = lineHeight * 0.7;
     let sum = 0;
     let prevSum = 0;
+    // A sum is a Lua integer (0) until the first measured (float) height is added.
+    let sumInt = true;
+    let prevInt = true;
     let dataEnd = 8;
     let maxw = 0;
     for (const it of arr) {
       if (SEPARATORS.includes(it.word)) {
-        data.push('-w/2', `-h/2+${num(sum)}`, 'w/2', `-h/2+${num(sum)}`);
+        data.push('-w/2', `-h/2+${lnum(sum, sumInt)}`, 'w/2', `-h/2+${lnum(sum, sumInt)}`);
         draw.push({ style: { disabled: true }, path: `M ${indexList(dataEnd, 2)} L ${indexList(dataEnd + 2, 2)}` });
         dataEnd += 4;
         continue;
       }
       sum += it.height;
+      sumInt = false;
       let width = h.textSize(it.word).w;
       if (it.endText !== undefined) width += h.textSize(it.endText).w;
       if (width > maxw) maxw = width;
       const cy = `-h/2+${num(prevSum + it.height / 2)}`;
       if (it.selected) {
-        const top = `-h/2+${num(prevSum)}`;
+        const top = `-h/2+${lnum(prevSum, prevInt)}`;
         const bottom = `-h/2+${num(prevSum + it.height)}`;
         data.push('-w/2', top, '-w/2', bottom, 'w/2', bottom, 'w/2', top);
         draw.push({
@@ -55,7 +59,7 @@ const menu: WireframeModule = Object.freeze<WireframeModule>({
         });
         dataEnd += 8;
       }
-      const textBox = [num(icw + LEFT_PAD), cy, `w-${num(LEFT_PAD + 1)}`, num(it.height), '0'];
+      const textBox = [num(icw + LEFT_PAD), cy, `w-${int(LEFT_PAD + 1)}`, num(it.height), '0'];
       let dc: number;
       if (it.startIcon !== undefined) {
         let icon = it.startIcon;
@@ -88,7 +92,7 @@ const menu: WireframeModule = Object.freeze<WireframeModule>({
       dataEnd += dc;
       if (it.endText !== undefined) {
         const sz = h.textSize(it.endText);
-        data.push(`w/2-${num(sz.w / 2)}-${num(LEFT_PAD + 2)}`, cy, num(sz.w + 2), num(sz.h + 2), '0');
+        data.push(`w/2-${num(sz.w / 2)}-${int(LEFT_PAD + 2)}`, cy, num(sz.w + 2), num(sz.h + 2), '0');
         texts.push({
           style: it.disabled ? { textalignhorizontal: 3, disabled: true } : { textalignhorizontal: 3 },
           location: indexList(dataEnd, 5),
@@ -97,6 +101,7 @@ const menu: WireframeModule = Object.freeze<WireframeModule>({
         dataEnd += 5;
       }
       prevSum = sum;
+      prevInt = sumInt;
     }
     return {
       data,

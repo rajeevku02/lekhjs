@@ -4,7 +4,7 @@
 // 0) along it, and the text in the box beside the pointer.
 import type { WireframeModule } from '../../template';
 import { BUBBLE_PATH, bubbleData } from '../wireframe-bubble';
-import { num } from '../wireframe-lua';
+import { int, num } from '../wireframe-lua';
 import { clampPosition } from '../wireframe-lua-param';
 
 const RAD = 8;
@@ -20,10 +20,10 @@ const tooltip: WireframeModule = Object.freeze<WireframeModule>({
     let textx = '0';
     let texty = '0';
     if (pointer === 'left' || pointer === 'right') {
-      textw = `w-${num(PS)}`;
+      textw = `w-${int(PS)}`;
       textx = pointer === 'right' ? `-${num(PS / 2)}` : num(PS / 2);
     } else {
-      texth = `h-${num(PS)}`;
+      texth = `h-${int(PS)}`;
       texty = pointer === 'bottom' ? `-${num(PS / 2)}` : num(PS / 2);
     }
     const data = bubbleData(pointer, pos, RAD, PS);

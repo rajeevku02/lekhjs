@@ -9,7 +9,7 @@
 // (2022/3/4), and nothing throws. A month inside 1..12 that is not whole (Lua: a nil month name,
 // so an error) is truncated, as `getMonthInfo` truncated it.
 import type { DrawEntry, GeneratorContext, TextEntry } from '../template';
-import { indexList, num } from './wireframe-lua';
+import { indexList, luaFloatString, num } from './wireframe-lua';
 
 /** A Lua number: the value, and whether Lua holds it as an integer (it prints without `.0`). */
 export interface LuaNumber {
@@ -50,25 +50,7 @@ export function luaToNumber(s: string): LuaNumber | null {
 
 /** Lua 5.3 `tostring` of a number: integers as digits, floats as `%.14g` with `.0` when whole. */
 export function luaNumberString(n: LuaNumber): string {
-  const x = n.value;
-  if (n.integer) return String(x);
-  if (Number.isNaN(x)) return 'nan';
-  if (!Number.isFinite(x)) return x > 0 ? 'inf' : '-inf';
-  let s: string;
-  if (x === 0) {
-    s = Object.is(x, -0) ? '-0' : '0';
-  } else {
-    const [mant = '0', expS = '0'] = x.toExponential(13).split('e');
-    const exp = Number(expS);
-    if (exp < -4 || exp >= 14) {
-      const m = mant.includes('.') ? mant.replace(/0+$/, '').replace(/\.$/, '') : mant;
-      s = `${m}e${exp < 0 ? '-' : '+'}${String(Math.abs(exp)).padStart(2, '0')}`;
-    } else {
-      s = x.toFixed(13 - exp);
-      if (s.includes('.')) s = s.replace(/0+$/, '').replace(/\.$/, '');
-    }
-  }
-  return /^-?\d+$/.test(s) ? `${s}.0` : s;
+  return n.integer ? String(n.value) : luaFloatString(n.value);
 }
 
 /** The date a calendar text names, after the scripts' checks. */

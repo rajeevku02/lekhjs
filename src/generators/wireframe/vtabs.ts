@@ -4,7 +4,7 @@
 // grey, the selected one (`*`) opens into the panel, and `-` disables a tab. The panel is a
 // container, and the first point is the shape's align point.
 import type { DrawEntry, TextEntry, WireframeModule } from '../../template';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, lnum, num } from '../wireframe-lua';
 
 const PANEL = -637534209;
 const UNSELECTED = -1184275;
@@ -32,17 +32,19 @@ const vtabs: WireframeModule = Object.freeze<WireframeModule>({
       sum += it.height;
       if (it.width > maxw) maxw = it.width;
     }
+    // With no tab the sum and the widest width are still Lua's integer 0 (no `-0.0` either).
+    const sumInt = arr.length === 0;
     let starty = '-h/2';
-    let endy = `-h/2+${num(sum)}`;
+    let endy = `-h/2+${lnum(sum, sumInt)}`;
     if (params['align'] === 'center') {
-      starty = num(-sum / 2);
+      starty = num(sumInt ? 0 - sum / 2 : -sum / 2);
       endy = num(sum / 2);
     } else if (params['align'] === 'bottom') {
-      starty = `h/2 - ${num(sum)}`;
+      starty = `h/2 - ${lnum(sum, sumInt)}`;
       endy = 'h/2';
     }
     const right = params['position'] === 'right';
-    const boxx = right ? `w/2 - ${num(maxw)}` : `-w/2 + ${num(maxw)}`;
+    const boxx = right ? `w/2 - ${lnum(maxw, sumInt)}` : `-w/2 + ${lnum(maxw, sumInt)}`;
     const lastx = right ? 'w/2' : '-w/2';
     const htw = right ? `-${num(maxw / 2)}` : `+${num(maxw / 2)}`;
     const far = right ? '-w/2' : 'w/2';

@@ -1,6 +1,9 @@
 // Normaliser `lua-data-number` (verification 02 §A.5 step 9, DR-GEN-13): in a generator template's
 // `data`, two strings that both parse as finite numbers compare with the numeric rule (Lua's
-// `%.14g` text vs JS shortest round trip, float32-widened sizes).
+// `%.14g` text vs JS shortest round trip, float32-widened sizes). Since task B4 the ports write Lua's
+// `%.14g` text themselves (DR-GEN-13 withdrawn) and the T6 fixtures pass without this rule; it is
+// kept for the corpus runs, where stored data was written from float32-widened inputs and by older
+// script versions.
 //
 // The scripts also write numbers inside expressions (`"-28.680000305176+14.340000152588"` against
 // the port's `"-28.68000030517578+14.34000015258789"`, `"-80.5+69.0"` against `"-80.5+69"`), so two

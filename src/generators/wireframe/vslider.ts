@@ -3,7 +3,7 @@
 // (0..1, clamped; nil is 0) and a `circular`, `rectangular` or pointer indicator. The script
 // returns -1 for the minimum size (no minimum).
 import type { DrawEntry, WireframeModule } from '../../template';
-import { num } from '../wireframe-lua';
+import { pnum } from '../wireframe-lua';
 import { clampPosition } from '../wireframe-lua-param';
 
 const vslider: WireframeModule = Object.freeze<WireframeModule>({
@@ -11,7 +11,7 @@ const vslider: WireframeModule = Object.freeze<WireframeModule>({
   generate({ params }) {
     const pos = clampPosition(params['position']);
     const indicator = params['position indicator'];
-    const yp = `-h/2 + w/2 + ${num(pos)}*(h-w)`;
+    const yp = `-h/2 + w/2 + ${pnum(pos)}*(h-w)`;
     const data = ['0', '-h/2', '0', 'h/2', '0', yp];
     const draw: DrawEntry[] = [{ path: 'M 0 1 L 2 3' }, { path: 'M 4 5 L 2 3', style: { disabled: true } }];
     if (indicator === 'circular') {

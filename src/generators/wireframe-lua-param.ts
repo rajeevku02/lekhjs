@@ -3,7 +3,7 @@
 // were (esbuild's minified names depend on the whole bundled graph).
 import { str, type ParamValue } from './wireframe-lua';
 
-/** Lua `tostring` of a parameter value: `nil`, `true`/`false`, numbers by `num`, strings as is. */
+/** Lua `tostring` of a parameter value: `nil`, `true`/`false`, numbers by `pnum` (an integral parameter is a Lua integer), strings as is. */
 export function luaToString(v: ParamValue): string {
   if (v === null || v === undefined) return 'nil';
   if (typeof v === 'boolean') return v ? 'true' : 'false';

@@ -11,7 +11,7 @@
 // DR-GEN-09: the leaked globals `hprev` and `selDraw`, and the four helper functions the script
 // defined as globals on every call, are locals (each was assigned before its read).
 import type { DrawEntry, EmbedEntry, JsonObject, TextEntry, WireframeModule } from '../../template';
-import { indexList, num, truthy } from '../wireframe-lua';
+import { indexList, lnum, num, truthy } from '../wireframe-lua';
 
 const SELECTED = -10504995;
 
@@ -69,6 +69,8 @@ const datagrid: WireframeModule = Object.freeze<WireframeModule>({
     const items: Cell[][] = [];
     const cols: number[] = [];
     const rows: number[] = [];
+    /** Whether Lua held the row height as an integer (an integral `min row height`, or the default 26). */
+    const rowInt: boolean[] = [];
     let ncols = 0;
     /** 1-based, as the script's row ids. */
     let selectedRow: number | null = null;
@@ -110,9 +112,15 @@ const datagrid: WireframeModule = Object.freeze<WireframeModule>({
         const cw = cols[c];
         if (cw === undefined || cw < width) cols[c] = width;
         const rh = rows[rid - 1];
-        if (rh === undefined || rh < height) rows[rid - 1] = height;
+        if (rh === undefined || rh < height) {
+          rows[rid - 1] = height;
+          rowInt[rid - 1] = cell.height < minHeight && Number.isInteger(minHeight);
+        }
       });
-      if (rows[rid - 1] === undefined) rows[rid - 1] = charHeight;
+      if (rows[rid - 1] === undefined) {
+        rows[rid - 1] = charHeight;
+        rowInt[rid - 1] = false;
+      }
     }
     const nrows = items.length;
     const colWidth = (c: number) => cols[c] ?? 0;
@@ -208,7 +216,7 @@ const datagrid: WireframeModule = Object.freeze<WireframeModule>({
       let vprev: number | null = null;
       for (let rid = 1; rid <= nrows; rid++) {
         const rowH = rows[rid - 1] ?? 0;
-        const ht = num(rowH);
+        const ht = lnum(rowH, rowInt[rid - 1] === true);
         let cy = vprev === null ? `-h/2 + ${num(sw / 2 + pad)}` : `-h/2 + ${num(sw / 2 + pad + vprev)}`;
         if (rid < nrows) drawHLine(`${cy}+${ht}+${num(pad + sw / 2)}`, rid);
         cy = `${cy}+${ht}/2`;

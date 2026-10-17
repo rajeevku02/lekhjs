@@ -9,7 +9,7 @@
 //   - DR-GEN-08 (OQ-20): the header weekday is the selected day's, not the 1st's.
 import type { DrawEntry, EmbedEntry, TextEntry, WireframeModule } from '../../template';
 import { MONTHS, drawMonthGrid, parseWireframeDate } from '../wireframe-date';
-import { indexList, num } from '../wireframe-lua';
+import { indexList, int, num } from '../wireframe-lua';
 
 const SHORT_MONTHS = Object.freeze([
   'Jan',
@@ -67,9 +67,9 @@ const androidDatepicker: WireframeModule = Object.freeze<WireframeModule>({
     data.push('0', `-h/2 + ${num(yh + ch / 2)}`, 'w', num(ch), '0');
     texts.push({ text: head, location: '22 23 24 25 26' });
 
-    data.push(`-w/2+${num(gap)}+ ${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
+    data.push(`-w/2+${int(gap)}+ ${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
     embeds.push({ name: 'avabodh.wireframe.icon_chevron-left', location: '27 28 29 30 31', mode: 'aspect' });
-    data.push(`w/2-${num(gap)}-${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
+    data.push(`w/2-${int(gap)}-${num(cw / 2)}`, `-h/2+${num(yh + ch / 2)}`, num(ch), num(ch), '0');
     embeds.push({ name: 'avabodh.wireframe.icon_chevron-right', location: '32 33 34 35 36', mode: 'aspect' });
     yh = yh + ch + gap;
 

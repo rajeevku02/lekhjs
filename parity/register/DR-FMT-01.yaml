@@ -5,12 +5,15 @@ kind: intended-change
 cpp: 'A stored page holding only objects (the C++ silent-empty-board bug) loaded as a page with no name at order 0'
 ts: 'io/ JSON reader: such a page is named "Recovered", "Recovered 2", … in stored-key order, after the real pages; nothing is written because of it (E7)'
 user_visible: true
-fixture: test/io/document-reader.test.ts
+fixture: parity/fixtures/DR-FMT-01/phantom-page.lekh
 rule:
-  json: ['pages.* holding only objects']
+  json:
+    - path: '/pages/*'
+      op: normalise
+      normaliser: phantom-page
   image: null
   perf: null
-evidence: 'spec 04 §9.1, §14; AC-FMT-29'
+evidence: 'spec 04 §9.1, §14; AC-FMT-29; unit test test/io/document-reader.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

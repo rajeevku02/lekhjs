@@ -423,3 +423,84 @@ describe('customer report', () => {
     assert.deepEqual(r.summary['gap_owners'], { G3: 1 });
   });
 });
+
+describe('D2 normalisers', () => {
+  const L = (/** @type {unknown} */ v) => lenientParse(JSON.stringify(v)).value;
+  it('empty-text-line: an empty floating text box, one line taller in TS, params/height only', async () => {
+    const m = await import('../json/normalisers/empty-text-line.mjs');
+    const box = (/** @type {string} */ text, /** @type {number} */ h) =>
+      L({
+        params: { width: 8, height: h },
+        template: { id: 'avabodh.basic.text', texts: [{ location: 'default', text }] },
+      });
+    assert.equal(m.equal(box('', 8), box('', 23), undefined, ['params', 'height']), true);
+    assert.equal(m.equal(box('', 8), box('', 8), undefined, ['params', 'width']), null);
+    assert.equal(m.equal(box('x', 8), box('x', 23), undefined, ['params', 'height']), null);
+    assert.equal(m.equal(box('', 30), box('', 23), undefined, ['params', 'height']), false);
+  });
+  it('phantom-page: only a page the input stored with objects alone, name and order only', async () => {
+    const m = await import('../json/normalisers/phantom-page.mjs');
+    const c = L({ name: '', order: 0, objects: {} });
+    const t = L({ name: 'Recovered 2', order: 3, objects: {} });
+    const phantom = L({ objects: {} });
+    assert.equal(m.equal(c, t, phantom, ['name']), true);
+    assert.equal(m.equal(c, t, phantom, ['order']), true);
+    assert.equal(m.equal(c, t, phantom, ['objects', 'x']), null);
+    assert.equal(m.equal(c, t, L({ name: '', objects: {} }), ['name']), null);
+    assert.equal(m.equal(c, L({ name: 'Page', order: 1, objects: {} }), phantom, ['name']), false);
+  });
+  it('geometry-precision: within 2e-5 of the coordinate magnitudes along the group chain', async () => {
+    const m = await import('../json/normalisers/geometry-precision.mjs');
+    const g = (/** @type {number} */ w) =>
+      L({
+        params: { cx: 12000, cy: -9000 },
+        objects: { m: { object: { params: { cx: 0.5, cy: -0.7, width: w, height: 20 } } } },
+      });
+    const rest = ['objects', 'm', 'object', 'params', 'width'];
+    assert.equal(m.equal(g(40.4318), g(40.4321), undefined, rest), true);
+    assert.equal(m.equal(g(40.4), g(41.4), undefined, rest), null);
+    assert.equal(m.equal(g(40.4318), g(40.4321), undefined, ['objects', 'm', 'object', 'template', 'id']), null);
+    const top = (/** @type {number} */ cy) => L({ params: { cx: 300, cy, width: 100, height: 50 } });
+    assert.equal(m.equal(top(0), top(-1.43e-5), undefined, ['params', 'cy']), true);
+  });
+  it('a normaliser sees the differing path below the matched one', () => {
+    const reg = compileRules([
+      {
+        file: 'x',
+        data: { id: 'DR-FMT-01', rule: { json: [{ path: '/pages/*', op: 'normalise', normaliser: 'phantom-page' }] } },
+        parseErrors: [],
+      },
+    ]);
+    const cpp = L({ pages: { P: { name: '', order: 0, objects: {} } } });
+    const ts = L({ pages: { P: { name: 'Recovered', order: 1, objects: {} } } });
+    const input = L({ pages: { P: { objects: {} } } });
+    const d = (/** @type {string} */ k) => ({
+      path: ['pages', 'P', k],
+      gpath: `/pages/*/${k}`,
+      kind: /** @type {const} */ ('value'),
+    });
+    const r = applyRules(reg, [d('name'), d('order')], cpp, ts, input);
+    assert.equal(r.unexplained.length, 0);
+    assert.deepEqual(Object.fromEntries(r.applied), { 'DR-FMT-01': 2 });
+  });
+});
+
+describe('D2 data normalisers', () => {
+  const L = (/** @type {unknown} */ v) => lenientParse(JSON.stringify(v)).value;
+  it('six-digit-data: one unit in the sixth significant digit, same tokens', async () => {
+    const m = await import('../json/normalisers/six-digit-data.mjs');
+    const t = (/** @type {string} */ s) => L({ data: ['0', s] });
+    const rest = ['data', '[1]'];
+    assert.equal(m.equal(t('d(18)+(h/2-d(18))*0.144286'), t('d(18)+(h/2-d(18))*0.144285'), undefined, rest), true);
+    assert.equal(m.equal(t('d(18)+(h/2-d(18))*0.144286'), t('d(18)+(h/2-d(18))*0.144283'), undefined, rest), null);
+    assert.equal(m.equal(t('d(18)*0.144286'), t('d(19)*0.144286'), undefined, rest), null);
+  });
+  it('empty-line-generator-data: only for a generator text with a blank line, same tokens', async () => {
+    const m = await import('../json/normalisers/empty-line-generator-data.mjs');
+    const t = (/** @type {string} */ text, /** @type {string} */ s) => L({ generator: { text }, data: [s] });
+    const rest = ['data', '[0]'];
+    assert.equal(m.equal(t('a\n\nb', '-h/2+24.0'), t('a\n\nb', '-h/2+31.5'), undefined, rest), true);
+    assert.equal(m.equal(t('a\nb', '-h/2+24.0'), t('a\nb', '-h/2+31.5'), undefined, rest), null);
+    assert.equal(m.equal(t('a\n\nb', '-h/2+24.0'), t('a\n\nb', '-w/2+31.5'), undefined, rest), null);
+  });
+});

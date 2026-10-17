@@ -1,0 +1,237 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "g1": {
+     "type": "avabodh.basic.group",
+     "name": "Group",
+     "order": 1,
+     "params": {
+      "cx": 12360.1,
+      "cy": -9870.2,
+      "width": 180.4567,
+      "height": 90.7654,
+      "angle": 0.3127,
+      "orig_width": 180.4567,
+      "orig_height": 90.7654
+     },
+     "objects": {
+      "gi": {
+       "index": 0,
+       "object": {
+        "type": "avabodh.basic.group",
+        "name": "Group",
+        "order": 1,
+        "params": {
+         "cx": 12345.6,
+         "cy": -9876.54,
+         "width": 100.6789,
+         "height": 50.1234,
+         "angle": 0.682095,
+         "orig_width": 100.6789,
+         "orig_height": 50.1234
+        },
+        "objects": {
+         "m1": {
+          "index": 0,
+          "object": {
+           "type": "templated",
+           "name": "Rectangle",
+           "order": 1,
+           "params": {
+            "cx": -30.1234,
+            "cy": 0.000137,
+            "width": 40.4321,
+            "height": 20.1111,
+            "angle": 0.0312
+           },
+           "template": {
+            "id": "avabodh.basic.rectangle",
+            "data": [
+             "-w/2",
+             "-h/2",
+             "-w/2",
+             "h/2",
+             "w/2",
+             "h/2",
+             "w/2",
+             "-h/2"
+            ],
+            "default": {
+             "width": 10,
+             "height": 10,
+             "angle": 0
+            },
+            "draw": [
+             {
+              "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z"
+             }
+            ],
+            "flags": 31,
+            "polygon": true,
+            "texts": [
+             {
+              "location": "default",
+              "text": ""
+             }
+            ]
+           }
+          },
+          "orig_angle": 0.0312,
+          "orig_cx": -30.1234,
+          "orig_cy": 0.000137,
+          "orig_height": 20.1111,
+          "orig_width": 40.4321,
+          "xfactor": 0.4015945744341664,
+          "yfactor": 0.40123176001627986
+         },
+         "m2": {
+          "index": 1,
+          "object": {
+           "type": "templated",
+           "name": "Rectangle",
+           "order": 2,
+           "params": {
+            "cx": 30.1234,
+            "cy": -0.000211,
+            "width": 40.4321,
+            "height": 20.1111,
+            "angle": -1.85177
+           },
+           "template": {
+            "id": "avabodh.basic.rectangle",
+            "data": [
+             "-w/2",
+             "-h/2",
+             "-w/2",
+             "h/2",
+             "w/2",
+             "h/2",
+             "w/2",
+             "-h/2"
+            ],
+            "default": {
+             "width": 10,
+             "height": 10,
+             "angle": 0
+            },
+            "draw": [
+             {
+              "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z"
+             }
+            ],
+            "flags": 31,
+            "polygon": true,
+            "texts": [
+             {
+              "location": "default",
+              "text": ""
+             }
+            ]
+           }
+          },
+          "orig_angle": -1.85177,
+          "orig_cx": 30.1234,
+          "orig_cy": -0.000211,
+          "orig_height": 20.1111,
+          "orig_width": 40.4321,
+          "xfactor": 0.4015945744341664,
+          "yfactor": 0.40123176001627986
+         }
+        }
+       },
+       "orig_angle": 0.682095,
+       "orig_cx": 12345.6,
+       "orig_cy": -9876.54,
+       "orig_height": 50.1234,
+       "orig_width": 100.6789,
+       "xfactor": 0.5579116763190283,
+       "yfactor": 0.5522302551412762
+      },
+      "m3": {
+       "index": 1,
+       "object": {
+        "type": "templated",
+        "name": "Rectangle",
+        "order": 2,
+        "params": {
+         "cx": 12420.77,
+         "cy": -9850.33,
+         "width": 30.5,
+         "height": 12.25,
+         "angle": 1.1468
+        },
+        "template": {
+         "id": "avabodh.basic.rectangle",
+         "data": [
+          "-w/2",
+          "-h/2",
+          "-w/2",
+          "h/2",
+          "w/2",
+          "h/2",
+          "w/2",
+          "-h/2"
+         ],
+         "default": {
+          "width": 10,
+          "height": 10,
+          "angle": 0
+         },
+         "draw": [
+          {
+           "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z"
+          }
+         ],
+         "flags": 31,
+         "polygon": true,
+         "texts": [
+          {
+           "location": "default",
+           "text": ""
+          }
+         ]
+        }
+       },
+       "orig_angle": 1.1468,
+       "orig_cx": 12420.77,
+       "orig_cy": -9850.33,
+       "orig_height": 12.25,
+       "orig_width": 30.5,
+       "xfactor": 0.16901561427201095,
+       "yfactor": 0.13496332302837866
+      }
+     }
+    }
+   }
+  }
+ }
+}

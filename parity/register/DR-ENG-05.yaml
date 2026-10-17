@@ -2,15 +2,24 @@ id: DR-ENG-05
 title: 'Empty text measures as one empty line on every path'
 area: ENG
 kind: bug-fix
-cpp: 'TextUtil::getTextSize read widths[0] of an empty text (B5); web/backend returned one line height only without a width'
+cpp: 'TextUtil::getTextSize read widths[0] of an empty text (B5). Without a width (a floating text box) the web and backend split the text with TextUtil::lines (std::getline), which yields no line for an empty string: height 0, so the box is the bounds adjust alone (8 × 8). Observed on the backend oracle over the corpus (D2); spec 03 §8.1 says one line height'
 ts: 'text/TextLayout: empty text = one empty line { width 0, height pitch }'
 user_visible: true
-fixture: test/text/text-layout.height.test.ts
+fixture: parity/fixtures/DR-ENG-05/empty-text.lekh
 rule:
-  json: []
+  json:
+    - path: '/pages/*/objects/*'
+      op: normalise
+      normaliser: empty-text-line
+    - path: '/pages/*/objects/**/object'
+      op: normalise
+      normaliser: empty-text-line
+    - path: '/pages/*/objects/**/template'
+      op: normalise
+      normaliser: empty-line-generator-data
   image: null
   perf: null
-evidence: 'spec 03 §8.1, §15 B5'
+evidence: 'spec 03 §8.1, §15 B5; unit test test/text/text-layout.height.test.ts; D2 corpus run: the most frequent P1 difference (an empty floating text box one line taller), and wireframe generators with blank lines in their text (rows after a blank line move by one line height; fixture parity/fixtures/DR-ENG-05/generator-empty-line.lekh)'
 status: proposed
 signed_off_by: null
 signed_off_at: null

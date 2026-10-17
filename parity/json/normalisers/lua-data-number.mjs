@@ -30,7 +30,7 @@ const NUMBER = /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?/;
  * @param {string} s
  * @returns {(string | { n: number })[] | null}
  */
-function tokens(s) {
+export function tokens(s) {
   /** @type {(string | { n: number })[]} */
   const out = [];
   let i = 0;

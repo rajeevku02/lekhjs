@@ -1,0 +1,90 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Text",
+     "order": 1,
+     "params": {
+      "cx": 100,
+      "cy": 100,
+      "width": 8,
+      "height": 26,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.text",
+      "data": [],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "texts": [
+       {
+        "location": "default",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "n2": {
+     "type": "templated",
+     "name": "Text",
+     "order": 2,
+     "params": {
+      "cx": 200,
+      "cy": 100,
+      "width": 60,
+      "height": 23,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.text",
+      "data": [],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "texts": [
+       {
+        "location": "default",
+        "text": "one"
+       }
+      ]
+     }
+    }
+   }
+  }
+ }
+}

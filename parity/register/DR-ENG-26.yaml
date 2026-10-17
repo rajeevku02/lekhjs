@@ -1,0 +1,23 @@
+id: DR-ENG-26
+title: 'Geometry is computed in doubles, not float32'
+area: ENG
+kind: bug-fix
+cpp: 'number_t is float (lekhcore/src/base/TypeDefinitions.h): group member rects derived on load from the stored factors, polygon centres and nested rotations are computed in float32, so they carry the rounding of the absolute coordinates involved (e.g. a 40.4321 wide member of a nested group near 12,000 is written 40.4318)'
+ts: 'Plain doubles throughout (spec 03, no Math.fround): the same geometry agrees with C++ only to the float32 and six-digit rounding of the coordinates, which the value-relative tolerance does not absorb when the result is small next to them'
+user_visible: false
+fixture: parity/fixtures/DR-ENG-26/group-nested.lekh
+rule:
+  json:
+    - path: '/pages/*/objects/*'
+      op: normalise
+      normaliser: geometry-precision
+    - path: '/pages/*/objects/**/template'
+      op: normalise
+      normaliser: six-digit-data
+  image: null
+  perf: null
+evidence: 'spec 03 (plain doubles); D2 corpus run: member and polygon cx/cy/width/height/angle differences within 2e-5 of the coordinate magnitudes, and native-generator data expressions (avabodh.table.std) whose six-digit literals differ by one unit in the last digit (unit test in parity/test/json.test.mjs)'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

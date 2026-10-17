@@ -1,0 +1,70 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Sample",
+     "order": 1,
+     "params": {
+      "cx": 200,
+      "cy": 200,
+      "width": 240,
+      "height": 128,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.wireframe.radiobuttongroup",
+      "name": "Sample",
+      "default": {
+       "width": 240,
+       "height": 128
+      },
+      "style": {
+       "strokewidth": 2.0
+      },
+      "generator": {
+       "script": "",
+       "scriptfile": "wireframe/radiobutton_group_min.lua",
+       "text": "[O]one\n\n[( )]two\n\n[( )]three",
+       "embedrefs": [
+        "avabodh.wireframe.icon_circle-o",
+        "avabodh.wireframe.icon_dot-circle-o",
+        "avabodh.wireframe.icon_minus-circle"
+       ],
+       "interprettext": true
+      }
+     }
+    }
+   }
+  }
+ }
+}

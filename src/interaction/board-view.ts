@@ -381,7 +381,7 @@ export class BoardView {
   paintLayer(layer: PaintLayer): void {
     const ctx = this.contexts_.get(layer);
     if (ctx === undefined || this.disposed_) return;
-    this.session.paint(layer, ctx);
+    this.session.paint(layer, ctx, { theme: this.theme() });
     if (layer === 'middle') {
       const dp = new Canvas2DDrawingPlatform(ctx, { textPainter: this.session.runtime.textPainter });
       this.overlay.draw(dp);

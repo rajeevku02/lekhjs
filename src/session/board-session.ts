@@ -57,6 +57,7 @@ import {
   type DrawingPlatform,
   type ExportView,
   type GridBackground,
+  type ThemeMode,
 } from '../render';
 import type { SemanticContext } from '../semantic';
 import { Color, Style } from '../style';
@@ -538,8 +539,14 @@ export class BoardSession {
    * Paints one layer of the active page onto `ctx`: `grid` (background and grid, screen space),
    * `drawing` (the objects, culled to the view) or `middle` (cleared; the interaction layer draws
    * the overlay). Lays out what is dirty first; never fetches an image.
+   *
+   * A fixed-size (or auto-size) page is drawn as C++ draws it (`CanvasWidget::computeSize`, which
+   * moves and sizes the grid and drawing canvases): the page rectangle only, with its 2 px
+   * separator-coloured border, and the drawing clipped to it. Outside the page the grid layer is
+   * left transparent, so the board's surround shows (the web's `#drawContent` grey, black in dark
+   * mode). `opts.theme` picks the border colour (C++ `system_opaq_separator_color`).
    */
-  paint(layer: PaintLayer, ctx: Canvas2DLike): void {
+  paint(layer: PaintLayer, ctx: Canvas2DLike, opts: { readonly theme?: ThemeMode } = {}): void {
     this.budgetCheck();
     const page = this.doc_.activePage();
     const view = this.view_;
@@ -555,24 +562,57 @@ export class BoardSession {
       return;
     }
     const dp = new Canvas2DDrawingPlatform(ctx, { textPainter: this.runtime.textPainter });
+    const fixed = page.canvasSizeType === CanvasSizeType.Infinite ? null : fixedPageRect(page, view);
     if (layer === 'grid') {
       view.applyScreen(ctx);
-      new GridPainter().paint(dp, {
+      const input = {
         background: gridBackgroundOf(page),
         gridPresent: this.doc_.grid.present,
         gridWidth: this.doc_.gridWidth(true).points(),
         zoom: view.zoom,
-        scrollX: view.scrollX,
-        scrollY: view.scrollY,
-        width: view.canvasW,
-        height: view.canvasH,
-        infiniteCanvas: page.canvasSizeType === CanvasSizeType.Infinite,
+        ...(opts.theme !== undefined ? { theme: opts.theme } : {}),
+      };
+      if (fixed === null) {
+        new GridPainter().paint(dp, {
+          ...input,
+          scrollX: view.scrollX,
+          scrollY: view.scrollY,
+          width: view.canvasW,
+          height: view.canvasH,
+          infiniteCanvas: true,
+        });
+        return;
+      }
+      ctx.clearRect(0, 0, view.canvasW, view.canvasH);
+      if (fixed.width <= 0 || fixed.height <= 0) return;
+      ctx.save();
+      ctx.translate(fixed.x, fixed.y);
+      // The C++ grid canvas is the page: its border stroke is half outside, so clipped.
+      ctx.beginPath();
+      ctx.rect(0, 0, fixed.width, fixed.height);
+      ctx.clip();
+      new GridPainter().paint(dp, {
+        ...input,
+        scrollX: fixed.scrollX,
+        scrollY: fixed.scrollY,
+        width: fixed.width,
+        height: fixed.height,
+        infiniteCanvas: false,
       });
+      ctx.restore();
       return;
+    }
+    if (fixed !== null) {
+      view.applyScreen(ctx);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(fixed.x, fixed.y, Math.max(0, fixed.width), Math.max(0, fixed.height));
+      ctx.clip();
     }
     dp.setView(view);
     const env: PaintEnv = { config: this.runtime.config, zoom: view.zoom, forExport: false, images: this.lookup_ };
     page.paint(dp, { env, view });
+    if (fixed !== null) ctx.restore();
   }
 
   // ---- client API ----
@@ -1236,6 +1276,34 @@ export class BoardSession {
   private budgetCheck(): void {
     this.options.budget?.check();
   }
+}
+
+/** C++ `MinSizeDP`: a fixed canvas is never drawn smaller than this. */
+const MIN_PAGE_SIZE_DP = 20;
+
+/**
+ * The visible part of a fixed (or auto) size page in screen px, and the grid's scroll, as C++
+ * `CanvasWidget::computeSize` places the grid and drawing canvases: at the page's offset (the TS
+ * scroll times the zoom) clamped to 0, its size cut by a negative offset and by the view's right
+ * and bottom edges, and a negative offset turned into the grid scroll.
+ */
+function fixedPageRect(
+  page: Page,
+  view: ViewTransform,
+): { x: number; y: number; width: number; height: number; scrollX: number; scrollY: number } {
+  const zoom = view.zoom;
+  const size = page.getCanvasSize(false);
+  const cw = Math.max(MIN_PAGE_SIZE_DP, size.width * zoom);
+  const ch = Math.max(MIN_PAGE_SIZE_DP, size.height * zoom);
+  const ox = view.scrollX * zoom;
+  const oy = view.scrollY * zoom;
+  const x = Math.max(0, ox);
+  const y = Math.max(0, oy);
+  let width = cw + Math.min(0, ox);
+  let height = ch + Math.min(0, oy);
+  if (x + width > view.canvasW) width = view.canvasW - x;
+  if (y + height > view.canvasH) height = view.canvasH - y;
+  return { x, y, width, height, scrollX: Math.min(0, ox) / zoom, scrollY: Math.min(0, oy) / zoom };
 }
 
 function gridBackgroundOf(page: Page): GridBackground {

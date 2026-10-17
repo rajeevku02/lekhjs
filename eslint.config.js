@@ -75,6 +75,10 @@ export default defineConfig(
     'coverage/',
     'test/lint/fixtures/',
     'parity/node_modules/',
+    // Parity run output (git-ignored by parity/.gitignore): builds, bundled TS front ends and
+    // reports that the harness writes there. It is generated, not source, and a build left there
+    // made `npm run check` fail on lint.
+    'parity/out/',
     // The owner's proprietary line aggregator (Work 01M4X7TCHFB862XGT68GPY071C, M1), obfuscated on
     // purpose: it is never linted or rewritten (no-module-state, layers, any fixer). Its API is
     // typed and linted through LineMerger.d.ts and LineAggregatorImpl.ts.

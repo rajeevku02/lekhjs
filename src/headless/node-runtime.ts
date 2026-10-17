@@ -37,6 +37,13 @@ export interface NodeRuntimeOptions {
   readonly generators?: GeneratorRegistry;
   /** Test-only text switches (`setTestConfig` from `lekhjs/testing`); production leaves them off. */
   readonly testing?: TextTestSwitches;
+  /**
+   * The script families the host has installed (kashi: the Noto CJK, Arabic, Hebrew, … faces of the
+   * image), named after the primary family in every font string: @napi-rs/canvas falls back only
+   * between families the string names, so without them a CJK run draws as `.notdef` (spec 06 §8.1,
+   * §11; spec 10 §7). Default none.
+   */
+  readonly fallbackFamilies?: readonly string[];
 }
 
 /** The backend's `FontLoader`: every font is already usable, so nothing is ever waited for. */
@@ -89,5 +96,6 @@ export function createNodeRuntime(opts: NodeRuntimeOptions): Runtime {
     ...(opts.config !== undefined ? { config: opts.config } : {}),
     host: 'backend',
     ...(opts.testing !== undefined ? { testing: opts.testing } : {}),
+    ...(opts.fallbackFamilies !== undefined ? { fallbackFamilies: opts.fallbackFamilies } : {}),
   });
 }

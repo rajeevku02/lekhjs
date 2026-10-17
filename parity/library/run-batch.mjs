@@ -5,7 +5,8 @@
 //
 //   node parity/library/run-batch.mjs --batch <file.lekh | batch id> [--out <dir>]
 //        [--cpp node|browser|none] [--ts node|browser] [--compat on|off] [--lekhjs <dir>]
-//        [--scale 1] [--against <v4 run dir>] [--no-selfdiff] [--register <dir>]
+//        [--scale 1] [--against <v4 run dir>] [--no-selfdiff] [--register <dir>] [--include-proposed]
+//        [--ts-commit <sha>]
 //
 // A batch id (`v3-basic-01`) is read from parity/out/library/<set>/ (build-batches.mjs). `--lekhjs`
 // names the lekhjs package whose `dist/node` is under test (default: this one). `--cpp none` with
@@ -118,6 +119,18 @@ export function cellRules(dir, acceptedOnly) {
   return out;
 }
 
+/**
+ * Register entries whose image rule re-frames TS on the reference's origin (`rule.image.align`).
+ * @param {string} dir
+ * @param {boolean} acceptedOnly
+ * @returns {string[]}
+ */
+export function alignRules(dir, acceptedOnly) {
+  return activeEntries(loadRegister(dir), { acceptedOnly })
+    .filter((e) => e.data?.['rule']?.['image']?.['align'] === 'reference-origin')
+    .map((e) => String(e.data['id']));
+}
+
 /** @param {string} p */
 const git = (p) => {
   try {
@@ -226,6 +239,10 @@ async function main() {
       'no-selfdiff': { type: 'boolean', default: false },
       register: { type: 'string', default: path.join(PARITY, 'register') },
       'accepted-only': { type: 'boolean', default: true },
+      // Triage view (§D step 3): proposed entries claim cells too. A phase exit counts accepted only.
+      'include-proposed': { type: 'boolean', default: false },
+      // The lekhjs commit a browser TS build was made from (its hooks do not report one).
+      'ts-commit': { type: 'string' },
     },
   });
   if (
@@ -265,7 +282,16 @@ async function main() {
     cells: batch.manifest.cells.length,
     shapes: batch.manifest.shapes,
     started_at: new Date().toISOString(),
-    options: { region: 'drawing', padding: PADDING, scale, background: true, compat, cpp: values.cpp, ts: values.ts },
+    options: {
+      region: 'drawing',
+      padding: PADDING,
+      scale,
+      background: true,
+      compat,
+      cpp: values.cpp,
+      ts: values.ts,
+      register: values['include-proposed'] ? 'accepted+proposed' : 'accepted',
+    },
     parity_commit: git(LEKHJS),
     lekhboard_commit: git(path.join(WS, 'lekhboard')),
   };
@@ -275,8 +301,13 @@ async function main() {
     result['identity'] = { cpp: cpp ? await cpp.identity() : null, ts: await ts.identity() };
     // The lekhjs under test: its build record, else its checkout, else (no --lekhjs) this one.
     const tsId = result['identity'].ts;
+    const browserCommit = tsId.build?.commit && tsId.build.commit !== 'unknown' ? tsId.build.commit : null;
     result['lekhjs_commit'] =
-      tsId.commit ?? (values.lekhjs ? git(values.lekhjs) : null) ?? (values.lekhjs ? null : result['parity_commit']);
+      values['ts-commit'] ??
+      tsId.commit ??
+      browserCommit ??
+      (values.lekhjs ? git(values.lekhjs) : null) ??
+      (values.lekhjs || values.ts === 'browser' ? null : result['parity_commit']);
     result['lekhjs_files_sha256'] = tsId.files_sha256 ?? null;
 
     // Node renders share one crop: the C++ page bounds (the projection's, as board_render crops a
@@ -307,7 +338,28 @@ async function main() {
     }
     const opts = { crop: cropBox, scale, padding: PADDING };
     const rc = cpp ? await renderChecked(cpp, text, opts, selfdiff) : null;
-    const rt = await renderChecked(ts, text, opts, selfdiff);
+    let rt = await renderChecked(ts, text, opts, selfdiff);
+    // §D step 4: page bounds that differ only by a register entry with `rule.image.align:
+    // reference-origin` (DR-ENG-17, a half-stroke shift that no whole-pixel alignment undoes) are
+    // re-drawn by TS on the reference's frame, and the entry is listed as applied.
+    const alignIds = alignRules(values.register, values['accepted-only'] && !values['include-proposed']);
+    if (
+      values.ts === 'browser' &&
+      rc?.ok &&
+      rt.ok &&
+      rc.origin &&
+      rt.origin &&
+      alignIds.length > 0 &&
+      (rc.origin.x !== rt.origin.x || rc.origin.y !== rt.origin.y)
+    ) {
+      const s = rc.scale ?? scale;
+      const frame = { x: rc.origin.x, y: rc.origin.y, width: rc.img.width / s, height: rc.img.height / s };
+      const again = await renderChecked(ts, text, { ...opts, frame }, selfdiff);
+      if (again.ok) {
+        result['bounds_rule'] = { register: alignIds, cpp_origin: rc.origin, ts_origin: rt.origin, frame };
+        rt = again;
+      }
+    }
     result['render'] = {
       cpp: rc
         ? {
@@ -341,7 +393,7 @@ async function main() {
     if (rt.img) writeFileSync(path.join(out, 'ts.png'), encodePng(rt.img));
     if (rc?.img) writeFileSync(path.join(out, 'cpp.png'), encodePng(rc.img));
 
-    const rules = cellRules(values.register, values['accepted-only']);
+    const rules = cellRules(values.register, values['accepted-only'] && !values['include-proposed']);
     /** @type {{ label: string, ref: any, refName: string, threshold0?: boolean }[]} */
     const pairs = [];
     if (rc?.ok && rt.ok) pairs.push({ label: 'cpp_vs_ts', ref: rc, refName: 'cpp' });
@@ -431,13 +483,23 @@ async function main() {
   writeFileSync(path.join(out, 'result.json'), JSON.stringify(result, null, 2) + '\n');
   const main = result['comparisons']?.['cpp_vs_ts'] ?? result['comparisons']?.['against_cpp'];
   const failingIds = main ? [...new Set(main.failing_cells.map((/** @type {any} */ f) => f.shape))] : [];
-  const regIds = main ? [...new Set(main.claimed_cells.flatMap((/** @type {any} */ c) => c.register))] : [];
+  const regIds = [
+    ...new Set([
+      ...(result['bounds_rule']?.register ?? []),
+      ...(main ? main.claimed_cells.flatMap((/** @type {any} */ c) => c.register) : []),
+    ]),
+  ];
+  // A pass that leans on proposed entries is register-listed, not a phase-exit pass.
+  const statusText =
+    result['status'] === 'PASS' && regIds.length > 0 && values['include-proposed']
+      ? 'PASS (register-listed, proposed)'
+      : result['status'];
   const cppId = result['identity']?.cpp;
   const wasm = cppId
     ? `${cppId.runtime} ${cppId.commit ?? cppId.build?.commit ?? '?'}/${String(cppId.wasm_sha256 ?? cppId.build?.wasmSha256 ?? '').slice(0, 8)}`
     : 'none';
   const row =
-    `| ${batch.id} | ${batch.manifest.cells.length} | ${result['status']} | ${failingIds.join(', ') || '—'} | ${regIds.join(', ') || '—'} | ` +
+    `| ${batch.id} | ${batch.manifest.cells.length} | ${statusText} | ${failingIds.join(', ') || '—'} | ${regIds.join(', ') || '—'} | ` +
     `${result['lekhjs_commit'] ? String(result['lekhjs_commit']).slice(0, 7) : `files ${String(result['lekhjs_files_sha256'] ?? '?').slice(0, 8)}`} | ${wasm} |`;
   writeFileSync(path.join(out, 'row.txt'), row + '\n');
   process.stdout.write(

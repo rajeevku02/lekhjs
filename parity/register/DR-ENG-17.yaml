@@ -8,7 +8,7 @@ user_visible: true
 fixture: test/model/hit-tester.test.ts
 rule:
   json: ['canvas size of auto pages', 'export bounds']
-  image: null
+  image: { align: reference-origin }
   perf: null
 evidence: 'spec 03 §4 #15, §15 B8; decision OQ-18'
 status: proposed

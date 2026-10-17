@@ -1,11 +1,12 @@
 // The library-shape test's pure parts (verification 02 §B.3, §C.2, §C.4): layout, batch plan,
-// coverage, the image bar and cell attribution. No oracle, no browser.
+// coverage, the image bar, cell attribution and the register's image rules. No oracle, no browser.
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import { test } from 'node:test';
 import { bar, blobs, diffImages, identical } from '../image/diff.mjs';
 import { buildSet, coverage } from '../library/build-batches.mjs';
 import { MAX_CELLS, footprint, shelfPack, splitCategory } from '../library/layout.mjs';
-import { attribute } from '../library/run-batch.mjs';
+import { alignRules, attribute, cellRules } from '../library/run-batch.mjs';
 
 test('footprint of a quarter-turned box swaps its sides', () => {
   assert.deepEqual(footprint(400, 600, -Math.PI / 2), { w: 600, h: 400 });
@@ -109,4 +110,12 @@ test('blobs are attributed to the cell whose grown rectangle they meet', () => {
     ['right'],
   );
   assert.equal(att.orphans.length, 0);
+});
+
+test('register image rules: DR-ENG-17 re-frames on the C++ origin; cells are claimed by shape id', () => {
+  const dir = path.resolve(import.meta.dirname, '..', 'register');
+  assert.ok(alignRules(dir, false).includes('DR-ENG-17'));
+  const cells = cellRules(dir, false);
+  assert.ok(cells.get('avabodh.wireframe.androiddatepicker')?.includes('DR-GEN-08'));
+  assert.ok(cells.get('avabodh.bpmn.dataobject')?.includes('DR-TXT-03'));
 });

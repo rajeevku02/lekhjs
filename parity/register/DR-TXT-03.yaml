@@ -10,6 +10,19 @@ rule:
   json: ['params.height of auto-height wrapped text containing -, / or CJK']
   image:
     attribute: { object_flag: text-wrap }
+    # Library-shape test (verification 02 §C.3, task G8): shapes whose text box is narrower than
+    # "Sample", so TS breaks the over-long word at a grapheme boundary (rule 3) where C++ overflows.
+    cells:
+      - avabodh.archimate.application.component
+      - avabodh.archimate.generic.function
+      - avabodh.archimate.generic.locationIcon
+      - avabodh.archimate.implementation.gapIcon
+      - avabodh.archimate.motivation.assess
+      - avabodh.archimate.technology.sysSw
+      - avabodh.bpmn.dataobject
+      - avabodh.wireframe.sqswitchoff
+      - avabodh.wireframe.sqswitchon
+      - avabodh.wireframe.stepper
   perf: null
 evidence: 'spec 06 §3.2, §13; decision OQ-34; AC-TXT-05, AC-TXT-06, AC-TXT-28, AC-TXT-31'
 status: proposed

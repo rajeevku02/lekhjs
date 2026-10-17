@@ -15,6 +15,9 @@ rule:
       normaliser: datepicker-weekday
   image:
     attribute: { object_flag: wireframe-generator }
+    # Library-shape test (verification 02 §C.3): both cells of the shape (defaults 2018/12/25,
+    # params.json 2019/03/07) show the header weekday change (v3-ui-wireframe-02, task G8).
+    cells: [avabodh.wireframe.androiddatepicker]
   perf: null
 evidence: 'spec 04 §5.3 script bugs, §14, OQ-20; AC-GEN-21; test/generators/wireframe-dates.test.ts'
 status: proposed

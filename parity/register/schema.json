@@ -63,7 +63,11 @@
                 "attribute": { "type": "object" },
                 "compat_switch": { "enum": ["lineSpacingCompat", "fontFallbackCompat"] },
                 "mask": { "type": "string" },
-                "cells": { "type": "array", "items": { "type": "string" } }
+                "cells": { "type": "array", "items": { "type": "string" } },
+                "align": {
+                  "enum": ["reference-origin"],
+                  "description": "Page bounds differ by this entry: TS is re-drawn on the reference build's export frame before comparing"
+                }
               }
             }
           ]

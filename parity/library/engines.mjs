@@ -35,7 +35,8 @@ export const PORTS = Object.freeze({ cpp: 4007, ts: 4008 });
 
 /**
  * @typedef {{ minx: number, miny: number, maxx: number, maxy: number }} Box
- * @typedef {{ crop: Box | null, scale: number, padding: number, fresh?: boolean }} RenderOpts
+ * @typedef {{ crop: Box | null, scale: number, padding: number, fresh?: boolean,
+ *   frame?: { x: number, y: number, width: number, height: number } | null }} RenderOpts
  * @typedef {{ ok: boolean, img?: import('../image/diff.mjs').Rgba, origin?: { x: number, y: number }, scale?: number,
  *   warnings?: { level: string, code: string, data?: unknown }[], bounds?: Box | null, error?: string, code?: string }} RenderResult
  */
@@ -208,7 +209,7 @@ export class BrowserEngine {
         `${engine} browser engine: no build at ${this.root}` +
           (engine === 'cpp'
             ? " (the C++ web build with the __lekhTest hooks needs the owner's H-ROL-1 wasm, task H1;" +
-              ' then npx vite build --outDir <that dir> from a scratch lekhboardwebapp worktree)'
+              ' then npx vite build --outDir <that dir> from the oracle worktree lekh-wt/lekhjs-port/oracle/lekhboardwebapp/v2)'
             : ' (the TS board build, phase 6)'),
       );
     }
@@ -289,7 +290,9 @@ export class BrowserEngine {
     const blockedBefore = this.blocked;
     try {
       const out = await page.evaluate(
-        async (/** @type {{ text: string, padding: number, scale: number, compat: boolean, ts: boolean }} */ a) => {
+        async (
+          /** @type {{ text: string, padding: number, scale: number, compat: boolean, ts: boolean, frame: any }} */ a,
+        ) => {
           const t = /** @type {any} */ (globalThis).__lekhTest;
           if (a.ts && typeof t.setConfig === 'function')
             t.setConfig({ lineSpacingCompat: a.compat, fontFallbackCompat: a.compat });
@@ -298,12 +301,25 @@ export class BrowserEngine {
           await t.settle();
           // §B.2 item 2: an empty export is retried at 0.5, then 0.25.
           for (const s of [a.scale, a.scale / 2, a.scale / 4]) {
-            const e = await t.exportPage(0, { region: 'drawing', padding: a.padding, scale: s, background: true });
+            const e = await t.exportPage(0, {
+              region: 'drawing',
+              padding: a.padding,
+              scale: s,
+              background: true,
+              ...(a.frame ? { frame: a.frame } : {}),
+            });
             if (e.dataUrl !== 'data:,') return { ok: true, ...e };
           }
           return { ok: false, error: 'empty export at every scale' };
         },
-        { text, padding: opts.padding, scale: opts.scale, compat: this.compat, ts: this.engine === 'ts' },
+        {
+          text,
+          padding: opts.padding,
+          scale: opts.scale,
+          compat: this.compat,
+          ts: this.engine === 'ts',
+          frame: this.engine === 'ts' ? (opts.frame ?? null) : null,
+        },
       );
       if (this.blocked !== blockedBefore)
         return { ok: false, code: 'harness', error: `${this.blocked - blockedBefore} blocked requests` };

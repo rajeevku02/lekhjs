@@ -33,7 +33,11 @@ describe('BundledFontSource with a cache', () => {
     expect(a?.bytes).toEqual(font);
     expect(cache.puts).toBe(1);
 
-    const offline = new BundledFontSource({ registry: bundledRegistry(), load: () => Promise.reject(new TypeError('Failed to fetch')), cache });
+    const offline = new BundledFontSource({
+      registry: bundledRegistry(),
+      load: () => Promise.reject(new TypeError('Failed to fetch')),
+      cache,
+    });
     const b = await offline.resolve(REQ, SIGNAL);
     expect(b?.bytes).toEqual(font);
     expect(b?.source).toBe('bundled');
@@ -46,20 +50,38 @@ describe('BundledFontSource with a cache', () => {
     const cache = memoryCache();
     const old = new Uint8Array([9]);
     const fresh = new Uint8Array([7, 7]);
-    await new BundledFontSource({ registry: bundledRegistry(), load: () => Promise.resolve(old), cache }).resolve(REQ, SIGNAL);
-    const r = await new BundledFontSource({ registry: bundledRegistry(), load: () => Promise.resolve(fresh), cache }).resolve(REQ, SIGNAL);
+    await new BundledFontSource({ registry: bundledRegistry(), load: () => Promise.resolve(old), cache }).resolve(
+      REQ,
+      SIGNAL,
+    );
+    const r = await new BundledFontSource({
+      registry: bundledRegistry(),
+      load: () => Promise.resolve(fresh),
+      cache,
+    }).resolve(REQ, SIGNAL);
     expect(r?.bytes).toEqual(fresh);
     expect([...cache.store.values()]).toEqual([fresh]);
   });
 
   it('offline with an empty store is null, and a failing store is ignored', async () => {
-    const empty = new BundledFontSource({ registry: bundledRegistry(), load: () => Promise.reject(new Error('offline')), cache: memoryCache() });
+    const empty = new BundledFontSource({
+      registry: bundledRegistry(),
+      load: () => Promise.reject(new Error('offline')),
+      cache: memoryCache(),
+    });
     expect(await empty.resolve(REQ, SIGNAL)).toBeNull();
-    const broken: BundledFontCache = { match: () => Promise.reject(new Error('quota')), put: () => Promise.reject(new Error('quota')) };
+    const broken: BundledFontCache = {
+      match: () => Promise.reject(new Error('quota')),
+      put: () => Promise.reject(new Error('quota')),
+    };
     const font = new Uint8Array([5]);
     const ok = new BundledFontSource({ registry: bundledRegistry(), load: () => Promise.resolve(font), cache: broken });
     expect((await ok.resolve(REQ, SIGNAL))?.bytes).toEqual(font);
-    const off = new BundledFontSource({ registry: bundledRegistry(), load: () => Promise.reject(new Error('offline')), cache: broken });
+    const off = new BundledFontSource({
+      registry: bundledRegistry(),
+      load: () => Promise.reject(new Error('offline')),
+      cache: broken,
+    });
     expect(await off.resolve(REQ, SIGNAL)).toBeNull();
   });
 

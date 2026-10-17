@@ -76,7 +76,16 @@ function runAll(module: LineAggregatorModule): Row[] {
         attributed.push('DR-REC-02');
       if (attributed.length === 0) attributed.push('DR-REC-01+DR-REC-02');
     }
-    return { name: c.name, scene: c.scene, strict, product, oracleFlips, oracleUnstable, attributed, tsMs: strictRun.ms };
+    return {
+      name: c.name,
+      scene: c.scene,
+      strict,
+      product,
+      oracleFlips,
+      oracleUnstable,
+      attributed,
+      tsMs: strictRun.ms,
+    };
   });
 }
 

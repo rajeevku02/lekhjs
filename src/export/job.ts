@@ -1,5 +1,5 @@
 // `runExport` (spec 08 §4, §10; class `ExportJob`): the async orchestrator over the synchronous
-// engine draw. Phases `preparing` → (`fonts`, PDF only, task F1) → `rendering` → `encoding`; it
+// engine draw. Phases `preparing` → (`fonts`, PDF only) → `rendering` → `encoding`; it
 // resolves `done` once the last chunk of the last file has been awaited by `env.sink`.
 //
 // - The free cap is checked first: capped + local → `export_limit_reached`, before `preparing`,
@@ -292,7 +292,11 @@ export async function runExport(
             progress: (page) => {
               progress({ phase: 'rendering', page, pageCount: n, fraction: (page - 1) / n });
             },
+            fonts: (bytes) => {
+              progress({ phase: 'fonts', fraction: 0, bytes });
+            },
             yieldToUi: step,
+            signal,
           });
           pdfWarnings = r.warnings;
         });

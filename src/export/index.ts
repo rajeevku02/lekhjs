@@ -1,7 +1,7 @@
 // lekhjs module `export` (spec 01 §2.1, spec 08). The only import target from outside the module.
 // The export job over a board session: the page plan (C++ `ExportInputBuilder`), PNG/JPEG
 // (single canvas or banded, streaming encoders), SVG, `.lekh`, the free-cap policy and the usage
-// payloads. PDF is the separate `export/pdf` entry (task F1), plugged in through `env.loadPdf`.
+// payloads. PDF is the separate `export/pdf` entry, plugged in through `env.loadPdf`.
 export type {
   ExportDestination,
   ExportEnv,
@@ -22,8 +22,12 @@ export type {
   ExportView,
   ExportWarning,
   ExportWarningCode,
+  ExportSignalLike,
+  FontData,
+  FontRequest,
   ImageDataLike,
   PdfRenderer,
+  PdfRenderHooks,
   RasterCanvas,
   RasterCanvasFactory,
   RasterContext2D,
@@ -59,4 +63,4 @@ export { PngStreamEncoder } from './raster/png-encoder';
 export { JpegStreamEncoder } from './raster/jpeg-encoder';
 export { SvgDrawingPlatform, escapeXml, svgNum, type SvgPart } from './svg/svg-drawing-platform';
 export { drawSvgPage, encodeImagePng, resolveSvgParts } from './svg/svg-exporter';
-export { ByteBuffer, base64, utf8Bytes } from './bytes';
+export { ByteBuffer, base64, utf8Bytes, utf8Decode } from './bytes';

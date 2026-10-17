@@ -72,6 +72,7 @@
     "globals": "17.13.0",
     "jpeg-js": "0.4.4",
     "pako": "3.0.2",
+    "pdfjs-dist": "6.3.289",
     "pdfkit": "0.20.2",
     "prettier": "3.9.10",
     "rbush": "4.0.1",

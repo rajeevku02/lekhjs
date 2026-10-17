@@ -60,6 +60,8 @@ export interface ExportProgress {
   readonly pageCount?: number;
   /** 0..1 overall. */
   readonly fraction: number;
+  /** Phase `fonts` (PDF): bytes of font data downloaded so far in this export. */
+  readonly bytes?: number;
 }
 
 export type ExportErrorCode =
@@ -153,8 +155,12 @@ export interface ExportEnv {
   readonly report: (event: ExportUsageEvent) => void;
   /** Debug logging: codes and counts only (AC-EXP-31). */
   readonly log?: (code: string, fields?: Record<string, number | string | boolean>) => void;
-  /** PDF only (task F1): the font chain and the lazily loaded PDF module. */
-  readonly fonts?: readonly unknown[];
+  /**
+   * PDF only: the font chain after the bundled fonts (spec 08 §6.1), in order. A renderer made with
+   * its own `fonts` (`createPdfRenderer({ fonts })`) uses those instead.
+   */
+  readonly fonts?: readonly FontDataProvider[];
+  /** PDF only: loads the lazily imported `lekhjs/export/pdf` entry and returns its renderer. */
   readonly loadPdf?: () => Promise<PdfRenderer>;
   /** Tests and tuning: the safe single-canvas budget (default 16,777,216 px, 8,192 px a side). */
   readonly canvasBudget?: { readonly pixels: number; readonly side: number };
@@ -171,8 +177,69 @@ export interface PdfRenderer {
     opts: ExportOptions,
     env: ExportEnv,
     out: (chunk: Uint8Array) => Promise<void>,
-    hooks: { progress(page: number): void; yieldToUi(): Promise<void> },
+    hooks: PdfRenderHooks,
   ): Promise<{ readonly warnings: readonly ExportWarning[] }>;
+}
+
+/** What the job gives the PDF renderer: progress, the yield (which throws once cancelled) and the signal. */
+export interface PdfRenderHooks {
+  /** Phase `rendering`, 1-based page. */
+  progress(page: number): void;
+  /** Phase `fonts`, with the bytes downloaded so far. */
+  fonts?(bytes: number): void;
+  yieldToUi(): Promise<void>;
+  /** Aborts in-flight font requests on cancel. */
+  readonly signal?: ExportSignalLike;
+}
+
+/** The part of an `AbortSignal` font providers read. */
+export interface ExportSignalLike {
+  readonly aborted: boolean;
+  addEventListener(type: 'abort', listener: () => void, opts?: { once?: boolean }): void;
+  removeEventListener?(type: 'abort', listener: () => void): void;
+}
+
+// ---- the PDF font chain (spec 08 §6.1) ----
+
+/** One font request: the text a font must draw, the box's family and traits, and the run's script. */
+export interface FontRequest {
+  readonly text: string;
+  /** The primary family of the text box ('' for the platform default). */
+  readonly family: string;
+  readonly bold: boolean;
+  readonly italic: boolean;
+  /** Set for a run the primary font does not cover: a Unicode script name (`Arabic`, `Han`, …). */
+  readonly script?: string;
+  /** BCP 47 language hint (the document language, else the host's), for the Han choice. */
+  readonly lang?: string;
+}
+
+/** Font bytes for a request. */
+export interface FontData {
+  /** TTF, OTF, or a TTC collection. */
+  readonly bytes: Uint8Array;
+  /** Selects the face; required to pick one face from a TTC ('' with `collectionIndex`: the face at that index). */
+  readonly postscriptName: string;
+  /** Android `getTtcIndex()`: a cross-check of `postscriptName`, or the selector when the name is ''. */
+  readonly collectionIndex?: number;
+  /** OS/2 `fsType` allows embedding and subsetting (as the host read it). */
+  readonly embeddable: boolean;
+  /** Has an `fvar` table. */
+  readonly variable: boolean;
+  readonly source: 'bundled' | 'platform' | 'noto-web' | 'noto-backend';
+}
+
+/**
+ * A source of font bytes (spec 08 §6.1, spec 02 `FontDataProvider`): the bundled fonts, the native
+ * `LekhPlugin.getFontData`, the web's Noto script fonts. `null` = nothing for this request.
+ */
+export interface FontDataProvider {
+  readonly id: string;
+  /** The resolver gives up on a request after this long and ignores a late answer (native: 10 s). */
+  readonly timeoutMs?: number;
+  resolve(req: FontRequest, signal: ExportSignalLike): Promise<FontData | null>;
+  /** Bytes this provider downloaded so far (the progress modal's phase `fonts`). */
+  downloadedBytes?(): number;
 }
 
 /**

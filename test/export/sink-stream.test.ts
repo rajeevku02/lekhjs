@@ -1,11 +1,11 @@
 // AC-EXP-39: `runExport` never holds a whole output file. Every byte reaches `env.sink` in order;
 // the largest chunk is at most one band (raster); the job resolves only after the last sink
 // promise; capped + local short-circuits with `export_limit_reached` before any sink or image
-// call; and lekhjs never calls `env.report`. (The 20-page PDF leg belongs to the PDF task, F1:
-// until `env.loadPdf` exists a PDF export is `export_pdf_unavailable`.)
+// call; and lekhjs never calls `env.report`. The 20-page PDF arrives page by page (task F1).
 import { describe, expect, it } from 'vitest';
 import { SAFE_CANVAS_PIXELS } from '../../src/export';
 import { boardSession, ControlledImagePort, env, pngSize, rectBoard, recordingSink, run } from './helpers';
+import { parsePdf, pdfEnv, textBoard } from './pdf-helpers';
 
 const RED = 0xffff0000 | 0;
 
@@ -96,6 +96,42 @@ describe('streaming to env.sink (AC-EXP-39)', () => {
     const text = Buffer.from(rec.file('Doc.lekh')).toString('utf8');
     expect(text).toBe(s.serialize({ stamp: 'offline' }));
     expect((JSON.parse(text) as { info: { version: string } }).info.version).toBe('5.0');
+  });
+
+  it('a 20-page PDF arrives page by page, in order, and the job waits for the sink', async () => {
+    const pages = Array.from({ length: 20 }, (_, i) => [
+      { text: `Page ${String(i + 1)} title`, cx: 200, cy: 40 },
+      { text: 'Body text on the page', cx: 200, cy: 120 },
+    ]);
+    const s = boardSession(textBoard(pages, { fixed: true }), undefined, 'Twenty');
+    const { sink, rec, pending } = recordingSink(2);
+    const e = pdfEnv(undefined, { sink });
+    const progress: { phase: string; page?: number }[] = [];
+    const r = await run(s, { format: 'pdf' }, e, undefined, progress as never);
+    expect(r.status).toBe('done');
+    expect(pending()).toBe(0);
+    expect(rec.names).toEqual(['Twenty.pdf']);
+    const bytes = rec.file('Twenty.pdf');
+    // One chunk per page (the previous page's content goes out when the next page starts) and one
+    // with the fonts and the cross-reference table at the end: never the whole file at once.
+    expect(rec.chunks.length).toBeGreaterThanOrEqual(20);
+    const pageChunks = rec.chunks.slice(1, -1).map((c) => c.bytes.length);
+    for (const n of pageChunks) expect(n).toBeLessThan(bytes.length / 5);
+    expect(Buffer.from(bytes.subarray(0, 5)).toString('latin1')).toBe('%PDF-');
+    expect(
+      Buffer.from(bytes.subarray(bytes.length - 6))
+        .toString('latin1')
+        .trim(),
+    ).toBe('%%EOF');
+    const parsed = await parsePdf(bytes);
+    expect(parsed.pages.length).toBe(20);
+    expect(parsed.pages[19]?.items.map((i) => i.str)).toEqual(['Page 20 title', 'Body text on the page']);
+    expect(progress.filter((p) => p.phase === 'rendering').map((p) => p.page)).toEqual(
+      Array.from({ length: 20 }, (_, i) => i + 1),
+    );
+    if (r.status === 'done')
+      expect(r.files).toEqual([{ name: 'Twenty.pdf', mime: 'application/pdf', index: 0, bytes: bytes.length }]);
+    expect(e.reports).toEqual([]);
   });
 
   it('PDF without the PDF module plugged in: export_pdf_unavailable', async () => {

@@ -1,5 +1,5 @@
 // Byte helpers for export, without `TextEncoder`, `btoa` or `Buffer` (no ambient globals): UTF-8
-// and base64 encoding, and a growable byte buffer the encoders write into and the job drains.
+// encoding and decoding, base64 encoding, and a growable byte buffer the encoders write into and the job drains.
 
 /** UTF-8 bytes of `s` (lone surrogates become U+FFFD, as `TextEncoder` does). */
 export function utf8Bytes(s: string): Uint8Array {
@@ -29,6 +29,37 @@ export function utf8Bytes(s: string): Uint8Array {
     }
   }
   return out.take();
+}
+
+/** The string of UTF-8 `bytes` (invalid sequences become U+FFFD). */
+export function utf8Decode(bytes: Uint8Array): string {
+  let out = '';
+  let i = 0;
+  const n = bytes.length;
+  while (i < n) {
+    const b = bytes[i] ?? 0;
+    let cp = 0xfffd;
+    let len = 1;
+    if (b < 0x80) cp = b;
+    else if (b >= 0xc2 && b < 0xe0) len = 2;
+    else if (b >= 0xe0 && b < 0xf0) len = 3;
+    else if (b >= 0xf0 && b < 0xf5) len = 4;
+    if (len > 1) {
+      let v = b & (0xff >> (len + 1));
+      let ok = i + len <= n;
+      for (let k = 1; ok && k < len; k++) {
+        const c = bytes[i + k] ?? 0;
+        if ((c & 0xc0) !== 0x80) ok = false;
+        else v = (v << 6) | (c & 63);
+      }
+      if (ok && v <= 0x10ffff && !(v >= 0xd800 && v <= 0xdfff) && v >= (len === 2 ? 0x80 : len === 3 ? 0x800 : 0x10000))
+        cp = v;
+      else len = 1;
+    }
+    out += String.fromCodePoint(cp);
+    i += len;
+  }
+  return out;
 }
 
 const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';

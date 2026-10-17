@@ -136,6 +136,28 @@ export class TemplatedObject extends LekhObject {
     return t !== null && t.id() !== '' ? [t.id(), this.name()] : [this.name()];
   }
 
+  /**
+   * The image URLs this shape's template references (its image slots and those of the templates
+   * embedded in it), inline (base64) images excluded: they are not URLs (spec 03 §7). What the
+   * session asks the `ImagePort` for at load, and what kashi's "unresolved image" note lists
+   * (`BoardSession.missingResources`).
+   */
+  override imageUrls(): readonly string[] {
+    const t = this.template_;
+    if (t === null) return super.imageUrls();
+    const out: string[] = [];
+    const add = (tmpl: ShapeTemplate, depth: number): void => {
+      for (const el of tmpl.images()) {
+        if (el.inlineImage() !== null) continue;
+        const url = el.resourceUrl();
+        if (url !== '' && !out.includes(url)) out.push(url);
+      }
+      if (depth < 8) for (const e of tmpl.embeds()) add(e.template, depth + 1);
+    };
+    add(t, 0);
+    return out;
+  }
+
   /** C++ `shapeTemplate()`: null for groups and freehand strokes. */
   shapeTemplate(): ShapeTemplate | null {
     return this.template_;

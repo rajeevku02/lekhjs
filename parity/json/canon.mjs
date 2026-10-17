@@ -73,7 +73,9 @@ export function renameMintedIds(tree, inputText) {
 
 /**
  * Group members (`objects: { <id>: { index, object } }`, any depth) are renamed too, to
- * `<group's position alias>/<n>`, n by the order they appear (array-form groups mint member ids).
+ * `<group's position alias>/<n>`, n by the member `index` (then by the order they appear):
+ * array-form groups mint member ids, and the two engines can mint them in different orders, so the
+ * order of appearance alone can pair different members.
  * @param {LValue} obj
  * @param {string} base
  * @param {string} inputText
@@ -82,7 +84,15 @@ export function renameMintedIds(tree, inputText) {
 function renameMembers(obj, base, inputText, alias) {
   if (!isObj(obj) || !isObj(obj['objects'])) return;
   let m = 0;
-  for (const [mid, member] of Object.entries(/** @type {LObj} */ (obj['objects']))) {
+  const indexOf = (/** @type {LValue} */ member) => {
+    const i = isObj(member) ? /** @type {LObj} */ (member)['index'] : undefined;
+    return i instanceof LNum ? i.value : Infinity;
+  };
+  const members = Object.entries(/** @type {LObj} */ (obj['objects']))
+    .map((e, at) => ({ e, at, index: indexOf(e[1]) }))
+    .sort((a, b) => a.index - b.index || a.at - b.at)
+    .map((x) => x.e);
+  for (const [mid, member] of members) {
     m++;
     if (!inputText.includes(mid)) alias.set(mid, `${base}/${m}`);
     const inner = isObj(member) ? /** @type {LObj} */ (member)['object'] : undefined;

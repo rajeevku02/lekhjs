@@ -501,6 +501,38 @@ describe('D2 data normalisers', () => {
     const rest = ['data', '[0]'];
     assert.equal(m.equal(t('a\n\nb', '-h/2+24.0'), t('a\n\nb', '-h/2+31.5'), undefined, rest), true);
     assert.equal(m.equal(t('a\nb', '-h/2+24.0'), t('a\nb', '-h/2+31.5'), undefined, rest), null);
+    assert.equal(m.equal(t('a = b\n=\nc', '2.0'), t('a = b\n=\nc', '17.0'), undefined, rest), true);
     assert.equal(m.equal(t('a\n\nb', '-h/2+24.0'), t('a\n\nb', '-w/2+31.5'), undefined, rest), null);
+  });
+});
+
+describe('array-form member renaming', () => {
+  it('pairs minted group members by index, whatever order each engine minted them in', () => {
+    const input = JSON.stringify({
+      objects: [{ id: 1, type: 'avabodh.basic.group', objects: [{ index: 1 }, { index: 0 }] }],
+    });
+    const doc = (/** @type {string[]} */ ids, /** @type {number[]} */ idx) =>
+      JSON.stringify({
+        pages: {
+          P: {
+            objects: {
+              G: {
+                objects: { [ids[0] ?? '']: { index: idx[0], w: idx[0] }, [ids[1] ?? '']: { index: idx[1], w: idx[1] } },
+              },
+            },
+          },
+        },
+      });
+    const r = canonicalise({
+      inputText: input,
+      cppText: doc(['ka', 'kb'], [0, 1]),
+      tsText: doc(['kc', 'kd'], [1, 0]),
+      stamp: 'app',
+    });
+    const { diffs } = diff(r.cpp, r.ts);
+    assert.deepEqual(
+      diffs.filter((d) => !d.path.includes('info')),
+      [],
+    );
   });
 });

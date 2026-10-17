@@ -20,7 +20,7 @@ import {
   type ShapeInteractionRegistry,
 } from '../../src/interaction';
 import type { ConnectionObject, LekhObject, TemplatedObject } from '../../src/model';
-import type { JsonObject } from '../../src/template';
+import type { JsonObject, TemplateCatalog } from '../../src/template';
 import { A, B, C, harness, testRuntime, type Harness } from '../session/helpers';
 
 export { A, B, C, P, fixtureJson } from '../session/helpers';
@@ -43,13 +43,19 @@ export interface ViewHarnessOptions {
   readonly board?: JsonObject | string;
   readonly registry?: ShapeInteractionRegistry;
   readonly save?: () => void;
+  /** The runtime's base catalog (default: the bundled one). */
+  readonly catalog?: TemplateCatalog;
   readonly closeTopPopover?: () => boolean;
 }
 
 export function viewHarness(opts: ViewHarnessOptions = {}): ViewHarness {
   // The runtime clock follows the harness's fake scheduler (timers and `now()` agree).
   const clock = { sched: null as { now(): number } | null, now: (): number => clock.sched?.now() ?? 1000 };
-  const runtime = testRuntime({ clock, ...(opts.config !== undefined ? { config: opts.config } : {}) });
+  const runtime = testRuntime({
+    clock,
+    ...(opts.config !== undefined ? { config: opts.config } : {}),
+    ...(opts.catalog !== undefined ? { catalog: opts.catalog } : {}),
+  });
   const h = harness({
     runtime,
     ...(opts.cloud === true ? { cloud: true } : {}),

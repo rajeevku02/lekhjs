@@ -15,7 +15,7 @@ import { ConnectionObject, GroupObject, TemplatedObject } from '../model';
 import { EllipseShape, ParamEditorType, PolygonTemplate, TextSide, type ShapeTemplate } from '../template';
 import type { ClipboardService } from './clipboard';
 import type { EditCommands } from './commands';
-import { isMulti, type EditTarget, type SelectionChange } from './edit-target';
+import { isMulti, type EditTarget, type MultiSelection, type SelectionChange } from './edit-target';
 import type { EditorContext } from './editor-context';
 import {
   ExpandAction,
@@ -69,7 +69,7 @@ export type SelectionPanel =
     }
   | { readonly panel: 'title_position'; readonly sides: readonly TextSide[]; readonly selected: number }
   | { readonly panel: 'shape_help'; readonly content: string }
-  | { readonly panel: 'save_to_library'; readonly object: TemplatedObject };
+  | { readonly panel: 'save_to_library'; readonly object: TemplatedObject | MultiSelection };
 
 export interface SelectionActionResult {
   /** The selection afterwards (`undefined`: unchanged, `null`: cleared). */
@@ -508,7 +508,8 @@ function buildEntries(): readonly SelectionActionDef[] {
       'copy_size',
       '',
       'Copy Size',
-      (t) => t instanceof TemplatedObject && !isTextShape(t),
+      // C++ `MultiSelectedObjects` is a `TemplatedObject`: a multi-selection copies its box.
+      (t) => (t instanceof TemplatedObject || isMulti(t)) && !isTextShape(t),
       (t, c) => {
         c.clipboard.copySize(t);
         return NONE;
@@ -538,8 +539,9 @@ function buildEntries(): readonly SelectionActionDef[] {
       'save_to_library',
       '',
       'Add To My Shape Library',
-      (t, c) => c.clipboard.canCopy(t) && t instanceof TemplatedObject && !containsImage(t),
-      (t) => (t instanceof TemplatedObject ? { open: { panel: 'save_to_library', object: t } } : NONE),
+      // C++ `MultiSelectedObjects` is a `TemplatedObject`: a multi-selection is saved as one item.
+      (t, c) => c.clipboard.canCopy(t) && (t instanceof TemplatedObject || isMulti(t)) && !containsImage(t),
+      (t) => (t instanceof TemplatedObject || isMulti(t) ? { open: { panel: 'save_to_library', object: t } } : NONE),
       true,
     ),
     panel('about', '', 'About Menu Items', () => true, { panel: 'about' }, true),

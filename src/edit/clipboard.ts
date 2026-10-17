@@ -277,8 +277,15 @@ export class ClipboardService {
 
   /** C++ `copySize`. */
   copySize(target: EditTarget | null): void {
-    if (!(target instanceof TemplatedObject)) return;
-    const r = target.selectionRect();
+    let r: Rect;
+    if (target instanceof TemplatedObject) {
+      r = target.selectionRect();
+    } else if (target instanceof MultiSelection && target.objects.length > 0) {
+      // C++ the multi-selection's own box: its objects' selection rectangles together.
+      r = target.objects.map((o) => o.selectionRect()).reduce((a, b) => a.includeRect(b));
+    } else {
+      return;
+    }
     this.copiedSize_ = { width: r.width, height: r.height };
     this.sizeCopied_ = true;
   }

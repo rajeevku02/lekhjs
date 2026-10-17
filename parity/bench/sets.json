@@ -1,0 +1,13 @@
+{
+  "schema": "synth-sets/1",
+  "note": "S-syn sets of verification 03 §2 used so far (P-07a). Each board: synth.mjs synthBoard(mix, objects, { pages, seed }).",
+  "sets": {
+    "S-syn/image/300": { "mix": "image", "objects": 300, "pages": 1, "seed": 300 },
+    "S-syn/image/1500": { "mix": "image", "objects": 1500, "pages": 1, "seed": 1500 },
+    "S-syn/image/5000": { "mix": "image", "objects": 5000, "pages": 1, "seed": 5000 },
+    "S-syn/diagram/300": { "mix": "diagram", "objects": 300, "pages": 1, "seed": 300 },
+    "S-syn/diagram/1500": { "mix": "diagram", "objects": 1500, "pages": 1, "seed": 1500 },
+    "S-syn/diagram/5000": { "mix": "diagram", "objects": 5000, "pages": 1, "seed": 5000 },
+    "S-syn/diagram/1500x5": { "mix": "diagram", "objects": 1500, "pages": 5, "seed": 7515 }
+  }
+}

@@ -1,0 +1,17 @@
+id: DR-EXP-01
+title: 'Web PDF export is vector: text, paths and images, not one JPEG per page'
+area: EXP
+kind: intended-change
+cpp: 'the web app drew each page into a canvas at scale 0.5 and put it in the PDF as one 72 dpi JPEG (lekhboardwebapp Exporter.jsx, jsPDF); iOS and Android wrote vector PDFs'
+ts: 'export/pdf PdfExporter writes every page through PdfDrawingPlatform on PDFKit on every host: paths, gradients, images and text (embedded subset fonts, outlines for restricted or variable fonts, images for runs no font covers); a page is width/2 × height/2 points as before (F1)'
+user_visible: true
+fixture: parity/fixtures/DR-EXP-01/pdf-vector.lekh
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: "spec 08 §1, §7; test/export/pdf-structure.test.ts (labels in getTextContent, no image XObject, MediaBox = size / 2)"
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

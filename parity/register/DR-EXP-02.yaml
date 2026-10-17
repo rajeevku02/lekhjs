@@ -1,0 +1,18 @@
+id: DR-EXP-02
+title: 'PDF gradients use every stop'
+area: EXP
+kind: intended-change
+cpp: 'iOS drew a PDF gradient fill from its first to its last stop only; Android and the web drew no gradient in PDF'
+ts: 'export/pdf PdfDrawingPlatform writes a linear or radial (focal) gradient as a PDF shading with every stop (a stitching function of n − 1 parts) and stop alpha as a soft mask; spread is pad only (F1)'
+user_visible: true
+fixture: parity/fixtures/DR-EXP-02/five-stop-gradient.lekh
+rule:
+  json: []
+  image:
+    attribute: { object_flag: gradient-fill }
+  perf: null
+evidence: "spec 08 §7; test/export/pdf-primitives.test.ts (a 5-stop linear shading with a 4-part stitching function, a focal radial shading)"
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

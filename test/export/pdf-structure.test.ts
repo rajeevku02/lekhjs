@@ -8,8 +8,9 @@ import { describe, expect, it } from 'vitest';
 import { planExport, type ExportOptions } from '../../src/export';
 import { TextCollectingPlatform } from '../../src/export/pdf';
 import type { BoardSession } from '../../src/session';
-import { CORE_FIXTURES } from '../io/helpers';
+import { CORE_FIXTURES, readText } from '../io/helpers';
 import { boardSession, fixtureSession, rectBoard, recordingSink, run } from './helpers';
+import { PKG } from './pdf-helpers';
 import { OPS, parsePdf, pdfEnv, textBoard, type ParsedPage } from './pdf-helpers';
 
 const OPTS: ExportOptions = { format: 'pdf', region: 'full', padding: 0, scale: 1, includeBackground: false };
@@ -132,5 +133,24 @@ describe('PDF structure (AC-EXP-08, AC-EXP-09)', () => {
       const x0 = t.align === 'left' ? l.x : t.align === 'right' ? l.x - w : l.x - w / 2;
       expect(Math.abs(it.x - (x0 + plan.translateX) / 2)).toBeLessThan(0.5);
     }
+  });
+
+  it('the register fixtures: DR-EXP-01 is vector text and paths, DR-EXP-02 a five-stop shading', async () => {
+    const one = boardSession(
+      JSON.parse(readText(path.join(PKG, 'parity/fixtures/DR-EXP-01/pdf-vector.lekh'))) as object,
+      undefined,
+      'One',
+    );
+    const p1 = await parsePdf(await exportPdf(one, 'One.pdf'));
+    expect(p1.pages[0]?.items.map((i) => i.str)).toEqual(['Sample label', 'Second line of text']);
+    expect(imagePaints(p1.pages[0] as ParsedPage)).toBe(0);
+    const two = boardSession(
+      JSON.parse(readText(path.join(PKG, 'parity/fixtures/DR-EXP-02/five-stop-gradient.lekh'))) as object,
+      undefined,
+      'Two',
+    );
+    const { raw } = await parsePdf(await exportPdf(two, 'Two.pdf'));
+    expect(raw).toMatch(/\/ShadingType 2/);
+    expect(raw).toMatch(/\/Bounds \[0\.25 0\.5 0\.75\]/);
   });
 });

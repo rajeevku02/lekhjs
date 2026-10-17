@@ -3,5 +3,6 @@
   "core": "../lekhcore/test/fixtures",
   "backend": "../lbs/kashi/test/core/fixtures",
   "lua": "../lekhcore/stencils/lua",
-  "stencilsV4": "../lekhboard/stencils/v4"
+  "stencilsV4": "../lekhboard/stencils/v4",
+  "icons": "../lekhcore/res/icons"
 }

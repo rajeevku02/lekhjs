@@ -1,12 +1,17 @@
 // AC-UI-41 (lekhjs half; spec 05 §4.4, §7.4): the three C++ icons the overlay draws on the canvas
 // are exactly the glyphs of `glyphs.ts`, exempt from the board's react-icons `iconMap`, and their
-// path data is the C++ templates' (`lekhcore/res/icons/svg_icons.json`, `icons.json`), copied once.
+// path data is the C++ templates' (`svg_icons.json`, `icons.json` of the C++ icon resources, found
+// through parity/fixture-sets.json "icons": test/ names no C++ repository path, AC-ARC-12), copied once.
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { CANVAS_GLYPHS } from '../../src/interaction/glyphs';
+import { PKG_ROOT } from '../lint/eslint-helpers';
 
-const ICONS = path.resolve(__dirname, '../../../lekhcore/res/icons');
+const FIXTURE_SETS = JSON.parse(readFileSync(path.join(PKG_ROOT, 'parity', 'fixture-sets.json'), 'utf8')) as {
+  icons: string;
+};
+const ICONS = path.resolve(PKG_ROOT, FIXTURE_SETS.icons);
 
 interface Template {
   id: string;
@@ -46,14 +51,14 @@ describe('canvas glyphs (AC-UI-41)', () => {
     const glyph = CANVAS_GLYPHS[id as keyof typeof CANVAS_GLYPHS];
     expect(glyph.paths).toHaveLength(t.draw.length);
     glyph.paths.forEach((p, i) => {
-      const tok = t.draw[i].path.trim().split(/\s+/);
+      const tok = (t.draw[i]?.path ?? '').trim().split(/\s+/);
+      const data = (k: number): string => t.data[Number(tok[k])] ?? '';
       const expected: (string | number)[] = [];
       for (let k = 0; k < tok.length;) {
-        const op = tok[k++];
+        const op = tok[k++] ?? '';
         const n = op === 'C' ? 3 : 1;
         expected.push(op);
-        for (let j = 0; j < n; j++, k += 2)
-          expected.push(factor(t.data[Number(tok[k])]), factor(t.data[Number(tok[k + 1])]));
+        for (let j = 0; j < n; j++, k += 2) expected.push(factor(data(k)), factor(data(k + 1)));
       }
       const actual = p.d.flat();
       expect(actual).toHaveLength(expected.length);

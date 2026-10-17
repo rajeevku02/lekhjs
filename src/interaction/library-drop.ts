@@ -4,7 +4,7 @@
 // custom library's, read by `io`); dropping it at a view point is one undo step and selects it.
 import { AddObjectAction } from '../edit';
 import { Point, Rect } from '../geometry';
-import { TemplatedObject, snapNumber, type LekhObject } from '../model';
+import { TemplatedObject, snapNumber, stampNewContentFont, type LekhObject } from '../model';
 import type { InteractionBoard } from './board';
 import type { CanvasView } from './canvas-view';
 import type { OverlayLayer } from './overlay-layer';
@@ -49,6 +49,7 @@ export class LibraryDropHandler {
         const r = obj.ds.rect();
         obj.setRect(new Rect(x - r.width / 2, y - r.height / 2, r.width, r.height));
       }
+      stampNewContentFont(obj);
       ctx.editor.tx.run(new AddObjectAction(ctx.editor.env, ctx.doc, [obj]));
     });
     if (b.page().objectStore.contains(obj)) this.overlay_.select(obj);

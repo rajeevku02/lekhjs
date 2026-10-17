@@ -5,7 +5,7 @@
 // `res://` reference (spec 09 §5.1 `pickImage`); the engine only places it.
 import type { Config } from '../base';
 import { Rect, Size, type Point } from '../geometry';
-import { TemplatedObject, type LekhObject } from '../model';
+import { TemplatedObject, stampNewContentFont, type LekhObject } from '../model';
 import type { EditorContext } from './editor-context';
 import { AddObjectAction } from './object-actions';
 
@@ -52,6 +52,7 @@ export function insertImageObject(ctx: EditorContext, center: Point, input: Inse
   const snap = ctx.config.snapToGridNewObject ? ctx.doc.snapStep() : null;
   const obj = new TemplatedObject(env.objects, tmpl, Rect.fromCenter(center, input.width, input.height), 0, snap);
   obj.generateData();
+  stampNewContentFont(obj);
   ctx.tx.run(new AddObjectAction(ctx.env, ctx.doc, [obj]));
   return obj;
 }

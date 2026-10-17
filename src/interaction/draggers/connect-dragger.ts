@@ -27,6 +27,7 @@ import {
   selfLoopParams,
   sideAngle,
   sideOfAngle,
+  stampNewContentFont,
   worldSideOf,
   type LekhObject,
   type ObjectEnv,
@@ -495,6 +496,7 @@ export class ConnectDragger extends BaseDragger {
         board.view().zoom,
       );
       if (con === null) return;
+      stampNewContentFont(con);
       ctx.editor.tx.run(new AddObjectAction(ctx.editor.env, ctx.doc, [con]));
       out.made = con;
     });

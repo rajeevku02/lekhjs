@@ -63,6 +63,7 @@ import {
 } from '../template';
 import type { CommandContext, CommandHandler, EditCommand } from './commands';
 import { SessionDiagnostics } from './diagnostics';
+import { documentFontRequests } from './font-requests';
 import { PaintRequests } from './paint-requests';
 import type {
   AbortSignalLike,
@@ -135,7 +136,12 @@ interface HoldEnd {
   readonly type: 'recognitionHoldEnd';
 }
 const HOLD_END: HoldEnd = Object.freeze({ type: 'recognitionHoldEnd' });
-type QueueItem = SessionEvent | HoldEnd;
+/** The queue's marker that ends the wait for a document's fonts (internal; spec 06 §5.3). */
+interface FontWaitEnd {
+  readonly type: 'fontWaitEnd';
+  readonly token: object;
+}
+type QueueItem = SessionEvent | HoldEnd | FontWaitEnd;
 
 /**
  * The commands a recognition hold queues behind the result (spec 07 §6.5): the document-mutating
@@ -192,6 +198,8 @@ export class BoardSession {
 
   private readonly queue_: QueueItem[] = [];
   private hold_: Hold | null = null;
+  /** The wait for the adopted document's fonts (spec 06 §5.3): no layout and no drawing-layer paint until it ends. */
+  private fontWait_: object | null = null;
   private draining_ = false;
   private disposed_ = false;
   private loggedAfterDispose_ = false;
@@ -496,6 +504,12 @@ export class BoardSession {
     this.budgetCheck();
     const page = this.doc_.activePage();
     const view = this.view_;
+    // Waiting for the document's fonts: nothing is laid out yet, so the objects are not drawn.
+    if (layer === 'drawing' && this.fontWait_ !== null) {
+      view.applyScreen(ctx);
+      ctx.clearRect(0, 0, view.canvasW, view.canvasH);
+      return;
+    }
     if (layer === 'middle') {
       view.applyScreen(ctx);
       ctx.clearRect(0, 0, view.canvasW, view.canvasH);
@@ -544,6 +558,10 @@ export class BoardSession {
       for (let ev = this.queue_.shift(); ev !== undefined; ev = this.queue_.shift()) {
         if (ev.type === 'recognitionHoldEnd') {
           this.releaseHold();
+          continue;
+        }
+        if (ev.type === 'fontWaitEnd') {
+          this.endFontWait(ev.token);
           continue;
         }
         if (this.hold_ !== null && this.isHeld(ev)) {
@@ -685,6 +703,7 @@ export class BoardSession {
     this.disposed_ = true;
     this.queue_.length = 0;
     this.hold_ = null;
+    this.fontWait_ = null;
     for (const t of this.timers_.values()) this.options.scheduler.clearTimeout(t.handle);
     this.timers_.clear();
     this.paint_.dispose();
@@ -797,7 +816,7 @@ export class BoardSession {
   /** Layout of everything dirty, the index re-keyed (inside `flushLayout`), repaint requests. */
   private flush(): void {
     let laidOut = 0;
-    for (const p of this.doc_.pages) {
+    for (const p of this.fontWait_ === null ? this.doc_.pages : []) {
       this.budgetCheck();
       laidOut += p.objectStore.flushLayout();
     }
@@ -919,6 +938,53 @@ export class BoardSession {
     pd.selection = true;
     pd.view = true;
     this.reportPlaceholders(this.doc_.pages.flatMap((p) => p.objectStore.objects));
+    this.startFontWait();
+  }
+
+  // ---- fonts before the first layout (spec 06 §5.3) ----
+
+  /** Whether the session is waiting for the adopted document's fonts (nothing laid out or drawn yet). */
+  get waitingForFonts(): boolean {
+    return this.fontWait_ !== null;
+  }
+
+  /**
+   * A loader that asks for it (`waitBeforeLayout`, the browser) gets the document's fonts to load
+   * before the first layout; the loader bounds the wait (one shared 3 s deadline). Elsewhere
+   * layout never waits and the engine API stays synchronous.
+   */
+  private startFontWait(): void {
+    const loader = this.runtime.fontLoader;
+    if (loader.waitBeforeLayout !== true) {
+      this.fontWait_ = null;
+      return;
+    }
+    const { requests, sampleText } = documentFontRequests(this.doc_, this.runtime.fontResolver);
+    const token = {};
+    this.fontWait_ = token;
+    const end = (): void => {
+      if (!this.disposed_ && this.fontWait_ === token) this.enqueue({ type: 'fontWaitEnd', token });
+    };
+    let p: Promise<void>;
+    try {
+      p = loader.ensureLoaded(requests, sampleText);
+    } catch {
+      p = Promise.resolve();
+    }
+    p.then(end, end);
+  }
+
+  private endFontWait(token: object): void {
+    if (this.fontWait_ !== token || this.disposed_) return;
+    this.fontWait_ = null;
+    for (const p of this.doc_.pages) p.objectStore.markAllDirty();
+    try {
+      this.flush();
+    } catch (err) {
+      this.reportError({ type: 'fontsChanged', epoch: this.runtime.fonts.fontEpoch }, err);
+    }
+    this.requestPaint('drawing');
+    this.notifyListeners();
   }
 
   // ---- generators (spec 04 §7.3, §7.4) ----

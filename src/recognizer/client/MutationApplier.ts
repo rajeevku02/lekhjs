@@ -32,6 +32,7 @@ import {
   SOLID_ARROW_ID,
   TemplatedObject,
   UnrecognizedObject,
+  stampNewContentFont,
   type LekhObject,
   type ObjectEnv,
   type Params,
@@ -184,8 +185,10 @@ export class MutationApplier {
     this.applyOne(ctx, { op: 'ink', points }, view);
   }
 
+  /** A new object in the current style; a recognised shape is new content (spec 06 §9: Noto Sans). */
   private style(obj: LekhObject): void {
     obj.getDrawingProfile().copyFrom(this.o_.currentStyle());
+    stampNewContentFont(obj);
   }
 
   private objectsOf(ctx: CommandContext, ids: readonly ObjectId[]): LekhObject[] {

@@ -7,6 +7,7 @@ import {
   ConnectionObject,
   GroupObject,
   TemplatedObject,
+  stampNewContentFont,
   type LekhObject,
   type MultiObjects,
   type ObjectStore,
@@ -114,6 +115,8 @@ export function addMultiToCanvas(ctx: EditorContext, multi: MultiObjects, cx: nu
       t.setRect(Rect.fromCenter(new Point(cx + info.dx, cy + info.dy), r.width, r.height));
     }
   }
+  // A library insert is new content (spec 06 §9): the clones get the bundled default font.
+  stampNewContentFont(clones);
   ctx.tx.run(new AddObjectAction(ctx.env, doc, clones));
   return clones;
 }

@@ -59,6 +59,8 @@ export interface Runtime {
   readonly catalog: TemplateCatalog;
   /** Owns `fontEpoch`; its `fontsChanged` is delivered to every live session on this runtime. */
   readonly fonts: FontRegistry;
+  /** The host's font loader (`RuntimeOptions.fonts`): what a session awaits before a board's first layout (spec 06 §5.3). */
+  readonly fontLoader: FontLoader;
   readonly lineWidths: LineWidthCache;
   /** `template.id` → generator, and the canonical JS texts; immutable, shared by every session. */
   readonly generators: GeneratorRegistry;
@@ -124,6 +126,7 @@ export function createRuntime(opts: RuntimeOptions): Runtime {
   return Object.freeze({
     catalog: opts.catalog,
     fonts,
+    fontLoader: opts.fonts,
     lineWidths,
     generators: opts.generators ?? GeneratorRegistry.builtin(),
     measurer: opts.measurer,

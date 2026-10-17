@@ -13,7 +13,7 @@
 // to the host's raw-stroke sink, which the board's "record strokes" toggle saves as corpus files.
 import { AddObjectAction } from '../edit';
 import type { Point } from '../geometry';
-import { UnrecognizedObject } from '../model';
+import { UnrecognizedObject, stampNewContentFont } from '../model';
 import type { DrawingPlatform } from '../render';
 import type { Style } from '../style';
 import type { InteractionBoard } from './board';
@@ -144,6 +144,7 @@ export class RecognitionController implements StrokeSink {
     b.edit((ctx) => {
       const obj = new UnrecognizedObject(b.objectEnv(), docPoints);
       obj.getDrawingProfile().copyFrom(b.currentStyle());
+      stampNewContentFont(obj);
       ctx.editor.tx.run(new AddObjectAction(ctx.editor.env, ctx.doc, [obj]));
     });
     b.requestPaint('drawing');

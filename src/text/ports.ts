@@ -32,6 +32,12 @@ export interface FontFaceRequest {
  */
 export interface FontLoader {
   ensureLoaded(fonts: readonly FontFaceRequest[], sampleText: string): Promise<void>;
+  /**
+   * True when a session must await `ensureLoaded` for a document's fonts before its first layout
+   * (the browser's `DomFontLoader`, spec 06 §5.3). Absent or false (the backend, test fakes): fonts
+   * are usable at once and layout never waits, so the engine API stays synchronous.
+   */
+  readonly waitBeforeLayout?: boolean;
   readonly epoch: number;
   onFontsChanged(cb: () => void): () => void;
 }

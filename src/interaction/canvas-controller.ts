@@ -13,7 +13,7 @@ import type { EditTarget } from '../edit';
 import { AddObjectAction, RotateAction } from '../edit';
 import type { Point } from '../geometry';
 import { Rect } from '../geometry';
-import { TemplatedObject, type LekhObject } from '../model';
+import { TemplatedObject, stampNewContentFont, type LekhObject } from '../model';
 import { PencilBehavior } from '../base';
 import { dragContext, type InteractionBoard } from './board';
 import type { CanvasView } from './canvas-view';
@@ -176,6 +176,7 @@ export class CanvasController implements RouterLayer {
       p.setFillColor(color);
       p.setStrokeColor(color);
       p.setStrokeWidth(1);
+      stampNewContentFont(obj);
       ctx.editor.tx.run(new AddObjectAction(ctx.editor.env, ctx.doc, [obj]));
     });
   }
@@ -350,6 +351,7 @@ export class CanvasController implements RouterLayer {
         tobj.getDrawingProfile().copyFrom(b.currentStyle());
         const te = tmpl.texts()[0];
         if (te !== undefined) te.setStyle(tobj.getDrawingProfile());
+        stampNewContentFont(tobj);
         ctx.editor.tx.run(new AddObjectAction(ctx.editor.env, ctx.doc, [tobj]));
         obj = tobj;
       }

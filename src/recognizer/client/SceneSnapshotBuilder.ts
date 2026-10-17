@@ -13,7 +13,9 @@
 //     copied into `docTemplates`;
 //  5. the serialised objects are read back here, as the worker will read them, with the session's
 //     text measurements tapped: the sizes go into `textSizes` (the worker answers `measure` from
-//     them).
+//     them). Freehand objects measure no text and are skipped. The sizes of each object are
+//     cached under its serialised JSON and the font epoch (the inputs of the re-read), so an
+//     unchanged object near later strokes is not re-read and re-laid out (AC-REC-30).
 //
 // It also returns the `rev` of every object it named, which `MutationApplier` validates against.
 import type { DocumentCodec } from '../../io';
@@ -50,6 +52,8 @@ export interface SnapshotSource {
   /** The session's text service (`BoardSession.text`): its measurements are tapped. */
   readonly text: Pick<TemplateTextService, 'tapMeasures'>;
   readonly config: Config;
+  /** The runtime's font epoch (`FontRegistry.fontEpoch`): a change empties the size cache. */
+  readonly fontEpoch?: () => number;
 }
 
 export interface BuiltSnapshot {
@@ -151,36 +155,64 @@ function objectRefs(obj: LekhObject, out: Set<string>, seen: Set<ShapeTemplate>)
 
 const ZERO_CLOCK = Object.freeze({ now: () => 0 });
 
+type Sizes = Record<string, readonly [number, number]>;
+
+/** Objects whose measured text sizes are kept (one board's neighbourhood of strokes). */
+const SIZE_CACHE_MAX = 512;
+
 export class SceneSnapshotBuilder {
   private readonly src_: SnapshotSource;
+  /** Serialised object (id + JSON) → the sizes its re-read measures, for `sizeEpoch_`. */
+  private readonly sizes_ = new Map<string, Sizes>();
+  private sizeEpoch_ = -1;
 
   constructor(src: SnapshotSource) {
     this.src_ = src;
   }
 
-  /** Step 5: the text sizes reading `objects` back (and laying them out) measures. */
-  private textSizes(objects: readonly SnapshotObject[]): Record<string, readonly [number, number]> {
-    const out: Record<string, readonly [number, number]> = {};
-    if (objects.length === 0) return out;
+  /** The sizes re-reading one serialised object (and laying it out) measures. */
+  private measureOne(so: SnapshotObject): Sizes {
+    const sizes: Sizes = {};
     const codec = this.src_.codec;
     this.src_.text.tapMeasures(
       (text, style, constraint, size) => {
-        out[measureKey(text, style, constraint)] = [size.width, size.height];
+        sizes[measureKey(text, style, constraint)] = [size.width, size.height];
       },
       () => {
-        const objs: LekhObject[] = [];
-        for (const so of objects) {
-          try {
-            objs.push(codec.readObject(so.json as JsonValue, so.id).object);
-          } catch {
-            // the worker reports it (`rec_snapshot`)
-          }
+        let obj: LekhObject;
+        try {
+          obj = codec.readObject(so.json as JsonValue, so.id).object;
+        } catch {
+          return; // the worker reports it (`rec_snapshot`)
         }
         const scratch = new ObjectStore({ config: this.src_.config, clock: ZERO_CLOCK });
-        scratch.load(objs);
+        scratch.load([obj]);
         scratch.flushLayout();
       },
     );
+    return sizes;
+  }
+
+  /** Step 5: the text sizes reading `objects` back (and laying them out) measures. */
+  private textSizes(objects: readonly SnapshotObject[]): Sizes {
+    const out: Record<string, readonly [number, number]> = {};
+    if (objects.length === 0) return out;
+    const epoch = this.src_.fontEpoch?.() ?? 0;
+    if (epoch !== this.sizeEpoch_) {
+      this.sizes_.clear();
+      this.sizeEpoch_ = epoch;
+    }
+    for (const so of objects) {
+      if (so.isUnrecognized) continue; // freehand ink measures no text
+      const key = `${so.id}\u0000${JSON.stringify(so.json)}`;
+      let sizes = this.sizes_.get(key);
+      if (sizes === undefined) {
+        sizes = this.measureOne(so);
+        if (this.sizes_.size >= SIZE_CACHE_MAX) this.sizes_.clear();
+        this.sizes_.set(key, sizes);
+      }
+      Object.assign(out, sizes);
+    }
     return out;
   }
 

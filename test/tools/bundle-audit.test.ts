@@ -66,4 +66,18 @@ describe('bundle-audit', () => {
     expect(r.status).not.toBe(0);
     expect(r.out).toContain('contains interaction code');
   });
+  it('fails on recognizer or PDF export code named by the sourcemap (AC-REC-23, REV-10)', () => {
+    const dir = seed({
+      'headless.js': 'export const a = 1;\n',
+      'headless.js.map': JSON.stringify({
+        version: 3,
+        sources: ['../../src/recognizer/core/Recognizer.ts', '../../src/export/pdf/pdf-export.ts'],
+        mappings: '',
+      }),
+    });
+    const r = audit(dir);
+    expect(r.status).not.toBe(0);
+    expect(r.out).toContain('contains recognizer code');
+    expect(r.out).toContain('contains PDF export code');
+  });
 });

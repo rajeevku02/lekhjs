@@ -58,10 +58,17 @@ export interface RecognitionSessionPort {
 
 /** What the client reports for telemetry and the `__lekhTest.recognizer.events()` hook. */
 export interface RecognitionClientEvent {
-  readonly kind: 'submit' | 'result' | 'ink' | 'restart' | 'watchdog' | 'disabled';
+  readonly kind: 'submit' | 'result' | 'ink' | 'restart' | 'watchdog' | 'disabled' | 'cost';
   readonly jobId?: number;
   readonly code?: RecErrorCode | 'rec_disabled';
   readonly at: number;
+  /**
+   * `cost` only, after a job's answer was applied: the main-thread milliseconds the job took
+   * (spec 07 §7.6, AC-REC-30): `dispatchMs` (snapshot build + post) and `applyMs` (apply or ink,
+   * and the end of the hold), measured with the client's clock.
+   */
+  readonly dispatchMs?: number;
+  readonly applyMs?: number;
 }
 
 export interface RecognitionClientOptions {
@@ -96,6 +103,8 @@ interface QueuedJob {
 interface InFlight extends QueuedJob {
   readonly jobId: number;
   timer: Handle | null;
+  /** Main-thread ms of the dispatch (snapshot build + post). */
+  dispatchMs: number;
 }
 
 interface Spawned {
@@ -366,6 +375,7 @@ export class RecognitionClient {
     if (f === null || m.jobId !== f.jobId) return; // a late answer for an abandoned job
     this.clearTimer(f);
     this.inflight_ = null;
+    const t0 = this.o_.clock.now();
     if (m.type === 'result') {
       this.emit({ kind: 'result', jobId: f.jobId });
       f.session.apply(m.mutations, f.stroke);
@@ -375,6 +385,7 @@ export class RecognitionClient {
       f.session.applyInk(f.stroke);
     }
     f.session.endRecognitionHold();
+    this.emit({ kind: 'cost', jobId: f.jobId, dispatchMs: f.dispatchMs, applyMs: this.o_.clock.now() - t0 });
     this.settleDrains();
     this.pump();
   }
@@ -416,6 +427,7 @@ export class RecognitionClient {
     if (s === null || !s.ready) return;
     const next = this.queue_.shift();
     if (next === undefined) return;
+    const t0 = this.o_.clock.now();
     const cfg = next.session.currentConfig();
     next.session.beginRecognitionHold();
     let scene: SceneSnapshot;
@@ -428,7 +440,7 @@ export class RecognitionClient {
       this.pump();
       return;
     }
-    const f: InFlight = { ...next, jobId: this.nextJobId_++, timer: null };
+    const f: InFlight = { ...next, jobId: this.nextJobId_++, timer: null, dispatchMs: 0 };
     this.inflight_ = f;
     const stroke = next.stroke.points.slice();
     const job: JobMsg = {
@@ -449,6 +461,7 @@ export class RecognitionClient {
       this.onCrash();
       return;
     }
+    f.dispatchMs = this.o_.clock.now() - t0;
     this.armWatchdog(f);
   }
 

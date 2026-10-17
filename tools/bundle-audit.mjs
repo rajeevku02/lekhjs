@@ -3,7 +3,8 @@
 // Every dist/node/*.js must contain:
 //   - no `pdfkit` or `fontkit` (export/pdf is a separate entry, never in the Node bundle), and no
 //     `fengari` (the Lua oracle is a test-only devDependency, AC-GEN-10);
-//   - no code from src/interaction/ (kashi never loads interaction code);
+//   - no code from src/interaction/ (kashi never loads interaction code), src/recognizer/
+//     (AC-REC-23, REV-10) or src/export/pdf/;
 //   - no reference to the globals `window` or `document`.
 // dist/node/index.js and dist/node/headless.js must also contain no code from src/testing/.
 //
@@ -139,6 +140,11 @@ export function auditDir(dir) {
     }
     for (const s of sources.filter((s) => s.includes('src/interaction/')))
       problems.push(`${name}: contains interaction code (${s})`);
+    // REV-10 / AC-REC-23: kashi and the Node entry never load the recognizer or the PDF exporter.
+    for (const s of sources.filter((s) => s.includes('src/recognizer/')))
+      problems.push(`${name}: contains recognizer code (${s})`);
+    for (const s of sources.filter((s) => s.includes('src/export/pdf/')))
+      problems.push(`${name}: contains PDF export code (${s})`);
     try {
       for (const r of freeGlobalRefs(code, FORBIDDEN_GLOBALS))
         problems.push(`${name}:${String(r.line)}: references the global '${r.name}'`);

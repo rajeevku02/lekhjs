@@ -59,6 +59,7 @@ export class SessionRecognitionPort implements RecognitionSessionPort {
       overlay: session.overlay,
       text: session.text,
       config: session.config,
+      fontEpoch: () => session.runtime.fonts.fontEpoch,
     });
     this.applier_ = new MutationApplier({
       currentStyle: () => session.currentStyle,

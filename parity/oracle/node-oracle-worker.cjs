@@ -27,7 +27,15 @@ nodeCrypto.randomUUID = () => {
 };
 
 const host = require(path.join(KASHI, 'service', 'mcp', 'core', 'host'));
-const ops = require(path.join(KASHI, 'service', 'mcp', 'core', 'ops'));
+// The wasm-era named operations: kashi's service `core/ops.js` runs lekhjs since B2 (Work
+// 01M4X7TCHFB862XGT68GPY071C, spec 10 §3), so the seeding the oracle needs (`ops.seed`) comes from
+// the copy kept beside the T10 parity test until the wasm is deleted.
+const fs = require('node:fs');
+const WASM_OPS = path.join(KASHI, 'test', 'parity', 'wasm', 'ops.js');
+const ops = require(fs.existsSync(WASM_OPS) ? WASM_OPS : path.join(KASHI, 'service', 'mcp', 'core', 'ops'));
+if (typeof ops.seed !== 'function') {
+  throw new Error('node oracle: no wasm-era ops.seed (expected ' + WASM_OPS + ')');
+}
 const stencils = require(path.join(KASHI, 'service', 'mcp', 'stencils'));
 
 const isAbort = (e) => e instanceof WebAssembly.RuntimeError;

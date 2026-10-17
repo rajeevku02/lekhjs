@@ -1,0 +1,17 @@
+id: DR-BE-02
+title: 'An http(s) image src on a stored board is not reported as an unresolved-image note'
+area: BE
+kind: intended-change
+cpp: "kashi's wasm platform recorded every resource the core asked for and the preload had not resolved, http(s) URLs included, so board_render answered a 'not among the images resolved' note for an http(s) src"
+ts: 'kashi on lekhjs: ops.drawMissing reports only res:// references from BoardSession.missingResources(); an http(s) src is neither fetched, drawn nor reported, as the verification spec of the image Work expected (kashi test/core/render-image.test.js)'
+user_visible: true
+fixture: parity/fixtures/DR-BE-02/http-image-src.lekh
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 10 §7 (images: bytes fetched under the caller permissions, res:// only); kashi service/mcp/core/ops.js drawMissing'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

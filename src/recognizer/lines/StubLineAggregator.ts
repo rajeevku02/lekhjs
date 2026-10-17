@@ -5,44 +5,43 @@ import type { RecognizerConfig } from '../core/RecognizerConfig';
 import type { LineAggregator, LineAggregatorModule } from './LineAggregatorModule';
 import { RangeNumber } from './RangeNumber';
 import type { Points, StrokeLine } from './StrokeLine';
+import { LineMerger } from "./LineMerger";
 
 /** C++ stub `LineAggregator`: `process`/`reset` do nothing, `lines()` is empty (never null). */
 export class StubLineAggregator implements LineAggregator {
-  private cost: number;
-  private pts: Points | null = null;
+  // @ts-ignore
+  private lineMerger: LineMerger | null = null;
 
   constructor(config: RecognizerConfig) {
-    this.cost = config.lineAggregatorMaxJoinCost;
+    this.lineMerger = new LineMerger(null, config.lineAggregatorMaxJoinCost, StrokeLine);
   }
 
   setPoints(points: Points): void {
-    this.reset();
-    this.pts = points;
+    this.lineMerger.setPoints(points);
   }
 
-  /** The points last given to `setPoints` (null before), for tests. */
   points(): Points | null {
-    return this.pts;
+    return this.lineMerger.points();
   }
 
   process(): void {
-    // The stub finds no lines.
+    this.lineMerger.process();
   }
 
   lines(): readonly StrokeLine[] {
-    return [];
+    return this.lineMerger.lines();
   }
 
   reset(): void {
-    // Nothing to reset (C++ `reset()` is empty too; `setPoints` replaces the points).
+    this.lineMerger.reset();
   }
 
   minCost(): number {
-    return this.cost;
+    return this.lineMerger.minCost();
   }
 
   setMinCost(cost: number): void {
-    this.cost = cost;
+    this.lineMerger.setMinCost(cost);
   }
 }
 

@@ -336,6 +336,62 @@ export class CommandDispatcher {
     });
   }
 
+  /** C++ `Command::clear` (the toolbar's Clear Canvas): deselect, then clear the page (undoable). */
+  clearCanvas(): void {
+    this.o_.overlay.deselect();
+    this.board.command({ kind: 'clear' });
+    this.board.requestPaint('drawing');
+  }
+
+  /** C++ `ToolMenu::clickResetZoom`. */
+  resetZoom(): void {
+    this.o_.view.resetZoom();
+    this.o_.overlay.refreshSelection();
+  }
+
+  /**
+   * The web zoom control's − / + (C++ `initBottomLeftMenus` `setZoom`): the integer percentage
+   * snapped down to a multiple of 5, reached by `Command::zoomIn(delta)` about the centre.
+   */
+  setZoomPercent(percent: number): void {
+    const zm = Math.trunc(percent / 5) * 5;
+    this.zoomBy(zm / 100 - this.board.view().zoom);
+  }
+
+  /** The integer zoom percentage C++ `LekhGlobal::zoom()` shows (`zoom_info_text`). */
+  zoomPercent(): number {
+    return Math.round(this.board.view().zoom * 100);
+  }
+
+  /**
+   * C++ `CanvasWidget::setViewFromBegnining` (the toolbar's "Move to begining"): 100 %, and on
+   * an infinite canvas the content's top-left brought into view (centred on an axis it fits in,
+   * else 65 px in, clear of the toolbar; the x inset only on a big screen). A fixed-size page
+   * goes back to 100 % at its origin.
+   */
+  goToBeginning(smallScreen: boolean): void {
+    const v = this.board.view();
+    if (!this.o_.view.isInfinite()) {
+      this.board.setView({ zoom: 1, tx: 0, ty: 0 });
+      this.o_.overlay.refreshSelection();
+      return;
+    }
+    const rect = this.board.page().objectStore.hit.boundsOfAll();
+    let sx = 0;
+    let sy = 0;
+    if (rect.width > 0.01 || rect.height > 0.01) {
+      const toolBarDelta = 65;
+      sx = -rect.x;
+      sy = -rect.y;
+      if (rect.width < v.canvasW) sx += (v.canvasW - rect.width) / 2;
+      else if (!smallScreen) sx += toolBarDelta;
+      if (rect.height < v.canvasH) sy += (v.canvasH - rect.height) / 2;
+      else sy += toolBarDelta;
+    }
+    this.board.setView({ zoom: 1, tx: sx, ty: sy });
+    this.o_.overlay.refreshSelection();
+  }
+
   /** C++ `duplicate(obj, displace)`. */
   duplicate(target: EditTarget | null, displace: boolean): void {
     const t = target ?? this.selected();

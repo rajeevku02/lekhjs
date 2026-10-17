@@ -72,6 +72,12 @@ export interface SelectionState {
   readonly anchorRect: Rect;
   readonly actions: readonly SelectionAction[];
   readonly style: StyleSnapshot;
+  /**
+   * The selection menu is not shown (C++ `SelectionMenuWidget::shouldShow` false: the selection
+   * is moving, resizing or rotating; or the whole `SelectionWidget` is hidden: scaling, or text
+   * being edited). Spec 05 §8, AC-UI-23.
+   */
+  readonly menuHidden: boolean;
 }
 
 export interface BoardUiState {

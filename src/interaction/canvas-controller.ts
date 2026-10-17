@@ -141,11 +141,11 @@ export class CanvasController implements RouterLayer {
       return true;
     }
     if (m === InputMode.Erase && onCanvas) {
-      b.ui()?.toast({ message: 'Erase mode is on', kind: 'info' });
+      b.ui()?.toast({ message: 'Erase mode is on', kind: 'info', at });
       return false;
     }
     if (m === InputMode.Laser && onCanvas) {
-      b.ui()?.toast({ message: 'Laser mode is on', kind: 'info' });
+      b.ui()?.toast({ message: 'Laser mode is on', kind: 'info', at });
       return false;
     }
     const obj = this.selectableAt(at);

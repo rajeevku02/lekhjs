@@ -65,6 +65,11 @@ export interface ToastRequest {
   readonly kind: 'info' | 'warn' | 'error';
   readonly durationMs?: number;
   readonly action?: { readonly label: string; readonly id: string };
+  /**
+   * C++ `Toast::show(at, msg)` (`Side::Relative`): the toast's top-left at this view point,
+   * kept on screen. Without it the toast is centred below the top toolbar (`Side::Top`).
+   */
+  readonly at?: Point;
 }
 
 /** An image the user picked (`LekhPlugin.pickImage` natively, `<input type=file>` on the web). */

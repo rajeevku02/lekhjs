@@ -124,6 +124,8 @@ export class BoardView {
       ...(opts.readOnly !== undefined ? { readOnly: opts.readOnly } : {}),
       requestPaint: (l) => {
         this.layers.invalidate(l);
+        // The grid's presence is UI state (`settings.gridOn`); a grid change only repaints.
+        if (l === 'grid') this.scheduleUi();
       },
     });
     this.modes = new InputModeState(defaultInputMode(opts.env));
@@ -336,6 +338,9 @@ export class BoardView {
     if (layer === 'middle') {
       const dp = new Canvas2DDrawingPlatform(ctx, { textPainter: this.session.runtime.textPainter });
       this.overlay.draw(dp);
+      // The selection menu follows every overlay frame (its anchor, and hidden while the
+      // selection moves, resizes or rotates; spec 05 §8, AC-UI-23).
+      if (this.overlay.selectionTarget() !== null) this.scheduleUi();
     }
   }
 
@@ -367,7 +372,8 @@ export class BoardView {
   // ---- the UI state ----
 
   private scheduleUi(): void {
-    if (this.disposed_) return;
+    // `store_` is unset while the constructor runs.
+    if (this.disposed_ || (this.store_ as UiStore | undefined) === undefined) return;
     const sched = this.opts_.scheduleUi;
     if (sched === undefined) {
       this.publishUi();
@@ -405,7 +411,9 @@ export class BoardView {
     const actions: SelectionAction[] = this.catalog.actionsFor(t, ctx).map((a) => ({ ...a }));
     const style = styleSnapshotOf(isMulti(t) ? t.drawingProfile : t.getDrawingProfile());
     const ids = isMulti(t) ? t.objects.map((o) => o.id) : [t.id];
-    return { ids, kind, anchorRect: anchor, actions, style };
+    const r = this.overlay.rect;
+    const menuHidden = r.isMoving || r.isResizing || r.isRotating || r.isScaling || this.textEdit.active;
+    return { ids, kind, anchorRect: anchor, actions, style, menuHidden };
   }
 
   private computeUi(prev?: BoardUiState): BoardUiState {
@@ -434,6 +442,16 @@ export class BoardView {
             text: te.getTextForEditing(),
           };
     const cfg = this.board.config;
+    const settings: BoardUiState['settings'] = {
+      gridOn: doc.grid.present,
+      snapToGrid: cfg.snapToGrid,
+      darkMode: 'system',
+      onlyDrawWithPencil: cfg.onlyDrawWithPencil,
+      recognizeShape: this.modes.get() === InputMode.SmartDraw,
+      keepScreenOn: false,
+      autoConnect: false,
+      showRulers: false,
+    };
     const next: BoardUiState = {
       inputMode: this.modes.get(),
       popup: prev?.popup ?? { for: null },
@@ -457,16 +475,7 @@ export class BoardView {
       cursor: this.cursor.get(),
       theme: this.theme(),
       env: this.env,
-      settings: prev?.settings ?? {
-        gridOn: doc.grid.present,
-        snapToGrid: cfg.snapToGrid,
-        darkMode: 'system',
-        onlyDrawWithPencil: cfg.onlyDrawWithPencil,
-        recognizeShape: this.modes.get() === InputMode.SmartDraw,
-        keepScreenOn: false,
-        autoConnect: false,
-        showRulers: false,
-      },
+      settings: sameSettings(prev?.settings, settings) ? (prev?.settings ?? settings) : settings,
     };
     if (prev !== undefined && sameUi(prev, next)) return prev;
     return Object.freeze(next);
@@ -492,8 +501,15 @@ export class BoardView {
   }
 }
 
+function sameSettings(a: BoardUiState['settings'] | undefined, b: BoardUiState['settings']): boolean {
+  if (a === undefined) return false;
+  const ka = Object.keys(a);
+  return ka.length === Object.keys(b).length && ka.every((k) => Object.is(a[k], b[k]));
+}
+
 function sameUi(a: BoardUiState, b: BoardUiState): boolean {
   return (
+    a.settings === b.settings &&
     a.inputMode === b.inputMode &&
     a.zoom === b.zoom &&
     a.scroll.x === b.scroll.x &&

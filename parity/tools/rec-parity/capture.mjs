@@ -8,10 +8,14 @@
 // out) are kept beside the reference so the comparison can apply the borderline rule (§7.4.2: a
 // discrete mismatch is accepted only if a jitter flips the wasm's own outcome).
 //
-//   node parity/tools/rec-parity/capture.mjs [--url http://127.0.0.1:4009] [--only <name-substring>]
+//   node parity/tools/rec-parity/capture.mjs [--url http://127.0.0.1:4009] [--webapp <lekhboardwebapp checkout>]
+//                                            [--only <name-substring>]
 //
-// Needs lekhboardwebapp/v2 served from the worktree on 127.0.0.1 (never all interfaces), e.g.
-//   (cd ../lekhboardwebapp/v2 && npx vite --host 127.0.0.1 --port 4009 --strictPort)
+// Needs the C++ web board (lekhboardwebapp/v2 with the owner-built wasm) served on 127.0.0.1 (never
+// all interfaces). Its permanent home during the Work is the detached oracle worktree at fa71c40
+// (the default --webapp), because ws/lekhboardwebapp moves to the TS board:
+//   (cd ../../oracle/lekhboardwebapp/v2 && npx vite --host 127.0.0.1 --port 4009 --strictPort)
+// The served wasm must be byte-identical to <webapp>/v2/public/a1/lekhapp.wasm (checked).
 // and Playwright from the e2e package (E2E_NODE_MODULES, default ../e2e/node_modules). Hold the
 // heavy-job lock. Re-captured only on purpose: the files are committed.
 
@@ -30,8 +34,6 @@ const WS = path.resolve(PKG, '..');
 const CORPUS = path.join(PKG, 'test', 'recognizer', 'corpus');
 const REF = path.join(PKG, 'test', 'recognizer', 'parity', 'reference');
 const OUT = path.join(PKG, 'parity', 'out', 'rec-parity');
-const WEBAPP = path.join(WS, 'lekhboardwebapp');
-const WASM = path.join(WEBAPP, 'v2', 'public', 'a1', 'lekhapp.wasm');
 
 const args = process.argv.slice(2);
 /** @param {string} name @param {string} dflt @returns {string} */
@@ -40,6 +42,8 @@ const opt = (name, dflt) => {
   return (i >= 0 ? args[i + 1] : undefined) ?? dflt;
 };
 const URL_ = opt('--url', 'http://127.0.0.1:4009');
+const WEBAPP = path.resolve(opt('--webapp', path.resolve(WS, '..', 'oracle', 'lekhboardwebapp')));
+const WASM = path.join(WEBAPP, 'v2', 'public', 'a1', 'lekhapp.wasm');
 const ONLY = opt('--only', '');
 const JITTERS = 8;
 const JITTER_PX = 0.01;

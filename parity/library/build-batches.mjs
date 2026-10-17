@@ -5,7 +5,7 @@
 // by the C++ apps do.
 //
 //   node parity/library/build-batches.mjs --set v3|v4|v5|core [--out <dir>] [--only <id,…>]
-//                                         [--no-normalise] [--list]
+//                                         [--no-normalise] [--list] [--v4 <dir>]
 //
 // Writes into `--out` (default parity/out/library/<set>/, git-ignored):
 //   <batch>.lekh            the input of both builds (normalised; for v5 the source itself)
@@ -14,9 +14,16 @@
 //   batches.json            every batch of the set, its hashes, and for v4 the v3 batch it is
 //                           covered by (§C.4; for v5 the v4 batch, §C.5 item 1)
 //
-// v5 batches are TS-only (§C.5): their JS generators are not something the C++ oracle can run, so
-// the source is the batch. `--list` prints the batch plan without writing or normalising.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+// v5 batches are TS-only (§C.5): their JS generators are not something the C++ oracle can run. The
+// v5 batch is therefore the normalised v4 batch of the same suffix (from `--v4`, default
+// parity/out/library/v4/) with each Lua `generator.script` replaced by the v5 stencil's JS script at
+// the same object path: the C++ writer rounds positions and sizes when it normalises (cx 1651.095 →
+// 1651.09), so a v5 source compared with a normalised v4 batch would differ by that rounding, not by
+// the generators. build-v5.js changes nothing in wireframe.json but the generator objects, and the
+// user's `text`/`interprettext`/`embedrefs` are kept as the v4 batch carries them. Without a v4
+// batch the v5 source itself is written. `--list` prints the batch plan without writing or
+// normalising.
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -372,6 +379,58 @@ export function planSet(setName) {
   return { set, plan, coreTemplates, params };
 }
 
+const JS_MARKER = '/*lekh-js:';
+
+/**
+ * The templates with a generator in `doc`, by JSON path.
+ * @param {any} doc
+ * @returns {Map<string, any>}
+ */
+function generatorTemplates(doc) {
+  /** @type {Map<string, any>} */
+  const out = new Map();
+  /** @param {any} x @param {string} at */
+  const walk = (x, at) => {
+    if (Array.isArray(x)) x.forEach((v, i) => walk(v, `${at}/${i}`));
+    else if (x !== null && typeof x === 'object') {
+      if (typeof x.id === 'string' && x.generator !== null && typeof x.generator === 'object') out.set(at, x);
+      for (const [k, v] of Object.entries(x)) walk(v, `${at}/${k}`);
+    }
+  };
+  walk(doc, '');
+  return out;
+}
+
+/**
+ * §C.5: the normalised v4 batch with each Lua generator script replaced by the v5 source's JS
+ * script at the same path. Fails unless every Lua generator is replaced by a JS one of the same id.
+ * @param {string} v4Text
+ * @param {any} v5Doc
+ */
+export function withJsGenerators(v4Text, v5Doc) {
+  const doc = JSON.parse(v4Text);
+  const js = generatorTemplates(v5Doc);
+  let swapped = 0;
+  for (const [at, t] of generatorTemplates(doc)) {
+    const g = t.generator;
+    const lua = typeof g.scriptfile === 'string' || (typeof g.script === 'string' && !g.script.startsWith(JS_MARKER));
+    if (!lua) continue;
+    const v5 = js.get(at);
+    if (
+      v5 === undefined ||
+      v5.id !== t.id ||
+      typeof v5.generator.script !== 'string' ||
+      !v5.generator.script.startsWith(JS_MARKER)
+    )
+      throw new Error(`v5: no JS generator for ${t.id} at ${at}`);
+    g.script = v5.generator.script;
+    delete g.scriptfile;
+    delete g.type;
+    swapped++;
+  }
+  return { text: JSON.stringify(doc), swapped };
+}
+
 /**
  * Builds every batch of a set in memory (no normalisation): `{ id, doc, manifest, srcText, srcSha }`.
  * @param {string} setName
@@ -451,6 +510,7 @@ async function main() {
       only: { type: 'string' },
       'no-normalise': { type: 'boolean', default: false },
       list: { type: 'boolean', default: false },
+      v4: { type: 'string' },
     },
   });
   const setName = values.set;
@@ -485,6 +545,7 @@ async function main() {
   const normalise = !values['no-normalise'] && setName !== 'v5';
   if (normalise) holdHeavyLock();
   const out = path.resolve(values.out ?? path.join(PARITY, 'out', 'library', setName));
+  const v4Dir = path.resolve(values.v4 ?? path.join(PARITY, 'out', 'library', 'v4'));
   mkdirSync(out, { recursive: true });
 
   const require = createRequire(import.meta.url);
@@ -515,6 +576,17 @@ async function main() {
         }
         text = r.json;
         Object.assign(norm, { normalised: true, oracle: identity });
+      } else if (setName === 'v5') {
+        const v4File = path.join(v4Dir, `${b.id.replace(/^v5-/, 'v4-')}.lekh`);
+        if (existsSync(v4File)) {
+          const swapped = withJsGenerators(readFileSync(v4File, 'utf8'), b.doc);
+          text = swapped.text;
+          Object.assign(norm, {
+            from_v4: path.relative(PARITY, v4File),
+            from_v4_sha256: sha256(readFileSync(v4File, 'utf8')),
+            generators_swapped: swapped.swapped,
+          });
+        }
       }
       writeFileSync(path.join(out, `${b.id}.lekh`), text);
       const manifest = { ...b.manifest, source_sha256: b.srcSha, sha256: sha256(text), ...norm };

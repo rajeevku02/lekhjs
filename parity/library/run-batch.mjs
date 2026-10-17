@@ -316,9 +316,15 @@ async function main() {
     /** @type {import('./engines.mjs').Box | null} */
     let cropBox = null;
     // §C.5: a TS-only run against a reference run draws the reference's crop, so the pair aligns.
-    const refCrop = values.against
-      ? (JSON.parse(readFileSync(path.join(path.resolve(values.against), 'result.json'), 'utf8')).crop ?? null)
+    const refResult = values.against
+      ? JSON.parse(readFileSync(path.join(path.resolve(values.against), 'result.json'), 'utf8'))
       : null;
+    const refCrop = refResult?.crop ?? null;
+    // A browser reference run crops itself, so its images are placed by the origins it recorded.
+    if (values.ts === 'browser' && refResult !== null && refCrop === null && !refResult.render?.ts?.origin)
+      throw new Error(
+        `--against ${values.against}: the reference run recorded no export origins (run it again with this harness)`,
+      );
     if (values.cpp === 'none' && values.ts === 'node' && refCrop !== null) {
       cropBox = refCrop;
       result['crop'] = cropBox;
@@ -360,6 +366,21 @@ async function main() {
         rt = again;
       }
     }
+    // §C.5: a TS-only run against a reference run whose TS image was re-drawn on the C++ frame
+    // re-draws on that same frame, so both comparisons see what the reference run compared.
+    const refFrame = refResult?.bounds_rule?.frame ?? null;
+    if (values.ts === 'browser' && rc === null && rt.ok && refFrame !== null) {
+      const again = await renderChecked(ts, text, { ...opts, frame: refFrame }, selfdiff);
+      if (again.ok) {
+        result['bounds_rule'] = {
+          register: refResult.bounds_rule.register,
+          from: refResult.batch,
+          ts_origin: rt.origin,
+          frame: refFrame,
+        };
+        rt = again;
+      }
+    }
     result['render'] = {
       cpp: rc
         ? {
@@ -368,6 +389,8 @@ async function main() {
             selfdiff: rc.selfdiff,
             error: rc.error ?? null,
             size: rc.img ? [rc.img.width, rc.img.height] : null,
+            origin: rc.origin ?? null,
+            scale: rc.scale ?? null,
           }
         : null,
       ts: {
@@ -376,6 +399,8 @@ async function main() {
         selfdiff: rt.selfdiff,
         error: rt.error ?? null,
         size: rt.img ? [rt.img.width, rt.img.height] : null,
+        origin: rt.origin ?? null,
+        scale: rt.scale ?? null,
       },
     };
     /** @type {{ level: string, code: string }[]} */
@@ -400,17 +425,22 @@ async function main() {
     if (values.against && rt.ok) {
       const dir = path.resolve(values.against);
       const prev = JSON.parse(readFileSync(path.join(dir, 'result.json'), 'utf8'));
-      const o = prev.crop ? { x: prev.crop.minx, y: prev.crop.miny } : { x: 0, y: 0 };
-      const load = (/** @type {string} */ f) => ({
+      const cropOrigin = prev.crop ? { x: prev.crop.minx, y: prev.crop.miny } : null;
+      const load = (/** @type {string} */ f, /** @type {'cpp' | 'ts'} */ side) => ({
         ok: true,
         img: decodePng(readFileSync(path.join(dir, f))),
-        origin: o,
+        origin: cropOrigin ?? prev.render?.[side]?.origin ?? { x: 0, y: 0 },
         scale,
       });
       if (existsSync(path.join(dir, 'cpp.png')))
-        pairs.push({ label: 'against_cpp', ref: load('cpp.png'), refName: `${prev.batch} cpp` });
+        pairs.push({ label: 'against_cpp', ref: load('cpp.png', 'cpp'), refName: `${prev.batch} cpp` });
       if (existsSync(path.join(dir, 'ts.png')))
-        pairs.push({ label: 'against_ts_exact', ref: load('ts.png'), refName: `${prev.batch} ts`, threshold0: true });
+        pairs.push({
+          label: 'against_ts_exact',
+          ref: load('ts.png', 'ts'),
+          refName: `${prev.batch} ts`,
+          threshold0: true,
+        });
       result['against'] = { run: path.relative(LEKHJS, dir), batch: prev.batch };
     }
     result['comparisons'] = {};

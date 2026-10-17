@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import { test } from 'node:test';
 import { bar, blobs, diffImages, identical } from '../image/diff.mjs';
-import { buildSet, coverage } from '../library/build-batches.mjs';
+import { buildSet, coverage, withJsGenerators } from '../library/build-batches.mjs';
 import { MAX_CELLS, footprint, shelfPack, splitCategory } from '../library/layout.mjs';
 import { alignRules, attribute, cellRules } from '../library/run-batch.mjs';
 
@@ -118,4 +118,31 @@ test('register image rules: DR-ENG-17 re-frames on the C++ origin; cells are cla
   const cells = cellRules(dir, false);
   assert.ok(cells.get('avabodh.wireframe.androiddatepicker')?.includes('DR-GEN-08'));
   assert.ok(cells.get('avabodh.bpmn.dataobject')?.includes('DR-TXT-03'));
+});
+
+test('v5 batch (§C.5): the normalised v4 batch with the Lua scripts swapped for the v5 JS, nothing else', () => {
+  const tpl = (/** @type {any} */ g) => ({ id: 'avabodh.wireframe.button', data: [], generator: g });
+  const v4 = {
+    pages: {
+      p: {
+        objects: { c1: { params: { cx: 1651.09 }, template: tpl({ script: 'function generate() end', text: 'A' }) } },
+      },
+    },
+  };
+  const v5 = {
+    pages: {
+      p: {
+        objects: {
+          c1: { params: { cx: 1651.095 }, template: tpl({ script: '/*lekh-js:1:wireframe/button*/x', text: 'B' }) },
+        },
+      },
+    },
+  };
+  const r = withJsGenerators(JSON.stringify(v4), v5);
+  assert.equal(r.swapped, 1);
+  const o = JSON.parse(r.text).pages.p.objects.c1;
+  assert.equal(o.params.cx, 1651.09);
+  assert.deepEqual(o.template.generator, { script: '/*lekh-js:1:wireframe/button*/x', text: 'A' });
+  const none = { pages: { p: { objects: { c1: { template: { id: 'avabodh.wireframe.button', data: [] } } } } } };
+  assert.throws(() => withJsGenerators(JSON.stringify(v4), none), /no JS generator/);
 });

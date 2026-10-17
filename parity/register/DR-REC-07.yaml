@@ -1,0 +1,17 @@
+id: DR-REC-07
+title: An extended path that becomes a double-line arrow deletes the extended path first
+area: REC
+kind: intended-change
+cpp: 'Recognizer::recognize consumes an extended path through ArrowRecognizer (a double-line arrow converts the two lines) and Recognizer::process then deletes the extended paths (recognizer/Recognizer.cpp:91-103, 143-148): two undo steps, the deletion on top'
+ts: 'recognizer/core/Recognizer.ts runs the extended-path specialists through DeferringCanvasDelegate and emits the deletion first, so a result is at most `delete` then one other mutation (AC-REC-15); the board ends the same, but the first undo reverts the arrow (the two lines come back, the extended path stays deleted) instead of restoring the extended path'
+user_visible: true
+fixture: test/recognizer/core/mutation-shape.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 07 §6.2 invariants, AC-REC-15; found by task R2, filed by task R3'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

@@ -15,6 +15,7 @@ export {
 } from './json';
 export {
   TemplateTextService,
+  type MeasureTap,
   type TemplateConfig,
   type TemplateEnv,
   type TemplateText,

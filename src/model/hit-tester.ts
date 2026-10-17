@@ -216,7 +216,14 @@ export class HitTester implements SceneQuery {
    * `connectObjectDistThreshold / zoom`. Groups are flattened; titles never count.
    */
   objectForConnection(p: Point, excludes: ReadonlySet<LekhObject>, zoom: number): LekhObject | null {
-    const gap = this.scene_.config.connectObjectDistThreshold / zoom;
+    return this.objectForConnectionWithin(p, excludes, this.scene_.config.connectObjectDistThreshold / zoom);
+  }
+
+  /**
+   * `objectForConnection` with the allowed gap given, in canvas units (the recognizer's snapshot
+   * store passes `connectObjectDistThreshold / zoom` of its job's config, spec 07 §6.7).
+   */
+  objectForConnectionWithin(p: Point, excludes: ReadonlySet<LekhObject>, gap: number): LekhObject | null {
     const hit = this.connectionIn(this.candidates(around(p, gap * 2)), p, excludes, gap);
     if (this.verify && this.connectionIn(this.scene_.objects, p, excludes, gap) !== hit) {
       this.mismatch('objectForConnection');

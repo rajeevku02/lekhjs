@@ -61,9 +61,13 @@ export interface TemplateEnv {
 }
 
 /** `TemplateText` over the runtime's `TextLayout` and `FontNameResolver` (the text/ stack). */
+/** Receives every `measure` while tapped (`TemplateTextService.tapMeasures`). */
+export type MeasureTap = (text: string, style: Style, constraint: Size, size: Size) => void;
+
 export class TemplateTextService implements TemplateText {
   private readonly layout_: TextLayout;
   private readonly resolver_: FontNameResolver;
+  private tap_: MeasureTap | null = null;
 
   constructor(layout: TextLayout, resolver: FontNameResolver) {
     this.layout_ = layout;
@@ -71,7 +75,24 @@ export class TemplateTextService implements TemplateText {
   }
 
   measure(text: string, style: Style, constraint: Size): Size {
-    return this.layout_.measure(text, textStyleSnapshot(style, this.resolver_), constraint);
+    const size = this.layout_.measure(text, textStyleSnapshot(style, this.resolver_), constraint);
+    this.tap_?.(text, style, constraint, size);
+    return size;
+  }
+
+  /**
+   * Runs `fn` with every `measure` also reported to `tap`: the recognizer's snapshot builder
+   * records the sizes a re-read of the snapshot objects measures, so the worker, which never
+   * measures text, can answer the same calls (spec 07 §6.4, §6.7).
+   */
+  tapMeasures<T>(tap: MeasureTap, fn: () => T): T {
+    const prev = this.tap_;
+    this.tap_ = tap;
+    try {
+      return fn();
+    } finally {
+      this.tap_ = prev;
+    }
   }
 
   layout(

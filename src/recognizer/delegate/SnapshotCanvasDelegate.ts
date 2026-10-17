@@ -26,25 +26,25 @@ import type { RecognizerConfig } from '../core/RecognizerConfig';
 import { at } from '../lines/RecognizerUtil';
 import type { ObjectId } from './RecMutation';
 import { RecordingCanvasDelegate, type SceneQueries } from './RecordingCanvasDelegate';
-import type { SceneStore, ViewTransform } from './SceneStore';
+import type { SceneStore, RecViewTransform } from './SceneStore';
 
 /** View → canvas (C++ `LekhUtil::mapPoint`: `view / zoom - scroll`). */
-export function toCanvas(view: ViewTransform, p: Point): Point {
+export function toCanvas(view: RecViewTransform, p: Point): Point {
   return new Point((p.x - view.tx) / view.zoom, (p.y - view.ty) / view.zoom);
 }
 
 /** Canvas → view (C++ `LekhUtil::mapPointR`: `(canvas + scroll) × zoom`). */
-export function toView(view: ViewTransform, p: Point): Point {
+export function toView(view: RecViewTransform, p: Point): Point {
   return new Point(p.x * view.zoom + view.tx, p.y * view.zoom + view.ty);
 }
 
 /** Canvas → view for a rect (C++ `LekhUtil::mapRectR`). */
-export function rectToView(view: ViewTransform, r: Rect): Rect {
+export function rectToView(view: RecViewTransform, r: Rect): Rect {
   return new Rect(r.x * view.zoom + view.tx, r.y * view.zoom + view.ty, r.width * view.zoom, r.height * view.zoom);
 }
 
 /** Canvas → view for a path (C++ `LekhUtil::mapPathR`). */
-export function pathToView(view: ViewTransform, path: SimplePath): SimplePath {
+export function pathToView(view: RecViewTransform, path: SimplePath): SimplePath {
   const out = new SimplePath();
   out.setClosed(path.closed());
   for (const pc of path.components) {
@@ -65,7 +65,7 @@ export function pathToView(view: ViewTransform, path: SimplePath): SimplePath {
 export interface SnapshotCanvasDelegateInit {
   readonly store: SceneStore;
   /** The job's view transform (`JobMsg.view`). */
-  readonly view: ViewTransform;
+  readonly view: RecViewTransform;
   /** `JobMsg.strokeWidth` (C++ `currentStrokeWidth()`). */
   readonly strokeWidth: number;
   /** The job's config: `connectObjectDistThreshold` and `multiStrokePathJoinDist` are read here. */
@@ -74,7 +74,7 @@ export interface SnapshotCanvasDelegateInit {
 
 export class SnapshotCanvasDelegate implements SceneQueries {
   private readonly store: SceneStore;
-  private readonly view: ViewTransform;
+  private readonly view: RecViewTransform;
   private readonly strokeWidth: number;
   private readonly config: RecognizerConfig;
 

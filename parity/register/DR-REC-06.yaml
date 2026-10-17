@@ -1,0 +1,17 @@
+id: DR-REC-06
+title: A recognised shape snaps to the grid in canvas space at every zoom and scroll
+area: REC
+kind: bug-fix
+cpp: 'ShapeToLekh builds the new shape in VIEW coordinates with TemplatedObject(…, snapToGridNewObject), which snaps its rect to the grid there, and CanvasWidget::zoomNewlyAddedObject then scales and moves it into canvas space with snapping off (lekh/LekhCanvasDelegate.cpp:260-296), so away from zoom 1 / scroll 0 the shape is snapped to a scaled, shifted grid'
+ts: 'recognizer/client/MutationApplier.ts maps the recognised geometry to canvas space with the job transform first, then builds the object, so its rect snaps to the document grid'
+user_visible: true
+fixture: test/recognizer/client/mutation-applier.view.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 07 §6.6 (geometry mapped with JobMsg.view); task R3'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

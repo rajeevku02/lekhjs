@@ -47,6 +47,7 @@ import { ShapeAggregator } from '../shapes/ShapeAggregator';
 import { ArrowRecognizer } from '../specialists/ArrowRecognizer';
 import { ConnectionRecognizer } from '../specialists/ConnectionRecognizer';
 import { SelfLoopRecognizer } from '../specialists/SelfLoopRecognizer';
+import { DeferringCanvasDelegate } from './DeferringCanvasDelegate';
 import { detectClosedShape } from './detectClosedShape';
 import type { RecognizerContext } from './RecognizerContext';
 
@@ -205,7 +206,18 @@ export class Recognizer {
     }
 
     if (this.extendExistingPath()) {
-      if (this.consumePath(this.recognizedPath[0] as SimplePath, true)) return false;
+      // AC-REC-15: a specialist that takes the extended path (only the double-line arrow can:
+      // `ArrowRecognizer` gives up on single arrows there) still leaves the extended paths to be
+      // deleted, as C++ does. C++ emitted the deletion after the specialist's mutation; here it
+      // goes first, so a result is at most `delete` then one other mutation (same final board).
+      const deferred = new DeferringCanvasDelegate(this.canvas);
+      const consumed = this.consumePath(this.recognizedPath[0] as SimplePath, true, deferred);
+      if (consumed && deferred.pending > 0 && this.deletedObjects.length > 0 && this.recognizedPath.length === 0) {
+        this.canvas.deleteShapes(this.deletedObjects);
+        this.deletedObjects = [];
+      }
+      deferred.flush();
+      if (consumed) return false;
     }
 
     if (this.recognizedPath.length === 0) {
@@ -261,7 +273,7 @@ export class Recognizer {
    * C++ `consumePath`: arrows, then (no self-crossing) connections and self-loops, or (crossing)
    * the star. `thePath` null: the connection-context path of the stroke is used.
    */
-  private consumePath(thePathIn: SimplePath | null, extended: boolean): boolean {
+  private consumePath(thePathIn: SimplePath | null, extended: boolean, canvas: CanvasDelegate = this.canvas): boolean {
     let thePath = thePathIn;
     let linePts: readonly Point[] = this.linePoints;
     if (thePath === null) {
@@ -276,13 +288,13 @@ export class Recognizer {
     const excluded = new Set<ObjectId>(this.deletedObjects);
     const config = this.ctx.config;
 
-    if (new ArrowRecognizer(config).recognize(current, extended, excluded, this.canvas)) {
+    if (new ArrowRecognizer(config).recognize(current, extended, excluded, canvas)) {
       this.recognizedPath = [];
       return true;
     }
 
     if (!hasLoop(linePts)) {
-      if (new ConnectionRecognizer(config).recognize(thePath, current, this.convex, excluded, this.canvas)) {
+      if (new ConnectionRecognizer(config).recognize(thePath, current, this.convex, excluded, canvas)) {
         this.recognizedPath = [];
         this.deletedObjects = [];
         return true;
@@ -290,7 +302,7 @@ export class Recognizer {
       // A fresh stroke from a shape's edge, round outside it and back to the same shape: a
       // self-loop connector. (C++ also requires `strokes_.size() == 1`, always true here.)
       if (!extended && config.recognizeConnection && config.recognizeSelfLoop) {
-        if (new SelfLoopRecognizer(config).recognize(this.stroke, thePath, excluded, this.canvas)) {
+        if (new SelfLoopRecognizer(config).recognize(this.stroke, thePath, excluded, canvas)) {
           this.recognizedPath = [];
           this.deletedObjects = [];
           return true;

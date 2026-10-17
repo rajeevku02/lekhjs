@@ -16,7 +16,7 @@ export {
 } from './CanvasDelegate';
 export type { ObjectId, Pt, RecMutation, RecPathComponent, RecShapeDTO, Seg } from './RecMutation';
 export { flattenPoints, RecordingCanvasDelegate, shapeToDTO, type SceneQueries } from './RecordingCanvasDelegate';
-export type { SceneArrowEnd, SceneArrowObject, SceneConnection, SceneStore, ViewTransform } from './SceneStore';
+export type { SceneArrowEnd, SceneArrowObject, SceneConnection, SceneStore, RecViewTransform } from './SceneStore';
 export {
   pathToView,
   rectToView,
@@ -26,3 +26,12 @@ export {
   toView,
   type SnapshotCanvasDelegateInit,
 } from './SnapshotCanvasDelegate';
+export {
+  ObjectSceneStore,
+  UnknownSceneObjectError,
+  pointOfPt,
+  rectOfSnap,
+  titleContains,
+  type ObjectSceneStoreInit,
+  type TitleBox,
+} from './ObjectSceneStore';

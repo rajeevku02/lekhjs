@@ -94,8 +94,27 @@ function configReads(source: string): string[] {
   return names;
 }
 
+// The recognition job's code: everything under src/recognizer/ but the main-thread client (which
+// reads the ENGINE config, e.g. `snapToGridNewObject` when it builds the recognised objects, spec 07
+// §6.3: "read on the main thread only") and the worker's scene loader (the snapshot objects are read
+// by the model under an engine config, exactly as on the main thread).
+const ENGINE_SIDE = [
+  path.join('src', 'recognizer', 'client') + path.sep,
+  path.join('src', 'recognizer', 'worker', 'WorkerScene.ts'),
+  path.join('src', 'recognizer', 'delegate', 'ObjectSceneStore.ts'),
+];
+
+function jobFiles(dir: string): string[] {
+  return tsFiles(dir).filter((f) => !ENGINE_SIDE.some((e) => path.relative(PKG_ROOT, f).startsWith(e)));
+}
+
 describe('recognizer sources read only declared config fields (AC-REC-05)', () => {
   const SRC = path.join(PKG_ROOT, 'src', 'recognizer');
+
+  it('the engine-side exclusions exist', () => {
+    const all = tsFiles(SRC).map((f) => path.relative(PKG_ROOT, f));
+    for (const e of ENGINE_SIDE) expect(all.some((f) => f.startsWith(e))).toBe(true);
+  });
 
   it('the scanner sees config reads', () => {
     expect(configReads('const a = ctx.config.lineCollConnectDist + cfg.foo; this.env.config?.bar')).toEqual([
@@ -109,7 +128,7 @@ describe('recognizer sources read only declared config fields (AC-REC-05)', () =
     const declared = new Set<string>(RECOGNIZER_CONFIG_KEYS);
     const unknown: string[] = [];
     let reads = 0;
-    for (const f of tsFiles(SRC)) {
+    for (const f of jobFiles(SRC)) {
       const text = readFileSync(f, 'utf8')
         .replace(/\/\/.*$/gm, '')
         .replace(/\/\*[\s\S]*?\*\//g, '');
@@ -123,7 +142,7 @@ describe('recognizer sources read only declared config fields (AC-REC-05)', () =
   });
 
   it('no recognizer source but RecognizerConfig.ts touches the engine Config', () => {
-    const hits = tsFiles(SRC)
+    const hits = jobFiles(SRC)
       .filter((f) => !f.endsWith(path.join('core', 'RecognizerConfig.ts')))
       .filter((f) => /\b(EngineConfig|CONFIG_DEFAULTS)\b/.test(readFileSync(f, 'utf8')));
     expect(hits.map((f) => path.relative(PKG_ROOT, f))).toEqual([]);

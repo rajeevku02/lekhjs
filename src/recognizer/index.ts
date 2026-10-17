@@ -21,9 +21,41 @@ export {
   type ObjectId,
   type RecMutation,
   type RecShapeDTO,
+  type RecViewTransform,
   type SceneStore,
 } from './delegate';
-export { shapeToLekh, type RecognizedObjectSpec } from './client';
+export {
+  MutationApplier,
+  RecognitionClient,
+  SceneSnapshotBuilder,
+  SessionRecognitionPort,
+  SessionStrokeRecognizer,
+  shapeToLekh,
+  type AppliedJob,
+  type CapturedStroke,
+  type RecognitionClientEvent,
+  type RecognitionClientOptions,
+  type RecognitionSessionPort,
+  type RecognitionStats,
+  type RecognizedObjectSpec,
+  type SessionStroke,
+} from './client';
+export {
+  REC_PROTOCOL,
+  recViewOf,
+  type ErrorMsg,
+  type InitMsg,
+  type JobMsg,
+  type ReadyMsg,
+  type RecErrorCode,
+  type RecRequest,
+  type RecResponse,
+  type ResultMsg,
+  type SceneSnapshot,
+  type SnapshotArrow,
+  type SnapshotConnection,
+  type SnapshotObject,
+} from './worker/protocol';
 export {
   defaultLineAggregatorModule,
   stubLineAggregatorModule,

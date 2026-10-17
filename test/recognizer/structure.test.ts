@@ -154,8 +154,10 @@ describe('AC-REC-06: the line aggregator is injected', () => {
     expect(/stubLineAggregatorModule|defaultLineAggregatorModule/.test(strip(src))).toBe(false);
   });
 
-  it('nothing in the recognizer reads defaultLineAggregatorModule but the module surface', () => {
+  it('nothing in the recognizer reads defaultLineAggregatorModule but the module surface and the worker entry', () => {
     const hits = recFiles.filter((f) => /\bdefaultLineAggregatorModule\b/.test(strip(readFileSync(f, 'utf8'))));
-    expect(hits.map((f) => path.relative(REC, f)).sort()).toEqual([path.join('lines', 'index.ts'), 'index.ts'].sort());
+    expect(hits.map((f) => path.relative(REC, f)).sort()).toEqual(
+      [path.join('lines', 'index.ts'), 'index.ts', path.join('worker', 'index.ts')].sort(),
+    );
   });
 });

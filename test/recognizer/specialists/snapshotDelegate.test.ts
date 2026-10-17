@@ -3,14 +3,14 @@
 import { describe, expect, it } from 'vitest';
 import { LineSegment, Point, Rect, SimplePath } from '../../../src/geometry';
 import { RECOGNIZER_CONFIG_DEFAULTS } from '../../../src/recognizer/core';
-import { FetchShapeType, SnapshotCanvasDelegate, type ViewTransform } from '../../../src/recognizer/delegate';
+import { FetchShapeType, SnapshotCanvasDelegate, type RecViewTransform } from '../../../src/recognizer/delegate';
 import { GeoScene, geoLine, geoRect } from '../support/geoScene';
 
 // zoom 2, scroll (10, -20): view = (canvas + scroll) * 2
-const view: ViewTransform = { zoom: 2, tx: 20, ty: -40 };
+const view: RecViewTransform = { zoom: 2, tx: 20, ty: -40 };
 const v = (x: number, y: number): Point => new Point((x + 10) * 2, (y - 20) * 2);
 
-function delegate(scene: GeoScene, vt: ViewTransform = view): SnapshotCanvasDelegate {
+function delegate(scene: GeoScene, vt: RecViewTransform = view): SnapshotCanvasDelegate {
   return new SnapshotCanvasDelegate({ store: scene, view: vt, strokeWidth: 3, config: RECOGNIZER_CONFIG_DEFAULTS });
 }
 
@@ -40,6 +40,7 @@ describe('SnapshotCanvasDelegate', () => {
     expect(p.y).toBeCloseTo(v(300, 250).y, 6);
   });
 
+  // DR-REC-05: C++ intersected the view segment with the canvas outline (right only at zoom 1).
   it('getIntersections: crossings within the view segment, nearest first, in view coordinates', () => {
     const d = delegate(scene());
     const pts = d.getIntersections('S', new LineSegment(v(100, 300), v(450, 300)));
@@ -118,9 +119,9 @@ describe('SnapshotCanvasDelegate', () => {
     const s = scene();
     const path = new SimplePath();
     expect(delegate(s).placePath(path)).toBe(false);
-    const seen: ViewTransform[] = [];
+    const seen: RecViewTransform[] = [];
     const withHook = Object.assign(s, {
-      placePath: (_p: SimplePath, vt: ViewTransform): boolean => {
+      placePath: (_p: SimplePath, vt: RecViewTransform): boolean => {
         seen.push(vt);
         return true;
       },

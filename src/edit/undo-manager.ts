@@ -20,12 +20,17 @@ export interface UndoManagerOptions {
 export interface UndoCheckpoint {
   readonly undo: readonly UserAction[];
   readonly redo: readonly UserAction[];
+  /** The held-back steps while deferring (`beginDefer`), else null. */
+  readonly deferred: readonly UserAction[] | null;
 }
 
 export class UndoManager {
   private undoStack_: UserAction[] = [];
   private redoStack_: UserAction[] = [];
   private readonly opts_: UndoManagerOptions;
+  /** Steps held back during a recognition hold (spec 07 §6.5), pushed on top when it ends. */
+  private deferred_: UserAction[] | null = null;
+  private undeferred_ = 0;
 
   constructor(opts: UndoManagerOptions = {}) {
     this.opts_ = opts;
@@ -72,7 +77,11 @@ export class UndoManager {
    * (spec 03 §14, E-52). Not a C++ member.
    */
   checkpoint(): UndoCheckpoint {
-    return Object.freeze({ undo: this.undoStack_.slice(), redo: this.redoStack_.slice() });
+    return Object.freeze({
+      undo: this.undoStack_.slice(),
+      redo: this.redoStack_.slice(),
+      deferred: this.deferred_ === null ? null : this.deferred_.slice(),
+    });
   }
 
   /** Puts the stacks back as `cp` captured them. */
@@ -81,6 +90,7 @@ export class UndoManager {
     const redoFlag = this.canRedo();
     this.undoStack_ = cp.undo.slice();
     this.redoStack_ = cp.redo.slice();
+    if (this.deferred_ !== null && cp.deferred !== null) this.deferred_ = cp.deferred.slice();
     this.raiseStateChange(undoFlag, this.canUndo(), redoFlag, this.canRedo());
   }
 
@@ -111,10 +121,55 @@ export class UndoManager {
     const undoFlag = this.canUndo();
     const redoFlag = this.canRedo();
     if (raise) act.raise();
+    if (this.deferred_ !== null && this.undeferred_ === 0) {
+      this.deferred_.push(act);
+      this.redoStack_ = [];
+      this.raiseStateChange(undoFlag, this.canUndo(), redoFlag, this.canRedo());
+      return;
+    }
     this.undoStack_.push(act);
     this.redoStack_ = [];
     if (this.undoStack_.length > UNDO_STACK_SIZE) this.undoStack_.shift();
     this.raiseStateChange(undoFlag, this.canUndo(), redoFlag, this.canRedo());
+  }
+
+  // ---- the recognition hold (spec 07 §6.5; not a C++ member) ----
+
+  /**
+   * From now on, steps added go to a held-back list instead of the stack (a local edit that ran
+   * live while a recognition job was in flight, e.g. a selection drag): the recognised result,
+   * applied later through `undeferred`, goes on the stack first, and `endDefer` puts the held-back
+   * steps on top of it, so undo order is the order a synchronous recognizer gives.
+   */
+  beginDefer(): void {
+    this.deferred_ ??= [];
+  }
+
+  get deferring(): boolean {
+    return this.deferred_ !== null;
+  }
+
+  /** Runs `fn` with steps going straight on the stack (the recognition result). */
+  undeferred<T>(fn: () => T): T {
+    this.undeferred_++;
+    try {
+      return fn();
+    } finally {
+      this.undeferred_--;
+    }
+  }
+
+  /** Ends deferring: the held-back steps go on top of the stack, in order. */
+  endDefer(): void {
+    const held = this.deferred_;
+    this.deferred_ = null;
+    if (held === null || held.length === 0) return;
+    const undoFlag = this.canUndo();
+    for (const act of held) {
+      this.undoStack_.push(act);
+      if (this.undoStack_.length > UNDO_STACK_SIZE) this.undoStack_.shift();
+    }
+    this.raiseStateChange(undoFlag, this.canUndo(), this.canRedo(), this.canRedo());
   }
 
   private raiseStateChange(undoBefore: boolean, undoAfter: boolean, redoBefore: boolean, redoAfter: boolean): void {

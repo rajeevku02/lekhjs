@@ -158,6 +158,7 @@ export class BoardView {
         this.scheduleUi();
       },
     });
+    this.recognition.setPendingInkHost(this.overlay);
     this.library = new LibraryDropHandler(this.board, this.view, this.overlay);
     this.canvas = new CanvasController({
       board: this.board,

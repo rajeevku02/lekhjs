@@ -2,13 +2,14 @@
 // SelfLoopRecognizer against SnapshotCanvasDelegate (wrapped in RecordingCanvasDelegate) over a
 // geometry SceneStore instead of LekhCanvasDelegate over the real ObjectStore. Same strokes, same
 // assertions, same tolerances. Config boundary moves go through recognizerConfigWith (cumulative
-// within a case, as the C++ Config edits are); zoom and scroll through the ViewTransform.
+// within a case, as the C++ Config edits are); zoom and scroll through the RecViewTransform.
 //
-// Deferred: three cases also check the laid-out ROUTE of the created connection against the stroke
-// (C++ `drawnRoute` via ConnectionObject::updateConnection) and the undo step. That needs the model's
-// ConnectionObject (task E6) and the MutationApplier (task R3); those assertions are `it.todo`s
-// below. Everything else in those cases (recognised, one connection added, a self-loop on S, its
-// type and param count) is asserted here on the recorded `connect` mutation.
+// Three cases also check the laid-out ROUTE of the created connection against the stroke (C++
+// `drawnRoute` via ConnectionObject::updateConnection) and the undo step: the recorded `connect`
+// mutation is applied by the main thread's MutationApplier to a real board holding S (task R3),
+// and the connector it adds is laid out and measured. Everything else in those cases (recognised,
+// one connection added, a self-loop on S, its type and param count) is asserted on the recorded
+// `connect` mutation.
 import { describe, expect, it } from 'vitest';
 import { isPointInsidePolygon, getDistance, Point, SimplePath } from '../../../src/geometry';
 import { RECOGNIZER_CONFIG_DEFAULTS, recognizerConfigWith, type RecognizerConfig } from '../../../src/recognizer/core';
@@ -17,7 +18,7 @@ import {
   type ParamMap,
   type RecMutation,
   type RecordingCanvasDelegate,
-  type ViewTransform,
+  type RecViewTransform,
 } from '../../../src/recognizer/delegate';
 import {
   SelfLoopKind,
@@ -26,6 +27,84 @@ import {
   type SelfLoopResult,
 } from '../../../src/recognizer/specialists';
 import { GeoScene, geoRect } from '../support/geoScene';
+import { pointLineSegmentDistance, Rect } from '../../../src/geometry';
+import { AddObjectAction } from '../../../src/edit';
+import { ConnectionObject, TemplatedObject } from '../../../src/model';
+import { applierRig } from '../client/applierRig';
+
+/**
+ * Applies `m` (recorded against S) to a real board holding S (avabodh.basic.rectangle, 200 x 100
+ * at (300, 300)) with the MutationApplier; returns the connector it added, the undo depth it
+ * left, and a function that undoes once and counts connectors.
+ */
+function applyToBoard(m: Extract<RecMutation, { op: 'connect' }>, view: RecViewTransform) {
+  const r = applierRig();
+  r.run((ctx) => {
+    const env = ctx.editor.env.codec.env;
+    const t = env.templates.resolver.getTemplate('avabodh.basic.rectangle');
+    if (t === null) throw new Error('no rectangle template');
+    const obj = new TemplatedObject(env.objects, t, new Rect(200, 250, 200, 100), 0, null, S);
+    ctx.editor.tx.run(new AddObjectAction(ctx.editor.env, ctx.doc, [obj]));
+  });
+  const depth0 = r.undoDepth();
+  const out = r.run((ctx) =>
+    r.applier.apply(ctx, [m], {
+      view,
+      revs: new Map([[S, ctx.page.objectStore.getObject(S)?.rev ?? -1]]),
+      pageId: ctx.page.id,
+    }),
+  );
+  expect(out.ok).toBe(true);
+  const cons = r.h.session.editor.doc
+    .activePage()
+    .objectStore.objects.filter((o): o is ConnectionObject => o instanceof ConnectionObject);
+  return {
+    con: cons[0],
+    connections: cons.length,
+    steps: r.undoDepth() - depth0,
+    undoCount: (): number => {
+      r.undo();
+      return r.h.session.editor.doc.activePage().objectStore.objects.filter((o) => o instanceof ConnectionObject)
+        .length;
+    },
+  };
+}
+
+/** C++ `drawnRoute`: the route as drawn, the curve sampled at 65 points, or the polyline. */
+function drawnRoute(con: ConnectionObject): Point[] {
+  con.updateConnection();
+  const bz = con.curves[0];
+  if (bz === undefined) return con.points.slice();
+  const pts: Point[] = [];
+  for (let i = 0; i <= 64; i++) {
+    const t = i / 64;
+    const u = 1 - t;
+    const b0 = u * u * u;
+    const b1 = 3 * u * u * t;
+    const b2 = 3 * u * t * t;
+    const b3 = t * t * t;
+    pts.push(
+      new Point(
+        b0 * bz.point1.x + b1 * bz.point2.x + b2 * bz.point3.x + b3 * bz.point4.x,
+        b0 * bz.point1.y + b1 * bz.point2.y + b2 * bz.point3.y + b3 * bz.point4.y,
+      ),
+    );
+  }
+  return pts;
+}
+
+/** C++ `meanDistanceToRoute` (canvas units). */
+function meanDistanceToRoute(stroke: readonly Point[], route: readonly Point[]): number {
+  let sum = 0;
+  for (const p of stroke) {
+    let best = 1e18;
+    for (let i = 1; i < route.length; i++) {
+      best = Math.min(best, pointLineSegmentDistance(route[i - 1] as Point, route[i] as Point, p).dist);
+    }
+    sum += best;
+  }
+  return sum / stroke.length;
+}
 
 const kPi = Math.PI;
 /** C++ ConnectionObject::Type. */
@@ -100,7 +179,7 @@ class Fixture {
     return Object.keys(this.overrides).length === 0 ? RECOGNIZER_CONFIG_DEFAULTS : recognizerConfigWith(this.overrides);
   }
 
-  viewTransform(): ViewTransform {
+  viewTransform(): RecViewTransform {
     return { zoom: this.zoom, tx: this.scroll.x * this.zoom, ty: this.scroll.y * this.zoom };
   }
 
@@ -162,10 +241,22 @@ describe('SelfLoopRecognizerTest (AC-REC-12)', () => {
       expect(con?.type).toBe(Type.Curve);
       expect(con?.deletedIds).toEqual([]);
     });
-    // Needs ConnectionObject (task E6) and the MutationApplier + undo (task R3).
-    it.todo(
-      'E6/R3: the drawn route follows the stroke (mean distance <= 0.15 * 70) and the add is one undoable action',
-    );
+    it('the drawn route follows the stroke (mean distance <= 0.15 * 70) and the add is one undoable action', () => {
+      const fx = new Fixture();
+      const delegate = fx.delegate();
+      const stroke = arch(kTopMid, 40, 70);
+      expect(fx.recognizer().recognize(fx.viewAll(stroke), null, new Set(), delegate)).toBe(true);
+      const m = connects(delegate.mutations())[0];
+      if (m === undefined) throw new Error('no connect mutation');
+      const b = applyToBoard(m, fx.viewTransform());
+      expect(b.connections).toBe(1);
+      expect(b.con?.getType()).toBe(Type.Curve);
+      const route = drawnRoute(b.con as ConnectionObject);
+      expect(route.length).toBeGreaterThanOrEqual(2);
+      expect(meanDistanceToRoute(stroke, route)).toBeLessThanOrEqual(0.15 * 70);
+      expect(b.steps).toBe(1);
+      expect(b.undoCount()).toBe(0);
+    });
   });
 
   describe('SmoothLoopRoundACornerFollowsTheStrokeAtZoomTwo', () => {
@@ -185,8 +276,24 @@ describe('SelfLoopRecognizerTest (AC-REC-12)', () => {
       expect(cons[0]?.obj2Id).toBe(S);
       expect(cons[0]?.type).toBe(Type.Curve);
     });
-    // Needs ConnectionObject (task E6) and the MutationApplier (task R3).
-    it.todo('E6/R3: the drawn route follows the stroke (mean distance <= 0.15 * 45)');
+    it('the drawn route follows the stroke (mean distance <= 0.15 * 45)', () => {
+      const fx = new Fixture(200, new Point(-40, 25));
+      const stroke: Point[] = [];
+      for (let i = 0; i <= 48; i++) {
+        const t = kPi + (1.5 * kPi * i) / 48;
+        stroke.push(new Point(400 + 45 * Math.cos(t), 250 + 45 * Math.sin(t)));
+      }
+      const delegate = fx.delegate();
+      expect(fx.recognizer().recognize(fx.viewAll(stroke), null, new Set(), delegate)).toBe(true);
+      const m = connects(delegate.mutations())[0];
+      if (m === undefined) throw new Error('no connect mutation');
+      const b = applyToBoard(m, fx.viewTransform());
+      expect(b.con?.getType()).toBe(Type.Curve);
+      const route = drawnRoute(b.con as ConnectionObject);
+      expect(route.length).toBeGreaterThanOrEqual(2);
+      // h is the circle's reach beyond the corner: 45 + 0 (the centre is the corner)
+      expect(meanDistanceToRoute(stroke, route)).toBeLessThanOrEqual(0.15 * 45);
+    });
   });
 
   it('SquareLoopOnTheTopIsThreeStoredSegments', () => {
@@ -227,8 +334,19 @@ describe('SelfLoopRecognizerTest (AC-REC-12)', () => {
       expect(cons[0]?.type).toBe(Type.MultiLine);
       expect(cons[0]?.params).toHaveLength(4);
     });
-    // Needs ConnectionObject (task E6) and the MutationApplier (task R3).
-    it.todo('E6/R3: the drawn route follows the stroke (mean distance <= 0.15 * 56.6)');
+    it('the drawn route follows the stroke (mean distance <= 0.15 * 56.6)', () => {
+      const fx = new Fixture();
+      const delegate = fx.delegate();
+      expect(fx.recognizer().recognize(fx.viewAll(polyline(v)), linesThrough(v), new Set(), delegate)).toBe(true);
+      const m = connects(delegate.mutations())[0];
+      if (m === undefined) throw new Error('no connect mutation');
+      const b = applyToBoard(m, fx.viewTransform());
+      expect(b.con?.getType()).toBe(Type.MultiLine);
+      expect(b.con?.getParams().length).toBe(4);
+      const route = drawnRoute(b.con as ConnectionObject);
+      expect(route.length).toBeGreaterThanOrEqual(2);
+      expect(meanDistanceToRoute(polyline(v), route)).toBeLessThanOrEqual(0.15 * 56.6);
+    });
   });
 
   it('ParamsAreCanvasUnitsAtAnyZoomAndScroll', () => {

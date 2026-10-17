@@ -128,6 +128,42 @@ function newPending(): Pending {
 }
 
 const NO_IDS: readonly string[] = Object.freeze([]);
+const EMPTY_SET: ReadonlySet<string> = Object.freeze(new Set<string>());
+
+/** The queue's marker that ends a recognition hold (internal; never a `SessionEvent`). */
+interface HoldEnd {
+  readonly type: 'recognitionHoldEnd';
+}
+const HOLD_END: HoldEnd = Object.freeze({ type: 'recognitionHoldEnd' });
+type QueueItem = SessionEvent | HoldEnd;
+
+/**
+ * The commands a recognition hold queues behind the result (spec 07 §6.5): the document-mutating
+ * commands a user issues directly (undo/redo, delete, paste-like duplicates, structure, keyboard
+ * moves, a page switch). `select`, `view` and `custom` (the interaction layer's live edits, whose
+ * undo steps are deferred instead) stay live.
+ */
+const HELD_COMMANDS: readonly EditCommand['kind'][] = Object.freeze<EditCommand['kind'][]>([
+  'undo',
+  'redo',
+  'move',
+  'delete',
+  'duplicate',
+  'group',
+  'ungroup',
+  'flip',
+  'zOrder',
+  'clear',
+  'setActivePage',
+]);
+
+/** A recognition hold in progress. */
+interface Hold {
+  /** Events queued behind the result, in arrival order. */
+  readonly held: SessionEvent[];
+  /** Ids the live local edits during the hold changed (they never make a result stale). */
+  readonly touched: Set<string>;
+}
 
 export class BoardSession {
   readonly runtime: Runtime;
@@ -154,7 +190,8 @@ export class BoardSession {
   private selection_: readonly string[] = NO_IDS;
   private viewState_: ViewState | null = null;
 
-  private readonly queue_: SessionEvent[] = [];
+  private readonly queue_: QueueItem[] = [];
+  private hold_: Hold | null = null;
   private draining_ = false;
   private disposed_ = false;
   private loggedAfterDispose_ = false;
@@ -490,11 +527,23 @@ export class BoardSession {
       }
       return;
     }
+    this.enqueue(event);
+  }
+
+  private enqueue(event: QueueItem): void {
     this.queue_.push(event);
     if (this.draining_) return;
     this.draining_ = true;
     try {
       for (let ev = this.queue_.shift(); ev !== undefined; ev = this.queue_.shift()) {
+        if (ev.type === 'recognitionHoldEnd') {
+          this.releaseHold();
+          continue;
+        }
+        if (this.hold_ !== null && this.isHeld(ev)) {
+          this.hold_.held.push(ev);
+          continue;
+        }
         this.runOne(ev);
         // `dispose()` from inside the event: the rest of the queue is dropped.
         if (this.isDisposed) {
@@ -544,6 +593,52 @@ export class BoardSession {
     this.recognitionApplier_ = applier;
   }
 
+  // ---- the recognition hold (spec 07 §6.5) ----
+
+  /**
+   * Starts holding for a recognition job: remote frames and the document-mutating commands of
+   * `HELD_COMMANDS` are queued in arrival order until `endRecognitionHold`; pan, zoom, selection
+   * and the interaction layer's live edits stay live, and the undo steps those edits add are put
+   * on top of the result's when the hold ends. Idempotent.
+   */
+  beginRecognitionHold(): void {
+    if (this.hold_ !== null || this.disposed_) return;
+    this.hold_ = { held: [], touched: new Set() };
+    this.editor.undo.beginDefer();
+  }
+
+  /**
+   * Ends the hold after whatever is queued now (the result's event): the deferred undo steps go on
+   * top, then the held events run, in arrival order, before anything queued later.
+   */
+  endRecognitionHold(): void {
+    if (this.hold_ === null || this.disposed_) return;
+    this.enqueue(HOLD_END);
+  }
+
+  /** Whether a recognition hold is in progress. */
+  get recognitionHeld(): boolean {
+    return this.hold_ !== null;
+  }
+
+  /** Ids that live local edits changed during the current hold (empty when none). */
+  holdTouched(): ReadonlySet<string> {
+    return this.hold_?.touched ?? EMPTY_SET;
+  }
+
+  private isHeld(ev: SessionEvent): boolean {
+    if (ev.type === 'remoteFrame') return true;
+    return ev.type === 'command' && HELD_COMMANDS.includes(ev.command.kind);
+  }
+
+  private releaseHold(): void {
+    const hold = this.hold_;
+    if (hold === null) return;
+    this.hold_ = null;
+    this.editor.undo.endDefer();
+    this.queue_.unshift(...hold.held);
+  }
+
   /**
    * Starts (or restarts) a session timer: after `ms` a `timer` event with `token` is dispatched,
    * and `fn` runs as that event. `dispose()` cancels every timer.
@@ -583,6 +678,7 @@ export class BoardSession {
     if (this.disposed_) return;
     this.disposed_ = true;
     this.queue_.length = 0;
+    this.hold_ = null;
     for (const t of this.timers_.values()) this.options.scheduler.clearTimeout(t.handle);
     this.timers_.clear();
     this.paint_.dispose();
@@ -609,6 +705,9 @@ export class BoardSession {
     try {
       this.handle(ev);
       if (before !== null) this.collectEditChanges(before);
+      if (this.hold_ !== null && ev.type === 'command') {
+        for (const id of this.pending_.changed) this.hold_.touched.add(id);
+      }
       this.flush();
       this.sendOutbox();
     } catch (err) {
@@ -669,7 +768,9 @@ export class BoardSession {
           this.runtime.logger.debug('stale_continuation', { type: ev.type });
           return;
         }
-        this.recognitionApplier_?.(this.commandContext(NO_IDS), ev);
+        this.editor.undo.undeferred(() => {
+          this.recognitionApplier_?.(this.commandContext(NO_IDS), ev);
+        });
         return;
       case 'command':
         if (ev.docGeneration !== undefined && ev.docGeneration !== this.docGeneration_) {

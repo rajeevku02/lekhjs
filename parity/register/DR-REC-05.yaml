@@ -1,0 +1,20 @@
+id: DR-REC-05
+title: A stroke's crossings with a shape outline are found in canvas space at every zoom and scroll
+area: REC
+kind: bug-fix
+cpp: 'LekhCanvasDelegate::getIntersections (lekh/LekhCanvasDelegate.cpp:688-706) intersects the VIEW segment the recognizer passes with the CANVAS outline (no LekhUtil::mapPoint), so the crossings are right only at zoom 1 and scroll 0'
+ts: 'recognizer/delegate/SnapshotCanvasDelegate.ts getIntersections: maps the segment to canvas with the job view, intersects, sorts by distance from its first point and maps the crossings back to view'
+user_visible: true
+# A recognizer case, not a board: the delegate unit cases at zoom 2, translate (20, -40). Stroke-level
+# results that depend on it (connectors and arrowheads ending on an outline away from zoom 1) land
+# with the parity corpus after the LineAggregator handoff (spec 07 §7.4).
+fixture: test/recognizer/specialists/snapshotDelegate.test.ts
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 07 §6.7 row 6; found by task R2, filed by task R3'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

@@ -2,12 +2,15 @@ id: DR-BE-01
 title: 'The backend measures and draws "" and unknown families in Noto Sans instead of DejaVu'
 area: BE
 kind: intended-change
-cpp: "kashi's wasm platform measured and drew every family through @napi-rs/canvas with an unquoted family and a sans-serif fallback; the image installs only fonts-dejavu-core, so \"\" and every family the container lacked were DejaVu Sans at 1.00 x the size per line"
+cpp: 'kashi''s wasm platform measured and drew every family through @napi-rs/canvas with an unquoted family and a sans-serif fallback; the image installs only fonts-dejavu-core, so "" and every family the container lacked were DejaVu Sans at 1.00 x the size per line'
 ts: 'kashi on lekhjs (spec 10 §7): the bundled TTFs are registered per worker (core/fonts.js) and FontNameResolver (host backend) resolves "" and unknown families to Noto Sans; DejaVu is no longer installed. Text-sized shapes the backend creates or re-measures get Noto Sans widths'
 user_visible: true
 fixture: parity/fixtures/DR-BE-01/backend-default-family.lekh
 rule:
-  json: ['params.width/height of auto-sized text in "" or an unknown family on boards the backend measures (switches-off runs only)']
+  json:
+    [
+      'params.width/height of auto-sized text in "" or an unknown family on boards the backend measures (switches-off runs only)',
+    ]
   image:
     compat_switch: fontFallbackCompat
   perf: null

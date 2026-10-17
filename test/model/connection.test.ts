@@ -170,6 +170,29 @@ describe('legacy content and copy', () => {
     expect(con.counters.migrations).toBe(1);
   });
 
+  it('after a settle restore, a migrated legacy label leaves no gap and no text in the drawing (as C++)', () => {
+    // The projector's settle lays out (migrating the legacy label) and restores what serialize
+    // writes; C++ cut the route around the labels it held at draw time, so the draw after the
+    // restore was one unbroken line with no label (kashi T10, compat/edges__labels).
+    const env = kindsEnv();
+    const a = rect(env, 0, 0, 40, 40);
+    const b = rect(env, 200, 0, 40, 40);
+    const con = ConnectionObject.getAutoConnection(env, a, b, AutoType.AutoLine);
+    con.legacyTexts = ['legacy label'];
+    const saved = con.settleSnapshot();
+    layOut(a, b, con);
+    const before = new LogPlatform();
+    con.paint(before, paintEnv());
+    expect(before.log.some((l) => l.startsWith('text legacy label'))).toBe(true);
+    expect(before.log.filter((l) => l.startsWith('M '))).toHaveLength(2); // cut around the label
+    con.restoreSettle(saved);
+    expect(con.legacyTexts).toEqual(['legacy label']);
+    const after = new LogPlatform();
+    con.paint(after, paintEnv());
+    expect(after.log.some((l) => l.startsWith('text'))).toBe(false);
+    expect(after.log.filter((l) => l.startsWith('M '))).toHaveLength(1);
+  });
+
   it('an old auto C connector gets its step fixed by half the narrower end', () => {
     const env = kindsEnv();
     const a = rect(env, 0, 0, 40, 40);

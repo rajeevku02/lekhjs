@@ -399,6 +399,10 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
       this.texts.push(...state.texts);
       this.legacyTexts = state.legacyTexts.slice();
       this.needParamFix_ = state.needParamFix;
+      // C++ cut the route around the labels on every draw, so a draw after the restore had no
+      // gap for the dropped label (and no label): recut it for the labels held now, on the route
+      // the layout computed (which stays).
+      if (state.legacyTexts.some((t) => t !== '')) this.layoutLabels();
     }
     if (state.fill !== null) this.drawingProfile.setFillPaint(state.fill);
   }
@@ -505,7 +509,20 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
     if (this.hasLegacyContent()) this.migrateOldConnection();
     this.connection_.update();
     if (this.drawingProfile.fill()) this.drawingProfile.setNoFill();
+    this.layoutLabels();
+    if (this.drawArrows_) this.arrows.layout(this.getArrowPoints(), this.drawingProfile);
+    this.selRect_ = this.computeSelectionRect();
+    const bp = new BoundsPlatform();
+    bp.addRect(this.selRect_);
+    this.paintContent(bp, -1);
+    return { visualBounds: this.selRect_, extent: bp.bounds() ?? this.selRect_ };
+  }
 
+  /**
+   * The drawn route cut around the labels, and the labels laid out (C++ `drawLines` / `drawPath` /
+   * the curve's computing half, which C++ ran on every draw with the labels the connector held).
+   */
+  private layoutLabels(): void {
     this.drawSegments_ = [];
     this.drawCurves_ = [];
     this.drawPaths_ = [];
@@ -535,12 +552,6 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
               ti.memo ?? undefined,
             );
     }
-    if (this.drawArrows_) this.arrows.layout(this.getArrowPoints(), this.drawingProfile);
-    this.selRect_ = this.computeSelectionRect();
-    const bp = new BoundsPlatform();
-    bp.addRect(this.selRect_);
-    this.paintContent(bp, -1);
-    return { visualBounds: this.selRect_, extent: bp.bounds() ?? this.selRect_ };
   }
 
   /** The non-empty labels' padded rects (the clip rects of C++ `drawPath`/`drawLines`). */

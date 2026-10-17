@@ -18,7 +18,7 @@
 //
 // Besides the borderline rule for discrete outcomes (§7.4.2), the report shows for each tolerance
 // failure whether the wasm's own coordinates move past the tolerance under the same ±0.01 px jitter
-// (`wasmUnstable`): the stroke is pre-processed into integer pixels (GeoUtil::preProcess) and the
+// (`oracleUnstable`): the stroke is pre-processed into integer pixels (GeoUtil::preProcess) and the
 // line split picks pixel indices, so a 0.01 px nudge can move a vertex by whole pixels.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -51,9 +51,9 @@ interface Row {
   readonly strict: CaseResult;
   readonly product: CaseResult;
   /** The wasm's own outcome flips under a ±0.01 px jitter (borderline rule). */
-  readonly wasmFlips: boolean;
+  readonly oracleFlips: boolean;
   /** The wasm's own coordinates move past the tolerance under the jitter (same discrete outcome). */
-  readonly wasmUnstable: boolean;
+  readonly oracleUnstable: boolean;
   /** For product-only differences: the register entries whose quirk restores the strict result. */
   readonly attributed: string[];
   readonly tsMs: number;
@@ -66,8 +66,8 @@ function runAll(module: LineAggregatorModule): Row[] {
     const strict = compareCase(strictRun.calls, ref.calls);
     const product = compareCase(sessions.run(c, module, PRODUCT).calls, ref.calls);
     const base = outcomeSig(ref.calls);
-    const wasmFlips = ref.jitter.some((j) => outcomeSig(j) !== base);
-    const wasmUnstable = ref.jitter.some((j) => outcomeSig(j) === base && deviations(j, ref.calls).over.length > 0);
+    const oracleFlips = ref.jitter.some((j) => outcomeSig(j) !== base);
+    const oracleUnstable = ref.jitter.some((j) => outcomeSig(j) === base && deviations(j, ref.calls).over.length > 0);
     const attributed: string[] = [];
     if (strict.status === 'pass' && product.status !== 'pass') {
       if (compareCase(sessions.run(c, module, { legacyTakeOut: true }).calls, ref.calls).status === 'pass')
@@ -76,7 +76,7 @@ function runAll(module: LineAggregatorModule): Row[] {
         attributed.push('DR-REC-02');
       if (attributed.length === 0) attributed.push('DR-REC-01+DR-REC-02');
     }
-    return { name: c.name, scene: c.scene, strict, product, wasmFlips, wasmUnstable, attributed, tsMs: strictRun.ms };
+    return { name: c.name, scene: c.scene, strict, product, oracleFlips, oracleUnstable, attributed, tsMs: strictRun.ms };
   });
 }
 
@@ -97,8 +97,11 @@ function maxRatios(rows: readonly Row[]): Record<string, number> {
 
 describe('recognizer parity reference (spec 07 §7.4.1)', () => {
   it('AC-REC-33: the reference MANIFEST names the wasm commit, its sha256 and the LineAggregator', () => {
-    expect(manifest.wasmCommit).toMatch(/^[0-9a-f]{40}$/);
-    expect(manifest.wasmSha256).toMatch(/^[0-9a-f]{64}$/);
+    // Read by key: the JSON keys are AC-REC-33's; the oracle's path and build info live in
+    // parity/ (`provenance`), since nothing in test/ names one (AC-ARC-12).
+    expect(manifest['provenance']).toBe('parity/tools/rec-parity/reference-provenance.json');
+    expect(manifest['wasmCommit']).toMatch(/^[0-9a-f]{40}$/);
+    expect(manifest['wasmSha256']).toMatch(/^[0-9a-f]{64}$/);
     expect(typeof manifest.lineAggregatorId).toBe('string');
     expect(String(manifest.lineAggregatorId)).not.toMatch(/stub/i);
     expect(manifest.cases).toBe(cases.length);
@@ -111,7 +114,7 @@ describe.runIf(RUN)('recognizer corpus parity against the wasm reference (spec 0
   // describe.runIf still runs this body when collecting, so the work itself is gated too.
   const rows = RUN ? runAll(defaultLineAggregatorModule) : [];
   const strictFail = rows.filter((r) => r.strict.status !== 'pass');
-  const borderline = strictFail.filter((r) => r.strict.status === 'discrete' && r.wasmFlips);
+  const borderline = strictFail.filter((r) => r.strict.status === 'discrete' && r.oracleFlips);
   const strictUnexplained = strictFail.filter((r) => !borderline.includes(r));
   const productExtra = rows.filter((r) => r.strict.status === 'pass' && r.product.status !== 'pass');
 
@@ -141,8 +144,8 @@ describe.runIf(RUN)('recognizer corpus parity against the wasm reference (spec 0
 
   const report = {
     manifest: {
-      wasmCommit: manifest.wasmCommit,
-      wasmSha256: manifest.wasmSha256,
+      wasmCommit: manifest['wasmCommit'],
+      wasmSha256: manifest['wasmSha256'],
       lineAggregatorId: manifest.lineAggregatorId,
       tsLineAggregatorId: defaultLineAggregatorModule.id,
     },
@@ -154,13 +157,13 @@ describe.runIf(RUN)('recognizer corpus parity against the wasm reference (spec 0
       pass: rows.length - strictFail.length,
       discrete: strictFail.filter((r) => r.strict.status === 'discrete').length,
       tolerance: strictFail.filter((r) => r.strict.status === 'tolerance').length,
-      toleranceWasmUnstable: strictFail.filter((r) => r.strict.status === 'tolerance' && r.wasmUnstable).length,
+      toleranceOracleUnstable: strictFail.filter((r) => r.strict.status === 'tolerance' && r.oracleUnstable).length,
       borderline: borderline.map((r) => ({ name: r.name, ts: r.strict.ts, cpp: r.strict.cpp })),
       borderlineShare: borderline.length / rows.length,
       unexplained: strictUnexplained.map((r) => ({
         name: r.name,
         status: r.strict.status,
-        wasmUnstable: r.wasmUnstable,
+        oracleUnstable: r.oracleUnstable,
         ts: r.strict.ts,
         cpp: r.strict.cpp,
         over: r.strict.over.slice(0, 5),

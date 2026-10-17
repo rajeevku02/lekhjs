@@ -2,7 +2,8 @@
 // test/recognizer/corpus/ goes through `window.__lekhTest.recognizeStroke` of the owner-built C++
 // web wasm (H-REC-2) in headless Chromium, and the recorded delegate calls are written to
 // test/recognizer/parity/reference/<case>.json with reference/MANIFEST.json
-// (`{ wasmCommit, wasmSha256, capturedAt, lineAggregatorId, cases }`, AC-REC-33).
+// (`{ wasmCommit, wasmSha256, capturedAt, lineAggregatorId, cases }`, AC-REC-33); the oracle's path
+// and build info go to reference-provenance.json beside this tool (AC-ARC-12).
 //
 // Each case is also run on 8 seeded ±0.01 px jitters of its stroke; their calls (ink points left
 // out) are kept beside the reference so the comparison can apply the borderline rule (§7.4.2: a
@@ -147,20 +148,33 @@ for (const c of todo) {
 }
 
 const files = readdirSync(REF).filter((f) => f.endsWith('.json') && f !== 'MANIFEST.json');
+// The reference under test/ carries what AC-REC-33 checks (the wasm commit and sha256, the
+// LineAggregator id) and no path or repository name of the oracle (AC-ARC-12: nothing in
+// lekhjs/test names one); where the oracle came from — its path and the C++ build info — is
+// written beside this tool, in parity/ (spec 01 §7 rule 2).
+const PROVENANCE = path.join(HERE, 'reference-provenance.json');
 const manifest = {
   about:
     'Recognizer parity reference (spec 07 §7.4.1), captured by parity/tools/rec-parity/capture.mjs through window.__lekhTest.recognizeStroke.',
   wasmCommit: git(WEBAPP, 'log', '-1', '--format=%H', '--', 'v2/public/a1/lekhapp.wasm'),
-  wasmPath: 'lekhboardwebapp/v2/public/a1/lekhapp.wasm',
   wasmSha256: servedSha,
-  wasmBuild: build.build.info,
-  lekhcoreCommit: build.build.commit,
+  provenance: 'parity/tools/rec-parity/reference-provenance.json',
   lineAggregatorId: build.build.lineAggregator,
   capturedAt: new Date().toISOString(),
   browser: `chromium ${browser.version()} (headless)`,
   jitter: { variants: JITTERS, px: JITTER_PX },
   cases: files.length,
 };
+const provenance = {
+  about: 'Where the recognizer parity reference (test/recognizer/parity/reference/) came from: the C++ web oracle.',
+  wasmCommit: manifest.wasmCommit,
+  wasmPath: 'lekhboardwebapp/v2/public/a1/lekhapp.wasm',
+  wasmSha256: servedSha,
+  wasmBuild: build.build.info,
+  lekhcoreCommit: build.build.commit,
+  capturedAt: manifest.capturedAt,
+};
+writeFileSync(PROVENANCE, `${JSON.stringify(provenance, null, 2)}\n`);
 writeFileSync(path.join(REF, 'MANIFEST.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 writeFileSync(
   path.join(OUT, 'wasm-timings.json'),

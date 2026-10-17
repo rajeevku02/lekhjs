@@ -73,8 +73,9 @@ const cppMeasurer: TextMeasurer = {
   },
 };
 /**
- * The C++ host build's compiled-in catalog: lekhcore/stencils/core, which also holds
- * `wireframe.json` (byte-identical to lekhboard/stencils/v4's). lekhjs/stencils/core leaves the
+ * The C++ host build's compiled-in catalog: the C++ core stencil set, which also holds
+ * `wireframe.json` (byte-identical to the v4 stencil set's, located through
+ * parity/fixture-sets.json `stencilsV4`; AC-ARC-12: test/ names no C++ path). lekhjs/stencils/core leaves the
  * wireframe file out (the apps and the backend read it from the v4/v5 stencil sets), so it is read
  * from the v4 set here; without it a template that embeds a wireframe icon by name (the iPhone
  * fixture's search field and its magnifier) has nothing to draw.

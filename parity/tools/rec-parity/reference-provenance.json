@@ -1,0 +1,14 @@
+{
+  "about": "Where the recognizer parity reference (test/recognizer/parity/reference/) came from: the C++ web oracle.",
+  "wasmCommit": "fa71c403ffb8b131aba8a6183877fdd13724c60f",
+  "wasmPath": "lekhboardwebapp/v2/public/a1/lekhapp.wasm",
+  "wasmSha256": "8bd22d24d203f95b6ec8380290c58f48b59e26ea2ac8b07365965ab98a46cd3d",
+  "wasmBuild": {
+    "lekhcore": "4140fd244e43",
+    "lekhemsdk": "91f422ee8612",
+    "line_aggregator": "owner-real-2026-10-17",
+    "built_at": "2026-10-17T12:19:44Z"
+  },
+  "lekhcoreCommit": "4140fd244e43",
+  "capturedAt": "2026-10-17T17:59:44.540Z"
+}

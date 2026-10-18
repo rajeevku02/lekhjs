@@ -75,9 +75,25 @@ export class LuaToJsConverter {
     if (!isJsonObject(gen)) return { json, generator: null, converted: false };
     const id = stringField(json, 'id') ?? '';
     const ref = this.classify(gen, id);
+    if (ref.kind === 'js') {
+      // A registry over the Lua pack serves Lua for every id it knows, a JS (v5) stencil body
+      // included, so the backend-first mode writes Lua whichever stencil set it reads.
+      const served = this.registry.scriptText(ref.key);
+      if (served === undefined || JS_GENERATOR_MARKER.test(served)) return { json, generator: ref, converted: false };
+      return {
+        json: { ...json, generator: convertBlock(gen, served) },
+        generator: { kind: 'lua', key: ref.key },
+        converted: false,
+      };
+    }
     if (ref.kind !== 'lua') return { json, generator: ref, converted: false };
-    const text = this.registry.scriptText(ref.key);
+    const text = this.luaText(gen) ?? this.registry.scriptText(ref.key);
     if (text === undefined) return { json, generator: unknown('lua_unknown_id'), converted: false };
+    if (!JS_GENERATOR_MARKER.test(text)) {
+      // Lua stays Lua (a registry over the Lua pack, `preserveLua`): the block takes the text in its
+      // stored order, and nothing was converted to JS (no conversion frame, no 5.0 stamp).
+      return { json: { ...json, generator: convertBlock(gen, text) }, generator: ref, converted: false };
+    }
     return {
       json: { ...json, generator: convertBlock(gen, text) },
       generator: { kind: 'js', key: ref.key },
@@ -95,7 +111,7 @@ export class LuaToJsConverter {
     const r = ref ?? this.classify(gen, templateId);
     if (r.kind === 'js' || r.kind === 'lua') {
       const module = this.registry.wireframe(templateId);
-      const text = this.registry.scriptText(r.key);
+      const text = (r.kind === 'lua' ? this.luaText(gen) : undefined) ?? this.registry.scriptText(r.key);
       if (module !== undefined && text !== undefined) {
         return new WireframeGenerator(module, text, generatorFieldsOf(gen), ctx.apply);
       }
@@ -112,6 +128,13 @@ export class LuaToJsConverter {
     }
     return new UnknownGeneratorPlaceholder(gen, ctx.template, r.reason ?? 'unknown_type', ctx.apply);
   };
+
+  /** The stored block's own Lua text when the registry keeps Lua (`preserveLua`), else undefined. */
+  private luaText(gen: JsonObject): string | undefined {
+    if (!this.registry.preserveLua) return undefined;
+    const script = stringField(gen, 'script');
+    return script !== undefined && script !== '' && !JS_GENERATOR_MARKER.test(script) ? script : undefined;
+  }
 
   /** A live generator counts as JS-form (the cloud stamp rule, spec 04 §9.2): never a placeholder. */
   readonly isJsForm = (g: ShapeGenerator): boolean => {

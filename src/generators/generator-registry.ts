@@ -46,6 +46,16 @@ export interface GeneratorRegistryOptions {
   readonly scripts?: GeneratorScriptTable;
   /** The id → module-key rows; default the 34 of spec 04 §5.3. */
   readonly templates?: readonly WireframeTemplateRow[];
+  /**
+   * Keep stored Lua as Lua (the backend-first compatibility mode, kashi `MCP_GENERATOR_FORM=lua`;
+   * Work 01M4X7TCHFB862XGT68GPY071C BF1). A stored block whose inline `script` is Lua keeps that
+   * text, as C++ `LuaShapeGenerator` kept `script_`, instead of taking `scripts`' text for its key;
+   * a block with no inline script (a `scriptfile` stencil) takes `scripts`' text. When `scripts` is
+   * Lua, a JS-form block (a v5 stencil) takes it too, preserveLua or not. With `scripts`
+   * holding the Lua pack, nothing this registry serves is ever JS-form, so the cloud stamp and the
+   * `FrameStamper` never raise a board to 5.0. Default false (spec 04 §7.2: Lua converts to JS).
+   */
+  readonly preserveLua?: boolean;
 }
 
 export class GeneratorRegistry {
@@ -56,6 +66,8 @@ export class GeneratorRegistry {
   readonly scripts: GeneratorScriptTable;
   /** Every generator template id the stencils know (ported or not), → its module key. */
   readonly keyById: ReadonlyMap<string, WireframeKey>;
+  /** Stored Lua keeps its own text (`GeneratorRegistryOptions.preserveLua`). */
+  readonly preserveLua: boolean;
   private readonly legacyScriptfiles_: ReadonlyMap<string, WireframeKey | null>;
 
   constructor(opts: GeneratorRegistryOptions = {}) {
@@ -75,6 +87,7 @@ export class GeneratorRegistry {
     this.wireframeById = byId;
     this.keyById = keyById;
     this.legacyScriptfiles_ = legacy;
+    this.preserveLua = opts.preserveLua === true;
     this.nativeByShape = new Map(Object.entries(opts.natives ?? NATIVE_GENERATORS));
     Object.freeze(this);
   }

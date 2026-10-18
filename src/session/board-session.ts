@@ -254,7 +254,7 @@ export class BoardSession {
       if (holder.codec === null) throw new Error('session codec not ready');
       return holder.codec;
     };
-    this.converter = new LuaToJsConverter(runtime.generators);
+    this.converter = new LuaToJsConverter(opts.generators ?? runtime.generators);
     this.diagnostics = new SessionDiagnostics(runtime.logger);
     this.overlay = new CatalogOverlay(opts.catalog ?? runtime.catalog, {
       resolve: this.converter.resolve,
@@ -495,6 +495,7 @@ export class BoardSession {
       config: runtime.config,
       logger: runtime.logger,
       images: this.lookup_,
+      newContentFont: this.options.newContentFont !== false,
       newId: () => shortIdFromUuid(runtime.ids.next()),
       budgetCheck: () => {
         this.budgetCheck();

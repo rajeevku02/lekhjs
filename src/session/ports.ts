@@ -3,6 +3,7 @@
 // `Canvas2DLike`), `Transport` (`sync/`), `DecodedImage` (`render/`) and the text ports (`text/`)
 // are re-exported here, so hosts import every port from one place.
 import type { Scheduler } from '../base';
+import type { GeneratorRegistry } from '../generators';
 import type { LekhDocument } from '../model';
 import type { DecodedImage } from '../render';
 import type { RecMutation } from '../recognizer';
@@ -179,6 +180,17 @@ export interface SessionOptions {
   readonly autoReconnect?: boolean;
   /** Cooperative deadline; lekhjs calls `check()` at safe points (spec 03 §12.4). */
   readonly budget?: Budget;
+  /**
+   * The generator registry this session's converter uses; default `runtime.generators`. kashi's
+   * backend-first mode passes one over the Lua pack with `preserveLua` (Work 01M4X7TCHFB862XGT68GPY071C
+   * BF1), with a `catalog` built over the same registry.
+   */
+  readonly generators?: GeneratorRegistry;
+  /**
+   * Whether the semantic layer's new nodes and edges get `fontfamily: "Noto Sans"` (spec 06 §9).
+   * Default true. kashi's backend-first mode passes false, as the C++ MCP never set a family.
+   */
+  readonly newContentFont?: boolean;
 }
 
 /** The structural `AbortSignal` part `on(…, signal)` reads (no DOM lib). */

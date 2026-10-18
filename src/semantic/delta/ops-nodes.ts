@@ -277,8 +277,9 @@ export abstract class NodeOps extends CompilationBase {
         return false;
       }
     }
-    // A new node is new content (spec 06 §9): without a `font_family` it gets the bundled default.
-    stampNewContentFont(obj);
+    // A new node is new content (spec 06 §9): without a `font_family` it gets the bundled default
+    // (not in kashi's backend-first mode, `newContentFont: false`, as the C++ MCP).
+    if (this.ctx.newContentFont) stampNewContentFont(obj);
 
     // Text and parameters are generator inputs: the geometry is recomputed after them.
     tmpl.load();
@@ -792,8 +793,9 @@ export abstract class NodeOps extends CompilationBase {
         this.noteLatentKeys(objId, named, sortedKeys(style).filter(latentEdgeKey));
       }
     }
-    // A new edge is new content (spec 06 §9): its labels get the bundled default font.
-    stampNewContentFont(con);
+    // A new edge is new content (spec 06 §9): its labels get the bundled default font (not with
+    // `newContentFont: false`).
+    if (this.ctx.newContentFont) stampNewContentFont(con);
 
     const zOrder = numberOf(memberOf(opNode, KEY.zOrder));
     if (zOrder !== null) {

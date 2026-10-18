@@ -27,6 +27,11 @@ export interface SemanticContext {
   readonly logger: Logger;
   /** Decoded images by key (the per-operation preload map on the server). */
   readonly images: ImageLookup;
+  /**
+   * Whether new nodes and edges get the bundled default font (spec 06 §9, `stampNewContentFont`).
+   * False in kashi's backend-first mode (`SessionOptions.newContentFont`), as the C++ MCP set none.
+   */
+  readonly newContentFont: boolean;
   /** C++ `Platform::newId`: a fresh short id. */
   newId(): string;
   /** The cooperative deadline (spec 03 §12.4): throws `LekhError('budget_exceeded')` once it has passed. */

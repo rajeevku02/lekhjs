@@ -4,7 +4,7 @@
 export { createNodeRuntime, type NodeCanvasFactory, type NodeRuntimeOptions } from './node-runtime';
 export { BoardSession, DeadlineBudget, createRuntime, type Runtime, type RuntimeOptions } from '../session';
 export { TemplateCatalog } from '../template';
-export { GeneratorRegistry, buildCatalog } from '../generators';
+export { GeneratorRegistry, GeneratorScriptTable, buildCatalog, type GeneratorRegistryOptions } from '../generators';
 export { project, compile, generate, lint } from '../semantic';
 export { paintPage, type PaintPageAnswer, type PaintPageOptions } from '../export/raster';
 export { Canvas2DDrawingPlatform } from '../render';

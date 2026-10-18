@@ -20,7 +20,7 @@ rule:
     cells: [avabodh.wireframe.androiddatepicker]
   perf: null
 evidence: 'spec 04 §5.3 script bugs, §14, OQ-20; AC-GEN-21; test/generators/wireframe-dates.test.ts'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-18'
+review: 'Owner in chat, 2026-10-18: "OK, I m signing off on DR-GEN-08 and DR-TXT-03"'

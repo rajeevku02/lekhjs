@@ -14,7 +14,7 @@ The owner reported the results in chat. The old app was the **Mac Catalyst** app
 | DEV-08 (Mac Catalyst variant) | Mac | macOS (not stated) | Mac Catalyst 3.5.x | pass | Owner: "Once the new client opened the board containing lua shapes, the old client was not able to load that with the correct error." kashi log: 2 `format_stamped{origin:'ws', version:'5.0'}` (TS web), then 3 `format_gate_refused{compat:4}` on those 2 boards. No MCP-origin stamp |
 | DEV-08 | iPhone/iPad | — | iOS 3.5.3 | not run | — |
 | DEV-09 | Android | — | Android 3.5.x | not run | — |
-| DEV-10 | — | — | — | not run | Kick of an old client that has the board open at the moment of the stamp: not reported separately |
+| DEV-10 (Mac Catalyst variant) | Mac | macOS (not stated) | Mac Catalyst 3.5.x + TS web | pass | Owner: "The live kick also worked on Mac". The old app had the board open when the TS client stamped it 5.0, and it was kicked with the gate message at once. iOS not run |
 | DEV-12 (Mac Catalyst) | Mac | macOS (not stated) | Mac Catalyst 3.5.x | pass | "Download a copy" of a 5.0 board: the app shows its generic error, "Unable to download" (the OQ-23 default). Recorded in the KB changeset, `/backend/subsystems/documents.md` §3.4.1. iOS and Android not run |
 | DEV-17 (Mac Catalyst) | Mac | macOS (not stated) | Mac Catalyst 3.5.x | pass | The old app renders text from a TS-created shape (`fontfamily: "Noto Sans"`) in the system default font, as expected. The owner's iOS-specific result (DEV-17 asks for iOS) and Android are not run |
 

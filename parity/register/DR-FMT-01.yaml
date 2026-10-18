@@ -13,7 +13,7 @@ rule:
       normaliser: phantom-page
   image: null
   perf: null
-evidence: 'spec 04 §9.1, §14; AC-FMT-29; unit test test/io/document-reader.test.ts'
+evidence: 'spec 04 §9.1, §14; AC-FMT-29; unit test test/io/document-reader.test.ts; P1 over the 10,003-board corpus (2026-10-18): 180 applications per pass (a name and an order per phantom page)'
 status: proposed
 signed_off_by: null
 signed_off_at: null

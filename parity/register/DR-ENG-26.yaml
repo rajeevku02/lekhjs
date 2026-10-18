@@ -16,7 +16,7 @@ rule:
       normaliser: six-digit-data
   image: null
   perf: null
-evidence: 'spec 03 (plain doubles); D2 corpus run: member and polygon cx/cy/width/height/angle differences within 2e-5 of the coordinate magnitudes, and native-generator data expressions (avabodh.table.std) whose six-digit literals differ by one unit in the last digit (unit test in parity/test/json.test.mjs)'
+evidence: 'spec 03 (plain doubles); D2 corpus run: member and polygon cx/cy/width/height/angle differences within 2e-5 of the coordinate magnitudes, and native-generator data expressions (avabodh.table.std) whose six-digit literals differ by one unit in the last digit (unit test in parity/test/json.test.mjs); member angles 2π apart where atan2 lands on the other side of its branch cut; P1 over the 10,003-board corpus (2026-10-18): 1,796 applications per pass'
 status: proposed
 signed_off_by: null
 signed_off_at: null

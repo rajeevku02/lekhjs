@@ -19,7 +19,7 @@ rule:
       normaliser: empty-line-generator-data
   image: null
   perf: null
-evidence: 'spec 03 §8.1, §15 B5; unit test test/text/text-layout.height.test.ts; D2 corpus run: the most frequent P1 difference (an empty floating text box one line taller), and wireframe generators with blank lines in their text (rows after a blank line move by one line height; fixture parity/fixtures/DR-ENG-05/generator-empty-line.lekh)'
+evidence: 'spec 03 §8.1, §15 B5; unit test test/text/text-layout.height.test.ts; D2 corpus run: the most frequent P1 difference (an empty floating text box one line taller), and wireframe generators with blank lines in their text (rows after a blank line move by one line height; fixture parity/fixtures/DR-ENG-05/generator-empty-line.lekh); P1 over the 10,003-board corpus (2026-10-18): 5,353 applications per pass'
 status: proposed
 signed_off_by: null
 signed_off_at: null

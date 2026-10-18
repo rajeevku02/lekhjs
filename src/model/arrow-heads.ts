@@ -129,6 +129,12 @@ export class ArrowHeads {
    * The computing half of C++ `drawArrows`: data regenerated, each arrowhead restyled from the
    * owner's `style` (stroke paint and width, no dash; a filled head gets the stroke colour
    * composited over white), then laid out.
+   *
+   * The head is sized from the owner's stroke width (`default + 2 × strokeWidth`), as every C++
+   * draw after the first sized it: C++ regenerated the data before restyling, from the stroke
+   * width the previous draw had set on the template, so only an object's very first frame used the
+   * arrowhead template's own width (2). Here the restyle comes first, so the size is the same on
+   * every frame (DR-ENG-27).
    */
   layout(pts: readonly ArrowInfo[], style: Style): void {
     this.generateData(pts);
@@ -136,8 +142,8 @@ export class ArrowHeads {
       const d = this.drawnCopy(i);
       const ds = i === 0 ? this.startDs : this.endDs;
       if (pts[i] === undefined || d === null) continue;
-      ArrowHeads.place(d, ds, pts[i]);
       ArrowHeads.restyle(d, style);
+      ArrowHeads.place(d, ds, pts[i]);
       d.layout(ds);
     }
   }

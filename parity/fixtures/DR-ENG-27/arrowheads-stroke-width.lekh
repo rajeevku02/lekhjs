@@ -1,0 +1,1421 @@
+{
+ "info": {
+  "author": "",
+  "description": "",
+  "platform": "1",
+  "title": "Page",
+  "version": "4.2"
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "objects": {
+    "o1": {
+     "type": "templated",
+     "order": 1,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 200,
+      "cy": 100,
+      "width": 300,
+      "height": 24,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 1
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o2": {
+     "type": "templated",
+     "order": 2,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 650,
+      "cy": 100,
+      "width": 300,
+      "height": 24,
+      "angle": 3.14159
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 1
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o3": {
+     "type": "templated",
+     "order": 3,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 1100,
+      "cy": 100,
+      "width": 300,
+      "height": 24,
+      "angle": 0.7
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 1
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o4": {
+     "type": "templated",
+     "order": 4,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 200,
+      "cy": 220,
+      "width": 300,
+      "height": 24,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 2
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o5": {
+     "type": "templated",
+     "order": 5,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 650,
+      "cy": 220,
+      "width": 300,
+      "height": 24,
+      "angle": 3.14159
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 2
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o6": {
+     "type": "templated",
+     "order": 6,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 1100,
+      "cy": 220,
+      "width": 300,
+      "height": 24,
+      "angle": 0.7
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 2
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o7": {
+     "type": "templated",
+     "order": 7,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 200,
+      "cy": 340,
+      "width": 300,
+      "height": 24,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 3
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o8": {
+     "type": "templated",
+     "order": 8,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 650,
+      "cy": 340,
+      "width": 300,
+      "height": 24,
+      "angle": 3.14159
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 3
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o9": {
+     "type": "templated",
+     "order": 9,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 1100,
+      "cy": 340,
+      "width": 300,
+      "height": 24,
+      "angle": 0.7
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 3
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o10": {
+     "type": "templated",
+     "order": 10,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 200,
+      "cy": 460,
+      "width": 300,
+      "height": 24,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 5
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o11": {
+     "type": "templated",
+     "order": 11,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 650,
+      "cy": 460,
+      "width": 300,
+      "height": 24,
+      "angle": 3.14159
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 5
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o12": {
+     "type": "templated",
+     "order": 12,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 1100,
+      "cy": 460,
+      "width": 300,
+      "height": 24,
+      "angle": 0.7
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 5
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o13": {
+     "type": "templated",
+     "order": 13,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 200,
+      "cy": 580,
+      "width": 300,
+      "height": 24,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 9
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o14": {
+     "type": "templated",
+     "order": 14,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 650,
+      "cy": 580,
+      "width": 300,
+      "height": 24,
+      "angle": 3.14159
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 9
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o15": {
+     "type": "templated",
+     "order": 15,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 1100,
+      "cy": 580,
+      "width": 300,
+      "height": 24,
+      "angle": 0.7
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 9
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o16": {
+     "type": "templated",
+     "order": 16,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 200,
+      "cy": 700,
+      "width": 300,
+      "height": 24,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 14
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o17": {
+     "type": "templated",
+     "order": 17,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 650,
+      "cy": 700,
+      "width": 300,
+      "height": 24,
+      "angle": 3.14159
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 14
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    },
+    "o18": {
+     "type": "templated",
+     "order": 18,
+     "arrows": {
+      "start": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      },
+      "end": {
+       "data": [
+        "-w/2",
+        "-h/2",
+        "w/2",
+        "0",
+        "-w/2",
+        "h/2"
+       ],
+       "default": {
+        "angle": 0,
+        "height": 12,
+        "width": 6
+       },
+       "draw": [
+        {
+         "path": "M 0 1 L 2 3 L 4 5"
+        }
+       ],
+       "id": "avabodh.arrow.ar"
+      }
+     },
+     "params": {
+      "cx": 1100,
+      "cy": 700,
+      "width": 300,
+      "height": 24,
+      "angle": 0.7
+     },
+     "template": {
+      "id": "avabodh.basic.polygon",
+      "flags": 15,
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "style": {
+       "strokewidth": 14
+      },
+      "data": [
+       "-w/2",
+       "0",
+       "w/2",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3"
+       }
+      ]
+     }
+    }
+   }
+  }
+ }
+}

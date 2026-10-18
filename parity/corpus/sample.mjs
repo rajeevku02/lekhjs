@@ -44,7 +44,7 @@ const RANDOM = 1200;
 const PER_USER = 4;
 const OFF_SUBSAMPLE = 200;
 
-/** mulberry32 */
+/** mulberry32 @param {number} seed */
 function rng(seed) {
   let a = seed >>> 0;
   return () => {
@@ -60,7 +60,9 @@ function shuffled(arr, r) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(r() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    const t = /** @type {T} */ (a[i]);
+    a[i] = /** @type {T} */ (a[j]);
+    a[j] = t;
   }
   return a;
 }

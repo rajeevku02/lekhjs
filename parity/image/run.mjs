@@ -117,6 +117,47 @@ for (const e of entries) {
   const f = e.data?.rule?.image?.attribute?.object_flag;
   if (typeof f === 'string') attributeRules.push({ id: String(e.data.id), flag: f });
 }
+const phantomRule = entries.some((e) => e.data?.id === 'DR-FMT-01') ? 'DR-FMT-01' : null;
+
+/** UTF-8 byte order of two keys (C++ std::map). @param {string} a @param {string} b */
+const byteOrder = (a, b) => Buffer.compare(Buffer.from(a), Buffer.from(b));
+
+/** The C++ page order: stored keys by byte order, then by order (a phantom at 0). @param {any} doc */
+function cppPageKeys(doc) {
+  const pages = doc.pages;
+  const keys = Object.keys(pages);
+  const phantom = (/** @type {string} */ k) => pages[k]?.order === undefined && pages[k]?.name === undefined;
+  const ord = (/** @type {string} */ k) => (phantom(k) ? 0 : Number(pages[k]?.order ?? 0));
+  return [...keys].sort(byteOrder).sort((a, b) => ord(a) - ord(b));
+}
+/** The stored key of C++ page `i`. @param {any} doc @param {number} i */
+const pagePairKey = (doc, i) => cppPageKeys(doc)[i] ?? '';
+
+/**
+ * The TS page index of each of the first `count` C++ pages when the board holds a phantom page
+ * (a stored page with objects only, DR-FMT-01), else null. C++ (LekhDocument: pages read in key
+ * byte order, then sorted by order, the phantom at 0; insertion sort for so few pages, so ties keep
+ * byte order); TS (io/ JSON reader: the real pages by order, then the phantoms as "Recovered…" in
+ * stored-key order).
+ * @param {any} doc
+ * @param {number} count
+ */
+function phantomPageMap(doc, count) {
+  const pages = doc?.pages;
+  if (pages === null || typeof pages !== 'object' || Array.isArray(pages)) return null;
+  const keys = Object.keys(pages);
+  const phantom = (/** @type {string} */ k) => pages[k]?.order === undefined && pages[k]?.name === undefined;
+  if (!keys.some(phantom)) return null;
+  const ord = (/** @type {string} */ k) => (phantom(k) ? 0 : Number(pages[k]?.order ?? 0));
+  const cpp = [...keys].sort(byteOrder).sort((a, b) => ord(a) - ord(b));
+  const real = keys
+    .filter((k) => !phantom(k))
+    .sort(byteOrder)
+    .sort((a, b) => ord(a) - ord(b));
+  const ts = [...real, ...keys.filter(phantom)];
+  return cpp.slice(0, count).map((k) => ts.indexOf(k));
+}
+
 const alignRule = entries.find((e) => e.data?.rule?.image?.align === 'reference-origin')?.data?.id ?? null;
 
 // ---- static servers and the browser ----
@@ -254,8 +295,11 @@ async function openPage(engine) {
  * @param {string} text
  * @param {number[] | null} scales
  * @param {boolean} compat
+ * @param {any} [wrapCands]
+ * @param {any} [refs]
+ * @param {number[] | null} [indices]
  */
-async function render(engine, text, scales, compat, wrapCands = null, refs = null) {
+async function render(engine, text, scales, compat, wrapCands = null, refs = null, indices = null) {
   const t0 = Date.now();
   const { context, page, net } = await openPage(engine);
   try {
@@ -287,9 +331,11 @@ async function render(engine, text, scales, compat, wrapCands = null, refs = nul
         ? await page.evaluate(`(${overlongWordsInPage.toString()})(${JSON.stringify(wrapCands)})`)
         : [];
     const n = Math.min(MAX_PAGES, loaded.pages);
+    const list = indices ?? Array.from({ length: n }, (_, k) => k);
     const pages = [];
-    for (let i = 0; i < n; i++) {
-      const ref = refs === null ? null : (refs[i] ?? null);
+    for (let k = 0; k < list.length; k++) {
+      const i = list[k] ?? k;
+      const ref = refs === null ? null : (refs[k] ?? null);
       // The C++ board fetches a page's res:// images only when that page is drawn (an export of a
       // page other than the active one starts them and draws without): export, let the fetches
       // finish and decode, and export again until an export starts none (TS awaits its images).
@@ -343,7 +389,7 @@ async function render(engine, text, scales, compat, wrapCands = null, refs = nul
         {
           i,
           o: EXPORT,
-          scales: scales === null ? [1, 0.5, 0.25, 0.125, 0.0625] : [scales[i] ?? 1],
+          scales: scales === null ? [1, 0.5, 0.25, 0.125, 0.0625] : [scales[k] ?? 1],
           ref,
           maxPixels: MAX_PIXELS,
         },
@@ -412,6 +458,7 @@ function rectMask(
  */
 function comparePage(c, t, flags) {
   const scale = c.scale;
+  /** @type {Record<string, any>} */
   const r = {
     status: '',
     scale,
@@ -461,7 +508,7 @@ function comparePage(c, t, flags) {
   // size each way: text that overflows its box (C++ lets an over-long word or a CJK line run past
   // the box, DR-TXT-03) and stroke or arrowhead overhang are the object's own pixels.
   const hit = (/** @type {any} */ bb) =>
-    objs.filter((o) => {
+    objs.filter((/** @type {any} */ o) => {
       const gx = 2 + 0.3 * o.px.w;
       const gy = 2 + 0.3 * o.px.h;
       return (
@@ -481,7 +528,7 @@ function comparePage(c, t, flags) {
   const flagsUnder = {};
   for (const blob of bl) {
     const under = hit(blob);
-    const fl = new Set(under.flatMap((o) => o.flags.concat(`kind:${o.kind}`)));
+    const fl = new Set(under.flatMap((/** @type {any} */ o) => o.flags.concat(`kind:${o.kind}`)));
     const rule = attributeRules.find((ar) => fl.has(ar.flag));
     if (rule !== undefined) {
       applied.add(rule.id);
@@ -506,7 +553,9 @@ function comparePage(c, t, flags) {
     return { ...r, status: 'pass_rules', a, b };
 
   // §B.5.2 masking fallback: text objects with ≥ 2 lines, dilated by 2 px, on both images.
-  const multi = objs.filter((o) => o.flags.includes('multiline-text')).map((o) => o.px);
+  const multi = objs
+    .filter((/** @type {any} */ o) => o.flags.includes('multiline-text'))
+    .map((/** @type {any} */ o) => o.px);
   if (multi.length > 0) {
     const m = rectMask(d.width, d.height, multi);
     const masked = m.count / d.total;
@@ -517,7 +566,7 @@ function comparePage(c, t, flags) {
     let un = dm.count;
     let lg = 0;
     for (const blob of blm) {
-      const fl = new Set(hit(blob).flatMap((o) => o.flags.concat(`kind:${o.kind}`)));
+      const fl = new Set(hit(blob).flatMap((/** @type {any} */ o) => o.flags.concat(`kind:${o.kind}`)));
       if (attributeRules.some((ar) => fl.has(ar.flag))) un -= blob.pixels;
       else lg = Math.max(lg, blob.pixels);
     }
@@ -528,6 +577,55 @@ function comparePage(c, t, flags) {
     }
   }
   return { ...r, status: 'fail', a, b };
+}
+
+/**
+ * For a phantom-page board: the TS page nearest each C++ page by drawing rectangle (origin and
+ * size in board points, from a scale-0.125 export of every TS page, at most 16), falling back to
+ * `guess` on a tie. Returns TS indices aligned with `cppPages`.
+ * @param {string} text
+ * @param {any[]} cppPages
+ * @param {number[]} guess
+ */
+async function pairByGeometry(text, cppPages, guess) {
+  const { context, page } = await openPage('ts');
+  try {
+    const geo = await page.evaluate(
+      async (/** @type {{ text: string, compat: boolean }} */ a) => {
+        const t = /** @type {any} */ (globalThis).__lekhTest;
+        t.setConfig({ lineSpacingCompat: a.compat, fontFallbackCompat: a.compat });
+        await t.loadDoc(a.text, { name: 'pairing' });
+        await t.settle();
+        const out = [];
+        for (let j = 0; j < Math.min(16, t.pageCount()); j++) {
+          const e = await t.exportPage(j, { region: 'drawing', padding: 20, scale: 0.125, background: false });
+          out.push({ ox: e.origin.x, oy: e.origin.y, w: e.width / 0.125, h: e.height / 0.125 });
+        }
+        return out;
+      },
+      { text, compat: COMPAT },
+    );
+    const used = new Set();
+    return cppPages.map((cp, i) => {
+      if (!cp?.ok) return guess[i] ?? i;
+      const w = cp.img.width / cp.scale;
+      const h = cp.img.height / cp.scale;
+      let best = guess[i] ?? i;
+      let bestD = Infinity;
+      geo.forEach((/** @type {any} */ g, /** @type {number} */ j) => {
+        if (used.has(j)) return;
+        const d = Math.abs(g.ox - cp.origin.x) + Math.abs(g.oy - cp.origin.y) + Math.abs(g.w - w) + Math.abs(g.h - h);
+        if (d < bestD - 1e-9 || (Math.abs(d - bestD) < 1e-9 && j === guess[i])) {
+          bestD = d;
+          best = j;
+        }
+      });
+      used.add(best);
+      return best;
+    });
+  } finally {
+    await context.close().catch(() => {});
+  }
 }
 
 /** Deterministic per-board choice for the self-diff (§B.3 rule 3). @param {string} idx */
@@ -549,6 +647,7 @@ if (!existsSync(runJson)) {
       return null;
     }
   };
+  /** @type {Record<string, any>} */
   const id = {};
   for (const e of /** @type {const} */ (['cpp', 'ts'])) {
     const { context, page } = await openPage(e);
@@ -605,13 +704,28 @@ for (const { idx, file } of inputs) {
             p.ok ? { ox: p.origin.x, oy: p.origin.y, w: p.img.width, h: p.img.height } : null,
           )
         : null;
-    const t = await withTimeout(render('ts', text, scales, COMPAT, wrapCandidates(doc), refs), BOARD_TIMEOUT);
+    // DR-FMT-01: C++ shows a phantom page (objects only) at order 0, TS after the real pages; the
+    // pages are paired by their stored key, not by index.
+    let tsIndices = c.ok ? phantomPageMap(doc, c.pages.length) : null;
+    // The key-order guess is checked against the pages' drawing rectangles: each C++ page is paired
+    // with the TS page whose rectangle (origin and size, board points) is nearest.
+    if (tsIndices !== null) tsIndices = await pairByGeometry(text, c.pages, tsIndices);
+    const t = await withTimeout(
+      render('ts', text, scales, COMPAT, wrapCandidates(doc), refs, tsIndices),
+      BOARD_TIMEOUT,
+    );
+    if (tsIndices !== null) row.page_map = tsIndices;
     // text-wrap (DR-TXT-03): an over-long word, or CJK text (native wrap).
     for (const id of t.overlong ?? []) flags.set(id, [...(flags.get(id) ?? []), 'text-wrap']);
     for (const [id, f] of flags)
       if (f.includes('cjk-text') && !f.includes('text-wrap')) flags.set(id, [...f, 'text-wrap']);
     row.ms = { cpp: c.ms, ts: t.ms };
     row.net = { cpp: c.net, ts: t.net };
+    if (!c.ok || !t.ok)
+      row.load_error = {
+        cpp: c.ok ? null : String(c.error).slice(0, 120),
+        ts: t.ok ? null : String(t.error).slice(0, 120),
+      };
     if (c.net.blocked + t.net.blocked > 0) row.status = 'harness:blocked';
     else if (c.net.resMissing + t.net.resMissing > 0) row.status = 'harness:res_missing';
     else if (!c.ok && !t.ok) row.status = 'both_fail';
@@ -628,7 +742,16 @@ for (const { idx, file } of inputs) {
           row.pages.push({ i, status: !cp?.ok ? 'cpp_export_fail' : 'ts_export_fail' });
           continue;
         }
+        /** @type {any} */
         const res = comparePage(cp, tp, flags);
+        if (tsIndices !== null && tsIndices[i] !== i && phantomRule !== null) {
+          res.rules.push(phantomRule);
+          if (res.status === 'pass') res.status = 'pass_rules';
+          // The pairing is checked: the TS page's objects must be the C++ page's stored ones.
+          const ids = new Set(Object.keys(doc.pages[pagePairKey(doc, i)]?.objects ?? {}));
+          if ((tp.objects ?? []).some((/** @type {any} */ o) => !ids.has(o.id)))
+            /** @type {any} */ (res).page_map_mismatch = true;
+        }
         const { a, b, ...rest } = res;
         row.pages.push({ i, ...rest });
         if (opt.save === 'all' || (opt.save === 'fail' && !['pass', 'pass_rules'].includes(res.status))) {
@@ -644,7 +767,7 @@ for (const { idx, file } of inputs) {
       // §B.3 rule 3: self-diff of both builds in fresh contexts on a seeded 1 %.
       if (selfdiffPick(idx)) {
         const c2 = await withTimeout(render('cpp', text, null, COMPAT), BOARD_TIMEOUT);
-        const t2 = await withTimeout(render('ts', text, scales, COMPAT, null, refs), BOARD_TIMEOUT);
+        const t2 = await withTimeout(render('ts', text, scales, COMPAT, null, refs, tsIndices), BOARD_TIMEOUT);
         const same = (/** @type {any} */ x, /** @type {any} */ y) =>
           x.ok &&
           y.ok &&

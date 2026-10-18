@@ -177,7 +177,10 @@ async function editScript(/** @type {Record<string, number>} */ done) {
   const T = (/** @type {string} */ id) => page.getByTestId(id).first();
   const view = await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.getView());
   // Empty space: the view moved left of the content, where a right-click offers the add items.
-  await page.evaluate((v) => /** @type {any} */ (globalThis).__lekhTest.setView({ zoom: 1, tx: 900, ty: v.ty }), view);
+  await page.evaluate(
+    (/** @type {any} */ v) => /** @type {any} */ (globalThis).__lekhTest.setView({ zoom: 1, tx: 900, ty: v.ty }),
+    view,
+  );
   await page.keyboard.press('v');
   for (let i = 0; i < 20; i++) {
     await step(done, 'add shape', async () => {
@@ -287,7 +290,9 @@ async function editScript(/** @type {Record<string, number>} */ done) {
   });
 }
 
+/** @type {any[]} */
 const series = [];
+/** @type {Record<string, number>} */
 const steps = {};
 const t0 = Date.now();
 for (let c = 1; c <= CYCLES; c++) {
@@ -370,14 +375,16 @@ async function census(/** @type {string} */ file) {
         (/** @type {any} */ e) =>
           e.name_or_index === 'prototype' || String(e.fromNode?.name ?? '').startsWith('system / ObjectTemplateInfo'),
       );
-      if (!proto) counts[n.name]++;
+      if (!proto) counts[n.name] = (counts[n.name] ?? 0) + 1;
     }
     if (n.name.includes('HTMLCanvasElement')) {
       canvas++;
       if (n.name.startsWith('Detached') || n.is_detached === true) detachedCanvas++;
     }
   });
-  return { ...counts, HTMLCanvasElement: canvas, detached_HTMLCanvasElement: detachedCanvas };
+  /** @type {Record<string, number>} */
+  const out = { ...counts, HTMLCanvasElement: canvas, detached_HTMLCanvasElement: detachedCanvas };
+  return out;
 }
 const maybe = async (/** @type {string} */ f) => (existsSync(f) ? census(f) : null);
 const retained = {

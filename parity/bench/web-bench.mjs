@@ -218,7 +218,7 @@ async function pass(engine) {
     try {
       new PerformanceObserver((l) => {
         for (const e of l.getEntries()) g.__longTasks.push(e.duration);
-      }).observe({ type: 'longtask', buffered: true });
+      }).observe(/** @type {any} */ ({ type: 'longtask', buffered: true }));
     } catch {
       /* no longtask support */
     }
@@ -227,7 +227,7 @@ async function pass(engine) {
   await page.goto(`${origin}/?offline=true&lekhtest=1`);
   await page.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, { timeout: 60000 });
   await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.ready());
-  const isolated = await page.evaluate(() => globalThis.crossOriginIsolated);
+  const isolated = await page.evaluate(() => /** @type {any} */ (globalThis).crossOriginIsolated);
   /** @type {Record<string, any>} */
   const out = { _meta: { engine, isolated, readyMs: Date.now() - tNav } };
   for (const b of BOARDS) {
@@ -286,7 +286,7 @@ async function pass(engine) {
           for (const kind of ['near', 'connection']) {
             for (let i = 0; i < pts.length; i += 2 * B) {
               const r = t.hitTest(pts.subarray(i, i + 2 * B), kind);
-              hit[kind].push(r.ms / B);
+              hit[kind]?.push(r.ms / B);
             }
           }
           res.hit = hit;
@@ -384,8 +384,8 @@ function envRecord() {
     chromium: browser.version(),
     node: process.version,
     lekhjs: sh('git', ['-C', LEKHJS, 'rev-parse', '--short', 'HEAD']),
-    quiet: !human && os.loadavg()[0] < 0.3,
-    env: !human && os.loadavg()[0] < 0.3 ? 'quiet' : 'shared',
+    quiet: !human && (os.loadavg()[0] ?? 1) < 0.3,
+    env: !human && (os.loadavg()[0] ?? 1) < 0.3 ? 'quiet' : 'shared',
   };
 }
 
@@ -531,7 +531,7 @@ const meta = {
   cold_ms: { cpp: runs.cpp.map((r) => r._meta.cold?.ms ?? null), ts: runs.ts.map((r) => r._meta.cold?.ms ?? null) },
   errors: Object.fromEntries(
     BOARDS.map((b) => [b.set, [...runs.cpp, ...runs.ts].filter((r) => r[b.name]?.error).length]).filter(
-      ([, n]) => n > 0,
+      ([, n]) => Number(n) > 0,
     ),
   ),
   table,

@@ -302,6 +302,8 @@ async function pass(engine) {
           if (a.exportPng && m.has('P-07a')) {
             /** @type {Record<string, number>} */
             const ex = {};
+            // §9 edge case 5: warm values only — one discarded export first (lazy chunks, encoder).
+            await t.exportPage(0, { region: 'drawing', padding: 20, scale: 1, background: true });
             for (const sc of [1, 2]) {
               const e0 = performance.now();
               const e = await t.exportPage(0, { region: 'drawing', padding: 20, scale: sc, background: true });

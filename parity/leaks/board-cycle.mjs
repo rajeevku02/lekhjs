@@ -19,6 +19,7 @@
 // C++ board cannot be unmounted, its closeBoard loads an empty document).
 import {
   createReadStream,
+  readFileSync,
   existsSync,
   mkdirSync,
   statSync,
@@ -125,6 +126,26 @@ await page.route('**/*', (/** @type {any} */ r) => {
   blocked++;
   return r.abort();
 });
+// The insert-image file picker is answered in the page: a click on an <input type=file> sets the
+// synthetic PNG as its files and fires `change`, as the browser does after a pick. Playwright's
+// intercepted file chooser (page.waitForEvent('filechooser')) keeps every input it served alive in
+// Blink, ~10 DOM nodes and 2 listeners per pick, measured on a bare page with no board at all; it
+// would charge the harness's own retention to the board.
+await page.addInitScript(
+  (/** @type {number[]} */ bytes) => {
+    const g = /** @type {any} */ (globalThis);
+    const proto = g.HTMLInputElement.prototype;
+    const click = proto.click;
+    proto.click = /** @this {any} */ function () {
+      if (this.type !== 'file') return click.call(this);
+      const dt = new g.DataTransfer();
+      dt.items.add(new File([new Uint8Array(bytes)], 'synthetic.png', { type: 'image/png' }));
+      this.files = dt.files;
+      setTimeout(() => this.dispatchEvent(new Event('change', { bubbles: true })), 0);
+    };
+  },
+  [...readFileSync(imgFile)],
+);
 await page.addInitScript(() => {
   try {
     localStorage.setItem('files:settings/userskill', JSON.stringify({ misc_skill: { info_dialog_acked: true } }));
@@ -277,15 +298,12 @@ async function editScript(/** @type {Record<string, number>} */ done) {
     await T('shapes_btn').click({ timeout: 3000 });
   });
   await step(done, 'insert image', async () => {
-    const chooser = page.waitForEvent('filechooser', { timeout: 3000 });
+    const before = await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.objects().length);
     await page.mouse.click(900, 300, { button: 'right' });
     await page.locator('[data-testid="popover-contextMenu"] [data-item-id="insert_image"]').click({ timeout: 3000 });
-    const fc = await chooser;
-    await fc.setFiles(imgFile);
-    // Playwright's FileChooser holds an ElementHandle to the page's <input type=file>; release it,
-    // or the harness itself retains the input (and its shadow tree) once per cycle.
-    await fc.element().dispose();
     await page.waitForTimeout(500);
+    const after = await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.objects().length);
+    if (!(after > before)) throw new Error('no image inserted');
     await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.settle());
   });
   await step(done, 'pan zoom', async () => {

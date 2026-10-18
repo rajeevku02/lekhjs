@@ -507,16 +507,15 @@ function comparePage(c, t, flags) {
   // A blob is over an object when it meets the object's rectangle grown by 2 px and by 30 % of its
   // size each way: text that overflows its box (C++ lets an over-long word or a CJK line run past
   // the box, DR-TXT-03) and stroke or arrowhead overhang are the object's own pixels.
+  // An object flagged text-wrap (DR-TXT-03) also owns blobs anywhere in its horizontal band: a C++
+  // line that never wrapped (CJK, Thai, a URL) runs past the box sideways, any distance.
   const hit = (/** @type {any} */ bb) =>
     objs.filter((/** @type {any} */ o) => {
       const gx = 2 + 0.3 * o.px.w;
       const gy = 2 + 0.3 * o.px.h;
-      return (
-        bb.x < o.px.x + o.px.w + gx &&
-        o.px.x - gx < bb.x + bb.w &&
-        bb.y < o.px.y + o.px.h + gy &&
-        o.px.y - gy < bb.y + bb.h
-      );
+      const band = bb.y < o.px.y + o.px.h + gy && o.px.y - gy < bb.y + bb.h;
+      if (band && o.flags.includes('text-wrap')) return true;
+      return band && bb.x < o.px.x + o.px.w + gx && o.px.x - gx < bb.x + bb.w;
     });
   let unexplained = d.count;
   let largestUnexplained = 0;
@@ -715,7 +714,8 @@ for (const { idx, file } of inputs) {
       BOARD_TIMEOUT,
     );
     if (tsIndices !== null) row.page_map = tsIndices;
-    // text-wrap (DR-TXT-03): an over-long word, or CJK text (native wrap).
+    // text-wrap (DR-TXT-03): an over-long word or a wrapping hyphen/slash paragraph (measured in
+    // the TS page), or CJK/Thai text (native wrap).
     for (const id of t.overlong ?? []) flags.set(id, [...(flags.get(id) ?? []), 'text-wrap']);
     for (const [id, f] of flags)
       if (f.includes('cjk-text') && !f.includes('text-wrap')) flags.set(id, [...f, 'text-wrap']);

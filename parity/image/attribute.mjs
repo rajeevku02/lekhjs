@@ -4,17 +4,26 @@
 // A register entry's `rule.image.attribute.object_flag` claims the diff blobs over objects with
 // that flag. Array-form (offline) pages mint new ids on load and get no flags.
 //
-// Flags: multiline-text, cjk-text, text-direction (a paragraph starting right-to-left),
+// Flags: multiline-text, cjk-text (CJK or another script that wraps between graphemes: Thai, Lao,
+// Khmer, Myanmar), text-direction (a paragraph starting right-to-left),
 // legacy-type, lua-generator, wireframe-generator, native-generator, connector:<ctype>, image,
 // ink, group, gradient-fill, dash, rotated, font-family, font-modifier.
 
 /** Code-point ranges (inclusive). */
 const CJK_RANGES = [
-  [0x3040, 0x30ff],
+  [0x0e00, 0x0eff], // Thai, Lao (DR-TXT-03: they wrap between graphemes, as CJK)
+  [0x1000, 0x109f], // Myanmar
+  [0x1100, 0x11ff], // Hangul Jamo
+  [0x1780, 0x17ff], // Khmer
+  [0x2e80, 0x2fdf], // CJK radicals
+  [0x3000, 0x30ff], // CJK symbols and punctuation, Hiragana, Katakana
+  [0x3100, 0x31ff], // Bopomofo, Hangul compatibility Jamo, Katakana extensions
   [0x3400, 0x4dbf],
   [0x4e00, 0x9fff],
   [0xac00, 0xd7af],
   [0xf900, 0xfaff],
+  [0xff00, 0xffef], // half- and full-width forms
+  [0x20000, 0x2fa1f], // CJK extensions B…
 ];
 const RTL_RANGES = [
   [0x0590, 0x08ff],
@@ -38,6 +47,9 @@ const rtlStart = (s) =>
     }
     return false;
   });
+
+/** A UAX 14 HY, BA or SY character with a non-space after it (inside a word). */
+const BREAK_AFTER = /[-/\u00ad\u2010\u2012\u2013|][^\s]/;
 
 /** @param {any} v */
 const values = (v) => (Array.isArray(v) ? v : v !== null && typeof v === 'object' ? Object.values(v) : []);
@@ -124,7 +136,7 @@ export function flagsByObject(doc) {
  * word at a grapheme boundary, C++ lets it overflow): per top-level object id, its words with the
  * font size and family and the object's width. The TS page measures them (`overlongWords`).
  * @param {any} doc
- * @returns {{ id: string, width: number, items: { words: string[], px: number, family: string }[] }[]}
+ * @returns {{ id: string, width: number, items: { words: string[], paras: string[], px: number, family: string }[] }[]}
  */
 export function wrapCandidates(doc) {
   const out = [];
@@ -132,7 +144,7 @@ export function wrapCandidates(doc) {
     const objs = p?.objects;
     if (objs === null || typeof objs !== 'object' || Array.isArray(objs)) continue;
     for (const [id, o] of Object.entries(objs)) {
-      /** @type {{ words: string[], px: number, family: string }[]} */
+      /** @type {{ words: string[], paras: string[], px: number, family: string }[]} */
       const items = [];
       /** @param {any} o */
       const visit = (o) => {
@@ -151,7 +163,11 @@ export function wrapCandidates(doc) {
               'sans-serif',
           );
           const words = s.split(/\s+/).filter((w) => w.length > 3);
-          if (words.length > 0) items.push({ words, px, family });
+          // DR-TXT-03 rule 1: TS also breaks after a hyphen, slash or other UAX 14 HY/BA/SY
+          // character followed by a non-space; C++ only at white space. A paragraph holding such a
+          // word wraps differently once it is wider than its box.
+          const paras = s.split('\n').filter((l) => BREAK_AFTER.test(l));
+          if (words.length > 0 || paras.length > 0) items.push({ words, paras, px, family });
         };
         for (const x of values(o.texts)) add(x?.text, x?.style);
         if (o.template !== null && typeof o.template === 'object')
@@ -168,8 +184,10 @@ export function wrapCandidates(doc) {
 }
 
 /**
- * In the page: the ids of `cands` with a word wider than 0.9 × the object's width at its font.
- * Passed to `page.evaluate`, so it uses nothing from this module.
+ * In the page: the ids of `cands` with a word wider than 0.75 × the object's width at its font (the
+ * text area is the box less the template's text insets, so a word somewhat narrower than the box
+ * already wraps), or with a hyphen/slash paragraph wider than that (it wraps, and TS may break it
+ * after the hyphen or slash). Passed to `page.evaluate`, so it uses nothing from this module.
  * @param {ReturnType<typeof wrapCandidates>} cands
  * @returns {string[]}
  */
@@ -181,7 +199,11 @@ export function overlongWordsInPage(cands) {
     let hit = false;
     for (const it of c.items) {
       ctx.font = `${it.px}px "${it.family.replace(/"/g, '')}", sans-serif`;
-      if (it.words.some((w) => ctx.measureText(w).width > 0.9 * c.width)) {
+      const limit = 0.75 * c.width;
+      if (
+        it.words.some((w) => ctx.measureText(w).width > limit) ||
+        (it.paras ?? []).some((l) => ctx.measureText(l).width > limit)
+      ) {
         hit = true;
         break;
       }

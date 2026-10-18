@@ -54,10 +54,14 @@ const heap = (Module, poisoned) => {
   return out;
 };
 
+// An abort is out-of-memory when the heap had grown to within 10 % of the cap: a grow request
+// larger than what is left fails before the buffer reaches the cap itself (an 8 MB board aborted at
+// 125 of 128 MB in the D2 corpus run).
+const OOM_FRACTION = 0.9;
 const atCap = () => {
   const bytes = host.memoryBytes();
   const max = host.maximumMemory();
-  return bytes !== null && max !== null && bytes >= max;
+  return bytes !== null && max !== null && bytes >= OOM_FRACTION * max;
 };
 
 const idsOf = (text) => {

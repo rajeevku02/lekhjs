@@ -352,7 +352,30 @@ export class BoardSession {
     this.paint_ = new PaintRequests(opts.scheduler, (layer) => {
       this.emit('paintRequested', { layer });
     });
-    this.imageRequests_ = new ImageRequests({ cache: this.imageCache, port: opts.images, scheduler: opts.scheduler });
+    // Inline (base64) images are scheduled by their `data:` key and decoded, not fetched.
+    const images = opts.images;
+    const port = {
+      request: (urls: readonly string[]): void => {
+        const fetched: string[] = [];
+        for (const url of urls) {
+          if (!url.startsWith('data:')) {
+            fetched.push(url);
+            continue;
+          }
+          images.decodeInline(url).then(
+            (image) => {
+              if (this.disposed_) image.close?.();
+              else this.dispatch({ type: 'imageLoaded', url, image });
+            },
+            () => {
+              if (!this.disposed_) this.dispatch({ type: 'imageFailed', url, reason: 'decode' });
+            },
+          );
+        }
+        if (fetched.length > 0) images.request(fetched);
+      },
+    };
+    this.imageRequests_ = new ImageRequests({ cache: this.imageCache, port, scheduler: opts.scheduler });
   }
 
   /** A session on a new, empty board (C++ `DocManager::loadEmpty`). */
@@ -1008,7 +1031,7 @@ export class BoardSession {
     this.selection_ = NO_IDS;
     this.viewState_ = null;
     for (const p of this.doc_.pages) p.objectStore.markAllDirty();
-    this.imageRequests_.schedule(ImageRefs.document(this.doc_));
+    this.imageRequests_.schedule([...ImageRefs.document(this.doc_), ...ImageRefs.documentInline(this.doc_)]);
     // Conversion is in memory: the document is not dirty, and only a writer's conversion frame
     // (or the next save) persists it (spec 04 §7.3).
     this.pendingConversion_ =

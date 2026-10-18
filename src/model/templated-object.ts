@@ -158,6 +158,23 @@ export class TemplatedObject extends LekhObject {
     return out;
   }
 
+  /** The inline images' cache keys of this shape's template and its embeds (see `imageUrls`). */
+  override inlineImageKeys(): readonly string[] {
+    const t = this.template_;
+    if (t === null) return super.inlineImageKeys();
+    const out: string[] = [];
+    const add = (tmpl: ShapeTemplate, depth: number): void => {
+      for (const el of tmpl.images()) {
+        if (el.inlineImage() === null) continue;
+        const key = el.imageKey();
+        if (key !== '' && !out.includes(key)) out.push(key);
+      }
+      if (depth < 8) for (const e of tmpl.embeds()) add(e.template, depth + 1);
+    };
+    add(t, 0);
+    return out;
+  }
+
   /** C++ `shapeTemplate()`: null for groups and freehand strokes. */
   shapeTemplate(): ShapeTemplate | null {
     return this.template_;

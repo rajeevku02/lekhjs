@@ -288,6 +288,14 @@ export abstract class LekhObject {
     return NO_STRINGS;
   }
 
+  /**
+   * The `ImageCache` keys (`data:` URIs) of the inline (base64) images this object holds, members
+   * excluded: decoded through `ImagePort.decodeInline` at load like a URL is fetched (spec 03 §7).
+   */
+  inlineImageKeys(): readonly string[] {
+    return NO_STRINGS;
+  }
+
   /* eslint-disable @typescript-eslint/no-unused-vars -- default hooks take the parameters their overrides use */
   // ---- the rest of the C++ `LekhObject` interface (defaults as C++) ----
 

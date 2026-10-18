@@ -5,8 +5,9 @@
 // load as they do today. Arrival is the `imageLoaded` / `imageFailed` event, handled by the
 // session; it requests a repaint and marks nothing dirty (no geometry changes).
 //
-// Base64 images (offline boards only, OQ-66) are not URLs: they are decoded per template
-// instance through `ImagePort.decodeInline`, by the object kinds.
+// Base64 images (offline boards only, OQ-66) are not URLs: they are collected by their cache key
+// (the `data:` URI) and the session decodes them through `ImagePort.decodeInline` instead of
+// `request` (until W11 nothing decoded them, and every inline image drew as the placeholder).
 import type { Handle, Scheduler } from '../base';
 import type { ImageCache } from '../render';
 import type { LekhDocument } from './lekh-document';
@@ -29,6 +30,24 @@ export const ImageRefs = Object.freeze({
       for (const m of o.members()) walk(m);
     };
     for (const o of objects) walk(o);
+    return [...out];
+  },
+
+  /** The inline images' `data:` cache keys of `objects` and their members, distinct. */
+  inline(objects: Iterable<LekhObject>): string[] {
+    const out = new Set<string>();
+    const walk = (o: LekhObject): void => {
+      for (const key of o.inlineImageKeys()) out.add(key);
+      for (const m of o.members()) walk(m);
+    };
+    for (const o of objects) walk(o);
+    return [...out];
+  },
+
+  /** `inline` over every page of `doc`. */
+  documentInline(doc: LekhDocument): string[] {
+    const out = new Set<string>();
+    for (const p of doc.pages) for (const key of ImageRefs.inline(p.objectStore.objects)) out.add(key);
     return [...out];
   },
 
@@ -82,9 +101,10 @@ export class ImageRequests {
     return missing;
   }
 
-  /** `schedule` for the objects just created or loaded. */
+  /** `schedule` for the objects just created or loaded: their URLs and their inline images' keys. */
   scheduleFor(objects: Iterable<LekhObject>): string[] {
-    return this.schedule(ImageRefs.collect(objects));
+    const list = [...objects];
+    return this.schedule([...ImageRefs.collect(list), ...ImageRefs.inline(list)]);
   }
 
   /** Cancels the deferred request. Idempotent. */

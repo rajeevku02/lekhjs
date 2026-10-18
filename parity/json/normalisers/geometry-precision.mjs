@@ -8,14 +8,18 @@
 // verification 02 §A.5 step 8. At a top-level object path, for a numeric
 // `params/{cx,cy,width,height,angle}` leaf at any group depth: true when |a − b| ≤ 2·10⁻⁵ · S,
 // where S is the sum of max(|cx|, |cy|) over the object chain (top-level object to the leaf's
-// object, as C++ wrote it) plus the leaf object's max(width, height), or 2π for `angle`; null for
-// any other leaf and for a larger difference (another rule may explain it).
+// object, as C++ wrote it) plus the leaf object's max(width, height), or 2π for `angle`, whose
+// difference is taken modulo 2π (a member angle comes from `atan2` of a near-zero float32
+// difference, so the two engines can land on either side of its branch cut: -0.785405 against
+// 5.49778, the same rotation); null for any other leaf and for a larger difference (another rule
+// may explain it).
 import { num, obj } from './util.mjs';
 
 export const name = 'geometry-precision';
 
 const LEAVES = new Set(['cx', 'cy', 'width', 'height', 'angle']);
 const REL = 2e-5;
+const TAU = 2 * Math.PI;
 
 /** The params of each object on the `objects/<id>/object` chain under a top-level object. */
 /** @param {any} top @param {string[]} chain @returns {any[] | null} */
@@ -50,5 +54,8 @@ export function equal(cpp, ts, _input, rest = []) {
     for (const p of cs) s += Math.max(Math.abs(num(p?.['cx']) ?? 0), Math.abs(num(p?.['cy']) ?? 0));
     s += Math.max(Math.abs(num(own?.['width']) ?? 0), Math.abs(num(own?.['height']) ?? 0));
   }
-  return Math.abs(a - b) <= REL * s ? true : null;
+  // An angle is a rotation: a member angle that `atan2` returns on the other side of its branch
+  // cut (a near-zero float32 difference changes sign) is the same rotation 2π away.
+  const d = leaf === 'angle' ? Math.abs(a - b - TAU * Math.round((a - b) / TAU)) : Math.abs(a - b);
+  return d <= REL * s ? true : null;
 }

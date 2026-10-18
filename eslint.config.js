@@ -75,6 +75,7 @@ export default defineConfig(
     'coverage/',
     'test/lint/fixtures/',
     'parity/node_modules/',
+    'parity/leaks/node_modules/',
     // Parity run output (git-ignored by parity/.gitignore): builds, bundled TS front ends and
     // reports that the harness writes there. It is generated, not source, and a build left there
     // made `npm run check` fail on lint.

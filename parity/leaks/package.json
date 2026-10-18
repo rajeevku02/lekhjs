@@ -1,0 +1,14 @@
+{
+  "name": "lekhjs-parity-leaks",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Leak tests of verification 03 §5 (L-01): memlab analyses the heap snapshots the Playwright scenario takes (porting-only, spec 01 §7). Installed with PUPPETEER_SKIP_DOWNLOAD=1: memlab does not drive a browser here.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@memlab/core": "2.0.5",
+    "@memlab/heap-analysis": "2.0.5"
+  }
+}

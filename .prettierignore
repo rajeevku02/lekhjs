@@ -4,6 +4,8 @@ coverage/
 package-lock.json
 parity/package-lock.json
 parity/out/
+parity/leaks/node_modules/
+parity/leaks/package-lock.json
 stencils/
 fonts/fonts.json
 test/fixtures/golden/

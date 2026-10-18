@@ -49,10 +49,20 @@ const { values: opt } = parseArgs({
       default: path.join(PARITY, 'out', 'leaks', `l01-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, '')}`),
     },
     engine: { type: 'string', default: 'ts' },
+    // Diagnosis: edit-script steps left out (comma-separated names, e.g. "insert image").
+    skip: { type: 'string', default: '' },
   },
 });
+const SKIP = new Set(
+  String(opt.skip)
+    .split(',')
+    .map((x) => x.trim())
+    .filter((x) => x !== ''),
+);
 if (!opt.build) {
-  process.stderr.write('usage: board-cycle.mjs --build <dir> [--cycles 50] [--out <dir>] [--engine ts|cpp]\n');
+  process.stderr.write(
+    'usage: board-cycle.mjs --build <dir> [--cycles 50] [--out <dir>] [--engine ts|cpp] [--skip <steps>]\n',
+  );
   process.exit(2);
 }
 const CYCLES = Number(opt.cycles);
@@ -163,6 +173,7 @@ async function step(
   /** @type {string} */ name,
   /** @type {() => Promise<void>} */ f,
 ) {
+  if (SKIP.has(name)) return;
   try {
     await f();
     done[name] = (done[name] ?? 0) + 1;
@@ -418,6 +429,7 @@ const result = {
   build: root,
   build_id: await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest?.build ?? null).catch(() => null),
   cycles: CYCLES,
+  skipped_steps: [...SKIP],
   minutes: (Date.now() - t0) / 60000,
   steps,
   blocked,

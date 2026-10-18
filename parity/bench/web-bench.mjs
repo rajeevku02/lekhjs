@@ -231,89 +231,111 @@ async function pass(engine) {
   /** @type {Record<string, any>} */
   const out = { _meta: { engine, isolated, readyMs: Date.now() - tNav } };
   for (const b of BOARDS) {
-    const r = await page.evaluate(
-      async (
-        /** @type {{ text: string, hit: boolean, side: number, exportPng: boolean, metrics: string[], seed: number }} */ a,
-      ) => {
-        const t = /** @type {any} */ (globalThis).__lekhTest;
-        const g = /** @type {any} */ (globalThis);
-        const m = new Set(a.metrics);
-        /** @type {Record<string, any>} */
-        const res = {};
-        t.resetCounters();
-        const l0 = performance.now();
-        const ld = await t.loadDoc(a.text, { name: 'bench' });
-        if (!ld.ok) return { error: String(ld.error) };
-        await t.settle();
-        res.load = performance.now() - l0;
-        res.measureLoad = t.counters().measureText;
-        const v0 = t.getView();
-        if (m.has('P-02') || m.has('P-09') || m.has('P-04')) {
-          const cx = (640 - v0.tx) / v0.zoom;
-          const cy = (400 - v0.ty) / v0.zoom;
-          g.__longTasks.length = 0;
+    /** @type {any} */
+    let r;
+    try {
+      r = await page.evaluate(
+        async (
+          /** @type {{ text: string, hit: boolean, side: number, exportPng: boolean, metrics: string[], seed: number }} */ a,
+        ) => {
+          const t = /** @type {any} */ (globalThis).__lekhTest;
+          const g = /** @type {any} */ (globalThis);
+          const m = new Set(a.metrics);
+          /** @type {Record<string, any>} */
+          const res = {};
           t.resetCounters();
-          const frames = [];
-          for (let k = 0; k < 150; k++) {
-            const dx = k < 75 ? -40 * (k + 1) : -40 * (150 - k - 1);
-            t.setView({ zoom: v0.zoom, tx: v0.tx + dx, ty: v0.ty });
-            frames.push(t.drawFrame().ms);
-          }
-          for (let k = 0; k < 150; k++) {
-            const z = k < 75 ? 0.25 * Math.pow(16, k / 74) : 4 * Math.pow(0.25, (k - 75) / 74);
-            t.setView({ zoom: z, tx: 640 - cx * z, ty: 400 - cy * z });
-            frames.push(t.drawFrame().ms);
-          }
-          res.frames = frames;
-          res.measurePan = t.counters().measureText;
-          res.longTasks = [...g.__longTasks];
-          t.setView(v0);
-        }
-        if (a.hit && m.has('P-03')) {
-          let s = a.seed >>> 0;
-          const rnd = () => {
-            s = (s + 0x6d2b79f5) >>> 0;
-            let x = s;
-            x = Math.imul(x ^ (x >>> 15), x | 1);
-            x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
-            return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
-          };
-          const pts = new Float64Array(20000);
-          for (let i = 0; i < pts.length; i++) pts[i] = rnd() * a.side;
-          const B = 200;
-          /** @type {Record<string, number[]>} */
-          const hit = { near: [], connection: [] };
-          for (const kind of ['near', 'connection']) {
-            for (let i = 0; i < pts.length; i += 2 * B) {
-              const r = t.hitTest(pts.subarray(i, i + 2 * B), kind);
-              hit[kind]?.push(r.ms / B);
+          const l0 = performance.now();
+          const ld = await t.loadDoc(a.text, { name: 'bench' });
+          if (!ld.ok) return { error: String(ld.error) };
+          await t.settle();
+          res.load = performance.now() - l0;
+          res.measureLoad = t.counters().measureText;
+          const v0 = t.getView();
+          if (m.has('P-02') || m.has('P-09') || m.has('P-04')) {
+            const cx = (640 - v0.tx) / v0.zoom;
+            const cy = (400 - v0.ty) / v0.zoom;
+            g.__longTasks.length = 0;
+            t.resetCounters();
+            const frames = [];
+            for (let k = 0; k < 150; k++) {
+              const dx = k < 75 ? -40 * (k + 1) : -40 * (150 - k - 1);
+              t.setView({ zoom: v0.zoom, tx: v0.tx + dx, ty: v0.ty });
+              frames.push(t.drawFrame().ms);
+              // A task boundary per frame, as a real frame has, so P-09 sees per-frame long tasks.
+              await new Promise((r) => setTimeout(r, 0));
             }
+            for (let k = 0; k < 150; k++) {
+              const z = k < 75 ? 0.25 * Math.pow(16, k / 74) : 4 * Math.pow(0.25, (k - 75) / 74);
+              t.setView({ zoom: z, tx: 640 - cx * z, ty: 400 - cy * z });
+              frames.push(t.drawFrame().ms);
+              // A task boundary per frame, as a real frame has, so P-09 sees per-frame long tasks.
+              await new Promise((r) => setTimeout(r, 0));
+            }
+            res.frames = frames;
+            res.measurePan = t.counters().measureText;
+            await new Promise((r) => setTimeout(r, 50)); // the observer reports after the task
+            res.longTasks = [...g.__longTasks];
+            t.setView(v0);
           }
-          res.hit = hit;
-        }
-        if (a.exportPng && m.has('P-07a')) {
-          /** @type {Record<string, number>} */
-          const ex = {};
-          for (const sc of [1, 2]) {
-            const e0 = performance.now();
-            const e = await t.exportPage(0, { region: 'drawing', padding: 20, scale: sc, background: true });
-            ex[`png${sc}`] = e.dataUrl === 'data:,' ? -1 : performance.now() - e0;
+          if (a.hit && m.has('P-03')) {
+            let s = a.seed >>> 0;
+            const rnd = () => {
+              s = (s + 0x6d2b79f5) >>> 0;
+              let x = s;
+              x = Math.imul(x ^ (x >>> 15), x | 1);
+              x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
+              return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+            };
+            const pts = new Float64Array(20000);
+            for (let i = 0; i < pts.length; i++) pts[i] = rnd() * a.side;
+            const B = 200;
+            /** @type {Record<string, number[]>} */
+            const hit = { near: [], connection: [] };
+            for (const kind of ['near', 'connection']) {
+              for (let i = 0; i < pts.length; i += 2 * B) {
+                const r = t.hitTest(pts.subarray(i, i + 2 * B), kind);
+                hit[kind]?.push(r.ms / B);
+              }
+            }
+            res.hit = hit;
           }
-          res.export = ex;
-        }
-        const mem = /** @type {any} */ (performance).memory;
-        res.heap = mem ? mem.usedJSHeapSize : null;
-        return res;
-      },
-      {
-        text: b.text,
-        hit: b.hit,
-        side: b.side ?? 0,
-        exportPng: b.exportPng,
-        metrics: [...METRICS],
-        seed: Number(opt.seed),
-      },
-    );
+          if (a.exportPng && m.has('P-07a')) {
+            /** @type {Record<string, number>} */
+            const ex = {};
+            for (const sc of [1, 2]) {
+              const e0 = performance.now();
+              const e = await t.exportPage(0, { region: 'drawing', padding: 20, scale: sc, background: true });
+              ex[`png${sc}`] = e.dataUrl === 'data:,' ? -1 : performance.now() - e0;
+            }
+            res.export = ex;
+          }
+          const mem = /** @type {any} */ (performance).memory;
+          res.heap = mem ? mem.usedJSHeapSize : null;
+          return res;
+        },
+        {
+          text: b.text,
+          hit: b.hit,
+          side: b.side ?? 0,
+          exportPng: b.exportPng,
+          metrics: [...METRICS],
+          seed: Number(opt.seed),
+        },
+      );
+    } catch (e) {
+      // §9 edge case 9: a build that fails a board (the C++ wasm aborts at its memory cap on the
+      // largest boards) is recorded for that board, and the page is reloaded for the next one.
+      r = {
+        error: String(/** @type {any} */ (e)?.message ?? e)
+          .split('\n')[0]
+          ?.slice(0, 160),
+      };
+      await page.reload();
+      await page.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, {
+        timeout: 60000,
+      });
+      await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.ready());
+    }
     out[b.name] = r;
   }
   // Cold load (P-01 cold): a reload, then ready → load → first frame of the mid board.
@@ -481,7 +503,12 @@ const table = rows.map((row) => {
   const margin = Math.max(0.02, Number.isFinite(a) ? a : 0);
   const ratio = cv > 0 ? tv / cv : tv === 0 ? 1 : Infinity;
   let verdict;
-  if (row.counter) verdict = tv <= cv ? 'pass' : 'fail';
+  const cppFailed = row.cpp.every((s) => s.n === 0);
+  // §9 edge case 9: no C++ value (cpp_fail on every run): TS is held to its own ceiling instead
+  // of a ratio (load ≤ 10 s on the box); other metrics are recorded without a verdict.
+  if (cppFailed)
+    verdict = row.metric === 'P-01' ? (tv <= 10000 ? 'cpp_fail; TS ≤ 10 s' : 'cpp_fail; TS > 10 s') : 'cpp_fail';
+  else if (row.counter) verdict = tv <= cv ? 'pass' : 'fail';
   else verdict = ratio <= 1 + margin ? 'pass' : ratio <= 1.1 ? 'needs DR-PERF' : 'fail';
   const nearBoundary = !row.counter && (Math.abs(ratio - (1 + margin)) < 0.02 || Math.abs(ratio - 1.1) < 0.02);
   return {

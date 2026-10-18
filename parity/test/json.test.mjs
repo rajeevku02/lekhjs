@@ -465,6 +465,14 @@ describe('D2 normalisers', () => {
     const rot = (/** @type {number} */ angle) => L({ params: { cx: 1, cy: 1, width: 10, height: 10, angle } });
     assert.equal(m.equal(rot(-0.785405), rot(5.497787143782138), undefined, ['params', 'angle']), true);
     assert.equal(m.equal(rot(-0.785405), rot(0.785405), undefined, ['params', 'angle']), null);
+    const far = (/** @type {number} */ angle) =>
+      L({
+        params: { cx: 233, cy: 12717 },
+        objects: { m: { object: { params: { cx: 556, cy: 10370, width: 2, height: 2, angle } } } },
+      });
+    const restA = ['objects', 'm', 'object', 'params', 'angle'];
+    assert.equal(m.equal(far(-0.523537), far(-0.523374), undefined, restA), true);
+    assert.equal(m.equal(far(-0.5235), far(-0.6), undefined, restA), null);
   });
   it('a normaliser sees the differing path below the matched one', () => {
     const reg = compileRules([

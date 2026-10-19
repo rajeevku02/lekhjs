@@ -231,7 +231,11 @@ export class MutationApplier {
         );
         break;
       case 'path': {
+        // C++ `ShapeToLekh.cpp:132-136`: `from` writes the data and draw strings only; `load` builds
+        // the path elements that lay out, paint and hit-test. Without it the object has bounds
+        // and draws nothing (RC1).
         const p = PathTemplate.from(tenv, spec.path);
+        p.template.load();
         obj = new TemplatedObject(oenv, p.template, p.bound, 0, null);
         break;
       }

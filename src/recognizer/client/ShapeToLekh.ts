@@ -40,7 +40,7 @@ export type RecognizedObjectSpec =
   | { readonly kind: 'polygon'; readonly points: readonly Point[]; readonly closed: boolean; readonly snap: boolean }
   /** `TemplatedObject(new BezierCurveTemplate(curve), bound, 0, snap)` (no `generateData`, as C++). */
   | { readonly kind: 'bezier'; readonly curve: BezierCurve; readonly bound: Rect; readonly snap: boolean }
-  /** `PathTemplate.from(path)` → (template, bound); `TemplatedObject(template, bound, 0, false)`; `generateData()`. */
+  /** `PathTemplate.from(path)` → (template, bound); `load()`; `TemplatedObject(template, bound, 0, false)`; `generateData()`. */
   | { readonly kind: 'path'; readonly path: SimplePath; readonly snap: false };
 
 /**

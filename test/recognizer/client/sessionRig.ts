@@ -4,6 +4,7 @@
 // recognised before H-REC-1).
 import { Point } from '../../../src/geometry';
 import { RECOGNIZER_CONFIG_DEFAULTS } from '../../../src/recognizer/core';
+import type { LineAggregatorModule } from '../../../src/recognizer/lines';
 import {
   RecognitionClient,
   SessionRecognitionPort,
@@ -45,7 +46,10 @@ export interface SessionRig {
 }
 
 export async function sessionRig(
-  opts: { board?: string; cloud?: boolean; latencyMs?: number } & Pick<HarnessOptions, 'meta'> = {},
+  opts: { board?: string; cloud?: boolean; latencyMs?: number; lineAggregator?: LineAggregatorModule } & Pick<
+    HarnessOptions,
+    'meta'
+  > = {},
 ): Promise<SessionRig> {
   const h = harness({
     board: boardText(opts.board ?? 'format/01-empty.lekh'),
@@ -60,7 +64,7 @@ export async function sessionRig(
     workerFactory: () => {
       const w = new FakeWorker(h.scheduler, {
         latencyMs: opts.latencyMs ?? 300,
-        lineAggregator: polylineLineAggregatorModule,
+        lineAggregator: opts.lineAggregator ?? polylineLineAggregatorModule,
       });
       workers.push(w);
       return w;

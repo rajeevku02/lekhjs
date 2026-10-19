@@ -232,6 +232,9 @@ async function iteration() {
       await page.mouse.up();
     });
   }
+  // Pen strokes stay transient for 500 ms so quick strokes batch (C++ onTmpDrawingEnd); only then
+  // are they one undo step. Undoing before that left the batch behind (seen in the first A3 run).
+  await page.waitForTimeout(800);
   await page.keyboard.press('v');
   await step('move shape', async () => {
     await page.mouse.move(120, 140);

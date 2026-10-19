@@ -1,6 +1,7 @@
 // The in-page bench of verification 03 §4.3 (T21, floor devices; H-REC-4, H-ROL-4): the C++ web
-// build and the TS web build sit beside this page in bench-dist/{cpp,ts}/ (same origin, both built
-// with VITE_LEKH_TEST_ANY_HOST=1 and a relative base), each opened in an iframe and driven through
+// build and the TS web build (bench-dist/{cpp,ts}/, both built with VITE_LEKH_TEST_ANY_HOST=1) are
+// served at "/" of this page's origin, the one the `lekhbench` cookie names (build-device-bench.mjs
+// --serve), each opened in an iframe and driven through
 // the v1 `window.__lekhTest` hooks with the same code as the box bench (web-bench.mjs):
 //
 //   P-01  warm load + first frame: loadDoc → settle, one sample per board
@@ -37,13 +38,16 @@ async function openBuild(engine) {
   f.id = 'frame';
   f.width = '1280';
   f.height = '800';
-  f.src = `${engine}/index.html?offline=true&lekhtest=1`;
+  document.cookie = `lekhbench=${engine}; path=/; SameSite=Strict`;
+  f.src = `/?offline=true&lekhtest=1&engine=${engine}`;
   document.getElementById('stage').appendChild(f);
   await new Promise((r) => f.addEventListener('load', r, { once: true }));
   const w = /** @type {any} */ (f.contentWindow);
   for (let i = 0; i < 600 && w.__lekhTest === undefined; i++) await sleep(100);
   if (w.__lekhTest === undefined)
     throw new Error(`${engine}: no __lekhTest (built without VITE_LEKH_TEST_ANY_HOST=1?)`);
+  if (w.__lekhTest.engine !== engine)
+    throw new Error(`asked for ${engine}, got ${w.__lekhTest.engine} (cookie not honoured?)`);
   await w.__lekhTest.ready();
   return w;
 }

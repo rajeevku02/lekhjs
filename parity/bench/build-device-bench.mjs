@@ -2,9 +2,15 @@
 //   cpp/      the C++ web build (the H-ROL-1 hooked wasm; a lekhboardwebapp checkout at the oracle
 //             commit, never v2/dist) and
 //   ts/       the TS web build under test (a lekhboardwebapp checkout whose v2 compiles ../../lekhjs),
-// both built with VITE_LEKH_TEST_ANY_HOST=1 (the hooks install on any host; never deployed) and a
-// relative base, so they run side by side under one origin; plus bench.html / bench.js (page/) and
-// the synthetic boards (boards/*.json and manifest.json, from synth.mjs; no customer data).
+// both built with VITE_LEKH_TEST_ANY_HOST=1 (the hooks install on any host; never deployed); plus
+// bench.html / bench.js (page/) and the synthetic boards (boards/*.json and manifest.json, from
+// synth.mjs; no customer data).
+//
+// Both web apps open a board only at the path "/" (lekhboardwebapp main.jsx), so the two builds
+// cannot sit in sub-folders of one origin. The server below serves bench.html, bench.js and
+// boards/ from the bundle root and everything else from the build the `lekhbench` cookie names
+// (cpp | ts), with no caching; the page sets the cookie before it opens a build in its iframe, so
+// both builds are same-origin with the page (the hooks are reachable) and each sees itself at "/".
 //
 //   node parity/bench/build-device-bench.mjs --cpp-webapp <lekhboardwebapp dir> --ts-webapp <dir>
 //        [--out <dir>] [--cache <dir>]
@@ -12,7 +18,8 @@
 //
 // --serve serves the bundle on 0.0.0.0:<port> with COOP/COEP (5 µs performance.now()). Android:
 // `adb reverse tcp:4006 tcp:4006`, then http://localhost:4006/bench.html?lekhtest=1 on the device.
-// iPad: serve the same folder from the Mac on the LAN with the same headers.
+// iPad: run the same --serve on the Mac (Node 24) on the LAN; a plain static server cannot switch
+// builds by cookie.
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, createReadStream, existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -69,11 +76,19 @@ if (opt.serve) {
   };
   createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
-    let file = path.join(OUT, decodeURIComponent(url.pathname));
-    if (!file.startsWith(OUT)) return void res.writeHead(403).end();
+    const p = decodeURIComponent(url.pathname);
+    const own = p === '/bench.html' || p === '/bench.js' || p.startsWith('/boards/');
+    const engine = /(?:^|;\s*)lekhbench=(cpp|ts)/.exec(req.headers.cookie ?? '')?.[1] ?? 'ts';
+    const base = own ? OUT : path.join(OUT, engine);
+    let file = path.join(base, p);
+    if (!file.startsWith(base)) return void res.writeHead(403).end();
     if (existsSync(file) && statSync(file).isDirectory()) file = path.join(file, 'index.html');
     if (!existsSync(file)) return void res.writeHead(404, ISOLATION).end();
-    res.writeHead(200, { ...ISOLATION, 'content-type': MIME[path.extname(file)] ?? 'application/octet-stream' });
+    res.writeHead(200, {
+      ...ISOLATION,
+      'cache-control': 'no-store',
+      'content-type': MIME[path.extname(file)] ?? 'application/octet-stream',
+    });
     createReadStream(file).pipe(res);
   }).listen(Number(opt.port), '0.0.0.0', () => {
     process.stdout.write(`serving ${OUT} on :${opt.port} (COOP/COEP); open /bench.html?lekhtest=1\n`);
@@ -98,15 +113,11 @@ if (opt.serve) {
         `export default { ...base, cacheDir: ${JSON.stringify(cache)} };\n`,
     );
     process.stdout.write(`building ${engine} from ${v2}\n`);
-    execFileSync(
-      'npx',
-      ['vite', 'build', '--config', cfg, '--base', './', '--outDir', path.join(OUT, engine), '--emptyOutDir'],
-      {
-        cwd: v2,
-        stdio: ['ignore', 'inherit', 'inherit'],
-        env: { ...process.env, VITE_LEKH_TEST_ANY_HOST: '1' },
-      },
-    );
+    execFileSync('npx', ['vite', 'build', '--config', cfg, '--outDir', path.join(OUT, engine), '--emptyOutDir'], {
+      cwd: v2,
+      stdio: ['ignore', 'inherit', 'inherit'],
+      env: { ...process.env, VITE_LEKH_TEST_ANY_HOST: '1' },
+    });
     const commit = execFileSync('git', ['-C', dir, 'rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim();
     writeFileSync(
       path.join(OUT, `${engine}.build.json`),

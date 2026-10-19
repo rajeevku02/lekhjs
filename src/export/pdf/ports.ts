@@ -61,7 +61,8 @@ export interface PdfDocumentOptions {
   readonly compress: boolean;
   /** `null`: no standard font is loaded (the browser build has none registered). */
   readonly font: null;
-  readonly info: { readonly Title: string; readonly Producer: string };
+  /** The document information dictionary (PDFKit's defaults are Creator and Producer "PDFKit"). */
+  readonly info: { readonly Title: string; readonly Creator: string; readonly Producer: string };
 }
 
 export type PdfDocumentCtor = new (opts: PdfDocumentOptions) => PdfDocument;

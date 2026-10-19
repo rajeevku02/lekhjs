@@ -386,13 +386,15 @@ export class CommandDispatcher {
   /**
    * C++ `CanvasWidget::setViewFromBegnining` (the toolbar's "Move to begining"): 100 %, and on
    * an infinite canvas the content's top-left brought into view (centred on an axis it fits in,
-   * else 65 px in, clear of the toolbar; the x inset only on a big screen). A fixed-size page
-   * goes back to 100 % at its origin.
+   * else 65 px in, clear of the toolbar; the x inset only on a big screen). A fixed or auto-size
+   * page goes back to 100 % placed as on the board's first open (`computeSize(true)`: centred on
+   * an axis it fits in, else at the view's edge).
    */
   goToBeginning(smallScreen: boolean): void {
     const v = this.board.view();
     if (!this.o_.view.isInfinite()) {
       this.board.setView({ zoom: 1, tx: 0, ty: 0 });
+      this.o_.view.firstTimeLayout();
       this.o_.overlay.refreshSelection();
       return;
     }

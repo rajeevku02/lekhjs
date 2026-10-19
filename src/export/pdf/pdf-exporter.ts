@@ -178,7 +178,7 @@ export class PdfExporter implements PdfRenderer {
       autoFirstPage: false,
       compress: true,
       font: null,
-      info: { Title: source.document.name, Producer: 'Lekh' },
+      info: { Title: source.document.name, Creator: 'Lekh', Producer: 'Lekh' },
     }) as unknown as PdfDocument;
     const flush = async (): Promise<void> => {
       if (pending.length === 0) return;

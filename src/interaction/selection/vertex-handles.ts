@@ -114,9 +114,9 @@ export class VertexHandles implements VertexHandleHost {
     dp.endDrawing();
     const r = this.overlay_.board.config.vertexHandleRadius;
     if (this.type_ === ShapePointType.Rotater) {
-      drawGlyph(dp, 'lekhapp.ui.sel_rect_rotate', Rect.fromCenter(this.centre_, r * 2, r * 2), 0, {
-        stroke: paint.tokens.cornerColor,
-      });
+      // C++ `VertexHandleWidget` draws the template with its own strokes (no border; see the
+      // selection rectangle's rotater).
+      drawGlyph(dp, 'lekhapp.ui.sel_rect_rotate', Rect.fromCenter(this.centre_, r * 2, r * 2), 0);
     } else {
       dp.startDrawing(this.centre_, s);
       dp.addCircle(this.centre_, r);

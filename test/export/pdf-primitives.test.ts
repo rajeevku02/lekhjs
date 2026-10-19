@@ -50,7 +50,7 @@ async function pdfOf(
     autoFirstPage: false,
     compress: opts.compress ?? false,
     font: null,
-    info: { Title: 't', Producer: 'Lekh' },
+    info: { Title: 't', Creator: 'Lekh', Producer: 'Lekh' },
   });
   const chunks: Uint8Array[] = [];
   doc.on('data', (c) => {

@@ -10,7 +10,7 @@
 // `syncSelection()` follows it when undo, a remote delete or a command changes it.
 import { MultiSelection, isMulti, selectionOf, type EditTarget } from '../edit';
 import { Point, PointType, Rect } from '../geometry';
-import { TemplatedObject, type LekhObject } from '../model';
+import { ConnectionObject, TemplatedObject, isConnector, type LekhObject } from '../model';
 import type { DrawingPlatform } from '../render';
 import { Color, Style } from '../style';
 import { objectsOf, type InteractionBoard } from './board';
@@ -26,6 +26,7 @@ import type { PointerEvent } from './input-event';
 import { OVERLAY_VALUES, overlayTokens, type OverlayTheme } from './overlay-tokens';
 import type { ClickTarget, RouterLayer } from './router-layer';
 import { SelectionRectangle } from './selection/selection-rectangle';
+import { ViewMappedPlatform } from './selection/view-mapped-platform';
 import {
   ShapePointType,
   type OverlayHost,
@@ -393,12 +394,66 @@ export class OverlayLayer implements OverlayHost, RouterLayer {
     };
     if (t !== null && !isMulti(t)) {
       if (interacting) {
-        if (t instanceof TemplatedObject) drawGuides(t);
+        // C++ `drawExtraWhileDragging`: a shape's guides and extras; a connector's vertices.
+        if (t instanceof TemplatedObject) {
+          drawGuides(t);
+          this.drawExtras(dp, t);
+        } else if (isConnector(t)) {
+          this.drawSelectionVertices(dp, t, zoom);
+        }
       } else if (!t.isEditingText()) {
-        this.drawVertices(dp, t, zoom);
+        this.drawSelectionVertices(dp, t, zoom);
       }
     }
-    if (vt !== null) this.drawVertices(dp, vt, zoom);
+    if (vt !== null) this.drawSelectionVertices(dp, vt, zoom);
+  }
+
+  /**
+   * C++ `drawSelectionVertices`: a shape's vertices, then its extras (`TemplatedObject`); a
+   * connector's control arms, then its vertices (`ConnectionObject`).
+   */
+  private drawSelectionVertices(dp: DrawingPlatform, o: LekhObject, zoom: number): void {
+    if (o instanceof ConnectionObject) {
+      this.drawExtras(dp, o);
+      this.drawVertices(dp, o, zoom);
+      return;
+    }
+    this.drawVertices(dp, o, zoom);
+    this.drawExtras(dp, o);
+  }
+
+  /**
+   * The dashed control arms of a selected curve, in document units on the zoomed view as C++
+   * drew them: a shape's `TemplatedObject::drawExtraStuff` (its template's
+   * `drawExtraWhenSelected`: a single Bézier curve's arms, `BezierCurveTemplate`, in
+   * `LekhGlobal::selectionStyle`) and the arms of a curve connector
+   * (`ConnectionObject::drawSelectionVertices`: start → first control, end → second control, in
+   * `LekhCore::selectionVerticesStyle_`). Both styles: black, 1 wide, dashes 2 2, no fill.
+   */
+  private drawExtras(dp: DrawingPlatform, o: LekhObject): void {
+    const s = new Style();
+    s.setNoFill();
+    s.setStrokeWidth(1);
+    s.setDashArray([2, 2]);
+    s.removeDashPatternPhase();
+    s.setStrokeColor(rgb(0, 0, 0));
+    const mdp = new ViewMappedPlatform(dp, this.board.view());
+    if (o instanceof TemplatedObject) {
+      o.shapeTemplate()?.drawExtraWhenSelected(mdp, o.ds, s);
+      return;
+    }
+    if (o instanceof ConnectionObject) {
+      const curve = o.routeCurves()[0];
+      const vtx = o.getInterestingPoints();
+      const c1 = vtx[1]?.point;
+      const c2 = vtx[2]?.point;
+      if (curve === undefined || c1 === undefined || c2 === undefined) return;
+      mdp.startDrawing(curve.point1, s);
+      mdp.addLineTo(c1);
+      mdp.moveTo(curve.point4);
+      mdp.addLineTo(c2);
+      mdp.endDrawing();
+    }
   }
 
   private drawVertices(dp: DrawingPlatform, o: LekhObject, zoom: number): void {
@@ -584,6 +639,25 @@ export class OverlayLayer implements OverlayHost, RouterLayer {
 
   onContextMenu(): boolean {
     return false;
+  }
+
+  /**
+   * The hover over a selection corner (C++ `CornerWidget`, an `Icon`, so
+   * `PointerIconType::Action`, the web's `pointer`; set by `WidgetObject::onPointerMove` on the
+   * widget `InputHandler::onPointerEvent` finds under a mouse move, the vertex handle and the
+   * connect handles before the corners). Only the rotater and the resizers while they are drawn
+   * (C++ also hit-tests the undrawn corners of a multi-selection). True when it took the hover.
+   */
+  hoverHandle(at: Point, m: Movement): boolean {
+    if (m === Movement.End || this.target_ === null) return false;
+    const r = this.rect;
+    if (r.underVertexHandle || r.isMoving || r.isResizing || r.isRotating || r.isScaling) return false;
+    if (this.vertex.isActive() && this.vertex.frame().contains(at)) return false;
+    const c = r.childAt(at);
+    if (c?.kind !== 'corner') return false;
+    if (c.corner.type !== ShapePointType.Resizer && c.corner.type !== ShapePointType.Rotater) return false;
+    this.setCursor('action');
+    return true;
   }
 
   /** C++ `MiddleWidget::onPointerMove` (the hover handler): the cursor of the mode. */

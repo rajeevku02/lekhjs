@@ -123,10 +123,15 @@ export class BoardView {
   private readonly abort_: { aborted: boolean; listeners: (() => void)[] } = { aborted: false, listeners: [] };
   private uiScheduled_ = false;
   private disposed_ = false;
+  /** C++ `computeSize(true)` is due: the board was opened (or reloaded) and not yet placed. */
+  private firstLayoutPending_: boolean;
+  /** The finite page's size and the view's at the last drawing paint (null: infinite). */
+  private canvasSizeKey_: string | null = null;
 
   constructor(opts: BoardViewOptions) {
     this.opts_ = opts;
     this.session = opts.session;
+    this.firstLayoutPending_ = opts.session.isLoaded;
     this.env = opts.env;
     this.layers = new LayerScheduler(opts.frames, (l) => {
       this.paintLayer(l);
@@ -210,6 +215,11 @@ export class BoardView {
         this.textEdit.finish();
       },
       onHover: (at, m) => {
+        // The selection's corners are above the shapes (C++ `MiddleWidget` is hit-tested first).
+        if (this.overlay.hoverHandle(at, m)) {
+          this.shapes.onHover(at, Movement.End);
+          return;
+        }
         if (!this.shapes.onHover(at, m)) this.overlay.onHover(m);
       },
       trace: this.board.trace,
@@ -268,7 +278,8 @@ export class BoardView {
     );
     s.on(
       'documentChanged',
-      () => {
+      (e) => {
+        if (e.reloaded) this.firstLayoutPending_ = true;
         this.overlay.syncSelection(s.selection);
         this.scheduleUi();
       },
@@ -383,6 +394,7 @@ export class BoardView {
     const ctx = this.contexts_.get(layer);
     if (ctx === undefined || this.disposed_) return;
     this.session.paint(layer, ctx, { theme: this.theme() });
+    if (layer === 'drawing') this.syncCanvasSize();
     if (layer === 'middle') {
       const dp = new Canvas2DDrawingPlatform(ctx, { textPainter: this.session.runtime.textPainter });
       this.overlay.draw(dp);
@@ -390,6 +402,42 @@ export class BoardView {
       // selection moves, resizes or rotates; spec 05 §8, AC-UI-23).
       if (this.overlay.selectionTarget() !== null) this.scheduleUi();
     }
+  }
+
+  /**
+   * After a drawing paint (the objects laid out): C++ `CanvasWidget::computeSize`. On the first
+   * paint of an opened board, `computeSize(true)` (a fixed or auto-size page smaller than the
+   * view is centred, `handleFirstTimeLayout`); afterwards, whenever a finite page's size or the
+   * view's changed, `computeSize(false)`: an auto-size page follows its content, which C++
+   * recomputes after every add, delete, move, resize, text edit, undo, redo and remote update
+   * (`LekhUtil::updateCanvas(true)` and the `computeSize(false)` calls of `Command`,
+   * `Clipboard`, `CoreIO`); every such change repaints the drawing layer here. The offset is
+   * re-clamped and the grid layer (the page rectangle and its border) repainted.
+   */
+  private syncCanvasSize(): void {
+    const s = this.session;
+    if (!s.isLoaded || s.waitingForFonts) return;
+    if (this.firstLayoutPending_ && this.view.firstTimeLayout()) {
+      this.firstLayoutPending_ = false;
+      // A view change repaints every layer; the size is compared from that paint on.
+      this.canvasSizeKey_ = this.canvasSizeKey();
+      return;
+    }
+    const key = this.canvasSizeKey();
+    if (key === this.canvasSizeKey_) return;
+    this.canvasSizeKey_ = key;
+    if (key === null) return;
+    if (this.view.reclampFixed()) return;
+    this.paintLayer('grid');
+    this.layers.invalidate('middle');
+  }
+
+  private canvasSizeKey(): string | null {
+    const page = this.session.document.activePage();
+    if (this.view.isInfinite()) return null;
+    const sz = page.getCanvasSize(false);
+    const v = this.board.view();
+    return `${page.id}|${String(sz.width)}|${String(sz.height)}|${String(v.zoom)}|${String(v.canvasW)}|${String(v.canvasH)}`;
   }
 
   /** Draws the overlay on any drawing platform (tests, a recording platform). */

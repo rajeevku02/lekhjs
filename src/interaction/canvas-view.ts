@@ -179,6 +179,43 @@ export class CanvasView {
     );
   }
 
+  /**
+   * C++ `CanvasWidget::computeSize(false)` after an edit (`LekhUtil::updateCanvas(true)`,
+   * `Command::undo/redo`, `Clipboard`, `CoreIO` after a remote update, …): the page's size is
+   * recomputed (an auto-size page follows its content, growing and shrinking) and the offset
+   * re-clamped so that a quarter of the canvas stays in view. True when the scroll moved.
+   */
+  reclampFixed(): boolean {
+    if (this.isInfinite()) return false;
+    const v = this.board_.view();
+    if (v.canvasW <= 0 || v.canvasH <= 0) return false;
+    const s = this.clampFixed(new Point(v.scrollX, v.scrollY), v.zoom);
+    if (s.x === v.scrollX && s.y === v.scrollY) return false;
+    this.board_.setView({ tx: s.x, ty: s.y });
+    return true;
+  }
+
+  /**
+   * C++ `CanvasWidget::handleFirstTimeLayout` (`computeSize(true)`: a board's first open, and
+   * `setViewFromBegnining` on a finite page): a fixed or auto-size page smaller than the view is
+   * centred on that axis, else placed at the view's edge. Nothing on an infinite canvas. False
+   * only while the view has no size yet (nothing could be placed).
+   */
+  firstTimeLayout(): boolean {
+    const v = this.board_.view();
+    if (v.canvasW <= 0 || v.canvasH <= 0) return false;
+    if (this.isInfinite()) return true;
+    const sz = this.board_.page().getCanvasSize(false);
+    const cw = Math.max(MIN_SIZE_DP, sz.width * v.zoom);
+    const ch = Math.max(MIN_SIZE_DP, sz.height * v.zoom);
+    const ox = cw < v.canvasW ? (v.canvasW - cw) / 2 : 0;
+    const oy = ch < v.canvasH ? (v.canvasH - ch) / 2 : 0;
+    const tx = ox / v.zoom;
+    const ty = oy / v.zoom;
+    if (tx !== v.scrollX || ty !== v.scrollY) this.board_.setView({ tx, ty });
+    return true;
+  }
+
   /** C++ `computeSize`'s clamp: at least a quarter of a fixed canvas stays in view. */
   private clampFixed(scroll: Point, zoom: number): Point {
     const v = this.board_.view();

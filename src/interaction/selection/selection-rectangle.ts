@@ -301,9 +301,9 @@ export class SelectionRectangle implements SelectionRectHost {
       dp.startDrawing(c.centre, bg);
       dp.addCircle(c.centre, size / 2);
       dp.endDrawing();
-      drawGlyph(dp, 'lekhapp.ui.sel_rect_rotate', Rect.fromCenter(c.centre, size, size), angle, {
-        stroke: paint.tokens.cornerColor,
-      });
+      // C++ `CornerWidget::onLayout`: the rotater's icon keeps its template's own strokes
+      // (`overrideStrokeColor_ = false`): the glyph's bounding square has none, so no border.
+      drawGlyph(dp, 'lekhapp.ui.sel_rect_rotate', Rect.fromCenter(c.centre, size, size), angle);
     }
   }
 

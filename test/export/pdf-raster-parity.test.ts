@@ -268,7 +268,7 @@ async function clipPdf(w: number, h: number): Promise<Uint8Array> {
     autoFirstPage: false,
     compress: true,
     font: null,
-    info: { Title: 't', Producer: 'Lekh' },
+    info: { Title: 't', Creator: 'Lekh', Producer: 'Lekh' },
   });
   const chunks: Uint8Array[] = [];
   doc.on('data', (c) => {

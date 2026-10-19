@@ -101,6 +101,21 @@ describe('PDF structure (AC-EXP-08, AC-EXP-09)', () => {
     expect(pages[0]?.ops.some((o) => o.fn === OPS.constructPath)).toBe(true);
   });
 
+  it('the document information names Lekh as the creator and producer, not PDFKit (owner UI3 #7)', async () => {
+    const s = boardSession(rectBoard([{ rects: [[100, 100, 50, 30]] }]), undefined, 'Rect');
+    const { raw } = await parsePdf(await exportPdf(s, 'Rect.pdf'));
+    // The Info dictionary refers to its strings: /Creator 11 0 R … 11 0 obj (Lekh) endobj.
+    const info = (key: string): string | undefined => {
+      const ref = new RegExp(`/${key} (\\d+) 0 R`).exec(raw)?.[1];
+      if (ref === undefined) return undefined;
+      return new RegExp(`(?:^|\\n)${ref} 0 obj\\n\\((.*?)\\)\\nendobj`).exec(raw)?.[1];
+    };
+    expect(info('Creator')).toBe('Lekh');
+    expect(info('Producer')).toBe('Lekh');
+    expect(info('Title')).toBe('Rect');
+    expect(raw).not.toContain('PDFKit');
+  });
+
   it('a line string equals the engine line, in order, at the engine baseline and alignment', async () => {
     const s = boardSession(
       textBoard([

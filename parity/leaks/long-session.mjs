@@ -292,6 +292,10 @@ async function exportPng() {
   });
 }
 async function sample(/** @type {number} */ minute) {
+  // The test hooks log every session notification and frame since resetCounters (events(),
+  // syncLog()); emptied before each sample so the hooks' own log is not counted as the board's
+  // heap (about 5 KB per iteration, the whole slope of the first A3 runs).
+  await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.resetCounters());
   await cdp.send('HeapProfiler.collectGarbage');
   await cdp.send('HeapProfiler.collectGarbage');
   const heap = await cdp.send('Runtime.getHeapUsage');

@@ -333,6 +333,10 @@ for (let c = 1; c <= CYCLES; c++) {
   }, board);
   if (!r.ok) throw new Error(`cycle ${c}: loadDoc failed: ${r.error}`);
   if (ENGINE === 'ts') await editScript(steps);
+  // The test hooks log every session notification and frame since resetCounters (events(),
+  // syncLog()) and keep that log across closeBoard; emptied first so the hooks' own log (about
+  // 18 KB per cycle of this edit script) is not charged to the board.
+  if (ENGINE === 'ts') await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.resetCounters());
   await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.closeBoard());
   await page.waitForTimeout(200);
   const m = await gcAndMeasure();

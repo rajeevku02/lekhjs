@@ -50,7 +50,14 @@ import {
   maxBlob,
   sideBySide,
 } from './diff.mjs';
-import { flagsByObject, halfPixelEdgeBlob, overlongWordsInPage, textRowShift, wrapCandidates } from './attribute.mjs';
+import {
+  flagsByObject,
+  halfPixelEdgeBlob,
+  overlongWordsInPage,
+  rotatedEllipseEndIds,
+  textRowShift,
+  wrapCandidates,
+} from './attribute.mjs';
 
 holdHeavyLock();
 
@@ -679,7 +686,7 @@ function rectMask(
  * @param {any} t  TS page
  * @param {Map<string, string[]>} flags  object id → flags (from the board JSON)
  */
-function comparePage(c, t, flags) {
+function comparePage(c, t, flags, ellipseEnds = new Map()) {
   const scale = c.scale;
   /** @type {Record<string, any>} */
   const r = {
@@ -778,11 +785,46 @@ function comparePage(c, t, flags) {
     }
     return undefined;
   };
+  // DR-ENG-28: the box of a flagged connector and its two end objects (page pixels).
+  // The C++ line starts beside the rotated ellipse's outline, off the TS connector's rectangle.
+  const ellipseRule = attributeRules.find((ar) => ar.flag === 'rotated-ellipse-end');
+  const ellipseBoxes =
+    ellipseRule === undefined
+      ? []
+      : objs
+          .filter((/** @type {any} */ o) => ellipseEnds.has(String(o.id)))
+          .map((/** @type {any} */ o) => {
+            const rs = [o.px];
+            for (const e of ellipseEnds.get(String(o.id)) ?? []) {
+              const eo = objs.find((/** @type {any} */ x) => String(x.id) === e);
+              if (eo !== undefined) rs.push(eo.px);
+            }
+            // Each rectangle grown as `hit` grows an object's (2 px and 30 % of its size each way):
+            // the C++ line's stroke and arrowhead overhang the ends' boxes.
+            const gx = (/** @type {any} */ q) => 2 + 0.3 * q.w;
+            const gy = (/** @type {any} */ q) => 2 + 0.3 * q.h;
+            const x0 = Math.min(...rs.map((q) => q.x - gx(q)));
+            const y0 = Math.min(...rs.map((q) => q.y - gy(q)));
+            const x1 = Math.max(...rs.map((q) => q.x + q.w + gx(q)));
+            const y1 = Math.max(...rs.map((q) => q.y + q.h + gy(q)));
+            return { x0, y0, x1, y1 };
+          });
+  /** @param {any} blob */
+  const ellipseClaim = (blob) =>
+    ellipseBoxes.some(
+      (/** @type {any} */ q) => blob.x >= q.x0 && blob.y >= q.y0 && blob.x + blob.w <= q.x1 && blob.y + blob.h <= q.y1,
+    )
+      ? ellipseRule
+      : undefined;
   /** The register entry that claims `blob`, or undefined. @param {any} blob */
   const claim = (blob) => {
     const under = hit(blob);
     const fl = new Set(under.flatMap((/** @type {any} */ o) => o.flags.concat(`kind:${o.kind}`)));
-    const rule = attributeRules.find((ar) => fl.has(ar.flag)) ?? edgeClaim(blob, under) ?? textShiftClaim(blob, under);
+    const rule =
+      attributeRules.find((ar) => fl.has(ar.flag)) ??
+      edgeClaim(blob, under) ??
+      textShiftClaim(blob, under) ??
+      ellipseClaim(blob);
     return { rule, fl };
   };
   let unexplained = d.count;
@@ -1111,6 +1153,7 @@ for (const { idx, file } of inputs) {
   try {
     const doc = JSON.parse(text);
     const flags = flagsByObject(doc);
+    const ellipseEnds = rotatedEllipseEndIds(doc);
     const c = await withTimeout(render('cpp', text, null, COMPAT), BOARD_TIMEOUT);
     const scales = c.ok ? c.pages.map((/** @type {any} */ p) => (p.ok ? p.scale : 1)) : null;
     const refs =
@@ -1163,7 +1206,7 @@ for (const { idx, file } of inputs) {
           continue;
         }
         /** @type {any} */
-        const res = comparePage(cp, tp, flags);
+        const res = comparePage(cp, tp, flags, ellipseEnds);
         if (tsIndices !== null && tsIndices[i] !== i && phantomRule !== null) {
           res.rules.push(phantomRule);
           if (res.status === 'pass') res.status = 'pass_rules';

@@ -9,7 +9,9 @@ fixture: parity/fixtures/DR-ENG-28/rotated-ellipse-ends.lekh
 rule:
   json: ['none: connector ends are not stored for automatic ends']
   image:
-    # A connector with an end on a rotated ellipse (an E path, a non-zero angle).
+    # A connector with an end on a rotated ellipse (an E path, a non-zero angle). The harness also
+    # claims a blob inside the box of that connector and its two end objects (each grown as an
+    # object's own box is): the C++ line starts beside the outline, off the TS connector's box (A2).
     attribute: { object_flag: rotated-ellipse-end }
   perf: null
 evidence: 'W11-FX image triage (verification 02 §B): in the fixture the connectors to ellipses turned by 1.5e-7, 0.3 and 1.5708 rad end beside the outline, off the line of centres and not at all on the C++ web build, the one to the unrotated ellipse matches; three corpus pages of the G2 sample; flag unit test in parity/test/image.test.mjs'

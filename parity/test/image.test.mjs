@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { BlobStream, blobs } from '../image/diff.mjs';
-import { flagsByObject, halfPixelEdgeBlob, wrapCandidates } from '../image/attribute.mjs';
+import { flagsByObject, halfPixelEdgeBlob, rotatedEllipseEndIds, wrapCandidates } from '../image/attribute.mjs';
 
 /** @param {{ x: number, y: number, w: number, h: number, pixels: number }[]} bl */
 const sorted = (bl) => [...bl].sort((a, b) => a.y - b.y || a.x - b.x || a.w - b.w || a.h - b.h || a.pixels - b.pixels);
@@ -161,4 +161,12 @@ test('DR-ENG-28 flags a connector with an end on a rotated ellipse only', async 
   const f = flagsByObject(doc);
   const flagged = ['c1', 'c5', 'c6', 'c7'].filter((id) => f.get(id)?.includes('rotated-ellipse-end'));
   assert.deepEqual(flagged, ['c1', 'c6', 'c7']); // c5's ellipse is unrotated
+  // The claim region's members: each flagged connector with its two ends, nothing else.
+  const ends = rotatedEllipseEndIds(doc);
+  assert.deepEqual([...ends.keys()].sort(), ['c1', 'c6', 'c7']);
+  const objects = Object.values(doc.pages)[0].objects;
+  for (const id of ends.keys()) {
+    const c = objects[id];
+    assert.deepEqual(ends.get(id), [String(c.source), String(c.target)]);
+  }
 });

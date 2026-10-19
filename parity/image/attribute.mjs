@@ -168,6 +168,26 @@ export function flagsByObject(doc) {
 }
 
 /**
+ * DR-ENG-28's region: for each connector flagged rotated-ellipse-end, the ids of its two ends. The
+ * C++ end lands beside the ellipse's outline (or on its horizontal axis), so the line C++ draws runs
+ * from there to the other end, off the TS connector's own rectangle: the blobs it leaves lie inside
+ * the box of the connector and its two end objects, which is what the rule claims (run.mjs).
+ * @param {any} doc  the parsed board
+ * @returns {Map<string, string[]>}  connector id → [source id, target id]
+ */
+export function rotatedEllipseEndIds(doc) {
+  /** @type {Map<string, string[]>} */
+  const out = new Map();
+  for (const p of values(doc?.pages)) {
+    const objs = p?.objects;
+    if (objs === null || typeof objs !== 'object' || Array.isArray(objs)) continue;
+    for (const [id, o] of Object.entries(objs))
+      if (rotatedEllipseEnd(o, objs)) out.set(id, [String(o.source), String(o.target)]);
+  }
+  return out;
+}
+
+/**
  * DR-ENG-28: a connector with an end on a rotated ellipse (a template drawing an `E` path, a
  * non-zero angle). C++ Ellipse::getIntersection rotates the line about the centre with
  * LineEquation::rotate, whose "pivot on the line" test (|A·x + B·y + C| < 0.1, unnormalised, in

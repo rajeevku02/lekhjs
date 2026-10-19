@@ -212,6 +212,7 @@ export class BoardView {
       onHover: (at, m) => {
         if (!this.shapes.onHover(at, m)) this.overlay.onHover(m);
       },
+      trace: this.board.trace,
     });
     this.keys = new KeyMap(opts.env.isApple);
     this.commands = new CommandDispatcher({

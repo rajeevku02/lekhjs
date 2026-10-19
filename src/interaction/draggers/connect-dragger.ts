@@ -354,6 +354,7 @@ export class ConnectDragger extends BaseDragger {
     if (this.cancelled_) return;
     const board = this.overlay_.board;
     if (!board.page().objectStore.contains(this.source_) || board.readOnly()) {
+      board.trace?.emit('connect.source_gone', { source: this.source_.id, readOnly: board.readOnly() });
       this.cancel();
       return;
     }
@@ -373,6 +374,7 @@ export class ConnectDragger extends BaseDragger {
   }
 
   override cancel(): boolean {
+    this.overlay_.board.trace?.emit('connect.cancel', { source: this.source_.id, mode: this.mode_ });
     this.cancelled_ = true;
     this.mode_ = ConnectMode.None;
     this.target_ = null;
@@ -460,6 +462,11 @@ export class ConnectDragger extends BaseDragger {
     const mode = this.mode_;
     const target = this.target_;
     const angle = this.targetAngle_;
+    this.overlay_.board.trace?.emit('connect.drop', {
+      at: { x: Math.round(viewPt.x), y: Math.round(viewPt.y) },
+      mode: ['none', 'target', 'selfLoop', 'canvas'][mode] ?? mode,
+      target: target?.id ?? null,
+    });
     this.clearPreview();
     if ((mode === ConnectMode.Target || mode === ConnectMode.SelfLoop) && target !== null) {
       this.create(target, angle);
@@ -500,6 +507,7 @@ export class ConnectDragger extends BaseDragger {
       ctx.editor.tx.run(new AddObjectAction(ctx.editor.env, ctx.doc, [con]));
       out.made = con;
     });
+    board.trace?.emit('connect.created', { connector: out.made?.id ?? null });
     if (out.made !== null) this.overlay_.select(out.made);
   }
 }

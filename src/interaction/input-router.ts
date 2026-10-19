@@ -31,6 +31,7 @@ import {
   type InputEvent,
   type PointerInput,
 } from './input-event';
+import type { InputTrace } from './input-trace';
 import type { ClickTarget, RouterLayer } from './router-layer';
 
 export interface InputRouterOptions {
@@ -47,6 +48,12 @@ export interface InputRouterOptions {
   readonly onHover: (at: Point, m: Movement) => void;
   /** C++ `setIgnoreMouseRightClick`. */
   readonly ignoreMouseRightClick?: boolean;
+  /** The opt-in input trace (gestures, drag-handler ownership, resets). */
+  readonly trace?: InputTrace;
+}
+
+function pt(at: Point): { x: number; y: number } {
+  return { x: Math.round(at.x * 10) / 10, y: Math.round(at.y * 10) / 10 };
 }
 
 export class InputRouter implements GestureListener {
@@ -56,9 +63,15 @@ export class InputRouter implements GestureListener {
   private panToClick_: ClickTarget | null = null;
   private hovering_ = false;
 
+  private readonly trace_: InputTrace | null;
+
   constructor(opts: InputRouterOptions) {
     this.o_ = opts;
-    this.recognizer = new GestureRecognizer(this, opts.timers, { onlyDrawWithPencil: opts.onlyDrawWithPencil });
+    this.trace_ = opts.trace ?? null;
+    this.recognizer = new GestureRecognizer(this, opts.timers, {
+      onlyDrawWithPencil: opts.onlyDrawWithPencil,
+      ...(opts.trace !== undefined ? { trace: opts.trace } : {}),
+    });
   }
 
   hasDragHandler(): boolean {
@@ -70,18 +83,34 @@ export class InputRouter implements GestureListener {
   }
 
   setDragHandler(d: DragHandler | null): void {
+    this.trace_?.emit('router.drag', { set: d?.kind ?? null, was: this.drag_?.kind ?? null });
     this.drag_ = d;
   }
 
   /** C++ `cancelDrag`: a handler that cancelled is dropped; the rest of the gesture reaches nobody. */
   cancelDrag(): void {
     if (this.drag_ === null) return;
-    if (this.drag_.cancel()) this.drag_ = null;
+    const d = this.drag_;
+    const cancelled = d.cancel();
+    this.trace_?.emit('router.cancel_drag', { kind: d.kind, cancelled });
+    if (cancelled) this.drag_ = null;
   }
 
-  /** C++ `resetGestureState` / the host's `resetPointerInputState`. */
-  reset(): void {
+  /**
+   * C++ `resetGestureState` / the host's `resetPointerInputState`: the gesture in progress ends
+   * as a cancel (`GestureRecognizer.reset`), and the router forgets its drag handler and
+   * pan-to-click target, so the next press starts clean.
+   */
+  reset(reason = 'reset'): void {
+    this.trace_?.emit('router.reset', { reason, state: this.recognizer.stateName, drag: this.drag_?.kind ?? null });
     this.recognizer.reset();
+    if (this.drag_ !== null) {
+      // A handler that would not cancel and got no End from the recogniser (the gesture was not
+      // a pan): it is let go here, as the End would have done.
+      this.trace_?.emit('router.drag', { set: null, was: this.drag_.kind, reason });
+      this.drag_ = null;
+    }
+    this.panToClick_ = null;
   }
 
   /** The host entry point. Returns true when the event was used (the host may `preventDefault`). */
@@ -106,7 +135,7 @@ export class InputRouter implements GestureListener {
         return true;
       }
       case 'reset':
-        this.reset();
+        this.reset(e.reason ?? 'reset');
         return true;
     }
   }
@@ -133,20 +162,24 @@ export class InputRouter implements GestureListener {
 
   private onPointer(e: PointerInput): boolean {
     if (e.phase === 'cancel') {
-      this.reset();
+      this.reset('pointercancel');
       return true;
     }
     const ev = InputRouter.toPointerEvent(e);
     const p0 = ev.points[0];
     if (p0 === undefined) return false;
     if (e.hover || ev.isMouseMove()) {
-      if (this.recognizer.inProgress()) return false;
+      if (this.recognizer.inProgress()) {
+        this.trace_?.emit('router.hover_in_gesture', { id: e.id, state: this.recognizer.stateName });
+        return false;
+      }
       this.o_.onHover(new Point(p0.x, p0.y), this.hovering_ ? Movement.Move : Movement.Start);
       this.hovering_ = true;
       if (e.hover && e.kind !== 'mouse') return true;
     }
     // A press while editing text finishes the edit first, and is used up.
     if (this.o_.isEditingText() && p0.state === PointState.Down) {
+      this.trace_?.emit('router.down_finishes_text', { id: e.id });
       this.o_.finishTextEditing();
       return false;
     }
@@ -181,6 +214,7 @@ export class InputRouter implements GestureListener {
   }
 
   onDown(at: Point, ev: PointerEvent): boolean {
+    this.trace_?.emit('router.down', { at: pt(at), drag: this.drag_?.kind ?? null });
     for (const l of this.o_.layers) if (l.onDown(at, ev)) return true;
     return false;
   }
@@ -190,6 +224,7 @@ export class InputRouter implements GestureListener {
   }
 
   onClick(at: Point, ev: PointerEvent): boolean {
+    this.trace_?.emit('router.click', { at: pt(at) });
     if (ev.isMouseRight() && this.o_.ignoreMouseRightClick === true) return false;
     // On Apple hosts Ctrl + click is the context menu.
     if (this.o_.env.isApple && ev.likeMouseLeft() && ev.isMouseDevice() && ev.mods.ctrl) return false;
@@ -198,6 +233,7 @@ export class InputRouter implements GestureListener {
   }
 
   onDoubleClick(at: Point, ev: PointerEvent): boolean {
+    this.trace_?.emit('router.double_click', { at: pt(at) });
     for (const l of this.o_.layers) if (l.onDoubleClick(at, ev)) return true;
     return false;
   }
@@ -220,8 +256,10 @@ export class InputRouter implements GestureListener {
           }
         }
       }
+      this.trace_?.emit('router.pan_start', { at: pt(at), handled, drag: this.drag_?.kind ?? null });
       return handled;
     }
+    if (m === Movement.End) this.trace_?.emit('router.pan_end', { at: pt(at), drag: this.drag_?.kind ?? null });
     this.drag_?.onPan(at, ev, m);
     if (m === Movement.End) {
       const t = this.panToClick_;
@@ -255,6 +293,12 @@ export class InputRouter implements GestureListener {
   }
 
   onLongPress(at: Point, ev: PointerEvent, m: Movement): boolean {
+    if (m !== Movement.Move)
+      this.trace_?.emit('router.long_press', {
+        at: pt(at),
+        m: m === Movement.Start ? 'start' : 'end',
+        drag: this.drag_?.kind ?? null,
+      });
     if (m === Movement.Start) {
       for (const l of this.o_.layers) if (l.onLongPress(at, ev, m)) return true;
       return false;

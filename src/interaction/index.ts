@@ -71,6 +71,7 @@ export {
 export { CanvasView } from './canvas-view';
 export type { ClickTarget, RouterLayer, WheelInput } from './router-layer';
 export { InputRouter, type InputRouterOptions } from './input-router';
+export { InputTrace, type InputTraceSink } from './input-trace';
 export { CanvasController, ON_PAN_BRANCHES, type CanvasControllerOptions, type OnPanBranch } from './canvas-controller';
 export { ContextMenuModel, type ContextActionId } from './context-menu';
 export { OverlayLayer, scrollPos, type OverlayOptions, type StrokeSink } from './overlay-layer';

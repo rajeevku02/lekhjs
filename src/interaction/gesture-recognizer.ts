@@ -7,6 +7,7 @@
 import { Point, getDistance } from '../geometry';
 import { EventName, GESTURE_CONSTANTS, Movement, type GestureListener, type GestureTimers } from './gesture-listener';
 import { PointerEvent, PointState, midOf, pointOf, type EventPoint } from './input-event';
+import type { InputTrace } from './input-trace';
 import {
   PointerPositions,
   RotateRecognizer,
@@ -24,6 +25,14 @@ const State = Object.freeze({
   LongPressDown: 5,
 } as const);
 type State = (typeof State)[keyof typeof State];
+const STATE_NAMES = Object.freeze([
+  'Init',
+  'Down',
+  'WaitForClick',
+  'Moving',
+  'WaitForMoveEnd',
+  'LongPressDown',
+] as const);
 
 function veryNear(a: Point, b: Point): boolean {
   return Math.abs(a.x - b.x) < 0.1 && Math.abs(a.y - b.y) < 0.1;
@@ -32,6 +41,8 @@ function veryNear(a: Point, b: Point): boolean {
 export interface GestureRecognizerOptions {
   /** `Config.onlyDrawWithPencil`, read on every event. */
   readonly onlyDrawWithPencil?: () => boolean;
+  /** The opt-in input trace (state changes, stale-gesture resets). */
+  readonly trace?: InputTrace;
 }
 
 export class GestureRecognizer {
@@ -43,6 +54,7 @@ export class GestureRecognizer {
   private readonly listener_: GestureListener;
   private readonly timers_: GestureTimers;
   private readonly onlyPencil_: () => boolean;
+  private readonly trace_: InputTrace | null;
   private current_ = new PointerEvent();
   private inProgress_ = new PointerEvent();
   private state_: State = State.Init;
@@ -62,6 +74,7 @@ export class GestureRecognizer {
     this.listener_ = listener;
     this.timers_ = timers;
     this.onlyPencil_ = opts.onlyDrawWithPencil ?? (() => false);
+    this.trace_ = opts.trace ?? null;
     const shared: MultiTouchShared = {
       positions: this.positions_,
       event: () => this.inProgress_,
@@ -102,8 +115,14 @@ export class GestureRecognizer {
     this.waitingForDoubleClick_ = false;
   }
 
+  /**
+   * Forgets the gesture in progress (the host's `resetPointerInputState`): the drag handler is
+   * cancelled, or — one that cannot be cancelled — ends at the gesture's last point (`onCancel`).
+   * A pending long press is dropped too, so it cannot fire into the next gesture.
+   */
   reset(): void {
     this.onCancel();
+    this.resetLongPressTimer();
     this.state_ = State.Init;
     this.numMovePoints_ = 0;
     this.positions_.clear();
@@ -128,7 +147,34 @@ export class GestureRecognizer {
     }
   }
 
+  /** The recogniser's state name (the input trace and tests). */
+  get stateName(): string {
+    return STATE_NAMES[this.state_];
+  }
+
   onPointerEvent(ev: PointerEvent): boolean {
+    // A Down for a pointer that is still down in the gesture in progress: its Up was lost (the
+    // host never saw it). End that gesture the way a cancel does (C++ hosts reset the recogniser
+    // when a first pointer goes down: Android ACTION_DOWN, iOS a touch set with no known touch),
+    // then take the Down as the start of a new one.
+    if (this.state_ !== State.Init) {
+      for (const pt of ev.points) {
+        if (pt.state === PointState.Down && this.positions_.has(pt.pointerId)) {
+          this.trace_?.emit('rec.stale_down', { id: pt.pointerId, state: this.stateName });
+          this.reset();
+          break;
+        }
+      }
+    }
+    const before = this.state_;
+    const r = this.onPointerEventInner(ev);
+    if (this.trace_?.on === true && this.state_ !== before) {
+      this.trace_.emit('rec.state', { from: STATE_NAMES[before], to: this.stateName });
+    }
+    return r;
+  }
+
+  private onPointerEventInner(ev: PointerEvent): boolean {
     if (this.state_ !== State.Init && this.onlyPencil_()) {
       if (ev.isPencil() && !this.inProgress_.isPencil()) {
         this.resetAll();
@@ -252,6 +298,7 @@ export class GestureRecognizer {
     const interval = res.param > 0 ? res.param : this.longPressTime;
     this.longPressTimer_ = this.timers_.setTimer(interval, () => {
       this.longPressInProgress_ = false;
+      this.trace_?.emit('rec.state', { from: this.stateName, to: 'LongPressDown', timer: true });
       this.state_ = State.LongPressDown;
       this.gotLongPress(e, Movement.Start);
     });

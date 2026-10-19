@@ -24,6 +24,7 @@ import type { ViewTransform } from '../render';
 import type { BoardSession, CommandContext, EditCommand, PaintLayer, UiRequests } from '../session';
 import type { ShapeTemplate } from '../template';
 import type { GestureTimers } from './gesture-listener';
+import { InputTrace } from './input-trace';
 
 export interface ViewChange {
   readonly zoom?: number;
@@ -59,6 +60,8 @@ export interface InteractionBoard {
   clipboard(): ClipboardService;
   /** A laser trail for the collaborators (C++ a `trackpointer` update), document units. */
   sendPointers(points: readonly Point[]): void;
+  /** The opt-in input trace (off unless the host sets its sink). */
+  readonly trace?: InputTrace;
 }
 
 /** The custom command `SessionBoard.edit` runs through. */
@@ -90,6 +93,7 @@ export interface SessionBoardOptions {
 export class SessionBoard implements InteractionBoard {
   readonly session: BoardSession;
   readonly timers: GestureTimers;
+  readonly trace = new InputTrace();
   private readonly readOnly_: () => boolean;
   private readonly requestPaint_: ((layer: PaintLayer) => void) | null;
 

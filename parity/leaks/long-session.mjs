@@ -72,7 +72,13 @@ const server = createServer((req, res) => {
   if (!file.startsWith(root)) return void res.writeHead(403).end();
   if (existsSync(file) && statSync(file).isDirectory()) file = path.join(file, 'index.html');
   if (!existsSync(file)) return void res.writeHead(404).end();
-  res.writeHead(200, { 'content-type': MIME[path.extname(file)] ?? 'application/octet-stream' });
+  // COOP/COEP as the bench pages (verification 03 §3.1): 5 µs performance.now() for the frame times.
+  res.writeHead(200, {
+    'cross-origin-opener-policy': 'same-origin',
+    'cross-origin-embedder-policy': 'require-corp',
+    'cross-origin-resource-policy': 'same-origin',
+    'content-type': MIME[path.extname(file)] ?? 'application/octet-stream',
+  });
   createReadStream(file).pipe(res);
 });
 await new Promise((r) => server.listen(PORT, '127.0.0.1', () => r(null)));
@@ -106,7 +112,7 @@ await page.addInitScript(() => {
   g.__longTasks = [];
   try {
     new PerformanceObserver((l) => {
-      for (const e of l.getEntries()) g.__longTasks.push(e.duration);
+      for (const e of l.getEntries()) g.__longTasks.push({ at: performance.timeOrigin + e.startTime, ms: e.duration });
     }).observe(/** @type {any} */ ({ type: 'longtask', buffered: true }));
   } catch {
     /* no longtask support */
@@ -158,17 +164,38 @@ async function collaborate() {
 /** @type {{ at: number, ms: number }[]} */
 const frameTimes = [];
 const steps = /** @type {Record<string, number>} */ ({});
+/** Wall-clock windows of each activity, to attribute a long task to what the page was doing. */
+/** @type {{ name: string, t0: number, t1: number }[]} */
+const windows = [];
+async function timed(/** @type {string} */ name, /** @type {() => Promise<any>} */ fn) {
+  const t0 = Date.now();
+  try {
+    return await fn();
+  } finally {
+    windows.push({ name, t0, t1: Date.now() });
+  }
+}
+/** Iterations whose undo did not bring the object count back, with the kinds left over. */
+/** @type {{ iteration: number, before: number, after: number, left: string[] }[]} */
+const leftovers = [];
 async function step(/** @type {string} */ name, /** @type {() => Promise<void>} */ fn) {
   try {
-    await fn();
+    await timed(name, fn);
     steps[name] = (steps[name] ?? 0) + 1;
   } catch {
     steps[`${name}:skipped`] = (steps[`${name}:skipped`] ?? 0) + 1;
     await page.keyboard.press('Escape').catch(() => {});
   }
 }
+const ids = () =>
+  page.evaluate(() =>
+    /** @type {any} */ (globalThis).__lekhTest
+      .objects()
+      .map((/** @type {any} */ o) => `${o.id} ${o.kind} ${o.templateId ?? ''}`),
+  );
 async function iteration() {
   const start = await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.undoDepth().undo);
+  const before = await ids();
   await step('pan zoom', async () => {
     const ms = await page.evaluate(() => {
       const t = /** @type {any} */ (globalThis).__lekhTest;
@@ -233,6 +260,18 @@ async function iteration() {
     await page.keyboard.press('Control+Shift+z');
     await page.keyboard.press('Control+z');
   });
+  const after = await ids();
+  // Remote objects (the collaborator stand-in's ids) come and go on their own; only local ones count.
+  const local = (/** @type {string[]} */ xs) => xs.filter((x) => !x.startsWith('00000000-0000-4000-9000-'));
+  const was = new Set(local(before).map((x) => x.split(' ')[0]));
+  const left = local(after).filter((x) => !was.has(x.split(' ')[0]));
+  if (left.length > 0 && leftovers.length < 50)
+    leftovers.push({
+      iteration: iterations + 1,
+      before: before.length,
+      after: after.length,
+      left: left.map((x) => x.split(' ').slice(1).join(' ')),
+    });
 }
 async function exportPng() {
   await step('export png', async () => {
@@ -285,15 +324,15 @@ while (Date.now() - t0 < MINUTES * 60000) {
   await iteration();
   iterations++;
   while (Date.now() >= nextRemote) {
-    await collaborate();
+    await timed('collaborator frames', collaborate);
     nextRemote += 2000;
   }
   if (Date.now() >= nextExport) {
-    await exportPng();
+    await timed('export png (all)', exportPng);
     nextExport += 5 * 60000;
   }
   if (Date.now() >= nextSample) {
-    const s = await sample(Math.round((Date.now() - t0) / 60000));
+    const s = await timed('sample (forced GC)', () => sample(Math.round((Date.now() - t0) / 60000)));
     series.push(s);
     process.stdout.write(
       `min ${s.minute}: heap ${(s.used / 1048576).toFixed(2)} MB, nodes ${s.nodes}, listeners ${s.listeners}, objects ${s.objects}, frame p95 ${s.frame_p95.toFixed(2)} ms\n`,
@@ -301,7 +340,17 @@ while (Date.now() - t0 < MINUTES * 60000) {
     nextSample += 60000;
   }
 }
-const longTasks = await page.evaluate(() => /** @type {any} */ (globalThis).__longTasks);
+/** @type {{ at: number, ms: number }[]} */
+const longTaskEntries = await page.evaluate(() => /** @type {any} */ (globalThis).__longTasks);
+const longTasks = longTaskEntries.map((e) => e.ms);
+/** Each long task over 200 ms with the activity windows it overlaps. */
+const longTaskLog = longTaskEntries
+  .filter((e) => e.ms > 200)
+  .map((e) => ({
+    minute: Number(((e.at - t0) / 60000).toFixed(2)),
+    ms: Math.round(e.ms),
+    during: [...new Set(windows.filter((w) => w.t0 <= e.at + e.ms && w.t1 >= e.at).map((w) => w.name))],
+  }));
 
 // ---- analysis ----
 const from5 = series.filter((s) => s.minute >= 5);
@@ -352,11 +401,19 @@ const result = {
   blocked,
   bars,
   pass,
+  long_task_log: longTaskLog,
+  leftovers,
   series,
   env: { load: os.loadavg(), node: process.version, chromium: browser.version() },
 };
 writeFileSync(path.join(OUT, 'result.json'), JSON.stringify(result, null, 1));
-process.stdout.write(JSON.stringify({ pass, bars, steps, remote, iterations }, null, 1) + `\nout: ${OUT}\n`);
+process.stdout.write(
+  JSON.stringify(
+    { pass, bars, steps, remote, iterations, long_task_log: longTaskLog, leftovers: leftovers.slice(0, 5) },
+    null,
+    1,
+  ) + `\nout: ${OUT}\n`,
+);
 await browser.close();
 server.closeAllConnections();
 await new Promise((r) => server.close(r));

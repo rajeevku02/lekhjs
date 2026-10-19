@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lekh device bench</title>
+    <style>
+      body {
+        font:
+          14px system-ui,
+          sans-serif;
+        margin: 12px;
+        background: #fff;
+        color: #111;
+      }
+      #log {
+        width: 100%;
+        height: 220px;
+        font:
+          12px ui-monospace,
+          monospace;
+        white-space: pre;
+        overflow: auto;
+        border: 1px solid #ccc;
+        padding: 4px;
+      }
+      #result {
+        width: 100%;
+        height: 60px;
+        font:
+          11px ui-monospace,
+          monospace;
+      }
+      #stage iframe {
+        border: 1px solid #ddd;
+        transform-origin: 0 0;
+      }
+      button,
+      a {
+        font-size: 16px;
+        padding: 6px 14px;
+        margin: 6px 6px 6px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lekh device bench (verification 03 §4.3)</h1>
+    <p>
+      Battery at least 80 % and charging, rebooted, 5 minutes idle, other apps closed, auto-lock off. Keep this tab in
+      front until it says done.
+    </p>
+    <button id="start">Start</button>
+    <a id="download" style="display: none">Download</a>
+    <pre id="log"></pre>
+    <textarea id="result" readonly></textarea>
+    <div id="stage"></div>
+    <script type="module" src="bench.js"></script>
+  </body>
+</html>

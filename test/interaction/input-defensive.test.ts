@@ -1,6 +1,7 @@
 // Defensive input handling (Work 01M4X7TCHFB862XGT68GPY071C, IN1): a gesture whose end the host
 // never delivered — a lost Up followed by a new Down for the same pointer, a pointercancel, a
-// host reset (lost pointer capture, window blur) — ends the way the C++ recogniser's `onCancel`
+// host reset (window blur, a hidden page; since IN2 not a lost pointer capture, which the web host
+// follows to its Up instead) — ends the way the C++ recogniser's `onCancel`
 // ends it: a cancellable drag handler (connect drag) is cancelled and its preview cleared; one
 // that cannot cancel (move, library drop) gets its End at the gesture's last point. The router
 // forgets the handler and the next press is processed normally. Plus the opt-in input trace.
@@ -95,8 +96,8 @@ describe('pointercancel and host resets', () => {
     expect(sel !== null && isConnector(sel)).toBe(true);
   });
 
-  it('a reset (lost capture, blur, hidden page) mid connect drag ends it the same way', () => {
-    for (const reason of ['lostpointercapture', 'blur', 'visibilitychange']) {
+  it('a reset (blur, hidden page, pagehide) mid connect drag ends it the same way', () => {
+    for (const reason of ['blur', 'visibilitychange', 'pagehide']) {
       const h = viewHarness();
       const n = store(h).size;
       connectDragWithoutUp(h);

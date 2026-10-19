@@ -68,7 +68,7 @@ export type InputEvent =
       readonly scale: number;
     }
   | { readonly type: 'contextmenu'; readonly x: number; readonly y: number }
-  /** `resetPointerInputState`; `reason` is for the input trace (lost capture, blur, stale down, …). */
+  /** `resetPointerInputState`; `reason` is for the input trace (blur, hidden page, stale down, …). */
   | { readonly type: 'reset'; readonly reason?: string };
 
 export type PointerInput = Extract<InputEvent, { type: 'pointer' }>;

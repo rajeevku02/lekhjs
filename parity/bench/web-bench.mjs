@@ -52,6 +52,9 @@ const { values: opt } = parseArgs({
     only: { type: 'string' },
     metrics: { type: 'string', default: 'P-01,P-02,P-03,P-04,P-07a,P-09' },
     seed: { type: 'string', default: '20261018' },
+    // A board whose measurement has not answered after this many ms is recorded as an error and
+    // the page is replaced (a wedged renderer cannot be reloaded); default 20 minutes.
+    'board-timeout': { type: 'string', default: '1200000' },
   },
 });
 const RUNS = Number(opt.runs);
@@ -206,38 +209,45 @@ async function pass(engine) {
     deviceScaleFactor: 1,
     locale: 'en-US',
   });
-  const page = await context.newPage();
   const origin = `http://localhost:${PORTS[engine]}`;
   let blocked = 0;
-  await page.route('**/*', (/** @type {any} */ r) => {
-    const u = r.request().url();
-    if (u.startsWith(origin) || u.startsWith('data:') || u.startsWith('blob:')) return r.continue();
-    blocked++;
-    return r.abort();
-  });
-  await page.addInitScript(() => {
-    const g = /** @type {any} */ (globalThis);
-    g.__longTasks = [];
-    try {
-      new PerformanceObserver((l) => {
-        for (const e of l.getEntries()) g.__longTasks.push(e.duration);
-      }).observe(/** @type {any} */ ({ type: 'longtask', buffered: true }));
-    } catch {
-      /* no longtask support */
-    }
-  });
+  /** A fresh page on the build, its hooks ready. */
+  const openPage = async () => {
+    const p = await context.newPage();
+    await p.route('**/*', (/** @type {any} */ r) => {
+      const u = r.request().url();
+      if (u.startsWith(origin) || u.startsWith('data:') || u.startsWith('blob:')) return r.continue();
+      blocked++;
+      return r.abort();
+    });
+    await p.addInitScript(() => {
+      const g = /** @type {any} */ (globalThis);
+      g.__longTasks = [];
+      try {
+        new PerformanceObserver((l) => {
+          for (const e of l.getEntries()) g.__longTasks.push(e.duration);
+        }).observe(/** @type {any} */ ({ type: 'longtask', buffered: true }));
+      } catch {
+        /* no longtask support */
+      }
+    });
+    await p.goto(`${origin}/?offline=true&lekhtest=1`);
+    await p.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, { timeout: 60000 });
+    await p.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.ready());
+    return p;
+  };
   const tNav = Date.now();
-  await page.goto(`${origin}/?offline=true&lekhtest=1`);
-  await page.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, { timeout: 60000 });
-  await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.ready());
+  let page = await openPage();
   const isolated = await page.evaluate(() => /** @type {any} */ (globalThis).crossOriginIsolated);
   /** @type {Record<string, any>} */
   const out = { _meta: { engine, isolated, readyMs: Date.now() - tNav } };
   for (const b of BOARDS) {
     /** @type {any} */
     let r;
+    /** @type {ReturnType<typeof setTimeout> | undefined} */
+    let timer;
     try {
-      r = await page.evaluate(
+      const measured = page.evaluate(
         async (
           /** @type {{ text: string, hit: boolean, side: number, exportPng: boolean, metrics: string[], seed: number }} */ a,
         ) => {
@@ -327,7 +337,18 @@ async function pass(engine) {
           seed: Number(opt.seed),
         },
       );
+      r = await Promise.race([
+        measured,
+        new Promise((_, reject) => {
+          timer = setTimeout(
+            () => reject(new Error(`board timeout after ${opt['board-timeout']} ms`)),
+            Number(opt['board-timeout']),
+          );
+        }),
+      ]);
+      clearTimeout(timer);
     } catch (e) {
+      clearTimeout(timer);
       // §9 edge case 9: a build that fails a board (the C++ wasm aborts at its memory cap on the
       // largest boards) is recorded for that board, and the page is reloaded for the next one.
       r = {
@@ -335,30 +356,44 @@ async function pass(engine) {
           .split('\n')[0]
           ?.slice(0, 160),
       };
-      await page.reload();
-      await page.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, {
-        timeout: 60000,
-      });
-      await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.ready());
+      // A new page, not a reload: a renderer wedged by an abort or a timeout may not navigate.
+      await page.close({ runBeforeUnload: false }).catch(() => {});
+      page = await openPage();
     }
     out[b.name] = r;
+    process.stdout.write(`  ${engine} ${b.set}${r?.error ? ` ERROR ${r.error}` : ''}\n`);
   }
   // Cold load (P-01 cold): a reload, then ready → load → first frame of the mid board.
   if (METRICS.has('P-01')) {
     const mid = BOARDS[Math.floor(BOARDS.length / 2)];
     if (mid !== undefined) {
       const t0 = Date.now();
-      await page.reload();
-      await page.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, {
-        timeout: 60000,
-      });
-      await page.evaluate(async (/** @type {string} */ text) => {
-        const t = /** @type {any} */ (globalThis).__lekhTest;
-        await t.ready();
-        await t.loadDoc(text, { name: 'bench' });
-        await t.settle();
-      }, mid.text);
-      out._meta.cold = { board: mid.set, ms: Date.now() - t0 };
+      /** @type {ReturnType<typeof setTimeout> | undefined} */
+      let timer;
+      try {
+        await Promise.race([
+          (async () => {
+            await page.reload();
+            await page.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, {
+              timeout: 60000,
+            });
+            await page.evaluate(async (/** @type {string} */ text) => {
+              const t = /** @type {any} */ (globalThis).__lekhTest;
+              await t.ready();
+              await t.loadDoc(text, { name: 'bench' });
+              await t.settle();
+            }, mid.text);
+          })(),
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error('cold load timeout')), 300000);
+          }),
+        ]);
+        out._meta.cold = { board: mid.set, ms: Date.now() - t0 };
+      } catch (e) {
+        out._meta.cold = { board: mid.set, error: String(/** @type {any} */ (e)?.message ?? e).slice(0, 160) };
+      } finally {
+        clearTimeout(timer);
+      }
     }
   }
   out._meta.blocked = blocked;

@@ -1,0 +1,35 @@
+{
+  "note": "Synthetic wrap corpus (verification 06 DEV-75, H-TXT-2). One object per case and width on wrap-corpus.lekh, ref <case>_<width>; font Noto Sans 16 px.",
+  "font": { "family": "Noto Sans", "size": 16 },
+  "widths": [60, 90, 120, 180, 240, 360],
+  "cases": [
+    {
+      "id": "cjk",
+      "text": "日本語の文章は単語の間に空白がないので任意の文字の間で改行できます。中文也是一样的。"
+    },
+    {
+      "id": "thai",
+      "text": "ภาษาไทยไม่มีการเว้นวรรคระหว่างคำจึงต้องตัดคำตามพจนานุกรม"
+    },
+    {
+      "id": "mixed",
+      "text": "Lekh は whiteboard アプリ with 中文 text and English words mixed together."
+    },
+    {
+      "id": "kinsoku",
+      "text": "「これは括弧の中です。」句読点、は行頭に来てはいけません！（括弧）も同じです。"
+    },
+    {
+      "id": "overlong",
+      "text": "Supercalifragilisticexpialidocious pneumonoultramicroscopicsilicovolcanoconiosis end"
+    },
+    {
+      "id": "hyphen",
+      "text": "state-of-the-art well-known self-explanatory long-term up-to-date words"
+    },
+    {
+      "id": "url",
+      "text": "See https://example.com/a/very/long/path/that/keeps/going?query=1&other=two for details"
+    }
+  ]
+}

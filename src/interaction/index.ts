@@ -182,6 +182,7 @@ export type {
   ConfigSnapshot,
   SelectionAction,
   SelectionActionId,
+  SelectionArrows,
   SelectionState,
   Store,
   StyleEditorApi,

@@ -7,6 +7,8 @@
 import type { Canvas2DLike } from '../base';
 import {
   SelectionActionCatalog,
+  arrowPointCount,
+  arrowsOf,
   insertImageObject,
   isMulti,
   type EditTarget,
@@ -15,7 +17,7 @@ import {
   type SelectionPanel,
 } from '../edit';
 import { Point, Rect } from '../geometry';
-import { GroupObject, TemplatedObject, isConnector } from '../model';
+import { ConnectionObject, GroupObject, TemplatedObject, isConnector } from '../model';
 import { Canvas2DDrawingPlatform } from '../render';
 import { styleSnapshotOf, type BoardSession, type PaintLayer } from '../session';
 import { Style } from '../style';
@@ -509,7 +511,17 @@ export class BoardView {
     const ids = isMulti(t) ? t.objects.map((o) => o.id) : [t.id];
     const r = this.overlay.rect;
     const menuHidden = r.isMoving || r.isResizing || r.isRotating || r.isScaling || this.textEdit.active;
-    return { ids, kind, anchorRect: anchor, actions, style, menuHidden };
+    let arrows: SelectionState['arrows'] = null;
+    // As the Connection And Arrows item (`selection-actions.ts`): a connector, or an object with arrow points.
+    const heads = isMulti(t) || !(t instanceof ConnectionObject || arrowPointCount(t) > 0) ? null : arrowsOf(t);
+    if (heads !== null) {
+      arrows = Object.freeze({
+        type: t instanceof ConnectionObject ? t.getType() : -1,
+        start: heads.start()?.id() ?? null,
+        end: heads.end()?.id() ?? null,
+      });
+    }
+    return { ids, kind, anchorRect: anchor, actions, style, menuHidden, arrows };
   }
 
   private computeUi(prev?: BoardUiState): BoardUiState {

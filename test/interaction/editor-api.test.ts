@@ -9,7 +9,8 @@ import { Point } from '../../src/geometry';
 import { ConnectionObject, TemplatedObject } from '../../src/model';
 import { parseCssColor } from '../../src/interaction';
 import { updatetypes } from '../../src/sync';
-import { A, C, viewHarness } from './helpers';
+import { frame } from '../sync/helpers';
+import { A, C, P, viewHarness } from './helpers';
 
 const PNG_1PX = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
 
@@ -104,6 +105,52 @@ describe('ConnectionApi', () => {
     expect(api.state().endArrow).toBe(1);
     api.swapArrows();
     expect(api.state().startArrow).toBe(1);
+  });
+
+  // Owner, round IC1: an arrowhead picked from the connection popup's preview changed the connector
+  // but not the popup. The popup re-reads the connector when the published selection changes, and
+  // the arrowheads were not part of it, so no change to them was published.
+  it('publishes the selected connector\'s arrowheads with the selection: picker, swap, undo / redo, a collaborator', () => {
+    const h = viewHarness({ cloud: true });
+    const con = h.obj(C) as ConnectionObject;
+    h.dispatch({ type: 'command', origin: 'ui', command: { kind: 'select', ids: [C] } });
+    const arrows = () => h.bv.ui.get().selection?.arrows;
+    const ids = () => ({ start: con.arrows.start()?.id() ?? null, end: con.arrows.end()?.id() ?? null });
+    expect(arrows()).toEqual({ type: con.getType(), ...ids() });
+    const seen: unknown[] = [];
+    const off = h.bv.ui.subscribe(() => seen.push(arrows()));
+    const api = h.bv.editors.connection();
+    const before = arrows();
+    // The arrow picker (its own ConnectionApi, as the React picker has).
+    api.setEndArrow(api.state().endArrow === 1 ? 2 : 1);
+    expect(arrows()).toEqual({ type: con.getType(), ...ids() });
+    expect(arrows()).not.toEqual(before);
+    expect(seen.length).toBeGreaterThan(0);
+    const picked = arrows();
+    api.swapArrows();
+    expect(arrows()).toEqual({ type: con.getType(), ...ids() });
+    expect(arrows()?.start).toBe(picked?.end);
+    // Undo and redo clear the selection (the popup has no connector then); selected again, the
+    // published arrowheads are the connector's after each.
+    const reselect = () => h.dispatch({ type: 'command', origin: 'ui', command: { kind: 'select', ids: [C] } });
+    h.bv.commands.run('undo');
+    reselect();
+    expect(arrows()).toEqual(picked);
+    h.bv.commands.run('redo');
+    reselect();
+    expect(arrows()?.start).toBe(picked?.end);
+    // A collaborator removes the end arrowhead while the connector stays selected.
+    h.dispatch({ type: 'remoteFrame', text: frame(updatetypes.changeArrow, { [`doc.pages.${P}.objects.${C}.arrows.end`]: null }, 12) });
+    expect(con.arrows.end()).toBeNull();
+    expect(arrows()?.end).toBeNull();
+    off();
+  });
+
+  it('publishes no arrowheads for a shape without arrow points', () => {
+    const h = viewHarness();
+    h.dispatch({ type: 'command', origin: 'ui', command: { kind: 'select', ids: [A] } });
+    expect(h.bv.ui.get().selection).not.toBeNull();
+    expect(h.bv.ui.get().selection?.arrows).toBeNull();
   });
 });
 

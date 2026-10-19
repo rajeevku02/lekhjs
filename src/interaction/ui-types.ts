@@ -85,6 +85,20 @@ export interface SelectionState {
    * being edited). Spec 05 §8, AC-UI-23.
    */
   readonly menuHidden: boolean;
+  /**
+   * The arrow attributes the connection popup shows, for a single connector or arrow object (C++
+   * `ConnectionAttrViewManager`): the routing type (`ConnectionObject::Type`, -1 for an arrow
+   * object) and the start / end arrowhead template ids (`null` without one). Part of the published
+   * state so the popup re-reads them whenever they change: its own picker, swap, undo and redo,
+   * a collaborator's update. `null` for any other selection, a multi-selection included.
+   */
+  readonly arrows: SelectionArrows | null;
+}
+
+export interface SelectionArrows {
+  readonly type: number;
+  readonly start: string | null;
+  readonly end: string | null;
 }
 
 export interface BoardUiState {

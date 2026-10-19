@@ -1,6 +1,6 @@
 // Self-tests of the comparison tools (node:test; `npm test` in parity/). Synthetic inputs only.
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -545,5 +545,107 @@ describe('array-form member renaming', () => {
       diffs.filter((d) => !d.path.includes('info')),
       [],
     );
+  });
+});
+
+describe('A1 normalisers', () => {
+  const L = (/** @type {unknown} */ v) => lenientParse(JSON.stringify(v)).value;
+  const FIX = path.join(import.meta.dirname, '..', 'fixtures', 'DR-ENG-29');
+  const read = (/** @type {string} */ f) => readFileSync(path.join(FIX, f), 'utf8');
+
+  it('draw-restyle: the C++ web output of the fixture equals the TS one under DR-ENG-29 only', async () => {
+    const { loadRegister, activeEntries } = await import('../register/load.mjs');
+    const c = canonicalise({
+      inputText: read('connector-draw-restyle.lekh'),
+      cppText: read('connector-draw-restyle.cpp-web.json'),
+      tsText: read('connector-draw-restyle.ts-web.json'),
+      stamp: 'app',
+    });
+    const { diffs } = diff(c.cpp, c.ts);
+    assert.ok(diffs.length >= 9, 'the fixture reproduces the C++ draw-time restyle');
+    const reg = compileRules(activeEntries(loadRegister()));
+    const r = applyRules(reg, diffs, c.cpp, c.ts, c.input ?? undefined);
+    assert.deepEqual(r.unexplained, []);
+    assert.deepEqual([...r.applied.keys()], ['DR-ENG-29']);
+  });
+  it('draw-restyle: connectors only, the restyle exactly, the stored style kept by TS', async () => {
+    const m = await import('../json/normalisers/draw-restyle.mjs');
+    assert.equal(m.overWhite(-2130771968), -32897);
+    assert.equal(m.overWhite(-16776961), -16776961);
+    const head = (/** @type {any} */ style) => ({ id: 'avabodh.arrow.str', style });
+    const conn = (/** @type {any} */ style, /** @type {any} */ hs) => {
+      /** @type {Record<string, unknown>} */
+      const o = { type: 'avabodh.basic.connection', arrows: { end: head(hs) } };
+      if (style !== undefined) o['style'] = style;
+      return L(o);
+    };
+    const stored = { fillpaint: { color: -1, type: 2 } };
+    const blue = { strokepaint: { color: -16776961, type: 2 } };
+    const input = conn(blue, stored);
+    const ts = conn(blue, stored);
+    const cpp = conn({ ...blue, fillpaint: { type: 1 } }, { ...blue, fillpaint: { color: -16776961, type: 2 } });
+    assert.equal(m.equal(cpp, ts, input, ['style', 'fillpaint']), true);
+    assert.equal(m.equal(cpp, ts, input, ['arrows', 'end', 'style', 'fillpaint', 'color']), true);
+    assert.equal(m.equal(cpp, ts, input, ['params', 'width']), null);
+    // A head filled with another colour than the connector's stroke is not the restyle.
+    const wrong = conn({ ...blue, fillpaint: { type: 1 } }, { ...blue, fillpaint: { color: -65536, type: 2 } });
+    assert.equal(m.equal(wrong, ts, input, ['arrows', 'end', 'style', 'fillpaint', 'color']), false);
+    // TS changed the stored head: not this entry's.
+    const tsMoved = conn(blue, { fillpaint: { color: -16776961, type: 2 } });
+    assert.equal(m.equal(cpp, tsMoved, input, ['arrows', 'end', 'style', 'fillpaint', 'color']), null);
+    // Not a connector.
+    const shape = L({ type: 'templated', style: { fillpaint: { type: 1 } } });
+    assert.equal(m.equal(shape, L({ type: 'templated' }), L({ type: 'templated' }), ['style']), null);
+    // The input already had a fill: not the draw's no-fill.
+    assert.equal(m.equal(cpp, ts, conn({ ...blue, fillpaint: { type: 1 } }, stored), ['style', 'fillpaint']), null);
+  });
+});
+
+describe('cpp_oom browser retry (G1)', () => {
+  const board = (/** @type {object} */ style) =>
+    JSON.stringify({ info: { version: '4.2' }, style, pages: { p: { name: 'P', order: 1, objects: {} } } });
+  const base = async () => {
+    const { compareBoard } = await import('../json/compare.mjs');
+    const reg = compileRules([]);
+    return { compareBoard, reg, filed: new Set(), board: { idx: 'b1', file: 'x.lekh' }, inputText: board({}) };
+  };
+  it('an out-of-memory Node oracle with no retry stays cpp_oom', async () => {
+    const { compareBoard, ...a } = await base();
+    const r = compareBoard({
+      ...a,
+      cpp: { ok: false, oom: true },
+      ts: { ok: true, json: board({}) },
+      stamp: 'app',
+      customer: true,
+    });
+    assert.equal(r.status, 'cpp_oom');
+    assert.equal(r.browser_retry, 'unavailable');
+  });
+  it('a board the browser oracle loaded is compared; the root style is not checked', async () => {
+    const { compareBoard, ...a } = await base();
+    const r = compareBoard({
+      ...a,
+      cpp: { ok: true, json: board({ fontsize: 15 }).replace('"4.2"', '"5.0"') },
+      ts: { ok: true, json: board({ fillpaint: { type: 1 } }).replace('"4.2"', '"5.0"') },
+      stamp: 'app',
+      customer: true,
+      retry: 'ok',
+    });
+    assert.equal(r.status, 'equal');
+    assert.equal(r.oracle, 'browser');
+    assert.equal(r.root_style_ok, null);
+  });
+  it('a browser retry that crashed again is cpp_oom with its outcome', async () => {
+    const { compareBoard, ...a } = await base();
+    const r = compareBoard({
+      ...a,
+      cpp: { ok: false, oom: true },
+      ts: { ok: true, json: board({}) },
+      stamp: 'app',
+      customer: true,
+      retry: 'oom',
+    });
+    assert.equal(r.status, 'cpp_oom');
+    assert.equal(r.browser_retry, 'oom');
   });
 });

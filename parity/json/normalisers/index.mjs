@@ -6,6 +6,7 @@
 // and the differing path below the matched one as a fourth (null: not applicable; the next rule is
 // tried).
 import * as dateMalformed from './date-malformed.mjs';
+import * as drawRestyle from './draw-restyle.mjs';
 import * as emptyLineGeneratorData from './empty-line-generator-data.mjs';
 import * as emptyTextLine from './empty-text-line.mjs';
 import * as geometryPrecision from './geometry-precision.mjs';
@@ -38,6 +39,7 @@ export const NORMALISERS = Object.freeze({
   [sixDigitData.name]: sixDigitData,
   [geometryPrecision.name]: geometryPrecision,
   [phantomPage.name]: phantomPage,
+  [drawRestyle.name]: drawRestyle,
 });
 
 /** The canonicalisation steps every comparison applies (no rule needed). */

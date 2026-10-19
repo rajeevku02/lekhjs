@@ -1,0 +1,23 @@
+id: DR-ENG-29
+title: 'Drawing a connector does not rewrite its stored style or its arrowheads'
+area: ENG
+kind: bug-fix
+cpp: 'ConnectionObject::draw called drawingProfile.setNoFill() and IArrowObject::drawArrows restyled the stored arrowhead templates from the connector (stroke paint and width, no dash, a filled head filled with the stroke colour over white), so a board saved after a draw carried fillpaint {type: 1} on every connector and restyled arrowhead styles, and one saved without a draw (kashi, the Node oracle) did not'
+ts: 'model/ ConnectionObject.layout sets no fill only on a connector that has a fill, and ArrowHeads.layout restyles a drawn copy of each arrowhead (AC-BE-08: layout and paint never change serialized state); the drawn look is the same, the stored arrowhead styles stay as loaded'
+user_visible: false
+fixture: parity/fixtures/DR-ENG-29/connector-draw-restyle.lekh
+rule:
+  json:
+    - path: '/pages/*/objects/*'
+      op: normalise
+      normaliser: draw-restyle
+    - path: '/pages/*/objects/**/object'
+      op: normalise
+      normaliser: draw-restyle
+  image: null
+  perf: null
+evidence: 'A1 (G1) corpus run: seen only on boards the Node oracle cannot load (cpp_oom), retried in the browser oracle, whose loadDoc draws once; the fixture reproduces it on the C++ web build (connector-draw-restyle.cpp-web.json) and not on the Node oracle; the TS web build (connector-draw-restyle.ts-web.json) and the Node TS runner keep the stored styles. test/json.test.mjs (draw-restyle)'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

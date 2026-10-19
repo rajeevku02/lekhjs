@@ -1,0 +1,176 @@
+{
+  "attributes": { "grid": { "present": true }, "scaling": { "scale": 1, "unit": "point" } },
+  "info": { "author": "", "description": "", "platform": "1", "title": "Sample", "version": "5.0" },
+  "pages": {
+    "p1": {
+      "background": { "color": -1 },
+      "canvasname": "",
+      "canvassizetype": "auto",
+      "name": "Page one",
+      "objects": {
+        "a": {
+          "name": "",
+          "order": 1,
+          "params": { "angle": 0, "cx": 100, "cy": 100, "height": 80, "width": 120 },
+          "template": {
+            "data": ["0", "0", "w", "h"],
+            "default": { "angle": 0, "height": 10, "width": 10 },
+            "draw": [{ "path": "R 0 1 2 3" }],
+            "flags": 7,
+            "id": "avabodh.basic.rectangle",
+            "texts": [{ "location": "0 1 2 3", "text": "" }]
+          },
+          "type": "templated"
+        },
+        "b": {
+          "name": "",
+          "order": 2,
+          "params": { "angle": 0, "cx": 400, "cy": 100, "height": 80, "width": 120 },
+          "template": {
+            "data": ["0", "0", "w", "h"],
+            "default": { "angle": 0, "height": 10, "width": 10 },
+            "draw": [{ "path": "R 0 1 2 3" }],
+            "flags": 7,
+            "id": "avabodh.basic.rectangle",
+            "texts": [{ "location": "0 1 2 3", "text": "" }]
+          },
+          "type": "templated"
+        },
+        "c": {
+          "name": "",
+          "order": 3,
+          "params": { "angle": 0, "cx": 100, "cy": 300, "height": 80, "width": 120 },
+          "template": {
+            "data": ["0", "0", "w", "h"],
+            "default": { "angle": 0, "height": 10, "width": 10 },
+            "draw": [{ "path": "R 0 1 2 3" }],
+            "flags": 7,
+            "id": "avabodh.basic.rectangle",
+            "texts": [{ "location": "0 1 2 3", "text": "" }]
+          },
+          "type": "templated"
+        },
+        "d": {
+          "name": "",
+          "order": 4,
+          "params": { "angle": 0, "cx": 400, "cy": 300, "height": 80, "width": 120 },
+          "template": {
+            "data": ["0", "0", "w", "h"],
+            "default": { "angle": 0, "height": 10, "width": 10 },
+            "draw": [{ "path": "R 0 1 2 3" }],
+            "flags": 7,
+            "id": "avabodh.basic.rectangle",
+            "texts": [{ "location": "0 1 2 3", "text": "" }]
+          },
+          "type": "templated"
+        },
+        "e": {
+          "name": "",
+          "order": 5,
+          "params": { "angle": 0, "cx": 100, "cy": 500, "height": 80, "width": 120 },
+          "template": {
+            "data": ["0", "0", "w", "h"],
+            "default": { "angle": 0, "height": 10, "width": 10 },
+            "draw": [{ "path": "R 0 1 2 3" }],
+            "flags": 7,
+            "id": "avabodh.basic.rectangle",
+            "texts": [{ "location": "0 1 2 3", "text": "" }]
+          },
+          "type": "templated"
+        },
+        "f": {
+          "name": "",
+          "order": 6,
+          "params": { "angle": 0, "cx": 400, "cy": 500, "height": 80, "width": 120 },
+          "template": {
+            "data": ["0", "0", "w", "h"],
+            "default": { "angle": 0, "height": 10, "width": 10 },
+            "draw": [{ "path": "R 0 1 2 3" }],
+            "flags": 7,
+            "id": "avabodh.basic.rectangle",
+            "texts": [{ "location": "0 1 2 3", "text": "" }]
+          },
+          "type": "templated"
+        },
+        "k1": {
+          "arrows": {
+            "end": {
+              "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+              "default": { "angle": 0, "height": 9, "width": 6 },
+              "draw": [{ "path": "M 0 1 L 2 3 L 4 5 Z" }],
+              "id": "avabodh.arrow.str",
+              "style": { "fillpaint": { "color": -1, "type": 2 } }
+            }
+          },
+          "ctype": 0,
+          "order": 7,
+          "params": [
+            { "angle1": 0, "angle2": 0, "angleauto": 1, "cdist1": 0.5, "cdistauto": 1 },
+            { "angle1": 0, "angle2": 0, "angleauto": 1, "cdist1": 0.5, "cdistauto": 1 }
+          ],
+          "source": "a",
+          "target": "b",
+          "text": "",
+          "texts": [],
+          "type": "avabodh.basic.connection"
+        },
+        "k2": {
+          "arrows": {
+            "end": {
+              "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+              "default": { "angle": 0, "height": 9, "width": 6 },
+              "draw": [{ "path": "M 0 1 L 2 3 L 4 5 Z" }],
+              "id": "avabodh.arrow.str",
+              "style": { "fillpaint": { "color": -1, "type": 2 } }
+            }
+          },
+          "ctype": 0,
+          "order": 8,
+          "params": [
+            { "angle1": 0, "angle2": 0, "angleauto": 1, "cdist1": 0.5, "cdistauto": 1 },
+            { "angle1": 0, "angle2": 0, "angleauto": 1, "cdist1": 0.5, "cdistauto": 1 }
+          ],
+          "source": "c",
+          "style": { "strokepaint": { "color": -16776961, "type": 2 } },
+          "target": "d",
+          "text": "",
+          "texts": [],
+          "type": "avabodh.basic.connection"
+        },
+        "k3": {
+          "arrows": {
+            "end": {
+              "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+              "default": { "angle": 0, "height": 9, "width": 6 },
+              "draw": [{ "path": "M 0 1 L 2 3 L 4 5 Z" }],
+              "id": "avabodh.arrow.str",
+              "style": { "fillpaint": { "color": -1, "type": 2 } }
+            },
+            "start": {
+              "data": ["-w/2", "-h/2", "-w/2", "h/2", "w/2", "0"],
+              "default": { "angle": 0, "height": 9, "width": 6 },
+              "draw": [{ "path": "M 0 1 L 2 3 L 4 5 Z" }],
+              "id": "avabodh.arrow.str",
+              "style": { "fillpaint": { "color": -1, "type": 2 } }
+            }
+          },
+          "ctype": 0,
+          "order": 9,
+          "params": [
+            { "angle1": 0, "angle2": 0, "angleauto": 1, "cdist1": 0.5, "cdistauto": 1 },
+            { "angle1": 0, "angle2": 0, "angleauto": 1, "cdist1": 0.5, "cdistauto": 1 }
+          ],
+          "source": "e",
+          "style": { "strokepaint": { "color": -2130771968, "type": 2 }, "strokewidth": 3 },
+          "target": "f",
+          "text": "",
+          "texts": [],
+          "type": "avabodh.basic.connection"
+        }
+      },
+      "order": 1,
+      "size": { "height": 0, "unit": "point", "width": 0 }
+    }
+  },
+  "style": { "fillpaint": { "type": 1 }, "strokepaint": { "color": -16777216, "type": 2 } }
+}

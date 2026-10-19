@@ -164,6 +164,11 @@ export interface ExportEnv {
   readonly loadPdf?: () => Promise<PdfRenderer>;
   /** Tests and tuning: the safe single-canvas budget (default 16,777,216 px, 8,192 px a side). */
   readonly canvasBudget?: { readonly pixels: number; readonly side: number };
+  /**
+   * Tests and tuning: how many pixels of a band are encoded between two yields to the UI (default
+   * 2,097,152), so no single task encodes a whole band (a long task over 1 s on the box at 16 MP).
+   */
+  readonly encodeSlicePixels?: number;
 }
 
 /**

@@ -6,7 +6,9 @@
 // - Banded above it: full-width bands of `floor(16 MP / width)` rows (JPEG: rounded down to a
 //   multiple of 16, the MCU height), one synchronous draw each with a band transform, their
 //   `getImageData` rows streamed through `PngStreamEncoder` / `JpegStreamEncoder` to the sink. Only
-//   one band is alive at a time.
+//   one band is alive at a time. A band's rows are encoded in slices of about 2 MP with a yield to
+//   the UI between slices (`between`), so the encoder never holds the main thread for a whole band
+//   (L-02 found 1.3-1.5 s tasks encoding 16 MP PNG bands on the 2-core box).
 // - Background: JPEG is filled white, then with the page's background colour when "Include
 //   background" is on (an image background paints white, as on screen); PNG stays transparent.
 import { Canvas2DDrawingPlatform } from '../../render';
@@ -52,6 +54,9 @@ function fillGround(ctx: RasterContext2D, w: number, h: number, page: Page, inpu
   }
 }
 
+/** Pixels of a band encoded between two yields (spec 08 §5; verification 03 L-02, no task > 1 s). */
+export const ENCODE_SLICE_PIXELS = 2_097_152;
+
 /** Band height for a page `width` px wide under the budget. */
 export function bandRows(width: number, format: 'png' | 'jpg', budget = SAFE_CANVAS_PIXELS): number {
   let rows = Math.max(1, Math.floor(budget / width));
@@ -91,6 +96,8 @@ export async function exportRasterPage(input: RasterPageInput): Promise<void> {
   }
 
   const rows = bandRows(w, input.format, env.canvasBudget?.pixels);
+  let slice = Math.max(1, Math.floor((env.encodeSlicePixels ?? ENCODE_SLICE_PIXELS) / w));
+  if (input.format === 'jpg') slice = Math.max(JPEG_BAND_ROWS, slice - (slice % JPEG_BAND_ROWS));
   const canvas = env.canvasFactory.createCanvas(w, Math.min(rows, h));
   const ctx = context(canvas);
   const enc = input.format === 'png' ? new PngStreamEncoder(w, h) : new JpegStreamEncoder(w, h, 100);
@@ -106,10 +113,17 @@ export async function exportRasterPage(input: RasterPageInput): Promise<void> {
       source.drawForExport(dp, rp.plan.pageIndex, input.includeBackground, view);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       const data = ctx.getImageData(0, 0, w, bh).data;
-      enc.pushRows(data, bh);
-      if (y0 + bh >= h) enc.finish();
-      await input.out(enc.take());
-      await input.between(y0 + bh);
+      // JPEG slices stay a multiple of 16 rows except the band's last (the encoder buffers a
+      // partial MCU row across pushes anyway).
+      const stride = w * 4;
+      for (let r0 = 0; r0 < bh; r0 += slice) {
+        const n = Math.min(slice, bh - r0);
+        enc.pushRows(data.subarray(r0 * stride, (r0 + n) * stride), n);
+        const last = y0 + r0 + n >= h;
+        if (last) enc.finish();
+        await input.out(enc.take());
+        await input.between(y0 + r0 + n);
+      }
     }
   } finally {
     canvas.width = 0;

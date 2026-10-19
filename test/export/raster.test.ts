@@ -8,6 +8,7 @@ import {
   MAX_TOTAL_PIXELS,
   planRaster,
   type ExportPagePlan,
+  type ExportProgress,
   type RasterCanvasFactory,
 } from '../../src/export';
 import { boardSession, env, jpegSize, napiFactory, pixelsOf, pngSize, rectBoard, recordingSink, run } from './helpers';
@@ -167,6 +168,36 @@ describe('banded output equals the single-canvas render', () => {
     const a = await pixelsOf(one.rec.file('B.png'));
     expect(created).toEqual([[a.width, Math.floor(20_000 / a.width)]]);
     const b = await pixelsOf(banded.rec.file('B.png'));
+    expect([b.width, b.height]).toEqual([a.width, a.height]);
+    expect(Buffer.from(b.data).equals(Buffer.from(a.data))).toBe(true);
+  });
+
+  it('a band is encoded in slices with a yield between them, the same pixels (verification 03 L-02)', async () => {
+    const whole = recordingSink();
+    const wholeProgress: ExportProgress[] = [];
+    const budget = { pixels: 20_000, side: 100 };
+    await run(
+      s(),
+      { format: 'png', scale: 2 },
+      env({ sink: whole.sink, canvasBudget: budget }),
+      undefined,
+      wholeProgress,
+    );
+    const sliced = recordingSink();
+    const slicedProgress: ExportProgress[] = [];
+    const r = await run(
+      s(),
+      { format: 'png', scale: 2 },
+      env({ sink: sliced.sink, canvasBudget: budget, encodeSlicePixels: 4_000 }),
+      undefined,
+      slicedProgress,
+    );
+    expect(r.status).toBe('done');
+    const encoding = (ps: ExportProgress[]) => ps.filter((p) => p.phase === 'encoding').length;
+    // Before the slicing, one yield per band; a 20,000 px band in 4,000 px slices yields 5 times.
+    expect(encoding(slicedProgress)).toBeGreaterThanOrEqual(4 * encoding(wholeProgress));
+    const a = await pixelsOf(whole.rec.file('B.png'));
+    const b = await pixelsOf(sliced.rec.file('B.png'));
     expect([b.width, b.height]).toEqual([a.width, a.height]);
     expect(Buffer.from(b.data).equals(Buffer.from(a.data))).toBe(true);
   });

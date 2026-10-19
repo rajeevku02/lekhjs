@@ -601,20 +601,31 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
     let len = 0;
     for (let i = 0; i < pts.length - 1; i++) len += getDistance(pts[i] as Point, pts[i + 1] as Point);
     if (len < 0.01) return; // total length very small: nothing to draw
-    const segments: LineSegment[] = [];
-    let lenSum = 0;
+    // Every label's centre first, then the clips. C++ `drawLines` set a label's centre while
+    // walking the segment it sits on and clipped every segment by all the labels' centres as they
+    // were at that moment, so a segment before a label's own one was clipped by that label's
+    // centre from the previous draw (the stored one on the first draw). C++ draws a board at
+    // least twice before anything is shown or exported, which settles every centre; TS lays a
+    // connector out once, so it computes the settled centres up front. Without this, a label next
+    // to a corner whose stored centre is stale cut a gap into the segment before its own one.
+    let lenAt = 0;
     for (let i = 0; i < pts.length - 1; i++) {
-      const prevLen = lenSum;
-      const prevT = prevLen / len;
+      const prevLen = lenAt;
       const firstPoint = pts[i] as Point;
       const secondPoint = pts[i + 1] as Point;
-      lenSum += getDistance(firstPoint, secondPoint);
-      const t = lenSum / len;
-      const seg = new LineSegment(firstPoint, secondPoint);
+      lenAt += getDistance(firstPoint, secondPoint);
+      const prevT = prevLen / len;
+      const t = lenAt / len;
       for (const ti of this.texts) {
         if (ti.param >= prevT && ti.param < t)
           ti.center = getPointAtDistance(firstPoint, secondPoint, len * ti.param - prevLen);
       }
+    }
+    const segments: LineSegment[] = [];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const firstPoint = pts[i] as Point;
+      const secondPoint = pts[i + 1] as Point;
+      const seg = new LineSegment(firstPoint, secondPoint);
       const clipped: LineSegment[] = [];
       for (const ti of this.texts) if (ti.text !== '') clipped.push(...seg.clip(this.textRect(ti)));
       clipped.sort((a, b) => getDistance(firstPoint, a.point1()) - getDistance(firstPoint, b.point1()));

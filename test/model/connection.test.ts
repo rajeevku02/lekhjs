@@ -117,6 +117,35 @@ describe('labels and arrows', () => {
     expect(con.selectionRect().height).toBeGreaterThan(12);
   });
 
+  it('a label with a stale stored centre cuts only its own leg on the first layout (C++ settled draw)', () => {
+    const env = kindsEnv();
+    const a = rect(env, 0, 0, 40, 40);
+    const b = rect(env, 200, 200, 40, 40);
+    const con = ConnectionObject.getAutoConnection(env, a, b, AutoType.Auto2LineA);
+    layOut(a, b, con);
+    const pts = con.routePoints();
+    expect(pts.length).toBe(3);
+    const [p0, p1, p2] = pts as [Point, Point, Point];
+    const len1 = Math.hypot(p1.x - p0.x, p1.y - p0.y);
+    const len2 = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    // On the second leg; its stored centre is stale, in the middle of the first leg.
+    const param = (len1 + len2 * 0.6) / (len1 + len2);
+    const stale = new Point((p0.x + p1.x) / 2, (p0.y + p1.y) / 2);
+    const paintLog = (): string[] => {
+      const dp = new LogPlatform();
+      con.paint(dp, paintEnv());
+      return dp.log;
+    };
+    con.setTexts([{ text: 'Yes', param, center: stale }]);
+    layOut(a, b, con);
+    const first = paintLog();
+    expect(con.textInfos()[0]?.center.equals(stale)).toBe(false);
+    con.invalidate();
+    layOut(a, b, con);
+    expect(first).toEqual(paintLog()); // the first layout already draws what a second one does
+    expect(first.filter((l) => l.startsWith('M')).length).toBe(2); // one gap, on the second leg only
+  });
+
   it('editing: an existing label is found, a tap near the route adds one ("Text")', () => {
     const env = kindsEnv();
     const store = kindsStore(env);

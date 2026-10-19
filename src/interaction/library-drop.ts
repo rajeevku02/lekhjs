@@ -20,8 +20,14 @@ export class LibraryDropHandler {
     this.overlay_ = overlay;
   }
 
-  /** A new object of a catalog template at its default size (C++ `getObjectFromTemplate`). */
+  /**
+   * C++ `TemplateStore::getObjectFromTemplate`: a copy of the library object keyed by the template
+   * (so the size its library gives it: Add Rectangle is 112 × 75, Add Circle 100 × 100), else a new
+   * object of the template at the template's default size.
+   */
   objectFromTemplate(templateId: string): TemplatedObject | null {
+    const lib = this.board_.libraryObject?.(templateId) ?? null;
+    if (lib instanceof TemplatedObject) return lib;
     const tmpl = this.board_.template(templateId);
     if (tmpl === null) return null;
     const a = tmpl.defaultAttr;

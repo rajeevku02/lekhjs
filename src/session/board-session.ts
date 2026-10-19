@@ -1142,11 +1142,15 @@ export class BoardSession {
     const c = this.commands;
     switch (cmd.kind) {
       case 'undo':
-        this.applySelection(c.undo());
+      case 'redo': {
+        // Undoing a page action (add, delete, rename, reorder, duplicate) changes no object, so
+        // nothing else would tell the view: announce it as a view change, as a remote page change
+        // is (`pagesChanged`), so the page list and the pages button follow.
+        const pages = this.pageSignature();
+        this.applySelection(cmd.kind === 'undo' ? c.undo() : c.redo());
+        if (this.pageSignature() !== pages) this.markView();
         return;
-      case 'redo':
-        this.applySelection(c.redo());
-        return;
+      }
       case 'select':
         this.setSelection(this.resolve(cmd.ids).map((o) => o.id));
         return;
@@ -1256,6 +1260,12 @@ export class BoardSession {
     if (same) return;
     this.selection_ = Object.freeze(ids.slice());
     this.pending_.selection = true;
+  }
+
+  /** The pages as the UI shows them: ids, names and orders in order, and the active index. */
+  private pageSignature(): string {
+    const d = this.doc_;
+    return `${String(d.activePageIndex)}|${d.pages.map((p) => `${p.id}:${String(p.order)}:${p.name}`).join('\n')}`;
   }
 
   private markView(): void {

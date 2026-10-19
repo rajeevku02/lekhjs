@@ -44,6 +44,12 @@ export interface InteractionBoard {
   objectEnv(): ObjectEnv;
   /** A fresh, loaded instance of a catalog template (C++ `TemplateStore::getTemplate`). */
   template(id: string): ShapeTemplate | null;
+  /**
+   * A fresh copy of the library object a library category keyed by template `id`, with the size
+   * the library gives it (C++ `TemplateStore::getObject(id)->clone()`); `null` when no library
+   * object has that template.
+   */
+  libraryObject?(id: string): LekhObject | null;
   selection(): readonly string[];
   /** Replaces the selection (ids on the active page). */
   select(ids: readonly string[]): void;
@@ -158,6 +164,18 @@ export class SessionBoard implements InteractionBoard {
 
   template(id: string): ShapeTemplate | null {
     return this.session.editor.env.codec.env.templates.resolver.getTemplate(id);
+  }
+
+  libraryObject(id: string): LekhObject | null {
+    const def = this.session.overlay.getEmbed(id);
+    const json = def?.object ?? null;
+    if (json === null) return null;
+    try {
+      const typed = typeof json['type'] === 'string' ? json : { ...json, type: 'templated' };
+      return this.session.codec.readObject(typed, undefined, this.session.editor.doc).object;
+    } catch {
+      return null;
+    }
   }
 
   selection(): readonly string[] {

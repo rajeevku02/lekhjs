@@ -1,0 +1,425 @@
+{
+ "info": {
+  "author": "",
+  "description": "",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "objects": {
+    "a": {
+     "type": "templated",
+     "name": "",
+     "order": 1,
+     "params": {
+      "angle": 0,
+      "cx": 1524.17,
+      "cy": 2016.38,
+      "width": 104.348,
+      "height": 104.348
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "b": {
+     "type": "templated",
+     "name": "",
+     "order": 2,
+     "params": {
+      "angle": 1.47406e-07,
+      "cx": 2163.2,
+      "cy": 1894.64,
+      "width": 243.478,
+      "height": 115.942
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "c1": {
+     "type": "avabodh.basic.connection",
+     "order": 4,
+     "ctype": 1,
+     "source": "a",
+     "target": "b",
+     "params": [
+      {
+       "angle": 0,
+       "autotype": 1
+      },
+      {
+       "angle": 0
+      }
+     ],
+     "text": "",
+     "texts": []
+    },
+    "b0": {
+     "type": "templated",
+     "name": "",
+     "order": 10,
+     "params": {
+      "angle": 0,
+      "cx": 2163.2,
+      "cy": 2194.6400000000003,
+      "width": 243.478,
+      "height": 115.942
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "a0": {
+     "type": "templated",
+     "name": "",
+     "order": 20,
+     "params": {
+      "angle": 0,
+      "cx": 1524.17,
+      "cy": 2316.38,
+      "width": 104.348,
+      "height": 104.348
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "c5": {
+     "type": "avabodh.basic.connection",
+     "order": 30,
+     "ctype": 1,
+     "source": "a0",
+     "target": "b0",
+     "params": [
+      {
+       "angle": 0,
+       "autotype": 1
+      },
+      {
+       "angle": 0
+      }
+     ],
+     "text": "",
+     "texts": []
+    },
+    "b1": {
+     "type": "templated",
+     "name": "",
+     "order": 11,
+     "params": {
+      "angle": 0.3,
+      "cx": 2163.2,
+      "cy": 2494.6400000000003,
+      "width": 243.478,
+      "height": 115.942
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "a1": {
+     "type": "templated",
+     "name": "",
+     "order": 21,
+     "params": {
+      "angle": 0,
+      "cx": 1524.17,
+      "cy": 2616.38,
+      "width": 104.348,
+      "height": 104.348
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "c6": {
+     "type": "avabodh.basic.connection",
+     "order": 31,
+     "ctype": 1,
+     "source": "a1",
+     "target": "b1",
+     "params": [
+      {
+       "angle": 0,
+       "autotype": 1
+      },
+      {
+       "angle": 0
+      }
+     ],
+     "text": "",
+     "texts": []
+    },
+    "b2": {
+     "type": "templated",
+     "name": "",
+     "order": 12,
+     "params": {
+      "angle": 1.5708,
+      "cx": 2163.2,
+      "cy": 2794.6400000000003,
+      "width": 243.478,
+      "height": 115.942
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "a2": {
+     "type": "templated",
+     "name": "",
+     "order": 22,
+     "params": {
+      "angle": 0,
+      "cx": 1524.17,
+      "cy": 2916.38,
+      "width": 104.348,
+      "height": 104.348
+     },
+     "template": {
+      "data": [
+       "0",
+       "0",
+       "w",
+       "h",
+       "0"
+      ],
+      "default": {
+       "angle": 0,
+       "height": 10,
+       "width": 10
+      },
+      "draw": [
+       {
+        "path": "E 0 1 2 3 4"
+       }
+      ],
+      "flags": 7,
+      "id": "avabodh.basic.ellipse",
+      "style": {
+       "fontsize": 15
+      },
+      "texts": [
+       {
+        "location": "0 1 2 3 4",
+        "text": ""
+       }
+      ]
+     }
+    },
+    "c7": {
+     "type": "avabodh.basic.connection",
+     "order": 32,
+     "ctype": 1,
+     "source": "a2",
+     "target": "b2",
+     "params": [
+      {
+       "angle": 0,
+       "autotype": 1
+      },
+      {
+       "angle": 0
+      }
+     ],
+     "text": "",
+     "texts": []
+    }
+   }
+  }
+ }
+}

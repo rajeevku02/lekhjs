@@ -1,0 +1,314 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "objects": {
+    "t1": {
+     "type": "templated",
+     "name": "",
+     "order": 1,
+     "params": {
+      "cx": 1300,
+      "cy": 871,
+      "width": 140,
+      "height": 105,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.bpmn.activities.task",
+      "data": [],
+      "draw": [],
+      "generator": {
+       "type": "native",
+       "shape": "bpmn.activity",
+       "embedrefs": [
+        "avabodh.bpmn.syms.adhoc",
+        "avabodh.bpmn.syms.businessRule",
+        "avabodh.bpmn.syms.compensation",
+        "avabodh.bpmn.syms.loop",
+        "avabodh.bpmn.syms.manual",
+        "avabodh.bpmn.syms.message",
+        "avabodh.bpmn.syms.messageCircle",
+        "avabodh.bpmn.syms.messageFilled",
+        "avabodh.bpmn.syms.parallelMarker",
+        "avabodh.bpmn.syms.script",
+        "avabodh.bpmn.syms.sequentialMarker",
+        "avabodh.bpmn.syms.service",
+        "avabodh.bpmn.syms.subprocess",
+        "avabodh.bpmn.syms.user"
+       ],
+       "interprettext": false,
+       "text": ""
+      },
+      "params": {
+       "activity": {
+        "value": "Task",
+        "order": 0,
+        "display": "Activity",
+        "editor": {
+         "type": 4,
+         "options": [
+          "Task",
+          "Transcation",
+          "Event Sub-Process",
+          "Call Activity"
+         ]
+        }
+       },
+       "tasktype": {
+        "value": "Receive",
+        "order": 1,
+        "display": "Task Type",
+        "editor": {
+         "type": 4,
+         "options": [
+          "None",
+          "Send",
+          "Receive",
+          "Receive Instantiating",
+          "User",
+          "Manual",
+          "Business Rule",
+          "Service",
+          "Script"
+         ]
+        }
+       },
+       "marker1": {
+        "value": "None",
+        "order": 2,
+        "display": "Activity Marker 1",
+        "editor": {
+         "type": 4,
+         "options": [
+          "None",
+          "Sub-Process",
+          "Loop",
+          "Parallel",
+          "Sequential",
+          "Ad Hoc",
+          "Compensation"
+         ]
+        }
+       },
+       "marker2": {
+        "value": "None",
+        "order": 3,
+        "display": "Activity Marker 2",
+        "editor": {
+         "type": 4,
+         "options": [
+          "None",
+          "Sub-Process",
+          "Loop",
+          "Parallel",
+          "Sequential",
+          "Ad Hoc",
+          "Compensation"
+         ]
+        }
+       }
+      },
+      "texts": [
+       {
+        "location": "default",
+        "text": ""
+       }
+      ],
+      "default": {
+       "width": 140,
+       "height": 105
+      },
+      "style": {
+       "strokewidth": 2,
+       "fillpaint": {
+        "type": 2,
+        "color": -1
+       }
+      }
+     }
+    },
+    "t2": {
+     "type": "templated",
+     "name": "",
+     "order": 2,
+     "params": {
+      "cx": 1500,
+      "cy": 871,
+      "width": 140,
+      "height": 105,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.bpmn.activities.task",
+      "data": [],
+      "draw": [],
+      "generator": {
+       "type": "native",
+       "shape": "bpmn.activity",
+       "embedrefs": [
+        "avabodh.bpmn.syms.adhoc",
+        "avabodh.bpmn.syms.businessRule",
+        "avabodh.bpmn.syms.compensation",
+        "avabodh.bpmn.syms.loop",
+        "avabodh.bpmn.syms.manual",
+        "avabodh.bpmn.syms.message",
+        "avabodh.bpmn.syms.messageCircle",
+        "avabodh.bpmn.syms.messageFilled",
+        "avabodh.bpmn.syms.parallelMarker",
+        "avabodh.bpmn.syms.script",
+        "avabodh.bpmn.syms.sequentialMarker",
+        "avabodh.bpmn.syms.service",
+        "avabodh.bpmn.syms.subprocess",
+        "avabodh.bpmn.syms.user"
+       ],
+       "interprettext": false,
+       "text": ""
+      },
+      "params": {
+       "activity": {
+        "value": "Task",
+        "order": 0,
+        "display": "Activity",
+        "editor": {
+         "type": 4,
+         "options": [
+          "Task",
+          "Transcation",
+          "Event Sub-Process",
+          "Call Activity"
+         ]
+        }
+       },
+       "tasktype": {
+        "value": "User",
+        "order": 1,
+        "display": "Task Type",
+        "editor": {
+         "type": 4,
+         "options": [
+          "None",
+          "Send",
+          "Receive",
+          "Receive Instantiating",
+          "User",
+          "Manual",
+          "Business Rule",
+          "Service",
+          "Script"
+         ]
+        }
+       },
+       "marker1": {
+        "value": "None",
+        "order": 2,
+        "display": "Activity Marker 1",
+        "editor": {
+         "type": 4,
+         "options": [
+          "None",
+          "Sub-Process",
+          "Loop",
+          "Parallel",
+          "Sequential",
+          "Ad Hoc",
+          "Compensation"
+         ]
+        }
+       },
+       "marker2": {
+        "value": "None",
+        "order": 3,
+        "display": "Activity Marker 2",
+        "editor": {
+         "type": 4,
+         "options": [
+          "None",
+          "Sub-Process",
+          "Loop",
+          "Parallel",
+          "Sequential",
+          "Ad Hoc",
+          "Compensation"
+         ]
+        }
+       }
+      },
+      "texts": [
+       {
+        "location": "default",
+        "text": ""
+       }
+      ],
+      "default": {
+       "width": 140,
+       "height": 105
+      },
+      "style": {
+       "strokewidth": 2,
+       "fillpaint": {
+        "type": 2,
+        "color": -1
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "templates": {
+  "avabodh_bpmn_syms_message": {
+   "id": "avabodh.bpmn.syms.message",
+   "data": [
+    "-w*0.5",
+    "-h*0.5",
+    "w*0.5",
+    "-h*0.5",
+    "w*0.5",
+    "h*0.5",
+    "-w*0.5",
+    "h*0.5",
+    "-w*0.5",
+    "-h*0.5",
+    "0",
+    "0",
+    "w*0.5",
+    "-h*0.5"
+   ],
+   "draw": [
+    {
+     "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z",
+     "style": {
+      "fillpaint": {
+       "color": -1,
+       "type": 2
+      },
+      "strokewidth": 1
+     }
+    },
+    {
+     "path": " M 8 9 L 10 11 L 12 13",
+     "style": {
+      "nonoverridables": [
+       "fillPaint"
+      ],
+      "strokewidth": 1
+     }
+    }
+   ],
+   "default": {
+    "angle": 0,
+    "width": 70,
+    "height": 50
+   }
+  }
+ }
+}

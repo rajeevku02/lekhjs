@@ -168,6 +168,97 @@ export function blobs(mask, width, height) {
 }
 
 /**
+ * 8-connected components of a mask fed one row at a time (top to bottom), for pages compared in
+ * tiles (run.mjs): only the previous row's labels are kept, so a page of any height costs one row
+ * of labels plus the components' statistics. `result()` gives the same blobs as `blobs()` over the
+ * whole mask (in a different order).
+ */
+export class BlobStream {
+  /** @param {number} width */
+  constructor(width) {
+    this.width = width;
+    this.prev = new Int32Array(width).fill(-1);
+    this.cur = new Int32Array(width).fill(-1);
+    this.y = 0;
+    /** @type {number[]} */
+    this.parent = [];
+    /** @type {number[][]} minx, miny, maxx, maxy, pixels */
+    this.stats = [];
+  }
+
+  /** @param {number} a */
+  find(a) {
+    const p = this.parent;
+    while (p[a] !== a) {
+      const g = /** @type {number} */ (p[/** @type {number} */ (p[a])]);
+      p[a] = g;
+      a = g;
+    }
+    return a;
+  }
+
+  /** @param {number} a @param {number} b */
+  union(a, b) {
+    a = this.find(a);
+    b = this.find(b);
+    if (a === b) return a;
+    const sa = /** @type {number[]} */ (this.stats[a]);
+    const sb = /** @type {number[]} */ (this.stats[b]);
+    sa[0] = Math.min(/** @type {number} */ (sa[0]), /** @type {number} */ (sb[0]));
+    sa[1] = Math.min(/** @type {number} */ (sa[1]), /** @type {number} */ (sb[1]));
+    sa[2] = Math.max(/** @type {number} */ (sa[2]), /** @type {number} */ (sb[2]));
+    sa[3] = Math.max(/** @type {number} */ (sa[3]), /** @type {number} */ (sb[3]));
+    sa[4] = /** @type {number} */ (sa[4]) + /** @type {number} */ (sb[4]);
+    this.parent[b] = a;
+    return a;
+  }
+
+  /** One mask row (`width` entries, non-zero = differs). @param {Uint8Array} row */
+  row(row) {
+    const { width, prev, cur } = this;
+    const y = this.y;
+    for (let x = 0; x < width; x++) {
+      if (!row[x]) {
+        cur[x] = -1;
+        continue;
+      }
+      let label = -1;
+      const n = [x > 0 ? cur[x - 1] : -1, x > 0 ? prev[x - 1] : -1, prev[x], x + 1 < width ? prev[x + 1] : -1];
+      for (const m of n) {
+        if (m === undefined || m < 0) continue;
+        label = label < 0 ? this.find(m) : this.union(label, m);
+      }
+      if (label < 0) {
+        label = this.parent.length;
+        this.parent.push(label);
+        this.stats.push([x, y, x, y, 0]);
+      }
+      cur[x] = label;
+      const st = /** @type {number[]} */ (this.stats[this.find(label)]);
+      if (x < /** @type {number} */ (st[0])) st[0] = x;
+      if (x > /** @type {number} */ (st[2])) st[2] = x;
+      if (y > /** @type {number} */ (st[3])) st[3] = y;
+      st[4] = /** @type {number} */ (st[4]) + 1;
+    }
+    this.prev = cur;
+    this.cur = prev;
+    this.y++;
+  }
+
+  /** @returns {Blob[]} */
+  result() {
+    /** @type {Blob[]} */
+    const out = [];
+    for (let i = 0; i < this.parent.length; i++) {
+      if (this.parent[i] !== i) continue;
+      const [minx = 0, miny = 0, maxx = 0, maxy = 0, pixels = 0] = /** @type {number[]} */ (this.stats[i]);
+      out.push({ x: minx, y: miny, w: maxx - minx + 1, h: maxy - miny + 1, pixels });
+    }
+    return out;
+  }
+}
+
+/**
  * The §B.3 bar over a diff: `{ pass, fraction, largestBlob, oversized }`.
  * @param {{ count: number, total: number }} d
  * @param {Blob[]} bl

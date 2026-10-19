@@ -9,6 +9,7 @@
 //   node parity/image/run.mjs --input <corpus/sample/image-sample.json | file.lekh> --out <dir>
 //        [--which boards|off] [--boards <dir>] [--res <dir>] [--builds <dir>] [--compat on|off]
 //        [--resume] [--limit N] [--selfdiff <rate>] [--seed N] [--save fail|all|none]
+//        [--board-timeout ms] [--tile-cap pixels]
 //
 // Writes into --out (customer boards: under corpus/out/ only, never published): results.jsonl (one
 // line per board: per-page status, differing fraction, largest blob, scale, masked fraction,
@@ -23,6 +24,8 @@ import {
   existsSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from 'node:fs';
@@ -34,17 +37,20 @@ import { activeEntries, loadRegister } from '../register/load.mjs';
 import { holdHeavyLock } from '../tools/lock.mjs';
 import {
   align,
+  BlobStream,
   bar,
   blobs,
   decodeDataUrl,
+  decodePng,
   diffImages,
   diffPicture,
   encodePng,
   identical,
   inkPixels,
   maxBlob,
+  sideBySide,
 } from './diff.mjs';
-import { flagsByObject, overlongWordsInPage, wrapCandidates } from './attribute.mjs';
+import { flagsByObject, halfPixelEdgeBlob, overlongWordsInPage, textRowShift, wrapCandidates } from './attribute.mjs';
 
 holdHeavyLock();
 
@@ -70,6 +76,7 @@ const { values: opt } = parseArgs({
     save: { type: 'string', default: 'fail' },
     'max-pages': { type: 'string', default: '4' },
     'board-timeout': { type: 'string', default: '180000' },
+    'tile-cap': { type: 'string', default: '400000000' },
   },
 });
 if (!opt.input || !opt.out) {
@@ -83,7 +90,7 @@ const SELFDIFF = Number(opt.selfdiff);
 const MAX_PAGES = Number(opt['max-pages']);
 const BOARD_TIMEOUT = Number(opt['board-timeout']);
 const RECYCLE = 200;
-/** Pages larger than this at scale 1 are compared at a smaller scale (see render). */
+/** Pages larger than this at scale 1 are compared in tiles (see tilePlan). */
 const MAX_PIXELS = 25_000_000;
 const PORTS = { cpp: 4007, ts: 4008 };
 const EXPORT = { region: 'drawing', padding: 20, scale: 1, background: true };
@@ -117,6 +124,29 @@ for (const e of entries) {
   const f = e.data?.rule?.image?.attribute?.object_flag;
   if (typeof f === 'string') attributeRules.push({ id: String(e.data.id), flag: f });
 }
+// DR-ENG-26 (rule.image.attribute.half_pixel_edge: <flag>): an unrotated object with that flag
+// whose edge lies on a pixel's centre line (k + 0.5 in page pixels, as the padding and the half
+// stroke put the edge of an image that bounds the page) is drawn with that row or column by one
+// build and not the other: C++ computes the edge in float32, TS in doubles, and the tie falls
+// either way. Only a one-pixel-thick blob on that row or column, within the edge's span, is claimed.
+const edgeRule = (() => {
+  const e = entries.find((x) => typeof x.data?.rule?.image?.attribute?.half_pixel_edge === 'string');
+  return e === undefined ? null : { id: String(e.data.id), flag: String(e.data.rule.image.attribute.half_pixel_edge) };
+})();
+// DR-ENG-26 (rule.image.attribute.text_row_shift: true): a single-line text drawn one pixel row
+// apart, its baseline on a row's centre line (textRowShift).
+const textShiftRule = (() => {
+  const e = entries.find((x) => x.data?.rule?.image?.attribute?.text_row_shift === true);
+  return e === undefined ? null : { id: String(e.data.id), flag: 'single-line-text' };
+})();
+/** Differing pixels of two equal-sized images under the §B.3 pixelmatch options. @param {any} x @param {any} y */
+const differing = (x, y) => diffImages(x, y).count;
+/**
+ * @param {{ x: number, y: number, w: number, h: number }} blob
+ * @param {{ flags: string[], px: { x: number, y: number, w: number, h: number } }[]} under
+ */
+const edgeClaim = (blob, under) =>
+  edgeRule !== null && halfPixelEdgeBlob(blob, under, edgeRule.flag) ? edgeRule : undefined;
 const phantomRule = entries.some((e) => e.data?.id === 'DR-FMT-01') ? 'DR-FMT-01' : null;
 
 /** UTF-8 byte order of two keys (C++ std::map). @param {string} a @param {string} b */
@@ -287,6 +317,188 @@ async function openPage(engine) {
   return { context, page, net };
 }
 
+// ---- tiled pages (harness) ----
+// A page larger than MAX_PIXELS at scale 1 was exported smaller to stay inside the box's memory,
+// and at scale s the §B.3 blob bar is 16·s² px: at 0.25 any 2 px difference failed a page that
+// passes at scale 1. Such pages are compared at scale 1 in tiles instead (or, when the page is
+// over TILE_CAP pixels at scale 1, at the largest power-of-two scale under it): both builds draw
+// the same pixel rectangles of the C++ export frame (C++: the hook's export canvas sized to the
+// tile and translated; TS: `frame`), each tile is diffed with an overlap so pixelmatch's
+// anti-aliasing test sees the same neighbours, and the blobs are labelled over the whole page
+// row by row (BlobStream). Tiles go to OUT/tiles/ and are removed after the comparison.
+// --tile-cap <pixels> (default 400 MP) bounds the page at the scale compared, so the run time.
+const TILE_CAP = Number(opt['tile-cap']);
+const TILE_W = 8192;
+const TILE_PIXELS = 16_000_000;
+const TILE_OVERLAP = 4;
+const TILES = path.join(OUT, 'tiles');
+
+/**
+ * The tiled plan of C++ page `i` (null when the page is at most MAX_PIXELS at scale 1).
+ * @param {any} page
+ * @param {number} i
+ */
+async function tilePlan(page, i) {
+  const L = await page.evaluate(
+    (/** @type {{ i: number, pad: number }} */ a) => {
+      const l = /** @type {any} */ (globalThis).Module.lekhTestExportLayout(a.i, 1, a.pad, 1);
+      return l.ok ? { width: l.width, height: l.height, ox: -l.translateX, oy: -l.translateY } : null;
+    },
+    { i, pad: EXPORT.padding },
+  );
+  if (L === null) return null;
+  const at = (/** @type {number} */ s) => ({
+    W: Math.max(1, Math.round(L.width * s)),
+    H: Math.max(1, Math.round(L.height * s)),
+  });
+  const one = at(1);
+  if (one.W * one.H <= MAX_PIXELS) return null;
+  let s = 1;
+  while (at(s).W * at(s).H > TILE_CAP) s /= 2;
+  const { W, H } = at(s);
+  const SH = Math.max(16, Math.floor(TILE_PIXELS / Math.min(W, TILE_W)));
+  const tiles = [];
+  for (let y = 0; y < H; y += SH)
+    for (let x = 0; x < W; x += TILE_W) {
+      const core = { x, y, w: Math.min(TILE_W, W - x), h: Math.min(SH, H - y) };
+      const x0 = Math.max(0, x - TILE_OVERLAP);
+      const y0 = Math.max(0, y - TILE_OVERLAP);
+      const x1 = Math.min(W, core.x + core.w + TILE_OVERLAP);
+      const y1 = Math.min(H, core.y + core.h + TILE_OVERLAP);
+      tiles.push({ core, ext: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } });
+    }
+  return { s, W, H, ox: L.ox, oy: L.oy, bw: L.width, bh: L.height, tiles };
+}
+
+/**
+ * Exports the plan's tiles of page `i` to PNG files; for TS also the objects and whether its own
+ * export frame differs from the C++ one (DR-ENG-17, as `reframed`).
+ * @param {any} page
+ * @param {'cpp' | 'ts'} engine
+ * @param {number} i
+ * @param {any} plan
+ */
+async function tiledExport(page, engine, i, plan) {
+  mkdirSync(TILES, { recursive: true });
+  const files = [];
+  /** @type {string[]} */
+  const hashes = [];
+  const stem = `${process.pid}-${Date.now()}-${engine}-p${i}`;
+  for (let k = 0; k < plan.tiles.length; k++) {
+    const ext = plan.tiles[k].ext;
+    const e = await page.evaluate(
+      async (/** @type {{ i: number, o: any, plan: any, ext: any, ts: boolean }} */ a) => {
+        const t = /** @type {any} */ (globalThis).__lekhTest;
+        const s = a.plan.s;
+        if (a.ts) {
+          const f = {
+            x: a.plan.ox + a.ext.x / s,
+            y: a.plan.oy + a.ext.y / s,
+            width: a.ext.w / s,
+            height: a.ext.h / s,
+          };
+          const r = await t.exportPage(a.i, { ...a.o, scale: s, frame: f });
+          return { dataUrl: r.dataUrl, w: r.width, h: r.height };
+        }
+        // C++: the hook sizes its canvas to the whole page; the canvas it creates is sized to the
+        // tile instead and its context translated to the tile's corner.
+        const doc = /** @type {any} */ (globalThis).document;
+        const P = /** @type {any} */ (globalThis).HTMLCanvasElement.prototype;
+        const dw = /** @type {any} */ (Object.getOwnPropertyDescriptor(P, 'width'));
+        const dh = /** @type {any} */ (Object.getOwnPropertyDescriptor(P, 'height'));
+        const real = doc.createElement;
+        doc.createElement = function (/** @type {string} */ tag, /** @type {any} */ opts) {
+          const el = real.call(doc, tag, opts);
+          if (String(tag).toLowerCase() !== 'canvas') return el;
+          let mine = false;
+          let vw = 0;
+          let vh = 0;
+          Object.defineProperty(el, 'width', {
+            configurable: true,
+            get: () => (mine ? vw : dw.get.call(el)),
+            set: (/** @type {number} */ v) => {
+              if (!mine && v === a.plan.W) mine = true;
+              if (mine) {
+                vw = v;
+                dw.set.call(el, a.ext.w);
+              } else dw.set.call(el, v);
+            },
+          });
+          Object.defineProperty(el, 'height', {
+            configurable: true,
+            get: () => (mine ? vh : dh.get.call(el)),
+            set: (/** @type {number} */ v) => {
+              if (mine) {
+                vh = v;
+                dh.set.call(el, a.ext.h);
+              } else dh.set.call(el, v);
+            },
+          });
+          let translated = false;
+          el.getContext = function (/** @type {any[]} */ ...args) {
+            const c = P.getContext.apply(el, args);
+            if (mine && c !== null && !translated) {
+              translated = true;
+              c.translate(-a.ext.x, -a.ext.y);
+            }
+            return c;
+          };
+          return el;
+        };
+        try {
+          const r = await t.exportPage(a.i, { ...a.o, scale: s });
+          return { dataUrl: r.dataUrl, w: r.width, h: r.height };
+        } finally {
+          doc.createElement = real;
+        }
+      },
+      { i, o: EXPORT, plan, ext, ts: engine === 'ts' },
+    );
+    const m = /^data:image\/png;base64,(.*)$/.exec(e.dataUrl);
+    if (m === null) return { ok: false, error: `tile ${k}: export is not a PNG data URL` };
+    const file = path.join(TILES, `${stem}-${k}.png`);
+    const bytes = Buffer.from(m[1] ?? '', 'base64');
+    writeFileSync(file, bytes);
+    files.push(file);
+    hashes.push(createHash('sha256').update(bytes).digest('hex'));
+  }
+  /** @type {any} */
+  let reframed = null;
+  /** @type {any} */
+  let objects = null;
+  if (engine === 'ts') {
+    const info = await page.evaluate(
+      async (/** @type {{ i: number, o: any }} */ a) => {
+        const t = /** @type {any} */ (globalThis).__lekhTest;
+        const p = typeof t.exportPlan === 'function' ? t.exportPlan(a.i, a.o) : null;
+        return { plan: p, objects: typeof t.objects === 'function' ? t.objects(a.i) : null };
+      },
+      { i, o: EXPORT },
+    );
+    objects = info.objects;
+    const p = info.plan;
+    // Without the hook's plan the TS frame is unknown: no DR-ENG-17 credit.
+    if (
+      p !== null &&
+      (Math.abs(p.x - plan.ox) >= 1e-3 ||
+        Math.abs(p.y - plan.oy) >= 1e-3 ||
+        Math.round(p.width * plan.s) !== plan.W ||
+        Math.round(p.height * plan.s) !== plan.H)
+    )
+      reframed = { ox: p.x, oy: p.y, w: Math.round(p.width * plan.s), h: Math.round(p.height * plan.s) };
+  }
+  return {
+    ok: true,
+    tiled: plan,
+    files,
+    hashes,
+    origin: { x: plan.ox, y: plan.oy },
+    scale: plan.s,
+    objects,
+    reframed,
+  };
+}
+
 /**
  * Loads `text` in a fresh page of `engine` and exports up to MAX_PAGES pages; for TS also the
  * page's objects (ids, kinds, rects) for masking and attribution. `scales` (TS) are the scales
@@ -355,6 +567,13 @@ async function render(engine, text, scales, compat, wrapCands = null, refs = nul
           if (net.res + net.resMissing === before) break;
         }
       }
+      // A page over MAX_PIXELS at scale 1 is compared in tiles at the largest scale whose page is
+      // at most TILE_CAP pixels (tiledExport); smaller pages as one image, as before.
+      const plan = engine === 'cpp' ? await tilePlan(page, i) : (ref?.tiled ?? null);
+      if (plan !== null) {
+        pages.push(await tiledExport(page, engine, i, plan));
+        continue;
+      }
       const out = await page.evaluate(
         async (/** @type {{ i: number, o: any, scales: number[], ref: any, maxPixels: number }} */ a) => {
           const t = /** @type {any} */ (globalThis).__lekhTest;
@@ -418,10 +637,14 @@ async function render(engine, text, scales, compat, wrapCands = null, refs = nul
 
 /** @param {Promise<any>} p @param {number} ms */
 function withTimeout(p, ms) {
+  /** @type {NodeJS.Timeout | undefined} */
+  let timer;
   return Promise.race([
     p,
-    new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error('timeout'), { timeout: true })), ms)),
-  ]);
+    new Promise((_, rej) => {
+      timer = setTimeout(() => rej(Object.assign(new Error('timeout'), { timeout: true })), ms);
+    }),
+  ]).finally(() => clearTimeout(timer));
 }
 
 /** Dilated union of rects (pixel space) as a mask. */
@@ -464,35 +687,41 @@ function comparePage(c, t, flags) {
     scale,
     rules: /** @type {string[]} */ ([]),
     dims_equal: true,
-    cpp: { w: c.img.width, h: c.img.height, ox: c.origin.x, oy: c.origin.y },
-    ts: { w: t.img.width, h: t.img.height, ox: t.origin.x, oy: t.origin.y },
+    cpp: c.tiled
+      ? { w: c.tiled.W, h: c.tiled.H, ox: c.origin.x, oy: c.origin.y }
+      : { w: c.img.width, h: c.img.height, ox: c.origin.x, oy: c.origin.y },
+    ts: t.tiled
+      ? { w: c.tiled.W, h: c.tiled.H, ox: t.origin.x, oy: t.origin.y }
+      : { w: t.img.width, h: t.img.height, ox: t.origin.x, oy: t.origin.y },
   };
   if (t.reframed) {
     r.ts_plan = t.reframed;
     if (alignRule !== null) r.rules.push(String(alignRule));
   }
-  let a = c.img;
-  let b = t.img;
+  /** @type {any} */
+  let a = null;
+  /** @type {any} */
+  let b = null;
   let origin = c.origin;
-  if (a.width !== b.width || a.height !== b.height) {
-    r.dims_equal = false;
-    const al = align(a, c.origin, b, t.origin, scale);
-    a = al.a;
-    b = al.b;
-    origin = al.origin;
-    if (alignRule !== null) r.rules.push(String(alignRule));
+  /** @type {DiffSource} */
+  let src;
+  if (c.tiled) {
+    r.tiled = c.tiled.tiles.length;
+    src = tiledSource(c, t);
+  } else {
+    a = c.img;
+    b = t.img;
+    if (a.width !== b.width || a.height !== b.height) {
+      r.dims_equal = false;
+      const al = align(a, c.origin, b, t.origin, scale);
+      a = al.a;
+      b = al.b;
+      origin = al.origin;
+      if (alignRule !== null) r.rules.push(String(alignRule));
+    }
+    src = fullSource(a, b);
   }
-  const d = diffImages(a, b);
-  const bl = blobs(d.mask, d.width, d.height);
-  const v = bar(d, bl, scale);
-  Object.assign(r, { fraction: d.fraction, largest_blob: v.largestBlob, width: d.width, height: d.height });
-  // §B.3 rule 4: a TS page all background where C++ is not
-  const full = { x: 0, y: 0, w: d.width, h: d.height };
-  if (inkPixels(b, full) === 0 && inkPixels(a, full) > 0) return { ...r, status: 'empty', a, b };
-  if (v.pass && r.dims_equal && r.rules.length === 0) return { ...r, status: 'pass', a, b };
-  if (v.pass) return { ...r, status: 'pass_rules', a, b };
-
-  // §B.6 attribution: blobs over objects whose flags a register rule claims.
+  // §B.6 attribution: the objects in page pixels.
   const objs = (t.objects ?? []).map((/** @type {any} */ o) => ({
     id: o.id,
     kind: o.kind,
@@ -502,8 +731,25 @@ function comparePage(c, t, flags) {
       w: o.rect.w * scale,
       h: o.rect.h * scale,
     },
-    flags: [...(flags.get(o.id) ?? []), ...(o.kind === 'connector' ? [] : [])],
+    // §B.5.2 masks text of two lines or more: a line break, or wrapped (the TS layout's count).
+    flags: [
+      ...(flags.get(o.id) ?? []),
+      ...(Number(o.lines ?? 0) >= 2 && !(flags.get(o.id) ?? []).includes('multiline-text') ? ['multiline-text'] : []),
+    ],
   }));
+  // §B.5.2: text objects with ≥ 2 lines, the masking fallback.
+  const multi = objs
+    .filter((/** @type {any} */ o) => o.flags.includes('multiline-text'))
+    .map((/** @type {any} */ o) => o.px);
+  const d = src.diff(multi);
+  const bl = d.blobs;
+  const v = bar(d, bl, scale);
+  Object.assign(r, { fraction: d.count / d.total, largest_blob: v.largestBlob, width: d.width, height: d.height });
+  // §B.3 rule 4: a TS page all background where C++ is not
+  if (!d.inkB && d.inkA) return { ...r, status: 'empty', a, b };
+  if (v.pass && r.dims_equal && r.rules.length === 0) return { ...r, status: 'pass', a, b };
+  if (v.pass) return { ...r, status: 'pass_rules', a, b };
+
   // A blob is over an object when it meets the object's rectangle grown by 2 px and by 30 % of its
   // size each way: text that overflows its box (C++ lets an over-long word or a CJK line run past
   // the box, DR-TXT-03) and stroke or arrowhead overhang are the object's own pixels.
@@ -517,6 +763,28 @@ function comparePage(c, t, flags) {
       if (band && o.flags.includes('text-wrap')) return true;
       return band && bb.x < o.px.x + o.px.w + gx && o.px.x - gx < bb.x + bb.w;
     });
+  /** @type {Map<any, boolean>} */
+  const shifted = new Map();
+  /** DR-ENG-26's text rule over the single-line text objects that contain `blob` (whole images only). @param {any} blob @param {any[]} under */
+  const textShiftClaim = (blob, under) => {
+    if (textShiftRule === null || a === null) return undefined;
+    for (const o of under) {
+      if (!o.flags.includes('single-line-text') || o.flags.includes('rotated')) continue;
+      const r = o.px;
+      if (blob.x < r.x - 2 || blob.y < r.y - 2 || blob.x + blob.w > r.x + r.w + 2 || blob.y + blob.h > r.y + r.h + 2)
+        continue;
+      if (!shifted.has(o)) shifted.set(o, textRowShift(a, b, r, differing));
+      if (shifted.get(o)) return textShiftRule;
+    }
+    return undefined;
+  };
+  /** The register entry that claims `blob`, or undefined. @param {any} blob */
+  const claim = (blob) => {
+    const under = hit(blob);
+    const fl = new Set(under.flatMap((/** @type {any} */ o) => o.flags.concat(`kind:${o.kind}`)));
+    const rule = attributeRules.find((ar) => fl.has(ar.flag)) ?? edgeClaim(blob, under) ?? textShiftClaim(blob, under);
+    return { rule, fl };
+  };
   let unexplained = d.count;
   let largestUnexplained = 0;
   /** @type {{ x: number, y: number, w: number, h: number, px: number }[]} */
@@ -526,9 +794,7 @@ function comparePage(c, t, flags) {
   /** @type {Record<string, number>} */
   const flagsUnder = {};
   for (const blob of bl) {
-    const under = hit(blob);
-    const fl = new Set(under.flatMap((/** @type {any} */ o) => o.flags.concat(`kind:${o.kind}`)));
-    const rule = attributeRules.find((ar) => fl.has(ar.flag));
+    const { rule, fl } = claim(blob);
     if (rule !== undefined) {
       applied.add(rule.id);
       unexplained -= blob.pixels;
@@ -552,30 +818,180 @@ function comparePage(c, t, flags) {
     return { ...r, status: 'pass_rules', a, b };
 
   // §B.5.2 masking fallback: text objects with ≥ 2 lines, dilated by 2 px, on both images.
-  const multi = objs
-    .filter((/** @type {any} */ o) => o.flags.includes('multiline-text'))
-    .map((/** @type {any} */ o) => o.px);
   if (multi.length > 0) {
-    const m = rectMask(d.width, d.height, multi);
-    const masked = m.count / d.total;
+    const dm = d.masked();
+    const masked = dm.maskedPixels / d.total;
     r.masked_fraction = masked;
     if (masked > 0.5) return { ...r, status: 'not_compared', a, b };
-    const dm = diffImages(a, b, { ignore: m.mask });
-    const blm = blobs(dm.mask, dm.width, dm.height);
     let un = dm.count;
     let lg = 0;
-    for (const blob of blm) {
-      const fl = new Set(hit(blob).flatMap((/** @type {any} */ o) => o.flags.concat(`kind:${o.kind}`)));
-      if (attributeRules.some((ar) => fl.has(ar.flag))) un -= blob.pixels;
+    for (const blob of dm.blobs) {
+      if (claim(blob).rule !== undefined) un -= blob.pixels;
       else lg = Math.max(lg, blob.pixels);
     }
-    r.masked_unexplained_fraction = un / dm.total;
-    if (un / dm.total < 0.001 && lg <= maxBlob(scale)) {
+    r.masked_unexplained_fraction = un / d.total;
+    if (un / d.total < 0.001 && lg <= maxBlob(scale)) {
       r.rules.push('mask:multiline-text');
       return { ...r, status: 'pass_rules', a, b };
     }
   }
   return { ...r, status: 'fail', a, b };
+}
+
+/**
+ * @typedef {{ x: number, y: number, w: number, h: number }} Rect
+ * @typedef {{ count: number, blobs: import('./diff.mjs').Blob[], maskedPixels: number }} MaskedDiff
+ * @typedef {{ width: number, height: number, count: number, total: number,
+ *   blobs: import('./diff.mjs').Blob[], inkA: boolean, inkB: boolean, masked: () => MaskedDiff }} PageDiff
+ * @typedef {{ diff: (multi: Rect[]) => PageDiff }} DiffSource
+ */
+
+/**
+ * The pixels of `r` (page pixels, clipped to the page) of a tiled page export, from its tile files.
+ * @param {any} p  a tiled page (tiledExport)
+ * @param {{ x: number, y: number, w: number, h: number }} r
+ */
+function cropTiled(p, r) {
+  const { W, H, tiles } = p.tiled;
+  const x0 = Math.max(0, Math.floor(r.x));
+  const y0 = Math.max(0, Math.floor(r.y));
+  const x1 = Math.min(W, Math.ceil(r.x + r.w));
+  const y1 = Math.min(H, Math.ceil(r.y + r.h));
+  const width = Math.max(1, x1 - x0);
+  const height = Math.max(1, y1 - y0);
+  const data = new Uint8Array(width * height * 4);
+  tiles.forEach((/** @type {any} */ t, /** @type {number} */ k) => {
+    const { core, ext } = t;
+    const ix0 = Math.max(x0, core.x);
+    const iy0 = Math.max(y0, core.y);
+    const ix1 = Math.min(x1, core.x + core.w);
+    const iy1 = Math.min(y1, core.y + core.h);
+    if (ix1 <= ix0 || iy1 <= iy0) return;
+    const img = decodePng(readFileSync(p.files[k]));
+    for (let y = iy0; y < iy1; y++) {
+      const src = ((y - ext.y) * img.width + (ix0 - ext.x)) * 4;
+      data.set(img.data.subarray(src, src + (ix1 - ix0) * 4), ((y - y0) * width + (ix0 - x0)) * 4);
+    }
+  });
+  return { width, height, data };
+}
+
+/** The diff of two whole images. @param {any} a @param {any} b @returns {DiffSource} */
+function fullSource(a, b) {
+  return {
+    diff(multi) {
+      const d = diffImages(a, b);
+      const full = { x: 0, y: 0, w: d.width, h: d.height };
+      return {
+        width: d.width,
+        height: d.height,
+        count: d.count,
+        total: d.total,
+        blobs: blobs(d.mask, d.width, d.height),
+        inkA: inkPixels(a, full) > 0,
+        inkB: inkPixels(b, full) > 0,
+        masked() {
+          const m = rectMask(d.width, d.height, multi);
+          const dm = diffImages(a, b, { ignore: m.mask });
+          return { count: dm.count, blobs: blobs(dm.mask, dm.width, dm.height), maskedPixels: m.count };
+        },
+      };
+    },
+  };
+}
+
+/**
+ * The diff of a tiled page pair (tiledExport), strip by strip: each tile pair is diffed with its
+ * overlap and only its core is kept; the masked diff of §B.5.2 is labelled in the same pass.
+ * The tile files stay until the board is done (crops of failing blobs are cut from them).
+ * @param {any} c @param {any} t @returns {DiffSource}
+ */
+function tiledSource(c, t) {
+  return {
+    diff(multi) {
+      const { W, H, tiles } = c.tiled;
+      const all = new BlobStream(W);
+      const msk = new BlobStream(W);
+      let count = 0;
+      let mcount = 0;
+      let maskedPixels = 0;
+      let inkA = false;
+      let inkB = false;
+      const dil = multi.map((q) => ({
+        x0: Math.max(0, Math.floor(q.x - 2)),
+        y0: Math.max(0, Math.floor(q.y - 2)),
+        x1: Math.min(W, Math.ceil(q.x + q.w + 2)),
+        y1: Math.min(H, Math.ceil(q.y + q.h + 2)),
+      }));
+      try {
+        let k = 0;
+        while (k < tiles.length) {
+          const y = tiles[k].core.y;
+          const sh = tiles[k].core.h;
+          const strip = new Uint8Array(W * sh);
+          for (; k < tiles.length && tiles[k].core.y === y; k++) {
+            const { core, ext } = tiles[k];
+            const ia = decodePng(readFileSync(c.files[k]));
+            const ib = decodePng(readFileSync(t.files[k]));
+            if (ia.width !== ext.w || ia.height !== ext.h || ib.width !== ext.w || ib.height !== ext.h)
+              throw new Error(
+                `tile ${k}: ${ia.width}x${ia.height} / ${ib.width}x${ib.height}, expected ${ext.w}x${ext.h}`,
+              );
+            const d = diffImages(ia, ib);
+            const cx = core.x - ext.x;
+            const cy = core.y - ext.y;
+            const rect = { x: cx, y: cy, w: core.w, h: core.h };
+            if (!inkA && inkPixels(ia, rect) > 0) inkA = true;
+            if (!inkB && inkPixels(ib, rect) > 0) inkB = true;
+            for (let yy = 0; yy < core.h; yy++) {
+              const src = (cy + yy) * ext.w + cx;
+              strip.set(d.mask.subarray(src, src + core.w), yy * W + core.x);
+            }
+          }
+          const row = new Uint8Array(W);
+          for (let yy = 0; yy < sh; yy++) {
+            const line = strip.subarray(yy * W, (yy + 1) * W);
+            all.row(line);
+            const py = y + yy;
+            row.set(line);
+            for (const q of dil) if (py >= q.y0 && py < q.y1) row.fill(0, q.x0, q.x1);
+            for (let x = 0; x < W; x++) {
+              if (line[x]) count++;
+              if (row[x]) mcount++;
+            }
+            msk.row(row);
+            if (dil.length > 0) {
+              // masked pixels of this row: the union of the dilated rectangles' spans
+              const spans = dil
+                .filter((q) => py >= q.y0 && py < q.y1)
+                .map((q) => [q.x0, q.x1])
+                .sort((p, q) => (p[0] ?? 0) - (q[0] ?? 0));
+              let end = -1;
+              for (const [x0 = 0, x1 = 0] of spans) {
+                const from = Math.max(x0, end);
+                if (x1 > from) maskedPixels += x1 - from;
+                end = Math.max(end, x1);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        for (const f of [...c.files, ...t.files]) rmSync(f, { force: true });
+        throw e;
+      }
+      const mres = { count: mcount, blobs: msk.result(), maskedPixels };
+      return {
+        width: W,
+        height: H,
+        count,
+        total: W * H,
+        blobs: all.result(),
+        inkA,
+        inkB,
+        masked: () => mres,
+      };
+    },
+  };
 }
 
 /**
@@ -700,7 +1116,11 @@ for (const { idx, file } of inputs) {
     const refs =
       c.ok && alignRule !== null
         ? c.pages.map((/** @type {any} */ p) =>
-            p.ok ? { ox: p.origin.x, oy: p.origin.y, w: p.img.width, h: p.img.height } : null,
+            !p.ok
+              ? null
+              : p.tiled
+                ? { ox: p.origin.x, oy: p.origin.y, w: p.tiled.W, h: p.tiled.H, tiled: p.tiled }
+                : { ox: p.origin.x, oy: p.origin.y, w: p.img.width, h: p.img.height },
           )
         : null;
     // DR-FMT-01: C++ shows a phantom page (objects only) at order 0, TS after the real pages; the
@@ -754,7 +1174,21 @@ for (const { idx, file } of inputs) {
         }
         const { a, b, ...rest } = res;
         row.pages.push({ i, ...rest });
-        if (opt.save === 'all' || (opt.save === 'fail' && !['pass', 'pass_rules'].includes(res.status))) {
+        // A tiled page is not saved whole: crops (C++ | TS | diff) around its largest unexplained blobs.
+        if (a === null && opt.save !== 'none' && !['pass', 'pass_rules'].includes(res.status))
+          (res.blobs_top ?? []).forEach((/** @type {any} */ bb, /** @type {number} */ n) => {
+            const r = { x: bb.x - 40, y: bb.y - 40, w: bb.w + 80, h: bb.h + 80 };
+            const ca = cropTiled(cp, r);
+            const cb = cropTiled(tp, r);
+            writeFileSync(
+              path.join(OUT, 'png', `${idx}-p${i}-blob${n}.png`),
+              encodePng(sideBySide([ca, cb, diffPicture(ca, cb)])),
+            );
+          });
+        if (
+          a !== null &&
+          (opt.save === 'all' || (opt.save === 'fail' && !['pass', 'pass_rules'].includes(res.status)))
+        ) {
           writeFileSync(path.join(OUT, 'png', `${idx}-p${i}-cpp.png`), encodePng(a));
           writeFileSync(path.join(OUT, 'png', `${idx}-p${i}-ts.png`), encodePng(b));
           writeFileSync(path.join(OUT, 'png', `${idx}-p${i}-diff.png`), encodePng(diffPicture(a, b)));
@@ -774,7 +1208,11 @@ for (const { idx, file } of inputs) {
           x.pages.length === y.pages.length &&
           x.pages.every(
             (/** @type {any} */ p, /** @type {number} */ k) =>
-              p.ok && y.pages[k].ok && identical(p.img, y.pages[k].img),
+              p.ok &&
+              y.pages[k].ok &&
+              (p.tiled
+                ? JSON.stringify(p.hashes) === JSON.stringify(y.pages[k].hashes)
+                : identical(p.img, y.pages[k].img)),
           );
         row.selfdiff = { cpp: same(c, c2), ts: same(t, t2) };
         if (!row.selfdiff.cpp || !row.selfdiff.ts) for (const p of row.pages) p.status = 'nondeterministic';
@@ -787,6 +1225,10 @@ for (const { idx, file } of inputs) {
     if (browser !== null) await browser.close().catch(() => {});
     browser = null;
   }
+  // Tiles a comparison did not consume (a page one build failed, the self-diff renders).
+  if (existsSync(TILES))
+    for (const f of readdirSync(TILES))
+      if (f.startsWith(`${process.pid}-`)) rmSync(path.join(TILES, f), { force: true });
   row.wall_ms = Date.now() - tBoard;
   appendFileSync(RESULTS, JSON.stringify(row) + '\n');
   if (processed % 25 === 0) {

@@ -17,9 +17,13 @@ rule:
     - path: '/pages/*/objects/**/template'
       op: normalise
       normaliser: empty-line-generator-data
-  image: null
+  # A template whose geometry measures an empty text (th(i) / tw(i) in its data: a UML class's
+  # empty compartment, an untitled fieldset, an unnamed package) places those parts one line
+  # height apart: the blobs over that object.
+  image:
+    attribute: { object_flag: empty-text-measure }
   perf: null
-evidence: 'spec 03 §8.1, §15 B5; unit test test/text/text-layout.height.test.ts; D2 corpus run: the most frequent P1 difference (an empty floating text box one line taller), and wireframe generators with blank lines in their text (rows after a blank line move by one line height; fixture parity/fixtures/DR-ENG-05/generator-empty-line.lekh); P1 over the 10,003-board corpus (2026-10-18): 5,353 applications per pass'
+evidence: 'spec 03 §8.1, §15 B5; unit test test/text/text-layout.height.test.ts; D2 corpus run: the most frequent P1 difference (an empty floating text box one line taller), and wireframe generators with blank lines in their text (rows after a blank line move by one line height; fixture parity/fixtures/DR-ENG-05/generator-empty-line.lekh); P1 over the 10,003-board corpus (2026-10-18): 5,353 applications per pass; image (B), W11-FX: UML class compartment lines, fieldset top edges and package tabs one line height apart where the measured text is empty (fixture parity/fixtures/DR-ENG-05/empty-text-compartments.lekh; flag unit test in parity/test/image.test.mjs)'
 status: proposed
 signed_off_by: null
 signed_off_at: null

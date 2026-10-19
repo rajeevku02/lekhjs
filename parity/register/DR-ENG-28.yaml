@@ -1,0 +1,19 @@
+id: DR-ENG-28
+title: 'A connector ends on the outline of a rotated ellipse at any board position'
+area: ENG
+kind: bug-fix
+cpp: 'Ellipse::getIntersection rotated the line through the connection centre with LineEquation::rotate, whose "pivot on the line" test compared |A·x + B·y + C| (unnormalised, float32) with 0.1. At board coordinates of a few hundred and more the rounding of that sum exceeds 0.1, the general branch builds a perpendicular through the pivot from two equal points (A = B = 0), and the end lands beside the outline, on the horizontal axis, or nowhere: a connector to an ellipse turned by 90 degrees was not drawn at all'
+ts: 'geometry/ LineEquation in doubles (spec 03, DR-ENG-26): the pivot test holds for a line through the centre, so the end is the outline crossing towards the other end, as for an unrotated ellipse'
+user_visible: true
+fixture: parity/fixtures/DR-ENG-28/rotated-ellipse-ends.lekh
+rule:
+  json: ['none: connector ends are not stored for automatic ends']
+  image:
+    # A connector with an end on a rotated ellipse (an E path, a non-zero angle).
+    attribute: { object_flag: rotated-ellipse-end }
+  perf: null
+evidence: 'W11-FX image triage (verification 02 §B): in the fixture the connectors to ellipses turned by 1.5e-7, 0.3 and 1.5708 rad end beside the outline, off the line of centres and not at all on the C++ web build, the one to the unrotated ellipse matches; three corpus pages of the G2 sample; flag unit test in parity/test/image.test.mjs'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

@@ -1,0 +1,362 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "c1": {
+     "type": "templated",
+     "name": "Class",
+     "order": 1,
+     "params": {
+      "cx": 200,
+      "cy": 160,
+      "width": 240,
+      "height": 200,
+      "angle": 0
+     },
+     "template": {
+      "data": [
+       "-w/2",
+       "-h/2",
+       "w/2",
+       "-h/2",
+       "w/2",
+       "h/2",
+       "-w/2",
+       "h/2",
+       "5",
+       "th(0) + d(8)",
+       "th(1) + d(8)",
+       "th(2) + d(8)",
+       "max(h - d(9) - d(10) - d(11), 0)",
+       "-w/2",
+       "-h/2 + d(9)",
+       "w/2",
+       "-h/2 + d(9)",
+       "-w/2",
+       "-h/2 + d(9) + d(10) + d(12) / 2",
+       "w/2",
+       "-h/2 + d(9) + d(10) + d(12) / 2",
+       "0",
+       "-h/2 + d(9) / 2",
+       "w",
+       "d(9)",
+       "0",
+       "0",
+       "d(14) + d(10) / 2 + d(12) / 4",
+       "w",
+       "d(10)",
+       "0",
+       "0",
+       "d(18) + d(11) / 2 + d(12) / 4",
+       "w",
+       "d(11)",
+       "0"
+      ],
+      "id": "avabodh.uml.class",
+      "texts": [
+       {
+        "location": "21 22 23 24 25",
+        "text": "Sample",
+        "style": {
+         "textalignhorizontal": 1
+        }
+       },
+       {
+        "location": "26 27 28 29 30",
+        "text": "",
+        "style": {
+         "textalignhorizontal": 2
+        }
+       },
+       {
+        "location": "31 32 33 34 35",
+        "text": "one two",
+        "style": {
+         "textalignhorizontal": 2
+        }
+       }
+      ],
+      "default": {
+       "width": 240,
+       "height": 200
+      },
+      "draw": [
+       {
+        "path": " M 0 1 L 2 3 L 4 5 L 6 7 Z"
+       },
+       {
+        "path": " M 13 14 L 15 16"
+       },
+       {
+        "path": " M 17 18 L 19 20"
+       }
+      ],
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    },
+    "c2": {
+     "type": "templated",
+     "name": "Class",
+     "order": 2,
+     "params": {
+      "cx": 520,
+      "cy": 160,
+      "width": 240,
+      "height": 200,
+      "angle": 0
+     },
+     "template": {
+      "data": [
+       "-w/2",
+       "-h/2",
+       "w/2",
+       "-h/2",
+       "w/2",
+       "h/2",
+       "-w/2",
+       "h/2",
+       "5",
+       "th(0) + d(8)",
+       "th(1) + d(8)",
+       "th(2) + d(8)",
+       "max(h - d(9) - d(10) - d(11), 0)",
+       "-w/2",
+       "-h/2 + d(9)",
+       "w/2",
+       "-h/2 + d(9)",
+       "-w/2",
+       "-h/2 + d(9) + d(10) + d(12) / 2",
+       "w/2",
+       "-h/2 + d(9) + d(10) + d(12) / 2",
+       "0",
+       "-h/2 + d(9) / 2",
+       "w",
+       "d(9)",
+       "0",
+       "0",
+       "d(14) + d(10) / 2 + d(12) / 4",
+       "w",
+       "d(10)",
+       "0",
+       "0",
+       "d(18) + d(11) / 2 + d(12) / 4",
+       "w",
+       "d(11)",
+       "0"
+      ],
+      "id": "avabodh.uml.class",
+      "texts": [
+       {
+        "location": "21 22 23 24 25",
+        "text": "Sample",
+        "style": {
+         "textalignhorizontal": 1
+        }
+       },
+       {
+        "location": "26 27 28 29 30",
+        "text": "one",
+        "style": {
+         "textalignhorizontal": 2
+        }
+       },
+       {
+        "location": "31 32 33 34 35",
+        "text": "two",
+        "style": {
+         "textalignhorizontal": 2
+        }
+       }
+      ],
+      "default": {
+       "width": 240,
+       "height": 200
+      },
+      "draw": [
+       {
+        "path": " M 0 1 L 2 3 L 4 5 L 6 7 Z"
+       },
+       {
+        "path": " M 13 14 L 15 16"
+       },
+       {
+        "path": " M 17 18 L 19 20"
+       }
+      ],
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    },
+    "f1": {
+     "type": "templated",
+     "name": "Fieldset",
+     "order": 3,
+     "params": {
+      "cx": 200,
+      "cy": 480,
+      "width": 368,
+      "height": 296,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.wireframe.fieldset",
+      "default": {
+       "width": 368,
+       "height": 296
+      },
+      "data": [
+       "-w/2+12",
+       "-h/2 + th(0)/2",
+       "-w/2",
+       "d(1)",
+       "-w/2",
+       "h/2",
+       "w/2",
+       "h/2",
+       "w/2",
+       "d(1)",
+       "-w/2 + 12 + 4 + tw(0) + 4",
+       "d(1)",
+       "-w/2 + 12 + 4 + tw(0)/2",
+       "d(1)",
+       "tw(0) + 8",
+       "th(0)",
+       "0"
+      ],
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3 L 4 5 L 6 7 L 8 9 L 10 11",
+        "style": {
+         "fillpaint": {
+          "color": -637534209,
+          "type": 2
+         }
+        }
+       }
+      ],
+      "texts": [
+       {
+        "text": "",
+        "location": "12 13 14 15 16"
+       }
+      ],
+      "containers": [
+       "M 2 3 L 4 5 L 6 7 L 8 9 Z"
+      ],
+      "style": {
+       "strokewidth": 1.5
+      }
+     }
+    },
+    "k1": {
+     "type": "templated",
+     "name": "Package",
+     "order": 4,
+     "params": {
+      "cx": 560,
+      "cy": 480,
+      "width": 230,
+      "height": 160,
+      "angle": 1.5708
+     },
+     "template": {
+      "data": [
+       "th(0) + 5",
+       "-w/2",
+       "-h/2 + d(0)",
+       "w/2",
+       "-h/2 + d(0)",
+       "w/2",
+       "h/2",
+       "-w/2",
+       "h/2",
+       "-w/2",
+       "-h/2 + d(0)",
+       "-w/2",
+       "-h/2",
+       "w/10",
+       "-h/2",
+       "w/7",
+       "-h/2 + d(0)",
+       "-w/5",
+       "-h/2 + d(0)/2",
+       "0.6*w",
+       "d(0)",
+       "0",
+       "0",
+       "d(0)/2",
+       "w",
+       "h-d(0)",
+       "0"
+      ],
+      "draw": [
+       "M 1 2 L 3 4 L 5 6 L 7 8 Z",
+       "M 9 10 L 11 12 L 13 14 L 15 16"
+      ],
+      "texts": [
+       {
+        "location": "17 18 19 20 21",
+        "text": ""
+       },
+       {
+        "location": "22 23 24 25 26",
+        "text": "one",
+        "style": {
+         "textalignhorizontal": 2
+        }
+       }
+      ],
+      "id": "avabodh.uml.package",
+      "default": {
+       "width": 230,
+       "height": 160
+      },
+      "style": {
+       "fillpaint": {
+        "color": -1,
+        "type": 2
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

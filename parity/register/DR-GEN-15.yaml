@@ -1,0 +1,20 @@
+id: DR-GEN-15
+title: "A BPMN shape draws its symbol from the bundled core stencils on the web too, not from the board's stored copy"
+area: GEN
+kind: intended-change
+cpp: "ShapeTemplate::load resolved an embed from the TemplateStore, then from the document's templates. The native apps compile the core stencils (lekhcore/stencils/core) in, so a BPMN task, event or gateway symbol came from them; the C++ web build has no core stencils until the BPMN library is opened, so it drew the copy the board stores in its root templates (written by another app version, possibly at another default size: another aspect, e.g. a message symbol 70 x 50 instead of 40 x 28) or, without one, no symbol at all"
+ts: 'The core stencils are bundled on every platform (spec 04 §7: lekhjs/stencils/{core,builtin}); the catalog is consulted first, as C++ ShapeTemplate::load orders it, so the web draws the symbol the native apps draw'
+user_visible: true
+fixture: parity/fixtures/DR-GEN-15/bpmn-stored-symbol.lekh
+rule:
+  json: ['none: the stored copy is kept in the root templates and written back unchanged']
+  image:
+    # A BPMN native-generator shape with a symbol picked (task type, marker or event type) whose
+    # symbol the board stores at another default size than the core stencils', or not at all.
+    attribute: { object_flag: core-embed }
+  perf: null
+evidence: "W11-FX image triage (verification 02 §B): the fixture's task with a stored 70 x 50 message symbol draws a 20 x 14.3 envelope on the C++ web build and 20 x 14 on TS; its task with no stored symbol draws none on the C++ web build; one corpus page of the G2 sample; flag unit test in parity/test/image.test.mjs"
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

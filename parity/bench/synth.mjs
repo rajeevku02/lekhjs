@@ -7,9 +7,10 @@
 //            per 20 objects
 //   diagram  rectangles (plain and dashed) and text boxes with multi-line labels, connectors (generic line
 //            and multi-line, labelled) between 40 % of the shapes
+//   ink      the basic mix with 30 % of the shapes as freehand strokes (unrecognised ink, as the
+//            C++ apps write it) of 50–400 points, a seeded random walk normalised to the stroke's box
 //
-// Not yet: the ink mix, groups and the 5 % Lua wireframe shapes of verification 03 §2 (left for the
-// general bench, task A3); P-07a's sets do not need them.
+// Not yet: groups and the 5 % Lua wireframe shapes of verification 03 §2's diagram mix.
 //
 // Usage: node parity/bench/synth.mjs <mix> <objects> [--pages N] [--seed S] > board.lekh
 //        import { synthBoard } from './synth.mjs'
@@ -81,7 +82,30 @@ function pngBase64(rnd, w, h) {
 }
 
 /**
- * @param {'basic' | 'image' | 'diagram'} mix
+ * A freehand stroke of 50–400 points: a smooth random walk, normalised to 0..1 in its box (the
+ * unrecognised-ink form of a C++ board). @param {() => number} rnd
+ */
+function inkPoints(rnd) {
+  const n = 50 + Math.floor(rnd() * 351);
+  let x = 0;
+  let y = 0;
+  let a = rnd() * 2 * Math.PI;
+  const raw = [];
+  for (let i = 0; i < n; i++) {
+    a += (rnd() - 0.5) * 0.6;
+    x += Math.cos(a);
+    y += Math.sin(a);
+    raw.push([x, y]);
+  }
+  const xs = raw.map((p) => p[0] ?? 0);
+  const ys = raw.map((p) => p[1] ?? 0);
+  const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  const r6 = (/** @type {number} */ v) => Math.round(v * 1e6) / 1e6;
+  return raw.map(([px = 0, py = 0]) => ({ x: r6((px - x0) / (x1 - x0 || 1)), y: r6((py - y0) / (y1 - y0 || 1)) }));
+}
+
+/**
+ * @param {'basic' | 'image' | 'diagram' | 'ink'} mix
  * @param {number} objects   objects in all (connectors included), split evenly over the pages
  * @param {{ seed?: number, pages?: number, size?: number }} [opts]  size: page side in points (6,000)
  */
@@ -137,6 +161,10 @@ export function synthBoard(mix, objects, opts = {}) {
             draw: [],
           },
         };
+        continue;
+      }
+      if (mix === 'ink' && k % 10 < 3) {
+        objs[oid] = { type: 'avabodh.basic.unrecognized', order: ++order, params, text: '', points: inkPoints(rnd) };
         continue;
       }
       const kind = mix === 'diagram' ? k % 3 : k % 2;
@@ -229,7 +257,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     return i >= 0 ? Number(rest[i + 1]) : d;
   };
   if (mix === undefined || n === undefined) {
-    process.stderr.write('usage: synth.mjs <basic|image|diagram> <objects> [--pages N] [--seed S]\n');
+    process.stderr.write('usage: synth.mjs <basic|image|diagram|ink> <objects> [--pages N] [--seed S]\n');
     process.exit(2);
   }
   process.stdout.write(

@@ -68,7 +68,7 @@ const PORTS = { cpp: 4007, ts: 4008 };
 /** @type {Board[]} */
 const boards = [];
 if (opt.sets === 'syn') {
-  /** The box's S-syn selection (sets.json mixes the synthesiser has: basic, image, diagram). */
+  /** The box's S-syn selection (sets.json mixes the synthesiser has: basic, image, diagram, ink). */
   const sel = [
     ['basic', 36],
     ['basic', 100],
@@ -84,6 +84,9 @@ if (opt.sets === 'syn') {
     ['image', 300],
     ['image', 1500],
     ['image', 5000],
+    ['ink', 685],
+    ['ink', 1500],
+    ['ink', 5000],
   ];
   for (const [mix, n] of /** @type {[string, number][]} */ (sel)) {
     const pages = n === 20000 ? 4 : 1;
@@ -95,7 +98,7 @@ if (opt.sets === 'syn') {
       text,
       objects: n,
       hit: n >= 1500,
-      exportPng: mix !== 'basic' && n <= 5000 && n >= 300,
+      exportPng: (mix === 'image' || mix === 'diagram') && n <= 5000 && n >= 300,
       side: 6000,
     });
   }

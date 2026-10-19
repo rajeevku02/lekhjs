@@ -1,13 +1,152 @@
 {
   "schema": "synth-sets/1",
-  "note": "S-syn sets of verification 03 §2 used so far (P-07a). Each board: synth.mjs synthBoard(mix, objects, { pages, seed }).",
+  "note": "S-syn sets of verification 03 \u00a72. 'sets': the P-07a / PDF sets (seed = objects). 'box_bench': the boards web-bench.mjs runs on the box (seed = objects * 7 + mix.length; the 20,000-object board on 4 pages). Each board: synth.mjs synthBoard(mix, objects, { pages, seed }).",
   "sets": {
-    "S-syn/image/300": { "mix": "image", "objects": 300, "pages": 1, "seed": 300 },
-    "S-syn/image/1500": { "mix": "image", "objects": 1500, "pages": 1, "seed": 1500 },
-    "S-syn/image/5000": { "mix": "image", "objects": 5000, "pages": 1, "seed": 5000 },
-    "S-syn/diagram/300": { "mix": "diagram", "objects": 300, "pages": 1, "seed": 300 },
-    "S-syn/diagram/1500": { "mix": "diagram", "objects": 1500, "pages": 1, "seed": 1500 },
-    "S-syn/diagram/5000": { "mix": "diagram", "objects": 5000, "pages": 1, "seed": 5000 },
-    "S-syn/diagram/1500x5": { "mix": "diagram", "objects": 1500, "pages": 5, "seed": 7515 }
+    "S-syn/image/300": {
+      "mix": "image",
+      "objects": 300,
+      "pages": 1,
+      "seed": 300
+    },
+    "S-syn/image/1500": {
+      "mix": "image",
+      "objects": 1500,
+      "pages": 1,
+      "seed": 1500
+    },
+    "S-syn/image/5000": {
+      "mix": "image",
+      "objects": 5000,
+      "pages": 1,
+      "seed": 5000
+    },
+    "S-syn/diagram/300": {
+      "mix": "diagram",
+      "objects": 300,
+      "pages": 1,
+      "seed": 300
+    },
+    "S-syn/diagram/1500": {
+      "mix": "diagram",
+      "objects": 1500,
+      "pages": 1,
+      "seed": 1500
+    },
+    "S-syn/diagram/5000": {
+      "mix": "diagram",
+      "objects": 5000,
+      "pages": 1,
+      "seed": 5000
+    },
+    "S-syn/diagram/1500x5": {
+      "mix": "diagram",
+      "objects": 1500,
+      "pages": 5,
+      "seed": 7515
+    }
+  },
+  "box_bench": {
+    "S-syn/basic/36": {
+      "mix": "basic",
+      "objects": 36,
+      "pages": 1,
+      "seed": 257
+    },
+    "S-syn/basic/100": {
+      "mix": "basic",
+      "objects": 100,
+      "pages": 1,
+      "seed": 705
+    },
+    "S-syn/basic/300": {
+      "mix": "basic",
+      "objects": 300,
+      "pages": 1,
+      "seed": 2105
+    },
+    "S-syn/basic/685": {
+      "mix": "basic",
+      "objects": 685,
+      "pages": 1,
+      "seed": 4800
+    },
+    "S-syn/basic/1500": {
+      "mix": "basic",
+      "objects": 1500,
+      "pages": 1,
+      "seed": 10505
+    },
+    "S-syn/basic/5000": {
+      "mix": "basic",
+      "objects": 5000,
+      "pages": 1,
+      "seed": 35005
+    },
+    "S-syn/basic/20000": {
+      "mix": "basic",
+      "objects": 20000,
+      "pages": 4,
+      "seed": 140005
+    },
+    "S-syn/diagram/300": {
+      "mix": "diagram",
+      "objects": 300,
+      "pages": 1,
+      "seed": 2107
+    },
+    "S-syn/diagram/685": {
+      "mix": "diagram",
+      "objects": 685,
+      "pages": 1,
+      "seed": 4802
+    },
+    "S-syn/diagram/1500": {
+      "mix": "diagram",
+      "objects": 1500,
+      "pages": 1,
+      "seed": 10507
+    },
+    "S-syn/diagram/5000": {
+      "mix": "diagram",
+      "objects": 5000,
+      "pages": 1,
+      "seed": 35007
+    },
+    "S-syn/image/300": {
+      "mix": "image",
+      "objects": 300,
+      "pages": 1,
+      "seed": 2105
+    },
+    "S-syn/image/1500": {
+      "mix": "image",
+      "objects": 1500,
+      "pages": 1,
+      "seed": 10505
+    },
+    "S-syn/image/5000": {
+      "mix": "image",
+      "objects": 5000,
+      "pages": 1,
+      "seed": 35005
+    },
+    "S-syn/ink/685": {
+      "mix": "ink",
+      "objects": 685,
+      "pages": 1,
+      "seed": 4798
+    },
+    "S-syn/ink/1500": {
+      "mix": "ink",
+      "objects": 1500,
+      "pages": 1,
+      "seed": 10503
+    },
+    "S-syn/ink/5000": {
+      "mix": "ink",
+      "objects": 5000,
+      "pages": 1,
+      "seed": 35003
+    }
   }
 }

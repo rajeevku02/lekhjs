@@ -36,6 +36,7 @@ const check = process.argv.includes('--check');
 // ---------------------------------------------------------------- engine
 
 const SKIP = new Set(['_index.json', '_text_syntax.json', 'libnames.json']);
+/** @param {string} dir */
 const stencilFiles = (dir) =>
   fs
     .readdirSync(dir)
@@ -50,7 +51,12 @@ const catalog = lib.buildCatalog([
 let seq = 0;
 const ids = { next: () => `fx-${String(++seq).padStart(5, '0')}` };
 const clock = { now: () => Date.UTC(2026, 9, 19) };
-const runtime = lib.createNodeRuntime({ canvas: { createCanvas: (w, h) => createCanvas(w, h) }, catalog, ids, clock });
+const runtime = lib.createNodeRuntime({
+  canvas: { createCanvas: (/** @type {number} */ w, /** @type {number} */ h) => createCanvas(w, h) },
+  catalog,
+  ids,
+  clock,
+});
 const scheduler = {
   setTimeout: () => 0,
   clearTimeout: () => undefined,
@@ -59,13 +65,17 @@ const scheduler = {
 };
 const images = {
   request: () => undefined,
-  ensure: (urls) => Promise.resolve({ loaded: [], missing: urls }),
+  ensure: (/** @type {string[]} */ urls) => Promise.resolve({ loaded: [], missing: urls }),
   pin: () => () => undefined,
   get: () => undefined,
   decodeInline: () => Promise.reject(new Error('no images')),
 };
 
 /** One board: the semantic content → a serialized on-device `.lekh`. */
+/**
+ * @param {any} content
+ * @returns {string}
+ */
 function board(content) {
   seq = 0;
   const s = new lib.BoardSession(runtime, { images, scheduler });
@@ -79,6 +89,16 @@ function board(content) {
 const RECT = 'avabodh.basic.rectangle';
 const A4 = { type: 'fixed', width: 21, height: 29.7, unit: 'cm' };
 
+/**
+ * @param {string} ref
+ * @param {number} cx
+ * @param {number} cy
+ * @param {number} width
+ * @param {number} height
+ * @param {string | undefined} text
+ * @param {Record<string, unknown>} [style]
+ * @param {string} [shape]
+ */
 const node = (ref, cx, cy, width, height, text, style = {}, shape = RECT) => ({
   ref,
   shape,
@@ -90,6 +110,7 @@ const node = (ref, cx, cy, width, height, text, style = {}, shape = RECT) => ({
   ...(Object.keys(style).length > 0 ? { style } : {}),
 });
 
+/** @type {[string, string][]} */
 const SCRIPT_SAMPLES = [
   ['zh', '中文：快速的棕色狐狸跳过懒狗。'],
   ['ja', '日本語：いろはにほへと ちりぬるを'],
@@ -161,6 +182,7 @@ function exportMatrixBoard() {
 
 /** The wrap corpus (DEV-75): each case at each width, in Noto Sans 16. */
 export const WRAP_WIDTHS = [60, 90, 120, 180, 240, 360];
+/** @type {[string, string][]} */
 export const WRAP_CASES = [
   ['cjk', '日本語の文章は単語の間に空白がないので任意の文字の間で改行できます。中文也是一样的。'],
   ['thai', 'ภาษาไทยไม่มีการเว้นวรรคระหว่างคำจึงต้องตัดคำตามพจนานุกรม'],
@@ -172,6 +194,7 @@ export const WRAP_CASES = [
 ];
 
 function wrapCorpusBoard() {
+  /** @type {object[]} */
   const nodes = [];
   WRAP_CASES.forEach(([id, text], row) => {
     let x = 20;
@@ -210,7 +233,9 @@ function perfBoard() {
   return { name: 'perf', pages: [{ name: 'Perf', nodes, edges }] };
 }
 
+/** @returns {[string, string][]} */
 function folderBoards() {
+  /** @param {string} name @param {number} n */
   const small = (name, n) => ({
     name,
     pages: [
@@ -229,10 +254,12 @@ const MALFORMED = '{"info":{"version":"5.0","name":"malformed"},"pages":{"p1":{"
 
 // ---------------------------------------------------------------- huge image
 
+/** @param {Buffer} buf */
 function crc32(buf) {
   return zlib.crc32(buf) >>> 0;
 }
 
+/** @param {string} type @param {Buffer} data */
 function chunk(type, data) {
   const len = Buffer.alloc(4);
   len.writeUInt32BE(data.length);
@@ -243,6 +270,7 @@ function chunk(type, data) {
 }
 
 /** A 1-bit grayscale PNG, all white, `w` × `h` (deflated rows of zeros compress ~1000:1). */
+/** @param {number} w @param {number} h */
 function hugePng(w, h) {
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(w, 0);
@@ -268,6 +296,7 @@ function hugePng(w, h) {
 
 // ---------------------------------------------------------------- write
 
+/** @type {Map<string, string | Buffer>} */
 const out = new Map([
   ['scripts.lekh', board(scriptsBoard())],
   ['export-matrix.lekh', board(exportMatrixBoard())],
@@ -275,7 +304,7 @@ const out = new Map([
   ['wrap-corpus.json', await require('prettier').format(JSON.stringify(wrapCorpusJson()), { parser: 'json' })],
   ['perf.lekh', board(perfBoard())],
   ['malformed.lekh', MALFORMED],
-  ...folderBoards().map(([n, b]) => [`export-folder/${n}`, b]),
+  ...folderBoards().map(([n, b]) => /** @type {[string, string]} */ ([`export-folder/${n}`, b])),
   ['huge-image.png', hugePng(30000, 30000)],
 ]);
 

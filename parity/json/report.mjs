@@ -69,6 +69,10 @@ export function report(dir) {
   let unescapedKey = 0;
   let cppRawCtrl = 0;
   let cppFailUntied = 0;
+  /** @type {Record<string, number>} */
+  const browserRetry = {};
+  /** @type {Record<string, number>} */
+  const browserStatus = {};
   /** @type {string[]} */
   const notEqual = [];
   for (const r of recs) {
@@ -90,6 +94,8 @@ export function report(dir) {
     if (r.root_style_ok === false) rootStyleWrong++;
     if (r.cpp_raw_ctrl === true) cppRawCtrl++;
     if (r.status === 'cpp_fail' && r.register === undefined) cppFailUntied++;
+    if (r.browser_retry !== undefined) bump(browserRetry, r.browser_retry);
+    if (r.oracle === 'browser') bump(browserStatus, r.status);
     if (!run.customer && !['equal', 'equal_tol', 'equal_rules'].includes(r.status))
       notEqual.push(`${r.status} ${r.idx}${r.gap !== undefined ? ` (${Object.keys(r.gap).join(', ')})` : ''}`);
   }
@@ -129,6 +135,15 @@ export function report(dir) {
       lekhjs: run.lekhjs
         ? { commit: run.lekhjs.commit, dirty: run.lekhjs.dirty, files_sha256: run.lekhjs.files_sha256 }
         : null,
+      oracle_browser: run.oracle_browser
+        ? {
+            commit: run.oracle_browser.cpp?.commit ?? null,
+            wasm_sha256: run.oracle_browser.cpp?.wasm_sha256 ?? null,
+            ts_build: run.oracle_browser.ts?.commit ?? null,
+            chromium: run.oracle_browser.chromium,
+            instances: run.oracle_browser.instances,
+          }
+        : null,
     },
     boards: recs.length,
     status,
@@ -141,6 +156,8 @@ export function report(dir) {
     root_style_wrong: rootStyleWrong,
     json_unescaped_key: unescapedKey,
     cpp_raw_ctrl: cppRawCtrl,
+    browser_retry: browserRetry,
+    browser_status: browserStatus,
     ts_fail_codes: tsCodes,
     register,
     gap_owners: gapOwners,
@@ -161,6 +178,22 @@ export function report(dir) {
     '',
     `stamp_ok ${stampOk}, stamp_wrong ${stampWrong}; generator_parts_ok ${partsOk}, bad ${partsBad}; root style wrong ${rootStyleWrong}; json_unescaped_key ${unescapedKey}; cpp_raw_ctrl ${cppRawCtrl}`,
     '',
+    ...(Object.keys(browserRetry).length > 0
+      ? [
+          `Node oracle out-of-memory retried in the browser oracle${summary.run.oracle_browser ? ` (C++ web ${String(summary.run.oracle_browser.commit).slice(0, 7)}/${String(summary.run.oracle_browser.wasm_sha256 ?? '').slice(0, 8)}, TS web ${summary.run.oracle_browser.ts_build}, Chromium ${summary.run.oracle_browser.chromium}; load → settle → serialize in both)` : ''}: ` +
+            Object.entries(browserRetry)
+              .sort()
+              .map(([k, v]) => `${k} ${v}`)
+              .join(', ') +
+            (Object.keys(browserStatus).length > 0
+              ? `; compared on the browser oracle: ${Object.entries(browserStatus)
+                  .sort()
+                  .map(([k, v]) => `${k} ${v}`)
+                  .join(', ')}`
+              : ''),
+          '',
+        ]
+      : []),
     failures.length > 0
       ? `**FAIL:** ${failures.join('; ')}`
       : '**PASS** (G1 bar: 0 differ, 0 ts_fail, 0 timeout, every cpp_fail tied, 0 stamp_wrong, 0 root style wrong; an owned gap (`parity/gaps.json`) is listed with its task and counts as differ in a phase-exit run)',

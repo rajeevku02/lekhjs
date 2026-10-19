@@ -20,6 +20,8 @@ const ALLOWED_TOP = new Set([
   'root_style_wrong',
   'json_unescaped_key',
   'cpp_raw_ctrl',
+  'browser_retry',
+  'browser_status',
   'gap_owners',
   'ts_fail_codes',
   'register',
@@ -45,6 +47,12 @@ export function scrubCheck(dir) {
     if (!PATH_KEY.test(k)) bad.push(`summary.json: path ${JSON.stringify(k.slice(0, 40))} is not a generalised path`);
   for (const k of Object.keys(s.register ?? {}))
     if (!/^DR-[A-Z]+-\d+$/.test(k)) bad.push(`summary.json: ${k} is not a register id`);
+  for (const k of Object.keys(s.browser_retry ?? {}))
+    if (!['ok', 'load_error', 'oom', 'timeout', 'unavailable'].includes(k))
+      bad.push(`summary.json: browser retry ${JSON.stringify(k.slice(0, 40))} is not an outcome`);
+  for (const k of Object.keys(s.browser_status ?? {}))
+    if (!/^[a-z_]+$/.test(k))
+      bad.push(`summary.json: browser status ${JSON.stringify(k.slice(0, 40))} is not a status`);
   for (const k of Object.keys(s.gap_owners ?? {}))
     if (!/^[A-Z]+\d+[a-z]?$/.test(k))
       bad.push(`summary.json: gap owner ${JSON.stringify(k.slice(0, 40))} is not a task key`);

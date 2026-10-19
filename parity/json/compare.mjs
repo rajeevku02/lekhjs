@@ -4,6 +4,7 @@
 //
 //   node parity/json/compare.mjs --input <dir|manifest.jsonl> --pipeline p1|p2 --stamp app|backend
 //        --out <dir> [--resume] [--limit N] [--register parity/register] [--accepted-only] [--compat on|off]
+//        [--browser-retry on|off] [--builds <dir with cpp/ and ts/>]
 //
 // Takes the heavy-job lock. Customer inputs (anything under a `corpus/` directory) may only write
 // under that corpus's `out/`, and their results carry the manifest's opaque idx, counts and
@@ -28,7 +29,7 @@ import { report } from './report.mjs';
 import { attributeGaps, gapOwnerOfId, loadGaps } from './gaps.mjs';
 import { applyRules, compileRules, cppFailEntry } from './rules.mjs';
 import { activeEntries, loadRegister, REGISTER_DIR } from '../register/load.mjs';
-import { browserOracleStatus } from '../oracle/browser.mjs';
+import { BrowserOracle, browserOracleStatus, cppBrowserStatus } from '../oracle/browser.mjs';
 import { TsRunner } from '../oracle/ts-runner.mjs';
 import { holdHeavyLock } from '../tools/lock.mjs';
 
@@ -116,8 +117,10 @@ function errorClass(/** @type {string | undefined} */ msg) {
  * @param {Set<string>} a.filed
  * @param {boolean} a.customer
  * @param {import('./gaps.mjs').Gap[]} [a.gaps]  owned gaps (`parity/gaps.json`); none by default
+ * @param {'ok' | 'load_error' | 'oom' | 'timeout' | 'unavailable' | null} [a.retry]  the browser
+ *   oracle's retry of a Node oracle out-of-memory (null: no retry was needed)
  */
-export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, customer, gaps = [] }) {
+export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, customer, gaps = [], retry = null }) {
   /** @type {Record<string, any>} */
   const rec = {
     idx: board.idx,
@@ -131,9 +134,16 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
     rec.timeout = cpp.timeout ? 'cpp' : 'ts';
     return rec;
   }
+  // The Node oracle aborted out of memory: `retry` is what the browser oracle did with the board
+  // (spec 11 §4 G1; verification 01 §5 rule 3). When it loaded or refused the board, `cpp` is
+  // already its result and the board is compared as any other; otherwise it stays `cpp_oom`.
+  if (retry !== null) {
+    rec.browser_retry = retry;
+    if (retry === 'ok' || retry === 'load_error') rec.oracle = 'browser';
+  }
   if (!cpp.ok && cpp.oom) {
     rec.status = ts.ok ? 'cpp_oom' : 'both_fail';
-    rec.browser_retry = 'unavailable';
+    if (retry === null) rec.browser_retry = 'unavailable';
     if (!ts.ok) rec.ts_code = ts.code;
     return rec;
   }
@@ -195,7 +205,9 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
   const { unexplained, gaps: gapCounts } = attributeGaps(gaps, ruled.unexplained, canon.cpp, canon.ts);
   rec.stamp = { ok: canon.stamp.ok, cpp: canon.stamp.cpp, ts: canon.stamp.ts, expected: canon.stamp.expected };
   rec.generator_parts = canon.generatorParts;
-  rec.root_style_ok = canon.rootStyleOk;
+  // The root style is the writer's current drawing tool (§A.5 step 4); a browser build writes its
+  // own UI's tool (the C++ web app's is `{fontsize}` alone), so it is checked on Node outputs only.
+  rec.root_style_ok = retry === 'ok' ? null : canon.rootStyleOk;
   rec.renamed_ids = canon.renamedIds;
   rec.duplicate_keys = canon.duplicateKeys;
   if (tolerance.size > 0) rec.tolerance = Object.fromEntries(tolerance);
@@ -235,6 +247,9 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
  * @property {boolean} [acceptedOnly]
  * @property {boolean} [compat]  TS test switches lineSpacingCompat + fontFallbackCompat (default on)
  * @property {boolean} [noGaps]  ignore `parity/gaps.json` (a phase-exit run: an owned gap is a differ)
+ * @property {boolean} [browserRetry]  retry a Node oracle out-of-memory in the C++ browser oracle
+ *   (default on when the hooked build exists; `--browser-retry off` disables it)
+ * @property {string} [builds]  the browser builds' directory (`cpp/`, `ts/`; default parity/out/builds)
  * @property {string} [label]
  * @property {(line: string) => void} [progress]
  */
@@ -292,8 +307,28 @@ export async function runComparison(o) {
     tz: 'UTC',
     clock: '2026-01-15T00:00:00Z',
   };
+  // A resumed run continues the same record: the same lekhjs build and Node oracle, or it refuses
+  // (a run's results come from one build); its start time and browser oracle are carried over.
+  const prevFile = path.join(o.out, 'run.json');
+  if (o.resume === true && done.size > 0 && existsSync(prevFile)) {
+    const prev = JSON.parse(readFileSync(prevFile, 'utf8'));
+    const same = (/** @type {any} */ a, /** @type {any} */ b, /** @type {string[]} */ keys) =>
+      keys.every((k) => JSON.stringify(a?.[k]) === JSON.stringify(b?.[k]));
+    if (
+      !same(prev.lekhjs, run.lekhjs, ['commit', 'dirty', 'files_sha256']) ||
+      !same(prev.oracle, run.oracle, ['commit', 'wasm_sha256'])
+    ) {
+      await oracle.close();
+      await ts.close();
+      throw new Error('compare: --resume with another lekhjs build or oracle than the run started with');
+    }
+    run.started = prev.started ?? run.started;
+    if (prev.oracle_browser !== undefined) run.oracle_browser = prev.oracle_browser;
+  }
   writeFileSync(path.join(o.out, 'run.json'), JSON.stringify(run, null, 2) + '\n');
 
+  /** @type {BrowserOracle | null} */
+  let browser = null;
   let n = 0;
   try {
     for (const board of o.boards) {
@@ -301,14 +336,45 @@ export async function runComparison(o) {
       if (done.has(board.idx)) continue;
       n++;
       const inputText = readFileSync(board.file, 'utf8');
-      const cpp = await oracle.load(inputText, { stamp: o.stamp });
-      const tsr = await ts.load(inputText, { stamp: o.stamp });
-      const rec = compareBoard({ board, inputText, cpp, ts: tsr, stamp: o.stamp, reg, filed, customer, gaps });
+      let cpp = await oracle.load(inputText, { stamp: o.stamp });
+      /** @type {'ok' | 'load_error' | 'oom' | 'timeout' | 'unavailable' | null} */
+      let retry = null;
+      /** @type {any} */
+      let tsr = null;
+      if (!cpp.ok && cpp.oom) {
+        if (browser === null && o.browserRetry !== false && cppBrowserStatus(o.builds).available) {
+          browser = new BrowserOracle({
+            compat: o.compat !== false,
+            ...(o.builds !== undefined ? { builds: o.builds } : {}),
+          });
+          run.oracle_browser = await browser.identity();
+        }
+        if (browser === null) retry = 'unavailable';
+        else {
+          const b = await browser.load('cpp', inputText, { stamp: o.stamp });
+          if (b.ok) retry = 'ok';
+          else if (b.timeout) retry = 'timeout';
+          else if (b.oom) retry = 'oom';
+          else retry = 'load_error';
+          if (retry === 'ok' || retry === 'load_error') {
+            // The C++ side came from the browser: so does the TS side (same measureText, P2 steps).
+            cpp = { ...b, heap: cpp.heap };
+            const t = await browser.load('ts', inputText, { stamp: o.stamp });
+            tsr = t.ok ? t : { ...t, code: t.timeout ? 'timeout' : t.oom ? 'browser_oom' : 'browser_load' };
+          }
+        }
+      }
+      if (tsr === null) tsr = await ts.load(inputText, { stamp: o.stamp });
+      const rec = compareBoard({ board, inputText, cpp, ts: tsr, stamp: o.stamp, reg, filed, customer, gaps, retry });
       appendFileSync(resultsFile, JSON.stringify(rec) + '\n');
       o.progress?.(`${rec.status.padEnd(11)} ${customer ? rec.idx : board.idx}`);
     }
   } finally {
     run.oracle.instances = oracle.instances;
+    if (browser !== null) {
+      run.oracle_browser.instances = browser.instances;
+      await browser.close();
+    }
     await oracle.close();
     await ts.close();
     log.end();
@@ -365,6 +431,8 @@ if (import.meta.filename === path.resolve(process.argv[1] ?? '')) {
       ...(a['register'] !== undefined ? { registerDir: path.resolve(String(a['register'])) } : {}),
       acceptedOnly: a['accepted-only'] === true,
       compat: a['compat'] !== 'off',
+      browserRetry: a['browser-retry'] !== 'off',
+      ...(a['builds'] !== undefined ? { builds: path.resolve(String(a['builds'])) } : {}),
       progress: corpus !== null ? undefined : (l) => process.stdout.write(l + '\n'),
     });
     process.stdout.write(`\n${s.line}\nsummary: ${path.join(out, 'summary.md')}\n`);

@@ -63,6 +63,12 @@ function templatedLike(t: EditTarget | null): boolean {
   return t instanceof TemplatedObject || isMulti(t);
 }
 
+
+/**
+ * The move / resize / rotate readout's font size: C++ draws it with a default `Style`, whose
+ * effective font size is 15 (C++ Style.cpp:511-521); the port had 12 (owner round UI5).
+ */
+export const TRANSFORM_INFO_FONT_SIZE = 15;
 export class SelectionRectangle implements SelectionRectHost {
   private readonly overlay_: OverlayHost;
   private readonly view_: CanvasView;
@@ -309,9 +315,12 @@ export class SelectionRectangle implements SelectionRectHost {
 
   private label(dp: DrawingPlatform, paint: OverlayPaint, text: string): void {
     // C++ `TextDrawParamInternal(text, 0, Rectangle((w/2, 0), w, h))`, `WrapMode::Float`: centred
-    // on the top edge of the frame.
+    // on the top edge of the frame, in a fresh `Style` (`Style tmpStyle`,
+    // SelectionRectangleWidget.cpp:44/62/83): no font size set, so `Style::effectiveFontSize`'s
+    // default 15 (Style.cpp:517), black, view px (the widget layer does not zoom).
     const f = this.frame_;
     paint.text?.draw(dp, text, Rect.fromCenter(new Point(f.x + f.width / 2, f.y), f.width, f.height), {
+      fontSize: TRANSFORM_INFO_FONT_SIZE,
       color: paint.tokens.cornerColor,
     });
   }

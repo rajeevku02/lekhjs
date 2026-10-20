@@ -70,6 +70,8 @@ const PORTS = { cpp: 4007, ts: 4008 };
 /** @typedef {{ set: string, name: string, text: string, objects: number, hit: boolean, exportPng: boolean, side?: number }} Board */
 /** @type {Board[]} */
 const boards = [];
+/** @type {Record<string, number>} board → phantom page entries dropped (--sets dec, DR-FMT-01) */
+const phantomPagesDropped = {};
 if (opt.sets === 'syn') {
   /** The box's S-syn selection (sets.json mixes the synthesiser has: basic, image, diagram, ink). */
   const sel = [
@@ -107,16 +109,46 @@ if (opt.sets === 'syn') {
   }
 } else {
   const inv = JSON.parse(readFileSync(path.join(CORPUS, 'inventory.json'), 'utf8'));
+  /**
+   * Both builds must export the same page 0. A stored page entry holding only `objects` (the old
+   * silent-empty-board bug) is a phantom page: C++ loads it as an unnamed page at order 0, so it can
+   * sort first, while lekhjs moves it after the real pages as "Recovered" (DR-FMT-01). On S-dec/max
+   * (90 pages, 3 phantoms) C++ exported a 1-object phantom (69 x 47 px) and TS the real first page
+   * (1,073 x 594 px), which read as a 26x PNG slowdown (P1). So a board with real pages loses its
+   * phantom entries before either build sees it; the count is in summary.json.
+   * @param {string} text
+   */
+  const withoutPhantomPages = (text) => {
+    /** @type {any} */
+    let doc;
+    try {
+      doc = JSON.parse(text);
+    } catch {
+      return { text, dropped: 0 };
+    }
+    const pages = doc?.pages;
+    if (pages === null || typeof pages !== 'object' || Array.isArray(pages)) return { text, dropped: 0 };
+    const isPhantom = (/** @type {any} */ p) =>
+      p !== null && typeof p === 'object' && !Array.isArray(p) && Object.keys(p).length === 1 && 'objects' in p;
+    const ids = Object.keys(pages).filter((k) => isPhantom(pages[k]));
+    if (ids.length === 0 || ids.length === Object.keys(pages).length) return { text, dropped: 0 };
+    for (const k of ids) delete pages[k];
+    return { text: JSON.stringify(doc), dropped: ids.length };
+  };
   const ids = Object.keys(inv)
     .filter((k) => !inv[k].parse_fail)
     .sort((a, b) => inv[a].objects - inv[b].objects || (a < b ? -1 : 1));
   const rnd = mulberry32(Number(opt.seed));
   const pick = (/** @type {string} */ set, /** @type {string} */ k) => {
     if (boards.some((b) => b.name === k)) return;
+    const { text, dropped } = withoutPhantomPages(
+      readFileSync(path.join(CORPUS, 'out', 'kashi-form', 'boards', `${k}.lekh`), 'utf8'),
+    );
+    if (dropped > 0) phantomPagesDropped[k] = dropped;
     boards.push({
       set,
       name: k,
-      text: readFileSync(path.join(CORPUS, 'out', 'kashi-form', 'boards', `${k}.lekh`), 'utf8'),
+      text,
       objects: inv[k].objects,
       hit: false,
       exportPng: true,
@@ -647,6 +679,7 @@ const meta = {
   isolated: { cpp: runs.cpp.map((r) => r._meta.isolated), ts: runs.ts.map((r) => r._meta.isolated) },
   blocked: { cpp: runs.cpp.map((r) => r._meta.blocked), ts: runs.ts.map((r) => r._meta.blocked) },
   res_served: { cpp: runs.cpp.map((r) => r._meta.res_served), ts: runs.ts.map((r) => r._meta.res_served) },
+  phantom_pages_dropped: phantomPagesDropped,
   cold_ms: { cpp: runs.cpp.map((r) => r._meta.cold?.ms ?? null), ts: runs.ts.map((r) => r._meta.cold?.ms ?? null) },
   errors: Object.fromEntries(
     BOARDS.map((b) => [b.set, [...runs.cpp, ...runs.ts].filter((r) => r[b.name]?.error).length]).filter(

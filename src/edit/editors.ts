@@ -334,14 +334,14 @@ export class ColorEditor {
     else this.setColor(paint.solidColor);
   }
 
-  /** C++ `setColor`: selects the nearest swatch (by RGB distance) and shows `color` in it. */
+  /** C++ `setColor`: selects the nearest swatch (by C++ `cdist`, see there) and shows `color` in it. */
   setColor(color: Color): void {
     this.colors_[this.currentIndex_] = this.colorSet_[this.currentIndex_] as Color;
     const start = this.type_ === ColorType.Fill ? 1 : 0;
     if (color.alpha === 0 && this.colorSet_[0]?.alpha === 0) {
       this.currentIndex_ = 0;
     } else {
-      let dist = Number.MAX_VALUE;
+      let dist = 3.4028234663852886e38; // FLT_MAX
       for (let i = start; i < this.colorSet_.length; i++) {
         const d = ColorEditor.cdist(color, this.colorSet_[i] as Color);
         if (d < dist) {
@@ -363,11 +363,19 @@ export class ColorEditor {
     this.updateShape();
   }
 
-  private static cdist(a: Color, b: Color): number {
-    const d1 = a.red - b.red;
-    const d2 = a.green - b.green;
-    const d3 = a.blue - b.blue;
-    return Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+  /**
+   * C++ `cdist` (ColorEditor.cpp:96-102) as it computes: `color_t`'s channels are `unsigned`
+   * (base/TypeDefinitions.h), so `c1.red - c2.red` wraps to 2^32 − d when the swatch's channel is
+   * the larger, and the result is taken to `float`. A swatch brighter than the colour in any
+   * channel is therefore "far": the tick goes to the nearest swatch no brighter in any channel
+   * ((204, 204, 255) ticks (95, 180, 221), not (210, 228, 252)). Float arithmetic as C++ does it.
+   */
+  static cdist(a: Color, b: Color): number {
+    const f = Math.fround;
+    const d1 = f((a.red - b.red) >>> 0);
+    const d2 = f((a.green - b.green) >>> 0);
+    const d3 = f((a.blue - b.blue) >>> 0);
+    return f(Math.sqrt(f(f(f(d1 * d1) + f(d2 * d2)) + f(d3 * d3))));
   }
 
   /** In [0, 1]. */

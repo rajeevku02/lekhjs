@@ -85,7 +85,11 @@ describe('editors', () => {
     ce.init(ColorType.Fill, 6, null);
     expect(ce.colors()[0]?.alpha).toBe(0);
     expect(ce.colors()[1]?.alpha).toBe(230);
+    // C++ cdist subtracts unsigned channels (owner round UI8): red (255, 0, 0) is brighter in red
+    // than (250, 5, 5), so it is "far", and black is picked; an exact swatch is its own.
     ce.setColor(new Color(250, 5, 5));
+    expect(ce.currentIndex()).toBe(1 + LEKH_COLORS.findIndex((c) => c.equals(new Color(0, 0, 0))));
+    ce.setColor(new Color(255, 0, 0));
     expect(ce.currentIndex()).toBe(1 + LEKH_COLORS.findIndex((c) => c.equals(new Color(255, 0, 0))));
     expect(ce.groupStartIndex()).toBe(Math.trunc(ce.currentIndex() / 6) * 6);
     ce.setColor(new Color(1, 2, 3, 0));

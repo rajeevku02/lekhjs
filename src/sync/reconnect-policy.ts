@@ -3,7 +3,9 @@
 //
 // The rule is C++ `CoreIO::onWebSocketDisconnect` (`L/app/CoreIO.cpp:657-668`): on a disconnect,
 // if the app is in the foreground and auto-reconnect is on, reopen the board; otherwise show
-// "Disconnected from server" with Reload. Auto-reconnect is off on Mac (`HostEnv.cpp:48-50`).
+// "Disconnected from server" with Reload. Auto-reconnect is off on Mac (`HostEnv.cpp:48-50`) and
+// on the web (`LekhCore::initForWeb`, LekhCore.cpp:125). A board that is not remote takes no
+// decision (`!isRemote_ || remoteDoc_.docid.empty()`; `SyncSession` checks its docid).
 //
 // Kept although JS may only see the close after resume (WKWebView suspends JS soon after
 // backgrounding; owner, OQ-58): a close observed while the last `hostLifecycle` was `background`,
@@ -19,7 +21,7 @@ export type ReconnectDecision =
   | { readonly kind: 'reopen'; readonly reason: 'auto_reconnect' };
 
 export interface ReconnectPolicyOptions {
-  /** `env.autoReconnect`: false on Mac (`idiom === 'mac'`). */
+  /** `env.autoReconnect`: false on Mac (`idiom === 'mac'`) and the web (`LekhCore::initForWeb`). */
   readonly autoReconnect: boolean;
   /** The lifecycle at start (a board opens in the foreground). */
   readonly lifecycle?: 'foreground' | 'background';

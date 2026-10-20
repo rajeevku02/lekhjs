@@ -94,7 +94,7 @@ export interface SyncSessionOptions {
   readonly transport?: Transport;
   /** Whether a generator block is JS-form for a known module (placeholders are not). */
   readonly isJsForm?: JsFormTest;
-  /** `env.autoReconnect` (false on Mac). Default true. */
+  /** `env.autoReconnect` (false on Mac and the web). Default true. */
   readonly autoReconnect?: boolean;
 }
 
@@ -457,6 +457,10 @@ export class SyncSession {
 
   /** A `transportState` event. */
   onTransportState(s: TransportState): ReconnectDecision | null {
+    // C++ `CoreIO::onWebSocketDisconnect` returns at once unless the board is remote
+    // (`!isRemote_ || remoteDoc_.docid.empty()`, CoreIO.cpp:659-661): an offline board never
+    // reopens nor shows "Disconnected from server".
+    if (this.docid_ === '') return null;
     const d = this.reconnect.onTransportState(s);
     if (d !== null) this.emit('reconnect', d);
     return d;
@@ -464,6 +468,12 @@ export class SyncSession {
 
   /** A `hostLifecycle` event. */
   onHostLifecycle(state: 'foreground' | 'background'): ReconnectDecision | null {
+    if (this.docid_ === '') {
+      // Not a cloud board (offline, or left): the lifecycle is still tracked, but the transport,
+      // which never connected and reads `closed`, is no disconnect (see `onTransportState`).
+      this.reconnect.onHostLifecycle(state);
+      return null;
+    }
     const d = this.reconnect.onHostLifecycle(state, this.opts_.transport?.state);
     if (d !== null) this.emit('reconnect', d);
     return d;

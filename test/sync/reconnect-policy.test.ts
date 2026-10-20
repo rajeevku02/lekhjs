@@ -103,4 +103,34 @@ describe('SyncSession wiring of the policy', () => {
     s.onTransportState({ state: 'open', at: 0 });
     expect(s.onTransportState({ state: 'closed', at: 1 })).toEqual(DIALOG);
   });
+
+  it('an offline board (no docid) never decides: C++ onWebSocketDisconnect returns for !isRemote_ (UI4 item 1)', () => {
+    const clock = new ManualClock();
+    const b = board(fixtureJson('format/03-connector.lekh'));
+    const transport = new FakeTransport();
+    transport.state = 'closed'; // a transport that never connected reports closed
+    const s = new SyncSession({
+      host: { document: () => b.doc, codec: b.io.codec, replaceDocument: () => undefined },
+      clock,
+      scheduler: new ManualScheduler(clock),
+      docid: '',
+      transport,
+    });
+    const seen: ReconnectDecision[] = [];
+    s.on('reconnect', (d) => seen.push(d));
+    // A tab switch: hidden, then visible.
+    expect(s.onHostLifecycle('background')).toBeNull();
+    expect(s.onHostLifecycle('foreground')).toBeNull();
+    expect(s.onTransportState({ state: 'closed', at: 1 })).toBeNull();
+    expect(seen).toEqual([]);
+    // The same session started as a cloud board decides again.
+    s.start(DOCID, 0);
+    transport.state = 'open';
+    s.onTransportState({ state: 'open', at: 2 });
+    s.onHostLifecycle('background');
+    expect(s.onHostLifecycle('foreground')).toBeNull(); // still open: a tab switch alone shows nothing
+    transport.state = 'closed';
+    s.onHostLifecycle('background');
+    expect(s.onHostLifecycle('foreground')).toEqual(DIALOG);
+  });
 });

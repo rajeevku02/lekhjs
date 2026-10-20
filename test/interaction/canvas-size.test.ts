@@ -12,6 +12,11 @@ import type { JsonObject } from '../../src/template';
 import { recordingCanvas } from '../render/helpers';
 import { frame } from '../sync/helpers';
 import { A, B, C, P, fixtureJson, viewHarness, type ViewHarness } from './helpers';
+import { BoardView, DESKTOP_WEB, ManualFrameScheduler } from '../../src/interaction';
+import { BoardSession } from '../../src/session';
+import { FakeImagePort, FakeScheduler, FakeTransport } from '../../src/testing';
+import { testRuntime } from '../session/helpers';
+import { DOCID } from '../sync/helpers';
 
 /** The connector fixture with its page made auto-size (or fixed, `size` in points). */
 function board(type: 'auto' | 'fixed', size?: { width: number; height: number }): JsonObject {
@@ -162,5 +167,56 @@ describe('an auto-size canvas follows its content (UI3 #1)', () => {
     settle();
     expect(width(h)).toBeCloseTo(2500 + 60 + 0.5 + 64, 6);
     expect(gridRects(grid.log).length).toBeGreaterThan(0);
+  });
+});
+
+describe('the placeholder page while a cloud board connects (owner round UI4 item 3)', () => {
+  // C++ `CoreIO::openRemoteDoc` loads the empty document (`loadEmpty`, CoreIO.cpp:299) under
+  // "Loading.." and the canvas places it with `computeSize(true)` (`resetAndSetSize` at every
+  // layout, CanvasWidget.cpp:932-944): the empty auto-size page (612 × 792) is centred as a
+  // loaded one is, until the load frame replaces it.
+  function connecting(w = 800, ht = 600) {
+    const runtime = testRuntime();
+    const scheduler = new FakeScheduler();
+    const session = new BoardSession(runtime, { images: new FakeImagePort(), scheduler, transport: new FakeTransport() });
+    session.dispatch({ type: 'connect', docid: DOCID, version: 0 });
+    const frames = new ManualFrameScheduler();
+    const bv = new BoardView({ session, env: DESKTOP_WEB, frames, readOnly: () => false });
+    bv.setViewportSize(w, ht, 1);
+    for (const l of ['grid', 'drawing', 'middle'] as const) bv.attach(l, recordingCanvas().ctx);
+    const settle = (): void => {
+      for (let i = 0; i < 10 && (frames.pending > 0 || scheduler.pendingFrames > 0); i++) {
+        scheduler.advance(0);
+        scheduler.frame();
+        frames.tick();
+      }
+    };
+    settle();
+    return { session, bv, settle };
+  }
+
+  it('the empty page under "Loading.." is centred, and follows a resize', () => {
+    const { session, bv, settle } = connecting();
+    expect(session.isLoaded).toBe(false);
+    expect(session.document.activePage().getCanvasSize(false)).toMatchObject({ width: 612, height: 792 });
+    expect(bv.view.canvasRect().x).toBeCloseTo((800 - 612) / 2, 6);
+    expect(bv.view.canvasRect().y).toBe(0);
+    bv.setViewportSize(1000, 900, 1);
+    settle();
+    expect(bv.view.canvasRect().x).toBeCloseTo((1000 - 612) / 2, 6);
+    expect(bv.view.canvasRect().y).toBeCloseTo((900 - 792) / 2, 6);
+  });
+
+  it('the load frame then places the loaded page (C++ computeSize(true) after the first update)', () => {
+    const { session, bv, settle } = connecting();
+    const doc = board('fixed', { width: 400, height: 300 });
+    session.dispatch({
+      type: 'remoteFrame',
+      text: JSON.stringify({ docid: DOCID, version: 3, timestamp: 1, type: 'update', updates: { changes: { doc }, type: 'load', permission: 'write' } }),
+    });
+    settle();
+    expect(session.isLoaded).toBe(true);
+    expect(bv.view.canvasRect().x).toBeCloseTo(200, 6);
+    expect(bv.view.canvasRect().y).toBeCloseTo(150, 6);
   });
 });

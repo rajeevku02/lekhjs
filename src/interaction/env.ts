@@ -13,16 +13,17 @@ export interface HostEnvironment {
   readonly hasTouch: boolean;
   /**
    * A cloud board whose socket closes in the foreground is reopened (spec 09 §7). Off on Mac
-   * (`HostEnv.cpp:48-50`: `idiom === 'mac'`); the session's `ReconnectPolicy` reads it through
-   * `SessionOptions.autoReconnect`.
+   * (`HostEnv.cpp:48-50`: `idiom === 'mac'`) and on the web (`LekhCore::initForWeb`,
+   * LekhCore.cpp:125: the lost socket shows "Disconnected from server" with Reload); the
+   * session's `ReconnectPolicy` reads it through `SessionOptions.autoReconnect`.
    */
   readonly autoReconnect: boolean;
   readonly androidApi?: number;
 }
 
-/** C++ `HostEnv` auto-reconnect: every host but Mac. */
+/** C++ auto-reconnect: iOS and Android (off on Mac, `HostEnv.cpp:48-50`, and the web, `LekhCore.cpp:125`). */
 export function autoReconnectFor(host: HostEnvironment['host']): boolean {
-  return host !== 'mac';
+  return host !== 'mac' && host !== 'web';
 }
 
 export const DESKTOP_WEB: HostEnvironment = Object.freeze({
@@ -33,7 +34,7 @@ export const DESKTOP_WEB: HostEnvironment = Object.freeze({
   isSmallScreen: false,
   hasPencilSupport: true,
   hasTouch: false,
-  autoReconnect: true,
+  autoReconnect: false,
 });
 
 /** C++ `HostEnv::isSmallScreen`: either side below 660 view px. */

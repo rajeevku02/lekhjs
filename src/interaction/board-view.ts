@@ -420,7 +420,15 @@ export class BoardView {
    */
   private syncCanvasSize(): void {
     const s = this.session;
-    if (!s.isLoaded || s.waitingForFonts) return;
+    if (s.waitingForFonts) return;
+    if (!s.isLoaded) {
+      // A cloud board still connecting shows the empty placeholder page under "Loading..": C++
+      // `openRemoteDoc` loads the empty document (`loadEmpty`) and the canvas places it with
+      // `computeSize(true)`, again at every layout (`resetAndSetSize`), so it is centred as a
+      // loaded page is (owner round UI4). The load frame's `reloaded` places the real page.
+      this.view.firstTimeLayout();
+      return;
+    }
     if (this.firstLayoutPending_ && this.view.firstTimeLayout()) {
       this.firstLayoutPending_ = false;
       // A view change repaints every layer; the size is compared from that paint on.

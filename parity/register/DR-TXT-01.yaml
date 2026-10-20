@@ -12,7 +12,7 @@ rule:
     compat_switch: lineSpacingCompat
   perf: null
 evidence: 'spec 06 §3.3, §3.4, §3.6, §13; AC-TXT-01, AC-TXT-02'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-20'
+review: 'Owner in chat, 2026-10-20: "accept DR-TXT-01, DR-TXT-02, DR-TXT-04 and DR-TXT-07"'

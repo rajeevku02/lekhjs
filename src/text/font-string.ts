@@ -49,6 +49,14 @@ export function buildFontKey(r: ResolvedFont, px: number): string {
   return r.stretch === 'normal' || r.stretch === '' ? css : `${css}|${r.stretch}`;
 }
 
+/**
+ * `fontKey` (from `buildFontKey`/`buildCanvasFont`) at another pixel size: only the size token
+ * changes, written as `buildCanvasFont` writes it.
+ */
+export function withFontPx(fontKey: string, px: number): string {
+  return fontKey.replace(/^(\S+ \S+ )[0-9.eE+-]+px /, `$1${pxStr(px)}px `);
+}
+
 const STRETCH_KEYWORDS: readonly string[] = Object.freeze([
   'ultra-condensed',
   'extra-condensed',

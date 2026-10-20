@@ -23,7 +23,7 @@ import {
 import type { Size } from '../../geometry';
 import { computeGradient, type ComputedGradient, type DrawingPlatform } from '../../render';
 import { Color, Style, TextAlignHorizontal, TextAlignVertical } from '../../style';
-import { TextMeasureMemo, type LaidOutText } from '../../text';
+import { TextMeasureMemo, splitFontKey, withFontPx, type LaidOutText } from '../../text';
 import type { DataStore } from '../expr/data-store';
 import { DataExpressionParser } from '../expr/data-expression-parser';
 import type { TemplateEnv } from '../env';
@@ -595,25 +595,72 @@ export const IMAGE_LOADING_FONT_FRACTION = 0.1;
 export const IMAGE_LOADING_MIN_FONT = 6;
 const IMAGE_LOADING_TEXT = Object.freeze(new Color(128, 128, 128, 255));
 
+/** The size the label is measured at; every placeholder scales this one layout (P3). */
+const IMAGE_LOADING_REF_PX = 100;
+
+function imageLoadingStyle(fontSize: number): Style {
+  const style = new Style();
+  style.setFontSize(fontSize);
+  style.setFontColor(IMAGE_LOADING_TEXT);
+  return style;
+}
+
+/**
+ * The label laid out at `IMAGE_LOADING_REF_PX` in a box centred on (0, 0), as `layoutTextInBox`
+ * lays it out ('float'). One font key for every placeholder, so after the first label it is
+ * answered from the runtime's width and metrics caches without a `measureText`.
+ */
+function imageLoadingRefLayout(text: TemplateEnv['text']): LaidOutText | null {
+  return layoutTextInBox(
+    text,
+    { text: IMAGE_LOADING_LABEL, angle: 0, inRect: new Rect(-1, -1, 2, 2), wrapMode: 'float' },
+    imageLoadingStyle(IMAGE_LOADING_REF_PX),
+    0,
+  );
+}
+
 /**
  * The "Loading…" label centred in the placeholder `rect` (rotated by `angle` with it), or nothing
  * when the rectangle is too small for it: a font under `IMAGE_LOADING_MIN_FONT`, or a label wider
  * or taller than 90 % of the rectangle.
+ *
+ * The label is the reference layout scaled to the placeholder's font size, not a layout of its
+ * own: each placeholder size was a new font size, so every slot of a board still loading cost a
+ * canvas font change and two `measureText` calls in the first frame (P3: P-01 S-dec/d7, a board
+ * of 32 image slots, 1.26 against C++, which draws no label). Text width scales with the font
+ * size, so the label's size and place are the same to well under a pixel.
  */
 function paintImageLoadingLabel(dp: DrawingPlatform, env: TemplateEnv, rect: Rect, angle: number): void {
   const fontSize = Math.min(rect.width, rect.height) * IMAGE_LOADING_FONT_FRACTION;
   if (!(fontSize >= IMAGE_LOADING_MIN_FONT)) return;
-  const style = new Style();
-  style.setFontSize(fontSize);
-  style.setFontColor(IMAGE_LOADING_TEXT);
-  const laid = layoutTextInBox(
-    env.text,
-    { text: IMAGE_LOADING_LABEL, angle, inRect: rect, wrapMode: 'float' },
-    style,
-    0,
-  );
-  if (laid === null || laid.width > rect.width * 0.9 || laid.height > rect.height * 0.9) return;
-  dp.drawText(laid, style);
+  const ref = imageLoadingRefLayout(env.text);
+  if (ref === null) return;
+  const k = fontSize / IMAGE_LOADING_REF_PX;
+  if (ref.width * k > rect.width * 0.9 || ref.height * k > rect.height * 0.9) return;
+  const c = rect.center();
+  const px = ref.px * k;
+  const fontKey = withFontPx(ref.fontKey, px);
+  const laid: LaidOutText = {
+    ...ref,
+    lines: ref.lines.map((l) => ({
+      ...l,
+      width: l.width * k,
+      x: c.x + l.x * k,
+      baselineY: c.y + l.baselineY * k,
+      top: c.y + l.top * k,
+    })),
+    width: ref.width * k,
+    height: ref.height * k,
+    lineHeight: ref.lineHeight * k,
+    fontKey,
+    font: splitFontKey(fontKey).font,
+    px,
+    ascent: ref.ascent * k,
+    descent: ref.descent * k,
+    box: Rect.fromCenter(c, ref.box.width * k, ref.box.height * k),
+    angle,
+  };
+  dp.drawText(laid, imageLoadingStyle(fontSize));
 }
 
 /** An image slot. The element holds the image's key; paint looks the bitmap up in the env. */

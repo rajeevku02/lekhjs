@@ -50,6 +50,7 @@ export {
   isGenericFamily,
   quoteFamily,
   splitFontKey,
+  withFontPx,
 } from './font-string';
 export { modifierToCss, type ModifierCss } from './font-modifier';
 export { seedPostScriptNames, type PostScriptFace } from './legacy-font-names';

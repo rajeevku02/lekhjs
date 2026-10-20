@@ -1,13 +1,16 @@
 // Images load like C++ (owner decision 2026-10-20, Work 01M4X7TCHFB862XGT68GPY071C, IM1): the board
 // is drawn without waiting for an image fetch or decode. While an image is loading its slot is the
-// C++ placeholder (white, black 2 pt border, at the image's frame: lekhcore `ShapeElement.cpp:537-554`)
+// C++ placeholder (white, black 2 pt border, at the image's frame: C++ `ShapeElement.cpp:537-554`)
 // with a centred "Loading…" label that scales with the shape and is skipped when the rectangle is
 // too small; the arrival repaints with the image. A failed image keeps the plain placeholder, and
 // an export never shows the label (it waits for the image).
 import { createCanvas } from '@napi-rs/canvas';
 import { describe, expect, it } from 'vitest';
 import { BoardSession } from '../../src/session';
-import { IMAGE_LOADING_LABEL } from '../../src/template';
+import { IMAGE_LOADING_LABEL, layoutTextInBox } from '../../src/template';
+import { Point, Rect } from '../../src/geometry';
+import { Style } from '../../src/style';
+import { fontPx, type LineMetrics, type TextMeasurer } from '../../src/text';
 import { FakeImagePort, FakeScheduler } from '../../src/testing';
 import { Canvas2DDrawingPlatform, type DecodedImage } from '../../src/render';
 import { testRuntime } from './helpers';
@@ -194,5 +197,115 @@ describe('an image that is still loading (IM1)', () => {
     s.drawForExport(new Canvas2DDrawingPlatform(ctx), 0, false, { scale: 1, tx: 0, ty: 0 });
     expect(s.imageCache.state(URL)).toBe('pending');
     expect(texts).toEqual([]);
+  });
+
+  // P3 (P-01 S-dec/d7 1.26: a board with 32 image slots): each placeholder size was a font size of
+  // its own, so the first frame of a board still loading its images measured the label once per
+  // slot. The label is now one reference layout, scaled.
+  describe('the label is measured once, not once per placeholder size (P3)', () => {
+    /** Widths linear in the font size (as a canvas measures), counting the calls. */
+    class LinearMeasurer implements TextMeasurer {
+      calls = 0;
+      measureLine(text: string, fontKey: string): LineMetrics {
+        this.calls++;
+        const px = fontPx(fontKey);
+        return { width: 0.55 * px * text.length, ascent: 0.8 * px, descent: 0.25 * px };
+      }
+    }
+
+    function boardOf(sizes: readonly [number, number][]): string {
+      const doc = JSON.parse(board(10, 10)) as { pages: { p1: { objects: Record<string, unknown> } } };
+      const objects: Record<string, unknown> = {};
+      sizes.forEach(([w, h], i) => {
+        objects['o' + String(i + 1)] = {
+          type: 'templated',
+          order: i + 1,
+          params: { cx: 60 + i * 130, cy: 150, width: w, height: h, angle: 0 },
+          template: {
+            id: 'avabodh.basic.image',
+            texts: '',
+            images: [{ location: '0 1 2 3 4 0', src: URL + '-' + String(i) }],
+            data: ['0', '0', 'w', 'h', '0'],
+            draw: [],
+          },
+        };
+      });
+      doc.pages.p1.objects = objects;
+      return JSON.stringify(doc);
+    }
+
+    function openWith(measurer: LinearMeasurer, sizes: readonly [number, number][]): BoardSession {
+      const sched = new FakeScheduler();
+      const s = new BoardSession(testRuntime({ clock: sched, measurer }), {
+        images: new FakeImagePort(),
+        scheduler: sched,
+      });
+      s.dispatch({ type: 'open', raw: boardOf(sizes), meta: { kind: 'offline' } });
+      s.dispatch({
+        type: 'command',
+        origin: 'ui',
+        command: { kind: 'view', canvasW: 1000, canvasH: 300, zoom: 1, tx: 0, ty: 0 },
+      });
+      sched.flushTimers();
+      return s;
+    }
+
+    /** Paints the drawing layer, recording each fillText with the font it was drawn in. */
+    function paintRecording(s: BoardSession): { text: string; x: number; y: number; font: string }[] {
+      const ctx = createCanvas(1000, 300).getContext('2d');
+      const out: { text: string; x: number; y: number; font: string }[] = [];
+      const real = ctx.fillText.bind(ctx);
+      ctx.fillText = (t: string, x: number, y: number) => {
+        out.push({ text: t, x, y, font: ctx.font });
+        real(t, x, y);
+      };
+      s.paint('drawing', ctx);
+      return out;
+    }
+
+    const SIZES: readonly [number, number][] = [
+      [100, 80],
+      [110, 90],
+      [120, 70],
+      [125, 105],
+      [90, 120],
+      [118, 97],
+    ];
+
+    it('measures nothing per placeholder: six sizes, one label layout', () => {
+      const m = new LinearMeasurer();
+      const s = openWith(m, SIZES);
+      const before = m.calls;
+      const drawn = paintRecording(s);
+      expect(drawn.map((d) => d.text)).toEqual(SIZES.map(() => IMAGE_LOADING_LABEL));
+      // The reference layout: the label and the font metrics, once (two per size before P3).
+      expect(m.calls - before).toBeLessThanOrEqual(2);
+      const again = m.calls;
+      paintRecording(s);
+      expect(m.calls).toBe(again);
+    });
+
+    it('draws each label at the size and place a layout at its own font size gives', () => {
+      const m = new LinearMeasurer();
+      const s = openWith(m, SIZES);
+      const drawn = paintRecording(s);
+      SIZES.forEach(([w, h], i) => {
+        const rect = Rect.fromCenter(new Point(60 + i * 130, 150), w, h);
+        const style = new Style();
+        style.setFontSize(Math.min(w, h) * 0.1);
+        const own = layoutTextInBox(
+          s.text,
+          { text: IMAGE_LOADING_LABEL, angle: 0, inRect: rect, wrapMode: 'float' },
+          style,
+          0,
+        );
+        const d = drawn[i];
+        expect(own).not.toBeNull();
+        expect(d).toBeDefined();
+        expect(fontPx(d?.font ?? '')).toBeCloseTo(own?.px ?? NaN, 3);
+        expect(d?.x).toBeCloseTo(own?.lines[0]?.x ?? NaN, 6);
+        expect(d?.y).toBeCloseTo(own?.lines[0]?.baselineY ?? NaN, 6);
+      });
+    });
   });
 });

@@ -11,7 +11,7 @@ rule:
   image: null
   perf: { metric: 'P-08a board_edit p95 (synthetic 0.25 MiB)', device: 'box', ratio_max: 1.1, measured: 1.08 }
 evidence: 'A3 (G3) backend rerun 2026-10-20, quiet box (kashi-human stopped), C T T C C T T C C T, lbs test/pool/perf.js --sizes 0.25; results lekhjs/parity/out/perf/a3/be2/. The fixture is the board perf.js builds (kashi test/core/helpers/synthetic.js sized(0.25) from its sample fixture android-sample-diagram.lekh) with its labels rewritten in the fixture vocabulary. Owner decision H-BE-1 (spec 11 §11)'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-20'
+review: 'Owner in chat, 2026-10-20: "accept DR-PERF-01"'

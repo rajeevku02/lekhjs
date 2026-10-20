@@ -31,7 +31,8 @@
 // --sets syn: the synthetic boards of sets.json (box, no customer data) → parity/out/perf/<run-id>/.
 // --sets dec: S-dec and S-feat from corpus/inventory.json → corpus/out/perf/<run-id>/ (customer
 // boards; only per-decile aggregates leave the box). Writes one perf-result/1 file per (metric,
-// set, build) and summary.json / summary.md (the §6.3 table).
+// set, build) and summary.json / summary.md (the §6.3 table), plus a per-board breakdown
+// (summary.json per_board, summary-boards.md: each board as set#position, no board ids).
 import { execFileSync } from 'node:child_process';
 import { createReadStream, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -317,13 +318,25 @@ async function pass(engine) {
   // §3.2.1: the first board on a fresh page pays one-off costs (lazy chunks, fonts, JIT) that a warm
   // load does not; one small synthetic board is loaded and discarded first, so the first measured
   // set is warm like the rest (the A3 S-syn run's basic/36 swung 60-144 ms on TS without it).
+  // P3: the warm-up board also runs the hit path (2,000 points of each kind, discarded) when P-03 is
+  // measured, so the first measured set does not carry the JIT warm-up of the TS hit test (on
+  // S-dec/d0, the first set, the first batches ran 10-40x the steady per-call time).
   await page
-    .evaluate(async (/** @type {string} */ text) => {
-      const t = /** @type {any} */ (globalThis).__lekhTest;
-      await t.loadDoc(text, { name: 'warm-up' });
-      await t.settle();
-      t.drawFrame();
-    }, WARM_BOARD)
+    .evaluate(
+      async (/** @type {{ text: string, hit: boolean }} */ a) => {
+        const t = /** @type {any} */ (globalThis).__lekhTest;
+        await t.loadDoc(a.text, { name: 'warm-up' });
+        await t.settle();
+        t.drawFrame();
+        if (a.hit) {
+          const pts = new Float64Array(4000);
+          for (let i = 0; i < pts.length; i++) pts[i] = ((i * 7919) % 6000) + (i % 2) * 13;
+          for (const kind of ['near', 'connection'])
+            for (let i = 0; i < pts.length; i += 400) t.hitTest(pts.subarray(i, i + 400), kind);
+        }
+      },
+      { text: WARM_BOARD, hit: METRICS.has('P-03') },
+    )
     .catch(() => {});
   for (const b of BOARDS) {
     /** @type {any} */
@@ -630,8 +643,36 @@ function addRow(
     const t = per(runs.ts);
     if (c.every((s) => s.n === 0) && t.every((s) => s.n === 0)) continue;
     rows.push({ metric, set, unit, cpp: c, ts: t, counter, boards: bs.length, excluded: all.length - bs.length });
+    if (set === 'S-dec/all') continue;
+    // The per-board breakdown (P3): each board's own per-run p95, median over the runs, so a pooled
+    // row over the bar can be traced to its board(s). Boards are named by set and position only.
+    for (const b of all) {
+      /** @param {any[]} rs */
+      const one = (rs) =>
+        median(
+          rs
+            .map((run) => (run[b.name] && !run[b.name].error ? stat(f(run[b.name], b) ?? []) : null))
+            .filter((s) => s !== null && s.n > 0)
+            .map((s) => /** @type {any} */ (s).p95),
+        );
+      const cv = one(runs.cpp);
+      const tv = one(runs.ts);
+      perBoard.push({
+        metric,
+        set,
+        board: `${set}#${BOARDS.filter((x) => x.set === set).indexOf(b)}`,
+        objects: b.objects,
+        unit,
+        cpp: cv,
+        ts: tv,
+        ratio: cv > 0 ? tv / cv : null,
+        failed: failed(b),
+      });
+    }
   }
 }
+/** @type {{ metric: string, set: string, board: string, objects: number, unit: string, cpp: number, ts: number, ratio: number | null, failed: boolean }[]} */
+const perBoard = [];
 if (METRICS.has('P-01')) addRow('P-01', 'ms', (r) => [r.load]);
 if (METRICS.has('P-02')) addRow('P-02', 'ms', (r) => r.frames ?? null);
 if (METRICS.has('P-03')) {
@@ -736,6 +777,7 @@ const meta = {
     ),
   ),
   table,
+  per_board: perBoard,
 };
 writeFileSync(path.join(OUT, 'summary.json'), JSON.stringify(meta, null, 1));
 const f = (/** @type {number} */ x) =>
@@ -749,6 +791,17 @@ const md = [
   ),
 ].join('\n');
 writeFileSync(path.join(OUT, 'summary.md'), md + '\n');
+writeFileSync(
+  path.join(OUT, 'summary-boards.md'),
+  [
+    `| Metric | Board | Objects | C++ p95 | TS p95 | Ratio |`,
+    `|---|---|---|---|---|---|`,
+    ...perBoard.map(
+      (r) =>
+        `| ${r.metric} | ${r.board} | ${r.objects} | ${f(r.cpp)} ${r.unit} | ${f(r.ts)} ${r.unit} | ${r.ratio === null ? 'n/a' : f(r.ratio)}${r.failed ? ' (failed)' : ''} |`,
+    ),
+  ].join('\n') + '\n',
+);
 process.stdout.write(md + '\n' + `out: ${OUT}\n`);
 await browser.close();
 for (const s of servers) {

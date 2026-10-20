@@ -3,14 +3,14 @@ title: 'MCP board_edit on a 0.25 MiB board is up to 8 % slower on lekhjs than on
 area: PERF
 kind: accepted-perf
 cpp: 'kashi MCP on the vendored backend wasm (lbs master eb9e0c8): board_edit (compile, stand-in dispatch, layout check) on the 0.25 MiB synthetic board, p95 213.4 ms (median of 5 runs, test/pool/perf.js, 50 calls)'
-ts: 'kashi on lekhjs pool workers at MCP_CORE_WORKER_HEAP_MB=256 (lbs b08fbb4, lekhjs ec1e82a dist 61fafba9): p95 231.5 ms, ratio 1.08 against an A/A margin of 0.05 (verification 03 §3.3: needs a DR-PERF entry). The other board sizes are at or below the wasm (0.5 MiB 0.85, 0.99 MiB 0.90, fixture 0.81)'
+ts: 'kashi on lekhjs pool workers at the default pool settings since round RC2 (MCP_CORE_WORKER_HEAP_MB=256, MCP_CORE_RECYCLE_AFTER=1000 by the owner''s decision of 2026-10-20; lbs dcd4695, lekhjs cdf8449 dist 09d96398): p95 113.8 ms against C++ 200.3 ms, ratio 0.57 (A/A margin 0.10). At the earlier recycle of 50 it was 1.08 (A3: 231.5 vs 213.4 ms, margin 0.05; lbs b08fbb4, lekhjs ec1e82a dist 61fafba9) and 1.27 (P1); the difference was the worker recycle (a fresh worker runs cold JS), not the engine'
 user_visible: false
 fixture: parity/fixtures/DR-PERF-01/synthetic-0.25mib.lekh
 rule:
   json: ['none: a timing difference, no JSON or pixel difference']
   image: null
-  perf: { metric: 'P-08a board_edit p95 (synthetic 0.25 MiB)', device: 'box', ratio_max: 1.1, measured: 1.08 }
-evidence: 'A3 (G3) backend rerun 2026-10-20, quiet box (kashi-human stopped), C T T C C T T C C T, lbs test/pool/perf.js --sizes 0.25; results lekhjs/parity/out/perf/a3/be2/. The fixture is the board perf.js builds (kashi test/core/helpers/synthetic.js sized(0.25) from its sample fixture android-sample-diagram.lekh) with its labels rewritten in the fixture vocabulary. Owner decision H-BE-1 (spec 11 §11)'
+  perf: { metric: 'P-08a board_edit p95 (synthetic 0.25 MiB)', device: 'box', ratio_max: 1.1, measured: 0.57 }
+evidence: 'RC2 backend rerun 2026-10-20 11:37-11:48 UTC, quiet box (load1 0.12 at start, kashi-human stopped), C T T C C T T C C T (N = 5 per build), lbs test/pool/perf.js --sizes 0.25, TS at the new default recycle 1000; results lekhjs/parity/out/perf/rc2/be2/, driver and analysis orchestrator/fix2/rc2/. Earlier: A3 (G3) backend rerun 2026-10-20 at recycle 50, same pattern; results lekhjs/parity/out/perf/a3/be2/. The fixture is the board perf.js builds (kashi test/core/helpers/synthetic.js sized(0.25) from its sample fixture android-sample-diagram.lekh) with its labels rewritten in the fixture vocabulary. Owner decision H-BE-1 (spec 11 §11)'
 status: accepted
 signed_off_by: 'owner (Rajeev Kumar)'
 signed_off_at: '2026-10-20'

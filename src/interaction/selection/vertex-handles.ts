@@ -7,7 +7,7 @@ import { isMulti } from '../../edit';
 import { Point, Rect } from '../../geometry';
 import type { LekhObject } from '../../model';
 import type { DrawingPlatform } from '../../render';
-import { Style } from '../../style';
+import { dashedStyle } from '../overlay-tokens';
 import type { CanvasView } from '../canvas-view';
 import { ResizeDragger, RotateDragger, VertexDragger } from '../draggers/selection-draggers';
 import { EventName, Movement } from '../gesture-listener';
@@ -100,11 +100,9 @@ export class VertexHandles implements VertexHandleHost {
 
   draw(dp: DrawingPlatform, paint: OverlayPaint): void {
     if (this.target_ === null) return;
-    const s = new Style();
-    s.setNoFill();
-    s.setStrokeColor(paint.tokens.selectionStroke);
-    s.setStrokeWidth(1);
-    s.setDashArray([2, 2]);
+    // C++ `VertexHandleWidget::draw`: its `drawingProfile` sets only the dash {2, 2}
+    // (VertexHandleWidget.cpp:19-25), so the frame and the circle are 2 wide, the default.
+    const s = dashedStyle(paint.tokens.selectionStroke);
     const f = this.frame_;
     dp.startDrawing(new Point(f.x, f.y), s);
     dp.addLineTo(new Point(f.x + f.width, f.y));

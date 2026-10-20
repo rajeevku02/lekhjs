@@ -77,6 +77,13 @@ export interface SelectionState {
   readonly kind: 'shape' | 'connector' | 'multi' | 'group' | 'text';
   /** View px; re-emitted on selection, viewport or layout change. */
   readonly anchorRect: Rect;
+  /**
+   * View px: the target's own selection rectangle (C++ `target_->getSelectionRectangle()` in view
+   * coordinates), which the selection menu's popups are placed around when their item has no room
+   * (C++ `launchVM`'s `secondaryRect`, inflated by 5 there). Smaller than `anchorRect`, which
+   * carries the stroke and the `selectRectAdjustment`.
+   */
+  readonly targetRect: Rect;
   readonly actions: readonly SelectionAction[];
   readonly style: StyleSnapshot;
   /**

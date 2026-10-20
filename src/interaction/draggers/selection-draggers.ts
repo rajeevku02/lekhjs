@@ -335,7 +335,9 @@ export class SelectDragObject implements Transient {
     const s = new Style();
     s.setStrokeColor(paint.tokens.rubberBandStroke);
     s.setFillColor(paint.tokens.rubberBandFill);
-    s.setStrokeWidth(1);
+    // C++ `SelectDragObject` sets only the colours on its `drawingProfile` (SelectDragObject.cpp:7-11),
+    // so the rubber band is stroked at the default width 2 (Style.cpp:70-84); the port drew 1.
+    s.setStrokeWidth(2);
     const pts = this.rect().getPoints();
     const p0 = pts[0] as Point;
     dp.startDrawing(p0, s);

@@ -531,7 +531,8 @@ export class BoardView {
         end: heads.end()?.id() ?? null,
       });
     }
-    return { ids, kind, anchorRect: anchor, actions, style, menuHidden, arrows };
+    const targetRect = this.overlay.targetRect() ?? anchor;
+    return { ids, kind, anchorRect: anchor, targetRect, actions, style, menuHidden, arrows };
   }
 
   private computeUi(prev?: BoardUiState): BoardUiState {

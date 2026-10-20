@@ -1,7 +1,7 @@
 // The colours and sizes the overlay paints with (the C++ `Colors` / `Values` entries the Middle
 // widgets read, `L/object/widget/WidgetStyle.cpp`), light and dark. One table, so the overlay and
 // the React board tokens (`--lk-*`, spec 05 §7.4) are generated from the same values.
-import { Color } from '../style';
+import { Color, Style } from '../style';
 
 export type OverlayTheme = 'light' | 'dark';
 
@@ -78,3 +78,20 @@ export const OVERLAY_VALUES = Object.freeze({
   zoomInfoFontSize: 20,
   remotePointerRadius: 20,
 });
+
+/**
+ * The selection rectangle's line: C++ `SelectionRectangleWidget` strokes it with its own
+ * `drawingProfile`, which sets only the dash {2, 2} (SelectionRectangleWidget.cpp:29-37), so the
+ * width is `Style::effectiveStrokeWidth`'s default 2 (Style.cpp:70-84); the port drew 1 (owner
+ * round UI6). The vertex handle's frame and circle (`VertexHandleWidget`) are drawn the same way.
+ */
+export const SELECTION_STROKE_WIDTH = 2;
+
+export function dashedStyle(color: Color): Style {
+  const s = new Style();
+  s.setNoFill();
+  s.setStrokeColor(color);
+  s.setStrokeWidth(SELECTION_STROKE_WIDTH);
+  s.setDashArray([2, 2]);
+  return s;
+}

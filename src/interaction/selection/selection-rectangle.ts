@@ -22,8 +22,9 @@ import {
 } from '../../geometry';
 import { TemplatedObject, snapNumber, type GroupObject, type LekhObject } from '../../model';
 import type { DrawingPlatform } from '../../render';
-import { Style, type Color } from '../../style';
+import { Style } from '../../style';
 import { dragContext } from '../board';
+import { dashedStyle } from '../overlay-tokens';
 import type { CanvasView } from '../canvas-view';
 import { ConnectDragger, isConnectable } from '../draggers/connect-dragger';
 import { NoOpDragger } from '../drag-handler';
@@ -62,7 +63,6 @@ export interface CornerHandle {
 function templatedLike(t: EditTarget | null): boolean {
   return t instanceof TemplatedObject || isMulti(t);
 }
-
 
 /**
  * The move / resize / rotate readout's font size: C++ draws it with a default `Style`, whose
@@ -172,6 +172,21 @@ export class SelectionRectangle implements SelectionRectHost {
       return out ?? new Rect();
     }
     return t instanceof TemplatedObject ? t.unrotatedRect() : t.selectionRect();
+  }
+
+  /**
+   * The target's selection rectangle in view px: C++ `SelectionMenuWidget::launchVM`'s
+   * `target_->getSelectionRectangle()` through `canvasToViewPort` (SelectionMenuWidget.cpp:1690-1696),
+   * the rotated shape's bounds without the stroke, the adjustment or the handle padding; a
+   * multi-selection's is its members' unrotated union (`MultiSelectedObjects`).
+   */
+  targetRect(): Rect | null {
+    const t = this.target_;
+    if (t === null) return null;
+    const r = t instanceof MultiSelection ? this.selRect() : t.selectionRect();
+    const p1 = this.view_.toView(r.topLeft());
+    const p2 = this.view_.toView(r.bottomRight());
+    return new Rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
   }
 
   private strokeWidth(): number {
@@ -749,15 +764,6 @@ function minSelRect(r: Rect, min: number): Rect {
     height += diff;
   }
   return new Rect(x, y, width, height);
-}
-
-function dashedStyle(color: Color): Style {
-  const s = new Style();
-  s.setNoFill();
-  s.setStrokeColor(color);
-  s.setStrokeWidth(1);
-  s.setDashArray([2, 2]);
-  return s;
 }
 
 function shapePointTypeOf(t: PointType): ShapePointType {

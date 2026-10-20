@@ -349,6 +349,11 @@ export class OverlayLayer implements OverlayHost, RouterLayer {
     return this.rect.bounds();
   }
 
+  /** The selection target's own rectangle, view px (the secondary anchor of the menu's popups). */
+  targetRect(): Rect | null {
+    return this.rect.targetRect();
+  }
+
   // ---- layout and drawing ----
 
   layout(): void {
@@ -381,15 +386,19 @@ export class OverlayLayer implements OverlayHost, RouterLayer {
     const vt = this.vertex.isActive() ? this.vertex.target() : null;
     const t = this.target_;
     const interacting = this.rect.isMoving || this.rect.isResizing || this.rect.isRotating;
+    // C++ `LekhCore::alignmentLineStyle_` (1 wide, dashes 4 4; LekhCore.cpp:72-74), drawn in
+    // document units on the zoomed platform (`drawExtraWhileDragging`, LekhCore.cpp:193-195), so
+    // the width and the dashes scale with the zoom like the control arms (owner round UI6).
     const drawGuides = (o: TemplatedObject): void => {
       const s = new Style();
       s.setStrokeWidth(1);
       s.setNoFill();
       s.setDashArray([4, 4]);
+      const mdp = new ViewMappedPlatform(dp, this.board.view());
       for (const [a, b] of [...o.alignmentxDraw, ...o.alignmentyDraw]) {
-        dp.startDrawing(this.view_.toView(a), s);
-        dp.addLineTo(this.view_.toView(b));
-        dp.endDrawing();
+        mdp.startDrawing(a, s);
+        mdp.addLineTo(b);
+        mdp.endDrawing();
       }
     };
     if (t !== null && !isMulti(t)) {

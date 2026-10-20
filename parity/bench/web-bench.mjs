@@ -142,6 +142,18 @@ if (opt.sets === 'syn') {
 }
 /** The per-page warm-up board (§3.2.1): not one of the measured boards. */
 const WARM_BOARD = JSON.stringify(synthBoard('diagram', 60, { pages: 1, seed: 424242 }));
+const RES_URL = /\/resources\/([A-Za-z0-9_.-]+)(?:[?#].*)?$/;
+const RES_HEADERS = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-headers': '*',
+  'access-control-allow-methods': 'GET, OPTIONS',
+  'cross-origin-resource-policy': 'cross-origin',
+};
+/** @type {Record<string, { file?: string }>} */
+const resIndex =
+  opt.sets === 'dec' && existsSync(path.join(CORPUS, 'res', 'index.json'))
+    ? JSON.parse(readFileSync(path.join(CORPUS, 'res', 'index.json'), 'utf8'))
+    : {};
 const only = opt.only ? new Set(opt.only.split(',')) : null;
 const BOARDS = only === null ? boards : boards.filter((b) => only.has(b.set));
 
@@ -213,12 +225,29 @@ async function pass(engine) {
   });
   const origin = `http://localhost:${PORTS[engine]}`;
   let blocked = 0;
+  let served = 0;
   /** A fresh page on the build, its hooks ready. */
   const openPage = async () => {
     const p = await context.newPage();
     await p.route('**/*', (/** @type {any} */ r) => {
       const u = r.request().url();
       if (u.startsWith(origin) || u.startsWith('data:') || u.startsWith('blob:')) return r.continue();
+      // Corpus boards: their `res://` images from corpus/res/, as the image comparison serves them
+      // (verification 02 §B; §9 edge case 6: load and export include the image decode in both builds).
+      const m = RES_URL.exec(new URL(u).pathname);
+      if (m !== null) {
+        if (r.request().method() === 'OPTIONS') return r.fulfill({ status: 204, headers: RES_HEADERS });
+        const e = resIndex[m[1] ?? ''];
+        if (e?.file !== undefined) {
+          served++;
+          return r.fulfill({
+            status: 200,
+            headers: { ...RES_HEADERS, 'content-type': 'application/octet-stream' },
+            body: readFileSync(path.join(CORPUS, 'res', e.file)),
+          });
+        }
+        return r.fulfill({ status: 404, headers: RES_HEADERS, body: '' });
+      }
       blocked++;
       return r.abort();
     });
@@ -410,6 +439,7 @@ async function pass(engine) {
     }
   }
   out._meta.blocked = blocked;
+  out._meta.res_served = served;
   await context.close();
   return out;
 }
@@ -497,7 +527,7 @@ const envEnd = envRecord();
 
 /**
  * Metric rows: per (metric, set) the per-run statistic for both builds.
- * @type {{ metric: string, set: string, unit: string, cpp: any[], ts: any[], counter?: boolean }[]}
+ * @type {{ metric: string, set: string, unit: string, cpp: any[], ts: any[], counter?: boolean, boards?: number, excluded?: number }[]}
  */
 const rows = [];
 /** Pools a per-board extractor over the boards of each set (load-type metrics pool boards). */
@@ -510,7 +540,13 @@ function addRow(
   const sets = [...new Set(BOARDS.map((b) => b.set))];
   const groups = opt.sets === 'dec' && metric === 'P-01' ? [...sets, 'S-dec/all'] : sets;
   for (const set of groups) {
-    const bs = BOARDS.filter((b) => b.set === set || (set === 'S-dec/all' && b.set.startsWith('S-dec/')));
+    const all = BOARDS.filter((b) => b.set === set || (set === 'S-dec/all' && b.set.startsWith('S-dec/')));
+    // A board either build failed in any run (§9 edge case 9) is left out of both sides of the
+    // pooled row, so the two builds are compared over the same boards; when every board of the set
+    // failed on C++, the row is the TS value alone (cpp_fail).
+    const failed = (/** @type {Board} */ b) => [...runs.cpp, ...runs.ts].some((run) => run[b.name]?.error);
+    const ok = all.filter((b) => !failed(b));
+    const bs = ok.length > 0 ? ok : all;
     /** @param {any[]} rs */
     const per = (rs) =>
       rs.map((run) => {
@@ -520,7 +556,7 @@ function addRow(
     const c = per(runs.cpp);
     const t = per(runs.ts);
     if (c.every((s) => s.n === 0) && t.every((s) => s.n === 0)) continue;
-    rows.push({ metric, set, unit, cpp: c, ts: t, counter });
+    rows.push({ metric, set, unit, cpp: c, ts: t, counter, boards: bs.length, excluded: all.length - bs.length });
   }
 }
 if (METRICS.has('P-01')) addRow('P-01', 'ms', (r) => [r.load]);
@@ -574,6 +610,8 @@ const table = rows.map((row) => {
     margin,
     verdict,
     near_boundary: nearBoundary,
+    boards: row.boards,
+    excluded: row.excluded,
   };
 });
 for (const row of rows)
@@ -608,6 +646,7 @@ const meta = {
   env_end: envEnd,
   isolated: { cpp: runs.cpp.map((r) => r._meta.isolated), ts: runs.ts.map((r) => r._meta.isolated) },
   blocked: { cpp: runs.cpp.map((r) => r._meta.blocked), ts: runs.ts.map((r) => r._meta.blocked) },
+  res_served: { cpp: runs.cpp.map((r) => r._meta.res_served), ts: runs.ts.map((r) => r._meta.res_served) },
   cold_ms: { cpp: runs.cpp.map((r) => r._meta.cold?.ms ?? null), ts: runs.ts.map((r) => r._meta.cold?.ms ?? null) },
   errors: Object.fromEntries(
     BOARDS.map((b) => [b.set, [...runs.cpp, ...runs.ts].filter((r) => r[b.name]?.error).length]).filter(

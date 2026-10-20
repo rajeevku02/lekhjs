@@ -1,0 +1,18 @@
+id: DR-GEN-16
+title: 'A failing Lua script leaves the node size alone (shipped C++ and the wasm size it from uninitialised memory)'
+area: GEN
+kind: bug-fix
+cpp: 'LuaShapeGenerator never initialised savedw_/savedh_ (lekhcore src/lekh/shapegen/LuaShapeGenerator.h:36; the constructor, .cpp:534, set only L_ and interpretText_). generate() returns before setting them when the script fails to load (.cpp:576), the generate() call raises (.cpp:622) or the result has no template (.cpp:631), and setDimension (.cpp:685, called by ShapeTemplate::generateData) grows the node to whatever memory holds: up to 2e29 seen, e.g. the calendar of parity/fixtures/DR-GEN-05/malformed-date.lekh came back 400 or 2.4e20 wide depending on the boards loaded before it. This is in the shipped iOS/Android/Mac apps, the web wasm and the backend/oracle wasm. Fixed in lekhcore source by b8d8edc (both start at -1, as CppShapeGenerator.h:41-42; setDimension already ignores a non-positive size), with test/shapegen/LuaShapeGeneratorTest.cpp; the shipped apps and the committed web/backend/oracle wasm are not rebuilt (the owner postponed the wasm rebuild), so the C++ reference keeps the bug until then'
+ts: 'generators/wireframe-generator.ts: minW_/minH_ start at 0 (:68-69, DR-GEN-03); a throwing module is caught (:112), warned as generator_failed and returns before they are set (:118), and setDimension (:128-131) ignores a non-positive minimum, so the node keeps its size (after an earlier success it keeps that success''s minimum, as C++ does). The Lua scripts run as converted JS modules, so there is no separate load failure'
+user_visible: true
+fixture: parity/fixtures/DR-GEN-05/malformed-date.lekh
+rule:
+  json:
+    - 'none: the parity harnesses avoid the C++ read instead of normalising it. K1: the T6 fixture run gives every board a fresh Node oracle wasm instance (lekhjs parity/json/fixtures.mjs recycleEvery 1), so the heap a failing script reads is the board''s own and the output is the same every run; kashi test:parity lua-form-oracle (lbs kashi/test/parity/lua-form-oracle/run.mjs) gives its negative control a script that draws nothing instead of an empty one and gives the date shapes (calendar, android_datepicker) a y/m/d date text, so no oracle script raises'
+  image: null
+  perf: null
+evidence: 'Found by round K1 (lekhjs 9b01879, lbs d8094bd). Owner decision 2026-10-20: "Yes, fix it in lekhcore and file a register entry. ... If not required for this work then I will pospone the wasm rebuild." lekhcore b8d8edc; test/shapegen/LuaShapeGeneratorTest.cpp FailingCallInDirtyMemoryKeepsNodeSize failed before the fix (node 865309568 x 865309568) and passes after; test/generators/register.test.ts (DR-GEN-03). Related: DR-GEN-03, DR-GEN-05, DR-GEN-10'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

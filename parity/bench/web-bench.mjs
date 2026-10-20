@@ -140,6 +140,8 @@ if (opt.sets === 'syn') {
   top((e) => e.connectors, 'S-feat/connectors');
   top((e) => e.lua, 'S-feat/lua');
 }
+/** The per-page warm-up board (§3.2.1): not one of the measured boards. */
+const WARM_BOARD = JSON.stringify(synthBoard('diagram', 60, { pages: 1, seed: 424242 }));
 const only = opt.only ? new Set(opt.only.split(',')) : null;
 const BOARDS = only === null ? boards : boards.filter((b) => only.has(b.set));
 
@@ -241,6 +243,17 @@ async function pass(engine) {
   const isolated = await page.evaluate(() => /** @type {any} */ (globalThis).crossOriginIsolated);
   /** @type {Record<string, any>} */
   const out = { _meta: { engine, isolated, readyMs: Date.now() - tNav } };
+  // §3.2.1: the first board on a fresh page pays one-off costs (lazy chunks, fonts, JIT) that a warm
+  // load does not; one small synthetic board is loaded and discarded first, so the first measured
+  // set is warm like the rest (the A3 S-syn run's basic/36 swung 60-144 ms on TS without it).
+  await page
+    .evaluate(async (/** @type {string} */ text) => {
+      const t = /** @type {any} */ (globalThis).__lekhTest;
+      await t.loadDoc(text, { name: 'warm-up' });
+      await t.settle();
+      t.drawFrame();
+    }, WARM_BOARD)
+    .catch(() => {});
   for (const b of BOARDS) {
     /** @type {any} */
     let r;

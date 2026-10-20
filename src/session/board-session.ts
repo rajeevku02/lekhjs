@@ -507,6 +507,11 @@ export class BoardSession {
     return this.imageCache.has(url) || this.options.images.get(url) !== undefined;
   }
 
+  /** Whether `url` answered HTTP 4xx in this session: export and redraw never fetch it again (IF1). */
+  imageGone(url: string): boolean {
+    return this.imageCache.isGone(url);
+  }
+
   /**
    * What the semantic layer (`project`, `compile`, `generate`, `lint`) and `paintPage` read from
    * this session: the document, the codec, the overlay (C++ `TemplateStore`), text measurement, ids
@@ -905,7 +910,7 @@ export class BoardSession {
         this.requestPaint('drawing');
         return;
       case 'imageFailed':
-        this.imageCache.fail(ev.url, ev.reason);
+        this.imageCache.fail(ev.url, ev.reason, ev.status);
         return;
       case 'stencilLoaded':
         this.addTemplates(ev.bodies);

@@ -261,6 +261,11 @@ export interface ExportSource {
   layoutAll(pageId?: string): void;
   /** Whether the session's cache or its image port holds `url` decoded. */
   hasImage(url: string): boolean;
+  /**
+   * Whether `url` answered HTTP 4xx in this session (round IF1): the export does not ask the port
+   * for it and draws the failed-image placeholder. Optional for sources that never fetch.
+   */
+  imageGone?(url: string): boolean;
   drawForExport(platform: DrawingPlatform, pageIndex: number, includeBackground: boolean, view: ExportView): void;
   serialize(opts: { stamp: 'offline' | 'cloud' }): string;
 }

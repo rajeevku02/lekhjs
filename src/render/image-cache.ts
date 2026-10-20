@@ -13,6 +13,11 @@
 //   which also cancels the timer (AC-ENG-26).
 // - A URL that failed more than `maxFailures` times (C++: `count > 3`) is no longer reported
 //   missing, so it is not requested again in this session.
+// - A URL whose fetch answered HTTP 4xx is gone for the session (owner decision 2026-10-20, round
+//   IF1: "don't refetch images that failed with 4xx"): never reported missing again, so no event,
+//   redraw, eviction re-request or export fetches it; it draws as the failed-image placeholder. A
+//   network error, a timeout or a 5xx keeps the retry rules above. `trust(url)` exempts the
+//   session's own just-inserted images, so a 4xx racing their upload is never made permanent.
 //
 // Synchronous: no promise, no fetch, no decode (AC-ENG-25).
 import type { Clock, Handle, Scheduler } from '../base';
@@ -47,6 +52,10 @@ export class ImageCache {
   private readonly entries_ = new Map<string, Entry>();
   private readonly pending_ = new Set<string>();
   private readonly failures_ = new Map<string, { count: number; reason: ImageFailReason }>();
+  /** URLs whose fetch answered HTTP 4xx: never requested again in this session (IF1). */
+  private readonly gone_ = new Set<string>();
+  /** URLs this session inserted itself: a 4xx for them is an ordinary failure, not `gone`. */
+  private readonly trusted_ = new Set<string>();
   /** URLs pinned before their image arrived: the pin count waits here. */
   private readonly earlyPins_ = new Map<string, number>();
   private timer_: Handle | null = null;
@@ -88,6 +97,21 @@ export class ImageCache {
     return 'absent';
   }
 
+  /** Whether `url` answered HTTP 4xx in this session, so it is never requested again. */
+  isGone(url: string): boolean {
+    return this.gone_.has(url);
+  }
+
+  /**
+   * Marks `url` as this session's own image (an insert whose upload just landed): a 4xx for it is
+   * not made permanent, in case the fetch raced the upload.
+   */
+  trust(url: string): void {
+    if (this.disposed_) return;
+    this.trusted_.add(url);
+    this.gone_.delete(url);
+  }
+
   /** How often `url` failed, and the last reason. */
   failure(url: string): { count: number; reason: ImageFailReason } | undefined {
     return this.failures_.get(url);
@@ -95,7 +119,7 @@ export class ImageCache {
 
   /**
    * The distinct URLs of `urls` to request: not loaded, not in flight, and not given up on
-   * (failed more than `maxFailures` times). In first-seen order.
+   * (failed more than `maxFailures` times, or answered 4xx). In first-seen order.
    */
   missing(urls: Iterable<string>): string[] {
     const out: string[] = [];
@@ -103,7 +127,7 @@ export class ImageCache {
     for (const url of urls) {
       if (seen.has(url)) continue;
       seen.add(url);
-      if (this.entries_.has(url) || this.pending_.has(url)) continue;
+      if (this.entries_.has(url) || this.pending_.has(url) || this.gone_.has(url)) continue;
       const f = this.failures_.get(url);
       if (f !== undefined && f.count > this.maxFailures_) continue;
       out.push(url);
@@ -125,6 +149,7 @@ export class ImageCache {
     }
     this.pending_.delete(url);
     this.failures_.delete(url);
+    this.gone_.delete(url);
     const old = this.entries_.get(url);
     const expiresAt = this.clock_.now() + this.ttl_;
     if (old !== undefined) {
@@ -139,12 +164,16 @@ export class ImageCache {
     this.arm(expiresAt);
   }
 
-  /** A request failed. */
-  fail(url: string, reason: ImageFailReason): void {
+  /**
+   * A request failed. `status` is the HTTP status when the server answered; a 4xx makes the URL
+   * gone for the session unless it is trusted (see the file comment).
+   */
+  fail(url: string, reason: ImageFailReason, status?: number): void {
     if (this.disposed_) return;
     this.pending_.delete(url);
     const f = this.failures_.get(url);
     this.failures_.set(url, { count: (f?.count ?? 0) + 1, reason });
+    if (reason === 'http' && isClientError(status) && !this.trusted_.has(url)) this.gone_.add(url);
   }
 
   /**
@@ -194,6 +223,8 @@ export class ImageCache {
     this.entries_.clear();
     this.pending_.clear();
     this.failures_.clear();
+    this.gone_.clear();
+    this.trusted_.clear();
     this.earlyPins_.clear();
   }
 
@@ -236,4 +267,9 @@ export class ImageCache {
     }
     if (next !== Infinity) this.arm(next);
   }
+}
+
+/** HTTP 400–499. */
+export function isClientError(status: number | undefined): boolean {
+  return status !== undefined && status >= 400 && status < 500;
 }

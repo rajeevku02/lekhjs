@@ -371,6 +371,8 @@ export class BoardView {
    */
   insertImage(input: InsertImageInput, at?: Point): string {
     const center = at ?? this.view.insertLocation();
+    // The user's own upload: a 4xx racing it must not make the image gone for the session (IF1).
+    if (input.kind === 'resource') this.session.imageCache.trust(input.url);
     let id = '';
     this.board.edit((ctx) => {
       id = insertImageObject(ctx.editor, center, input)?.id ?? '';

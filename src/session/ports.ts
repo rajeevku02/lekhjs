@@ -71,7 +71,13 @@ export type SessionEvent =
   | { readonly type: 'remoteFrame'; readonly text: string }
   | { readonly type: 'transportState'; readonly state: TransportState }
   | { readonly type: 'imageLoaded'; readonly url: string; readonly image: DecodedImage }
-  | { readonly type: 'imageFailed'; readonly url: string; readonly reason: 'http' | 'decode' | 'too_large' }
+  | {
+      readonly type: 'imageFailed';
+      readonly url: string;
+      readonly reason: 'http' | 'decode' | 'too_large';
+      /** The HTTP status when the server answered (a 4xx is never fetched again, round IF1). */
+      readonly status?: number;
+    }
   | { readonly type: 'stencilLoaded'; readonly setId: string; readonly bodies: readonly TemplateJson[] }
   /** Posted by the runtime to every live session. */
   | { readonly type: 'fontsChanged'; readonly epoch: number }

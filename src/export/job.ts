@@ -8,6 +8,8 @@
 //   the image port for the whole job, and waits up to 15 s for the ones not decoded yet
 //   (`ensure`). An image still missing draws the broken-image placeholder and gives one
 //   `export_image_missing` warning with its count; the export goes on (AC-EXP-38).
+//   An image that answered HTTP 4xx in this session is not asked for again (owner decision
+//   2026-10-20, round IF1): it is missing at once, with no wait and no fetch.
 // - Output is streamed: raster bands, SVG pages and the `.lekh` text go to the sink as they are
 //   produced; no whole file is held (AC-EXP-39).
 // - Cancel: the signal is checked at every yield (between pages, bands and the image wait);
@@ -180,12 +182,17 @@ export async function runExport(
       const urls = exportImageUrls(source, plans);
       if (urls.length > 0) {
         unpin = [source.imageCache.pin(urls), env.images.pin(urls)];
-        const waiting = urls.filter((u) => !source.hasImage(u));
-        if (waiting.length > 0) {
-          await raceAbort(env.images.ensure(waiting, { timeoutMs: IMAGE_WAIT_MS }), signal);
-          check();
-          await step(); // let the arrivals land in the session cache (imageLoaded events)
-          const missing = waiting.filter((u) => !source.hasImage(u)).length;
+        const absent = urls.filter((u) => !source.hasImage(u));
+        // A URL that answered 4xx in this session is never fetched again (owner decision
+        // 2026-10-20, round IF1); it counts as missing and draws the failed-image placeholder.
+        const waiting = absent.filter((u) => source.imageGone?.(u) !== true);
+        if (absent.length > 0) {
+          if (waiting.length > 0) {
+            await raceAbort(env.images.ensure(waiting, { timeoutMs: IMAGE_WAIT_MS }), signal);
+            check();
+            await step(); // let the arrivals land in the session cache (imageLoaded events)
+          }
+          const missing = absent.filter((u) => !source.hasImage(u)).length;
           if (missing > 0) {
             warnings.push({ code: 'export_image_missing', count: missing });
             log('export_image_missing', { count: missing });

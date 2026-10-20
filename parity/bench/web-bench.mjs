@@ -7,10 +7,18 @@
 //         ready → load → first frame, once per run on one board)
 //   P-02  pan/zoom frame time: setView through 150 pan steps of 40 px, then 150 zoom steps
 //         0.25 → 4 → 1 around the view centre, drawFrame() per step; frames > 50 ms counted
-//   P-03  hit test: 10,000 seeded points, 'near' and 'connection', batched (§3.2.5)
+//   P-03  hit test: 10,000 seeded points over the active page's drawing bounds, 'near' and
+//         'connection', batched (§3.2.5); S-syn: the 6,000 pt page; S-dec/S-feat: the drawing
+//         rectangle read once from the TS build's `exportPlan` before the runs, the same points on
+//         both builds
 //   P-04  text-measure calls: (a) load + first frame, (b) the 300-step pan/zoom path
 //   P-07a PNG export time at scale 1 and 2 (exportPage, region drawing, padding 20)
 //   P-09  long tasks (PerformanceObserver 'longtask') during P-02: count and max
+//
+// P-01 times `settle()`, which waits for fonts and paint but not images on either build (owner
+// decision 2026-10-20, IM1: the C++ engine draws a placeholder while an image loads; the C++ hook's
+// settle got the same `{ images }` option, P2). Before P-02/P-03/P-09 the page is settled with
+// `{ images: true }` (untimed), so the pan/zoom and hit paths run with the images decoded as before.
 //
 // Runs: one warm-up pass per build (discarded), then N measured passes interleaved C++, TS, TS,
 // C++, C++, TS, … (§3.2). Each pass is a fresh browser context. Per-run statistic: p95 (p50, max,
@@ -67,7 +75,7 @@ mkdirSync(OUT, { recursive: true });
 const PORTS = { cpp: 4007, ts: 4008 };
 
 // ---- boards ----
-/** @typedef {{ set: string, name: string, text: string, objects: number, hit: boolean, exportPng: boolean, side?: number }} Board */
+/** @typedef {{ set: string, name: string, text: string, objects: number, hit: boolean, exportPng: boolean, side?: number, rect?: { x: number, y: number, w: number, h: number } }} Board */
 /** @type {Board[]} */
 const boards = [];
 /** @type {Record<string, number>} board → phantom page entries dropped (--sets dec, DR-FMT-01) */
@@ -150,7 +158,9 @@ if (opt.sets === 'syn') {
       name: k,
       text,
       objects: inv[k].objects,
-      hit: false,
+      // P-03 (verification 03 §4.1: S-dec top deciles; every corpus board here): the points cover
+      // the drawing rectangle, read from the TS build before the runs (the P-03 pre-pass below).
+      hit: true,
       exportPng: true,
     });
   };
@@ -323,7 +333,7 @@ async function pass(engine) {
     try {
       const measured = page.evaluate(
         async (
-          /** @type {{ text: string, hit: boolean, side: number, exportPng: boolean, metrics: string[], seed: number }} */ a,
+          /** @type {{ text: string, hit: boolean, rect: { x: number, y: number, w: number, h: number } | null, exportPng: boolean, metrics: string[], seed: number }} */ a,
         ) => {
           const t = /** @type {any} */ (globalThis).__lekhTest;
           const g = /** @type {any} */ (globalThis);
@@ -338,6 +348,9 @@ async function pass(engine) {
           res.load = performance.now() - l0;
           res.measureLoad = t.counters().measureText;
           const v0 = t.getView();
+          res.page = v0.page;
+          // P-02/P-03/P-09 run with the board's images decoded, as before IM1 (untimed).
+          if (m.has('P-02') || m.has('P-09') || m.has('P-03')) await t.settle({ images: true });
           if (m.has('P-02') || m.has('P-09') || m.has('P-04')) {
             const cx = (640 - v0.tx) / v0.zoom;
             const cy = (400 - v0.ty) / v0.zoom;
@@ -364,7 +377,7 @@ async function pass(engine) {
             res.longTasks = [...g.__longTasks];
             t.setView(v0);
           }
-          if (a.hit && m.has('P-03')) {
+          if (a.hit && a.rect !== null && m.has('P-03')) {
             let s = a.seed >>> 0;
             const rnd = () => {
               s = (s + 0x6d2b79f5) >>> 0;
@@ -374,7 +387,8 @@ async function pass(engine) {
               return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
             };
             const pts = new Float64Array(20000);
-            for (let i = 0; i < pts.length; i++) pts[i] = rnd() * a.side;
+            for (let i = 0; i < pts.length; i++)
+              pts[i] = i % 2 === 0 ? a.rect.x + rnd() * a.rect.w : a.rect.y + rnd() * a.rect.h;
             const B = 200;
             /** @type {Record<string, number[]>} */
             const hit = { near: [], connection: [] };
@@ -405,7 +419,7 @@ async function pass(engine) {
         {
           text: b.text,
           hit: b.hit,
-          side: b.side ?? 0,
+          rect: b.rect ?? (b.side !== undefined ? { x: 0, y: 0, w: b.side, h: b.side } : null),
           exportPng: b.exportPng,
           metrics: [...METRICS],
           seed: Number(opt.seed),
@@ -541,6 +555,33 @@ for (const e of /** @type {const} */ (['cpp', 'ts'])) {
     const t = /** @type {any} */ (globalThis).__lekhTest;
     return { version: t.version, engine: t.engine, build: t.build };
   });
+  await ctx.close();
+}
+// P-03 on corpus boards: the active page's drawing rectangle (board points), read once from the TS
+// build (`exportPlan`, no export drawn), so both builds hit-test the same seeded points.
+if (METRICS.has('P-03') && opt.sets === 'dec') {
+  const ctx = await browser.newContext();
+  const p = await ctx.newPage();
+  await p.route('**/*', (/** @type {any} */ r) =>
+    r.request().url().startsWith(`http://localhost:${PORTS.ts}`) ? r.continue() : r.abort(),
+  );
+  await p.goto(`http://localhost:${PORTS.ts}/?offline=true&lekhtest=1`);
+  await p.waitForFunction(() => /** @type {any} */ (globalThis).__lekhTest !== undefined, null, { timeout: 60000 });
+  await p.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.ready());
+  for (const b of BOARDS) {
+    if (!b.hit) continue;
+    const r = await p
+      .evaluate(async (/** @type {string} */ text) => {
+        const t = /** @type {any} */ (globalThis).__lekhTest;
+        const ld = await t.loadDoc(text, { name: 'bench-rect' });
+        if (!ld.ok) return null;
+        const pg = t.getView().page;
+        return t.exportPlan(pg, { region: 'drawing', padding: 0, background: false });
+      }, b.text)
+      .catch(() => null);
+    if (r && r.width > 0 && r.height > 0) b.rect = { x: r.x, y: r.y, w: r.width, h: r.height };
+    else b.hit = false;
+  }
   await ctx.close();
 }
 process.stdout.write(`boards: ${BOARDS.length}; warm-up\n`);
@@ -680,6 +721,14 @@ const meta = {
   blocked: { cpp: runs.cpp.map((r) => r._meta.blocked), ts: runs.ts.map((r) => r._meta.blocked) },
   res_served: { cpp: runs.cpp.map((r) => r._meta.res_served), ts: runs.ts.map((r) => r._meta.res_served) },
   phantom_pages_dropped: phantomPagesDropped,
+  // P-03 on corpus boards: boards with a drawing rectangle, and whether both builds hit-tested the
+  // same active page in every run.
+  hit_boards: BOARDS.filter((b) => b.hit && METRICS.has('P-03')).length,
+  active_page_mismatch: BOARDS.filter((b) =>
+    [...runs.cpp, ...runs.ts].some(
+      (r) => r[b.name]?.page !== undefined && r[b.name].page !== runs.ts[0]?.[b.name]?.page,
+    ),
+  ).map((b) => b.set),
   cold_ms: { cpp: runs.cpp.map((r) => r._meta.cold?.ms ?? null), ts: runs.ts.map((r) => r._meta.cold?.ms ?? null) },
   errors: Object.fromEntries(
     BOARDS.map((b) => [b.set, [...runs.cpp, ...runs.ts].filter((r) => r[b.name]?.error).length]).filter(

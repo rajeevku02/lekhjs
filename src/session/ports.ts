@@ -126,8 +126,11 @@ export interface SessionEvents {
   toast: ToastRequest;
   /** `ReconnectPolicy`: the host's BoardLoader reopens the board. */
   reopenRequested: { readonly reason: 'auto_reconnect' };
-  /** Engine errors (spec 03 §14); no board content. */
-  error: { readonly code: string; readonly eventType: SessionEvent['type'] };
+  /**
+   * Engine errors (spec 03 §14); no board content. `message`: a failed `open`'s fixed user text
+   * (the `LoadError` message), for the host to show as C++ hosts showed `CoreIO::openFile`'s error.
+   */
+  error: { readonly code: string; readonly eventType: SessionEvent['type']; readonly message?: string };
 }
 
 export interface ViewState {

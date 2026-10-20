@@ -36,10 +36,9 @@ describe('dialogForMessage', () => {
     });
   });
 
-  it('a plain message → OK; an empty one → nothing', () => {
+  it('a plain message → the blocker with OK (C++ CoreIO::showMessage); an empty one → nothing', () => {
     expect(dialogForMessage(msg({ code: 'no_org_subscription', message: 'Read only' }))).toEqual({
-      kind: 'info',
-      title: '',
+      kind: 'message',
       message: 'Read only',
     });
     expect(dialogForMessage(msg({ code: 'x', message: '', upgrade: true, reload: true }))).toBeNull();

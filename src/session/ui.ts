@@ -76,6 +76,12 @@ export type DialogRequest =
    */
   | { readonly kind: 'reload'; readonly message: string }
   /**
+   * A server `message` with neither reload nor upgrade (C++ `CoreIO::showMessage`,
+   * CoreIO.cpp:326-331): the board's blocker with the text and OK, which only closes it. Not a
+   * system dialog.
+   */
+  | { readonly kind: 'message'; readonly message: string }
+  /**
    * A paywall dialog (C++ `LekhUtil::showPaywallDialog`): `title`, `message`, Upgrade and
    * `dismiss`. Upgrade answers `ok`; the host reports `upgrade_clicked{source: trigger}` and opens
    * the upgrade for `trigger`. The server `message` with `upgrade: true` is one (trigger

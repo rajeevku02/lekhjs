@@ -1013,8 +1013,9 @@ export class BoardSession {
   private onOpen(raw: string | object, meta: BoardMeta): void {
     const r = this.load(raw, meta);
     if (!r.ok) {
-      this.pending_.errors.push({ code: r.code, eventType: 'open' });
-      this.pending_.dialogs.push({ kind: 'error', title: '', message: r.message });
+      // No dialog of the session's own: C++ `CoreIO::load` / `openFile` hand the error to the host,
+      // which shows it once ("Error while loading!" on iOS and Android; the web shows nothing).
+      this.pending_.errors.push({ code: r.code, eventType: 'open', message: r.message });
     }
   }
 
@@ -1381,7 +1382,7 @@ function gridBackgroundOf(page: Page): GridBackground {
  * `processBackendMessage`; KB websocket-protocol §6.2-§6.3): nothing for an empty text;
  * `upgrade: true` → the "Read-only board" paywall (Upgrade / Keep viewing, trigger
  * `readonly_open`); `reload: true` → Reload (the format gate's code keeps its own dialog, spec
- * 04 §10.1); otherwise the text with OK.
+ * 04 §10.1); otherwise the text with OK on the board's blocker (C++ `CoreIO::showMessage`).
  */
 export function dialogForMessage(m: ServerMessage): DialogRequest | null {
   if (m.code === 'board_requires_newer_app') {
@@ -1398,5 +1399,5 @@ export function dialogForMessage(m: ServerMessage): DialogRequest | null {
     };
   }
   if (m.reload) return { kind: 'reload', message: m.message };
-  return { kind: 'info', title: '', message: m.message };
+  return { kind: 'message', message: m.message };
 }

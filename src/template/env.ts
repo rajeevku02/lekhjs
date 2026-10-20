@@ -55,6 +55,11 @@ export interface TemplateEnv {
   readonly resolver: TemplateResolver;
   /** A decoded image by its key (a URL, or the `data:` key of an inline image), if loaded. */
   image(key: string): DecodedImage | undefined;
+  /**
+   * Whether the image under `key` is still loading, for the live view's placeholder label
+   * (`ShapeImageElement`). False (or absent) for every other draw: export, thumbnails, the backend.
+   */
+  imageLoading?(key: string): boolean;
   /** The host functions a generator may call, bound to `t` (spec 04 §5.1). */
   generatorContext(t: ShapeTemplate): GeneratorContext;
   warn(code: TemplateWarningCode, details: Readonly<Record<string, string | number>>): void;

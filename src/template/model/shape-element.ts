@@ -583,6 +583,39 @@ export class ShapeTextElement extends ShapeBoxElement {
 /** The fill of an image slot whose image is not loaded: white, alpha 2555 truncated to 251 (as C++). */
 const IMAGE_PLACEHOLDER_FILL = Object.freeze(new Color(255, 255, 255, 2555));
 
+/**
+ * The label drawn in the placeholder while the image is loading (owner decision 2026-10-20: the
+ * white rectangle as C++, plus "Loading…"; C++ draws no label). Live view only: the session's
+ * `TemplateEnv.imageLoading` is false for export, thumbnails and `board_render`.
+ */
+export const IMAGE_LOADING_LABEL = 'Loading\u2026';
+/** The label's font size as a fraction of the placeholder's shorter side (it scales with the shape). */
+export const IMAGE_LOADING_FONT_FRACTION = 0.1;
+/** Below this font size (board points) the label is not drawn. */
+export const IMAGE_LOADING_MIN_FONT = 6;
+const IMAGE_LOADING_TEXT = Object.freeze(new Color(128, 128, 128, 255));
+
+/**
+ * The "Loading…" label centred in the placeholder `rect` (rotated by `angle` with it), or nothing
+ * when the rectangle is too small for it: a font under `IMAGE_LOADING_MIN_FONT`, or a label wider
+ * or taller than 90 % of the rectangle.
+ */
+function paintImageLoadingLabel(dp: DrawingPlatform, env: TemplateEnv, rect: Rect, angle: number): void {
+  const fontSize = Math.min(rect.width, rect.height) * IMAGE_LOADING_FONT_FRACTION;
+  if (!(fontSize >= IMAGE_LOADING_MIN_FONT)) return;
+  const style = new Style();
+  style.setFontSize(fontSize);
+  style.setFontColor(IMAGE_LOADING_TEXT);
+  const laid = layoutTextInBox(
+    env.text,
+    { text: IMAGE_LOADING_LABEL, angle, inRect: rect, wrapMode: 'float' },
+    style,
+    0,
+  );
+  if (laid === null || laid.width > rect.width * 0.9 || laid.height > rect.height * 0.9) return;
+  dp.drawText(laid, style);
+}
+
 /** An image slot. The element holds the image's key; paint looks the bitmap up in the env. */
 export class ShapeImageElement extends ShapeBoxElement {
   private resourceUrl_ = '';
@@ -647,6 +680,7 @@ export class ShapeImageElement extends ShapeBoxElement {
     for (let i = 1; i < pts.length; i++) dp.addLineTo(pts[i] ?? new Point());
     dp.closePath();
     dp.endDrawing();
+    if (key !== '' && env.imageLoading?.(key) === true) paintImageLoadingLabel(dp, env, rect, angle);
   }
 
   /** C++ `clone`: copies the image and the location only (not the style or the URL), as C++. */

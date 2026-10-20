@@ -225,6 +225,8 @@ export class BoardSession {
   private readonly docHelp_ = new Map<string, string>();
   private readonly unsubscribe_: (() => void)[] = [];
   private readonly lookup_: ImageLookup;
+  /** True only inside the live view's `drawing` paint: the one draw that labels a loading image. */
+  private livePaint_ = false;
   private permission_: BoardPermission | null = null;
   /**
    * The stored document of the last open or reload while it still holds Lua this session converted
@@ -267,6 +269,9 @@ export class BoardSession {
       text,
       resolver,
       image: (key) => this.lookup_.get(key),
+      // "Loading…" in the placeholder while the image is in flight, on the live view only: an
+      // export, a thumbnail or the backend's render never labels it (a failed image stays plain).
+      imageLoading: (key) => this.livePaint_ && this.liveImageLoading(key),
       generatorContext: (t) => new TemplateGeneratorHost(t, text),
       warn: (code, details) => {
         logger.warn(code, details);
@@ -562,7 +567,8 @@ export class BoardSession {
   /**
    * Paints one layer of the active page onto `ctx`: `grid` (background and grid, screen space),
    * `drawing` (the objects, culled to the view) or `middle` (cleared; the interaction layer draws
-   * the overlay). Lays out what is dirty first; never fetches an image.
+   * the overlay). Lays out what is dirty first; never fetches an image itself (an evicted one is
+   * re-requested through `ImageRequests`, deferred: `liveImageLoading`).
    *
    * A fixed-size (or auto-size) page is drawn as C++ draws it (`CanvasWidget::computeSize`, which
    * moves and sizes the grid and drawing canvases): the page rectangle only, with its 2 px
@@ -635,8 +641,26 @@ export class BoardSession {
     }
     dp.setView(view);
     const env: PaintEnv = { config: this.runtime.config, zoom: view.zoom, forExport: false, images: this.lookup_ };
-    page.paint(dp, { env, view });
+    this.livePaint_ = true;
+    try {
+      page.paint(dp, { env, view });
+    } finally {
+      this.livePaint_ = false;
+    }
     if (fixed !== null) ctx.restore();
+  }
+
+  /**
+   * The live view's answer for an image slot with no decoded image: loading or not. An image the
+   * cache evicted (60 s unused while off screen) is requested again here, deferred like every
+   * request (`ImageRequests`, one `setTimeout(0)`), and shows as loading: C++ kept the bitmap on
+   * the element, so a drawn image never went blank (`ShapeTemplate.cpp:676-682`). A failed image
+   * is not retried (unchanged).
+   */
+  private liveImageLoading(key: string): boolean {
+    const state = this.imageCache.state(key);
+    if (state === 'absent') return this.imageRequests_.schedule([key]).length > 0;
+    return state === 'pending';
   }
 
   // ---- client API ----

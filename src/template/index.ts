@@ -52,6 +52,9 @@ export {
 export { SvgPathParser, type ParsedPath } from './model/svg-path-parser';
 export {
   ElementType,
+  IMAGE_LOADING_FONT_FRACTION,
+  IMAGE_LOADING_LABEL,
+  IMAGE_LOADING_MIN_FONT,
   ShapeBoxElement,
   ShapeElement,
   ShapeImageElement,

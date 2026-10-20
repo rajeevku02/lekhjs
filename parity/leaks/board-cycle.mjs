@@ -304,7 +304,9 @@ async function editScript(/** @type {Record<string, number>} */ done) {
     await page.waitForTimeout(500);
     const after = await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.objects().length);
     if (!(after > before)) throw new Error('no image inserted');
-    await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.settle());
+    // The inserted image decoded and drawn before the next step (settle alone no longer waits for
+    // images since IM1; the TS hook only, which is the only engine that runs the edit script).
+    await page.evaluate(() => /** @type {any} */ (globalThis).__lekhTest.settle({ images: true }));
   });
   await step(done, 'pan zoom', async () => {
     await page.evaluate(() => {

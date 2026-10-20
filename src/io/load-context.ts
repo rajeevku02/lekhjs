@@ -58,6 +58,7 @@ export function withResolver(base: TemplateEnv, resolver: TemplateResolver): Tem
     text: base.text,
     resolver,
     image: (key) => base.image(key),
+    imageLoading: (key) => base.imageLoading?.(key) ?? false,
     generatorContext: (t) => base.generatorContext(t),
     warn: (code, details) => {
       base.warn(code, details);

@@ -21,6 +21,7 @@ import {
 } from '../../src/interaction';
 import type { ConnectionObject, LekhObject, TemplatedObject } from '../../src/model';
 import type { JsonObject, TemplateCatalog } from '../../src/template';
+import type { FontHost, TextMeasurer } from '../../src/text';
 import { A, B, C, harness, testRuntime, type Harness } from '../session/helpers';
 
 export { A, B, C, P, fixtureJson } from '../session/helpers';
@@ -46,6 +47,10 @@ export interface ViewHarnessOptions {
   /** The runtime's base catalog (default: the bundled one). */
   readonly catalog?: TemplateCatalog;
   readonly closeTopPopover?: () => boolean;
+  /** The text measurer (default: the test runtime's 10 px per character in every font). */
+  readonly measurer?: TextMeasurer;
+  /** The runtime's font host (default: the test runtime's `backend`, whose default family is Noto Sans). */
+  readonly host?: FontHost;
 }
 
 export function viewHarness(opts: ViewHarnessOptions = {}): ViewHarness {
@@ -55,6 +60,8 @@ export function viewHarness(opts: ViewHarnessOptions = {}): ViewHarness {
     clock,
     ...(opts.config !== undefined ? { config: opts.config } : {}),
     ...(opts.catalog !== undefined ? { catalog: opts.catalog } : {}),
+    ...(opts.measurer !== undefined ? { measurer: opts.measurer } : {}),
+    ...(opts.host !== undefined ? { host: opts.host } : {}),
   });
   const h = harness({
     runtime,

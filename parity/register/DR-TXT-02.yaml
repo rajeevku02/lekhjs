@@ -1,0 +1,18 @@
+id: DR-TXT-02
+title: 'fontmultiplier != 1 scales the line pitch too on web and the backend, not only the glyphs'
+area: TXT
+kind: intended-change
+cpp: 'The web and the backend drew glyphs at fontsize x fontmultiplier (lekhboardwebapp v2/src/board/common/Util.js:128-133; lbs kashi/service/mcp/core/styleUtil.js:46-50) but stepped lines and measured height at fontsize alone (web Platform.js:471 and ViewPort.jsx:188; backend drawing.js:272 and platform.js:234-250; SVG export SVGExporter.cpp:616,757), so text with a multiplier above 1 drew overlapping lines and auto-sized too short; the web editor line-height already included it (TextEditor.js:48-55). iOS and Android scale the font itself (PlatformUtil.mm:68-77, LekhUtil.java:346,374), so their native pitch already follows the multiplier'
+ts: 'text/ TextLayout.lineHeight: LP = 1.18 x fontSize x fontMultiplier (src/text/text-layout.ts:208-210) for measuring, drawing, SVG, PDF, the backend and the editor; the multiplier part is this entry, the 1.18 factor is DR-TXT-01. The gate runs neutralise both with the lineSpacingCompat test switch (pitch 1.00 x fontSize, multiplier not applied: text-layout.ts:209)'
+user_visible: true
+fixture: parity/fixtures/DR-TXT-02/font-multiplier-pitch.lekh
+rule:
+  json: ['params.height of auto-sized multi-line text with fontmultiplier != 1 (switches-off runs only; the gate runs use lineSpacingCompat). Fixture n1 (fontsize 20, fontmultiplier 2, three lines): C++ 3 x 20, TS 3 x 1.18 x 40; n2 (fontmultiplier 1) differs by DR-TXT-01 alone']
+  image:
+    compat_switch: lineSpacingCompat
+  perf: null
+evidence: 'spec 06 §2, §3.3, §3.6, §13, §14 item 3; AC-TXT-02, AC-TXT-04, AC-TXT-30 (test/text/text-layout.height.test.ts multiplier 0.5-3; test/text/word-wrapper.golden.test.ts lineSpacingCompat ignores the multiplier); the pitch factor 1.18 itself is DR-TXT-01'
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-20'
+review: 'Owner in chat, 2026-10-20: "accept DR-TXT-01, DR-TXT-02, DR-TXT-04 and DR-TXT-07"'

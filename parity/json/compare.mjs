@@ -250,6 +250,8 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
  * @property {boolean} [browserRetry]  retry a Node oracle out-of-memory in the C++ browser oracle
  *   (default on when the hooked build exists; `--browser-retry off` disables it)
  * @property {string} [builds]  the browser builds' directory (`cpp/`, `ts/`; default parity/out/builds)
+ * @property {number} [recycleEvery]  boards per Node oracle wasm instance (default 50); 1 gives every
+ *   board a fresh instance, so its C++ output cannot depend on the boards run before it
  * @property {string} [label]
  * @property {(line: string) => void} [progress]
  */
@@ -289,7 +291,7 @@ export async function runComparison(o) {
   if (reg.errors.length > 0) throw new Error('compare: register rules do not compile:\n  ' + reg.errors.join('\n  '));
 
   const log = createWriteStream(path.join(o.out, 'engines.log'));
-  const oracle = new NodeOracle({ log });
+  const oracle = new NodeOracle({ log, ...(o.recycleEvery !== undefined ? { recycleEvery: o.recycleEvery } : {}) });
   const ts = new TsRunner({ log, compat: o.compat !== false });
   const started = new Date().toISOString();
   /** @type {Record<string, any>} */
@@ -300,7 +302,7 @@ export async function runComparison(o) {
     customer,
     started,
     boards: o.boards.length,
-    oracle: await oracle.identity(),
+    oracle: { ...(await oracle.identity()), recycle_every: o.recycleEvery ?? 50 },
     lekhjs: await ts.identity(),
     register: { entries: entries.length, json_rules: reg.json.length, accepted_only: o.acceptedOnly === true },
     gaps: gaps.map((g) => g.owner),

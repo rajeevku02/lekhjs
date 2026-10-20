@@ -101,6 +101,15 @@ async function main() {
       out,
       label: 'T6 fixtures',
       noGaps: args.includes('--no-gaps'),
+      // A fresh wasm instance per board (~0.3 s each). The C++ engine reads uninitialised memory on
+      // some register fixtures: LuaShapeGenerator never initialises savedw_/savedh_
+      // (lekhcore src/lekh/shapegen/LuaShapeGenerator.h:36, constructor .cpp:534), a script that
+      // raises returns before setting them (.cpp:622-646), and setDimension (.cpp:685) grows the
+      // shape by whatever is there. DR-GEN-05/malformed-date's calendar raises on its first
+      // generation, so its C++ width was 400 or 2.4e20 depending on what earlier boards (and a
+      // --resume or --limit) had left in a shared instance's heap. A fresh instance's heap history
+      // is the board's own, so the output is the same on every run.
+      recycleEvery: 1,
     });
     lines.push(s.line);
     pass &&= s.pass;

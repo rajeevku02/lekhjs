@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Span } from '../../src/base';
+import * as G from '../../src/geometry';
 import {
   GeoUtil,
   LineEquation,
@@ -180,5 +181,42 @@ describe('GeoUtil object', () => {
     expect(Object.isFrozen(GeoUtil)).toBe(true);
     expect(GeoUtil.getDistance(P(0, 0), P(3, 4))).toBe(5);
     expect(GeoUtil.pointLineSegmentDistance(P(0, 0), P(10, 0), P(5, 2)).dist).toBe(2);
+  });
+});
+
+describe('rectDistance (P3)', () => {
+  // The allocation-free form the templated hit test uses must give exactly rectDistanceFrom's number.
+  it('equals rectDistanceFrom(...).dist bit for bit', () => {
+    let s = 11;
+    const r = () => {
+      s = (s * 1103515245 + 12345) % 2147483648;
+      return s / 2147483648;
+    };
+    for (let i = 0; i < 20000; i++) {
+      const rect = new G.Rect(
+        r() * 400 - 200,
+        r() * 400 - 200,
+        i % 9 === 0 ? 0 : r() * 300,
+        i % 11 === 0 ? 0 : r() * 300,
+      );
+      const p = new G.Point(r() * 1000 - 500, r() * 1000 - 500);
+      expect(Object.is(G.rectDistance(rect, p), G.rectDistanceFrom(rect, p).dist)).toBe(true);
+    }
+  });
+});
+
+describe('Rect.containsInflated (P3)', () => {
+  it('equals inflate(val).contains(pt), negative sizes and shrinking included', () => {
+    let s = 3;
+    const r = () => {
+      s = (s * 1103515245 + 12345) % 2147483648;
+      return s / 2147483648;
+    };
+    for (let i = 0; i < 20000; i++) {
+      const rect = new G.Rect(Math.round(r() * 40) - 20, Math.round(r() * 40) - 20, r() * 30 - 5, r() * 30 - 5);
+      const val = i % 5 === 0 ? -r() * 40 : r() * 20;
+      const p = new G.Point(Math.round(r() * 80) - 40, r() * 80 - 40);
+      expect(rect.containsInflated(val, p)).toBe(rect.inflate(val).contains(p));
+    }
   });
 });

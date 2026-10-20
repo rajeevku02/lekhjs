@@ -10,6 +10,7 @@ import {
   getDistance,
   getPointAtDistance,
   type PathComponent,
+  distanceToSegment,
 } from '../../geometry';
 import type { InterestingPoint } from '../../template';
 import { Connection } from './connection';
@@ -203,7 +204,7 @@ export class PathConnection extends Connection {
   override getDistanceFrom(pt: Point): number {
     let dist = 2147483647;
     for (const seg of this.lines()) {
-      const tmp = seg.getDistanceFrom(pt).dist;
+      const tmp = distanceToSegment(seg.p1, seg.p2, pt);
       if (tmp < dist) dist = Math.trunc(tmp);
     }
     return dist;

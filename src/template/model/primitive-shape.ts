@@ -22,6 +22,7 @@ import {
   rotate,
   type LineEquation,
   type PointAndSlope,
+  distanceToSegment,
 } from '../../geometry';
 import type { DrawingPlatform } from '../../render';
 import type { DataStore } from '../expr/data-store';
@@ -154,7 +155,7 @@ export class LineShape extends PrimitiveShape {
   override distanceFrom(pt: Point, ds: DataStore): number {
     const p1 = this.prevLast(new Point());
     this.computePoints(ds);
-    return pointLineSegmentDistance(p1, this.lastPoint_, pt).dist;
+    return distanceToSegment(p1, this.lastPoint_, pt);
   }
   override intersectionWith(eq: LineEquation, ds: DataStore, pts: PointAndSlope[]): void {
     const p1 = this.prevLast(new Point());

@@ -4,7 +4,7 @@
 // cycle does not exist in TS (spec 01 §3.1 C1). `GeoUtil` bundles them for C++-style calls.
 import { formatG6, Span } from '../base';
 import { LineEquation } from './lineEquation';
-import { LineSegment, type DistanceAndPoint } from './lineSegment';
+import { LineSegment, segmentDistanceXY, type DistanceAndPoint } from './lineSegment';
 import { Point, type PointAndSlope } from './point';
 import {
   getDistance,
@@ -504,6 +504,26 @@ export function rectIntersects(a: Rect, b: Rect): boolean {
     }
   }
   return false;
+}
+
+/**
+ * `rectDistanceFrom(rect, point).dist` without the allocations (the same four edges and the same
+ * arithmetic, so the same number); for the templated object's hit-test distance (P3).
+ */
+export function rectDistance(rect: Rect, point: Point): number {
+  const { x, y, width: w, height: h } = rect;
+  const px = point.x;
+  const py = point.y;
+  let dist = 2147483647;
+  let d = segmentDistanceXY(x, y, x, y + h, px, py);
+  if (d < dist) dist = d;
+  d = segmentDistanceXY(x, y + h, x + w, y + h, px, py);
+  if (d < dist) dist = d;
+  d = segmentDistanceXY(x + w, y + h, x + w, y, px, py);
+  if (d < dist) dist = d;
+  d = segmentDistanceXY(x + w, y, x, y, px, py);
+  if (d < dist) dist = d;
+  return dist;
 }
 
 /** Distance from `point` to the nearest edge of `rect`, and the nearest point. */

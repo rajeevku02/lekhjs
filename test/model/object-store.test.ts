@@ -3,8 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG_DEFAULTS, EngineConfig } from '../../src/base';
 import { Point, Rect } from '../../src/geometry';
-import { ConnectionDependencyMap, OrderAllocator, SpatialIndex } from '../../src/model';
-import { BoxShape, FakeConnector, FakeGroup, fixedClock, newStore } from './helpers';
+import { ConnectionDependencyMap, LINEAR_CANDIDATES_MAX, OrderAllocator, SpatialIndex } from '../../src/model';
+import { BoxShape, FakeConnector, FakeGroup, fixedClock, newStore, rng } from './helpers';
 
 const box = (id: string, order = 0, x = 0) => new BoxShape(id, new Rect(x, 0, 10, 10), order);
 const ids = (objs: readonly { id: string }[]) => objs.map((o) => o.id);
@@ -156,4 +156,39 @@ describe('SpatialIndex', () => {
     expect(CONFIG_DEFAULTS.debug.verifyIndex).toBe(false);
     expect(new EngineConfig().debug.verifyIndex).toBe(true);
   });
+});
+
+describe('candidates on a small page (P3)', () => {
+  // Up to LINEAR_CANDIDATES_MAX objects, candidates scans the store instead of searching the index
+  // (P-03 on the small corpus boards: the tree search, dedup set and sort per hit test cost more
+  // than the test itself). It must return what the index returns, in store order.
+  for (const n of [1, 5, LINEAR_CANDIDATES_MAX, LINEAR_CANDIDATES_MAX + 1]) {
+    it(`gives the index's answer with ${String(n)} objects, lifted and non-finite ones included`, () => {
+      const r = rng(n);
+      const store = newStore();
+      const boxes: BoxShape[] = [];
+      for (let i = 0; i < n; i++) {
+        const b = new BoxShape(`b${String(i)}`, new Rect(r() * 400, r() * 400, r() * 80, r() * 80), (i + 1) * 100);
+        boxes.push(b);
+        store.add(b);
+      }
+      const odd = boxes[0] as BoxShape;
+      odd.rect = new Rect(Number.NaN, 0, 10, 10);
+      odd.invalidate();
+      store.flushLayout();
+      const check = () => {
+        store.flushLayout();
+        for (let i = 0; i < 200; i++) {
+          const q = new Rect(r() * 500 - 50, r() * 500 - 50, r() * 120, r() * 120);
+          expect(ids(store.candidates(q))).toEqual(ids(store.indexCandidates(q)));
+        }
+      };
+      check();
+      store.lift(boxes.slice(1, 3));
+      for (const b of boxes.slice(1, 3)) b.translate(60, 60);
+      check();
+      store.land();
+      check();
+    });
+  }
 });

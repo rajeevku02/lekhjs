@@ -120,13 +120,12 @@ export class HitTester implements SceneQuery {
     let dist = INT_MAX;
     let obj: LekhObject | null = null;
     for (const o of objects) {
-      const rect = o.selectionRect().inflate(tolerance * 2);
       if (o.isPointInsideTitle(p)) {
         if (0 < dist) {
           dist = 0;
           obj = o;
         }
-      } else if (rect.contains(p)) {
+      } else if (o.selectionRect().containsInflated(tolerance * 2, p)) {
         const d = o.distanceFrom(p);
         if (d < dist) {
           dist = d;
@@ -238,12 +237,7 @@ export class HitTester implements SceneQuery {
     gap: number,
   ): LekhObject | null {
     const ignore = (o: LekhObject): boolean =>
-      excludes.has(o) ||
-      !o.isConnectableKind() ||
-      !o
-        .selectionRect()
-        .inflate(gap * 4)
-        .contains(p);
+      excludes.has(o) || !o.isConnectableKind() || !o.selectionRect().containsInflated(gap * 4, p);
     let result: LekhObject | null = null;
     let dist = INT_MAX;
     let insideFound = false;

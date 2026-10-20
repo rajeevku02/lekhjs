@@ -53,6 +53,17 @@ export class Rect {
     return new Rect(this.x - val / 2, this.y - val / 2, w, h);
   }
 
+  /** `inflate(val).contains(pt)` without the new rect (the same arithmetic; hit tests, P3). */
+  containsInflated(val: number, pt: Point): boolean {
+    let w = this.width + val;
+    let h = this.height + val;
+    if (w < 0) w = 0;
+    if (h < 0) h = 0;
+    const x = this.x - val / 2;
+    const y = this.y - val / 2;
+    return pt.x >= x && pt.x <= x + w && pt.y >= y && pt.y <= y + h;
+  }
+
   zoom(val: number): Rect {
     return new Rect(this.x * val, this.y * val, this.width * val, this.height * val);
   }

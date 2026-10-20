@@ -3,7 +3,14 @@ export { BezierCurve, QuadBezier } from './bezier';
 export { Ellipse } from './ellipse';
 export * from './geo';
 export { LineEquation } from './lineEquation';
-export { LineSegment, joinTrim, type DistanceAndPoint, type SegmentJoinInfo } from './lineSegment';
+export {
+  LineSegment,
+  distanceToSegment,
+  joinTrim,
+  segmentDistanceXY,
+  type DistanceAndPoint,
+  type SegmentJoinInfo,
+} from './lineSegment';
 export { Point, PointType, type PointAndSlope, type Transformation } from './point';
 export { Rect } from './rect';
 export { GeoShape, GeoShapeType } from './shape';

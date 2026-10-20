@@ -53,6 +53,13 @@ function intersects(a: Rect, b: Rect): boolean {
   return a.x <= b.x + b.width && b.x <= a.x + a.width && a.y <= b.y + b.height && b.y <= a.y + a.height;
 }
 
+function finiteRect(r: Rect): boolean {
+  return Number.isFinite(r.x) && Number.isFinite(r.y) && Number.isFinite(r.width) && Number.isFinite(r.height);
+}
+
+/** Up to this many top-level objects, `candidates` scans the store instead of the index (P3). */
+export const LINEAR_CANDIDATES_MAX = 32;
+
 export class ObjectStore implements LayoutOwner, LayoutHost, HitScene, SceneQuery {
   readonly config: Config;
   readonly orders: OrderAllocator;
@@ -409,6 +416,28 @@ export class ObjectStore implements LayoutOwner, LayoutHost, HitScene, SceneQuer
 
   /** HitScene: index candidates of `rect` plus intersecting lifted objects, in store order. */
   candidates(rect: Rect): LekhObject[] {
+    if (this.objects_.length <= LINEAR_CANDIDATES_MAX) return this.linearCandidates(rect);
+    return this.indexCandidates(rect);
+  }
+
+  /**
+   * `candidates` by a scan of the store: on a page of a few objects the tree search, the dedup set
+   * and the sort into store order cost more than testing every extent, and allocate on every hit
+   * test (P3: P-03 on S-dec/d0-d5, 2-7x C++ per call). The same objects: every laid-out object is
+   * in the index or lifted under its current extent, and an object with a non-finite extent is
+   * returned by every index search.
+   */
+  private linearCandidates(rect: Rect): LekhObject[] {
+    const out: LekhObject[] = [];
+    for (const obj of this.objects_) {
+      const e = obj.extent();
+      if (!finiteRect(e) || intersects(e, rect)) out.push(obj);
+    }
+    return out;
+  }
+
+  /** `candidates` from the spatial index (any page size; tests compare it with the scan). */
+  indexCandidates(rect: Rect): LekhObject[] {
     const found = this.index.search(rect);
     for (const obj of this.lifted_) if (intersects(obj.extent(), rect)) found.push(obj);
     const withPos: { obj: LekhObject; pos: number }[] = [];

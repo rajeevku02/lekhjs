@@ -26,6 +26,7 @@ import {
   type PointAndSlope,
   type Range,
   type SimplePath,
+  distanceToSegment,
 } from '../../geometry';
 import type { DrawingPlatform } from '../../render';
 import type { Paint, Style } from '../../style';
@@ -810,7 +811,7 @@ export class ConnectionObject extends LekhObjectBase implements RouteHost {
     let dist = INT_MAX;
     const pts = this.points;
     for (let i = 0; i + 1 < pts.length; i++) {
-      const d = pointLineSegmentDistance(pts[i] as Point, pts[i + 1] as Point, p).dist;
+      const d = distanceToSegment(pts[i] as Point, pts[i + 1] as Point, p);
       if (d < dist) dist = d;
     }
     return dist;

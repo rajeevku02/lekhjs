@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LineEquation, LineSegment, Point, Rect, joinTrim } from '../../src/geometry';
+import { LineEquation, LineSegment, Point, Rect, distanceToSegment, joinTrim } from '../../src/geometry';
 
 const seg = (a: number, b: number, c: number, d: number): LineSegment =>
   new LineSegment(new Point(a, b), new Point(c, d));
@@ -59,5 +59,24 @@ describe('LineSegment', () => {
     expect(k.dist).toBe(3);
     expect(k.at).toEqual(new Point(-3, 1));
     expect(k.other).toEqual(new Point(0, 1));
+  });
+});
+
+describe('distanceToSegment (P3)', () => {
+  // The allocation-free form the freehand hit test uses must give exactly LineSegment's number.
+  it('equals LineSegment.getDistanceFrom(...).dist bit for bit', () => {
+    let s = 7;
+    const r = () => {
+      s = (s * 1103515245 + 12345) % 2147483648;
+      return s / 2147483648;
+    };
+    const pick = () => (r() < 0.2 ? Math.round(r() * 20) : r() * 2000 - 1000);
+    for (let i = 0; i < 20000; i++) {
+      const p1 = new Point(pick(), pick());
+      const p2 =
+        i % 50 === 0 ? new Point(p1.x, p1.y) : i % 7 === 0 ? new Point(p1.x, pick()) : new Point(pick(), pick());
+      const q = new Point(pick(), pick());
+      expect(Object.is(distanceToSegment(p1, p2, q), new LineSegment(p1, p2).getDistanceFrom(q).dist)).toBe(true);
+    }
   });
 });

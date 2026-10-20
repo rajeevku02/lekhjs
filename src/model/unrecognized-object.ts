@@ -8,7 +8,7 @@
 // guard: C++ `getDistanceFrom` underflowed `size() - 1` on an empty stroke; here an empty or
 // one-point stroke is `INT_MAX` away.
 import { INT_MAX } from '../base';
-import { LineSegment, Point, Rect, getDistance, getMidPoint, getPointsBound, rotateAboutMid } from '../geometry';
+import { distanceToSegment, Point, Rect, getDistance, getMidPoint, getPointsBound, rotateAboutMid } from '../geometry';
 import type { DrawingPlatform } from '../render';
 import type { InterestingPoint } from '../template';
 import type { LayoutGeometry, PaintEnv } from './lekh-object';
@@ -112,7 +112,7 @@ export class UnrecognizedObject extends TemplatedObject {
     let dist = INT_MAX;
     const a = this.actualPoints_;
     for (let i = 0; i + 1 < a.length; i++) {
-      const d = new LineSegment(a[i], a[i + 1]).getDistanceFrom(point).dist;
+      const d = distanceToSegment(a[i] as Point, a[i + 1] as Point, point);
       if (d < dist) dist = d;
     }
     return dist;

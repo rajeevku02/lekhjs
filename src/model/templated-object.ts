@@ -19,7 +19,7 @@ import {
   Rect,
   getPointsBound,
   intersectionWithPolygon,
-  rectDistanceFrom,
+  rectDistance,
   rotate,
   rotateAboutMid,
   getMidPoint,
@@ -323,7 +323,7 @@ export class TemplatedObject extends LekhObject {
       return ret;
     }
     const p = this.unrotatePoint(pt);
-    return rectDistanceFrom(this.ds.rect(), p).dist;
+    return rectDistance(this.ds.rect(), p);
   }
 
   override getIntersection(eq: LineEquation): PointAndSlope[] {

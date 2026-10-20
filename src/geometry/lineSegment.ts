@@ -36,6 +36,54 @@ function inRangeValue(v1: number, v2: number, val: number, delta: number): boole
   return val1 - delta <= val && val <= val2 + delta;
 }
 
+/**
+ * `new LineSegment(p1, p2).getDistanceFrom(point).dist` without the allocations: the same
+ * arithmetic in the same order (the line through the ends, the perpendicular through `point`,
+ * Cramer's rule for the foot, the 0.4 on-segment test), so the result is the same number. For
+ * the per-segment loops of hit tests over freehand ink (P3: P-03 'near' on S-dec/d5).
+ */
+export function distanceToSegment(p1: Point, p2: Point, point: Point): number {
+  return segmentDistanceXY(p1.x, p1.y, p2.x, p2.y, point.x, point.y);
+}
+
+/** `distanceToSegment` on coordinates: the segment (x1, y1)–(x2, y2), the point (px, py). */
+export function segmentDistanceXY(x1: number, y1: number, x2: number, y2: number, px: number, py: number): number {
+  // LineEquation.through(p1, p2)
+  const A = y2 - y1;
+  const B = x1 - x2;
+  const C = y1 * x2 - x1 * y2;
+  // getPerpendicularPassingThrough(point)
+  const A2 = -B;
+  const B2 = A;
+  const C2 = -A2 * px - B2 * py;
+  // solveWith: the foot, (0, 0) when the lines do not meet
+  const D = A * B2 - A2 * B;
+  let fx = 0;
+  let fy = 0;
+  if (D !== 0) {
+    fx = (B2 * -C - B * -C2) / D;
+    fy = (A * -C2 - A2 * -C) / D;
+  }
+  // containsEqPoint(foot)
+  const d1x = x1 - fx;
+  const d1y = y1 - fy;
+  const d2x = x2 - fx;
+  const d2y = y2 - fy;
+  const lx = x2 - x1;
+  const ly = y2 - y1;
+  const len = Math.sqrt(lx * lx + ly * ly);
+  if (Math.abs(len - (Math.sqrt(d1x * d1x + d1y * d1y) + Math.sqrt(d2x * d2x + d2y * d2y))) < rangeDelta) {
+    return Math.abs(A * px + B * py + C) / Math.sqrt(A * A + B * B);
+  }
+  const e1x = px - x1;
+  const e1y = py - y1;
+  const e2x = px - x2;
+  const e2y = py - y2;
+  const dist = Math.sqrt(e1x * e1x + e1y * e1y);
+  const dist2 = Math.sqrt(e2x * e2x + e2y * e2y);
+  return dist2 < dist ? dist2 : dist;
+}
+
 export class LineSegment {
   readonly p1: Point;
   readonly p2: Point;

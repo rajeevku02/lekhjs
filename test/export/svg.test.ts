@@ -2,12 +2,15 @@
 // the fixed gaps of DR-EXP-03 (save/restore groups, translate, clip), gradients with every stop,
 // one `<tspan>` per laid-out line, and AC-EXP-20: clipped content and a translated group render
 // like the canvas (the PNG export's platform), rasterised here by @napi-rs/canvas's SVG reader.
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { describe, expect, it } from 'vitest';
 import { SvgDrawingPlatform, escapeXml, resolveSvgParts, svgNum } from '../../src/export';
 import { BezierCurve, PathStepType, Point, Rect, Size, pathStep, type PathStep } from '../../src/geometry';
 import { Canvas2DDrawingPlatform, type DrawingPlatform } from '../../src/render';
 import { Color, Style } from '../../src/style';
+import { PKG_ROOT } from '../lint/eslint-helpers';
 import { boardSession, env, fixtureSession, rectBoard, recordingSink, run, solidImage } from './helpers';
 
 function filled(c: Color, stroke = 0): Style {
@@ -268,6 +271,26 @@ describe('SVG renders like the canvas (AC-EXP-20)', () => {
       if (d > 48) bad++;
     }
     expect(bad / (W * H)).toBeLessThan(0.005);
+  });
+});
+
+describe('SVG page structure (DR-EXP-03)', () => {
+  it('the register fixture exports its rectangle inside one outer group, at unchanged coordinates', async () => {
+    const board = JSON.parse(
+      readFileSync(path.join(PKG_ROOT, 'parity/fixtures/DR-EXP-03/one-rectangle.lekh'), 'utf8'),
+    ) as object;
+    const s = boardSession(board);
+    const { sink, rec } = recordingSink();
+    const r = await run(s, { format: 'svg', region: 'drawing', padding: 10 }, env({ sink }));
+    expect(r.status).toBe('done');
+    const t = Buffer.from(rec.file(rec.names[0] ?? '')).toString('utf8');
+    expect(t.match(/<g[ >]/g)).toHaveLength(1);
+    expect(t.match(/<\/g>/g)).toHaveLength(1);
+    const body = t.slice(t.indexOf('<g'), t.indexOf('</g>'));
+    expect(body).toContain('<path');
+    // The 200 x 100 rectangle at the drawing region's corner plus the padding and half its
+    // default 2-unit stroke (the region includes the stroke, DR-ENG-17).
+    expect(body).toMatch(/d=" M 10.5,10.5 {2}L 10.5,110.5 {2}L 210.5,110.5 {2}L 210.5,10.5 {2}Z "/);
   });
 });
 

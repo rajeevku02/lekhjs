@@ -1,0 +1,17 @@
+id: DR-EXP-03
+title: 'SVG export honours clip, translate and save/restore'
+area: EXP
+kind: bug-fix
+cpp: 'L/SVGExporter.cpp SVGDrawingPlatform left saveContext, restoreContext, translate and clip empty: the SVG drew clipped content unclipped and translated content untranslated, and its elements sat directly under the root'
+ts: 'export/svg/svg-drawing-platform.ts: saveContext/restoreContext open and close a <g>; translate opens a <g transform="translate(x y)"> and clip a <g clip-path="url(#…)"> after its <clipPath>, each closed by the matching restoreContext. BoardSession.drawForExport wraps every page paint in one saveContext/restoreContext pair, so every exported SVG page holds its elements in one outer <g>; the element coordinates are unchanged (applyExportView offsets them, as C++ TranslatedDrawingPlatform did, AC-EXP-29) and the rendered image is the same for content that issues no clip or translate'
+user_visible: false
+fixture: parity/fixtures/DR-EXP-03/one-rectangle.lekh
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'spec 08 §8; AC-EXP-20; test/export/svg.test.ts (balanced groups, the clipPath and the translate group on a scripted drawing; the fixture board exports its rectangle inside one outer <g>)'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

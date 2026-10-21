@@ -89,6 +89,17 @@ const BINDINGS: readonly Binding[] = Object.freeze([
   { key: 'x', mods: COMMAND, id: 'cut' },
 ]);
 
+/**
+ * Command + "+" is Zoom in whichever way the keyboard makes the "+" (owner fix list, item 5). C++
+ * bound "+" with Command alone (`Command.cpp:723`); on iOS and Mac its `UIKeyCommand` "+" also
+ * took ⌘⇧= and Android mapped `KEYCODE_PLUS`. A DOM `keydown` reports "+" with Shift held on a US
+ * layout and "=" without it, so ⌘+ / ⌘⇧= / ⌘= (and Ctrl off Apple hosts) all zoom in, as the key
+ * shows "+" on its cap.
+ */
+function zoomInChord(key: string, mods: number): boolean {
+  return (key === '+' || key === '=') && (mods === COMMAND || mods === (COMMAND | SHIFT));
+}
+
 /** The keys matched with any modifiers (C++ `CmdKey` with `Modifiers::None`). */
 const CMD_KEYS: Readonly<Record<string, KeyCommandId>> = Object.freeze({
   backspace: 'delete',
@@ -163,6 +174,8 @@ export class KeyMap {
     let mods = (k.shift ? SHIFT : 0) | (k.ctrl ? CONTROL : 0) | (k.alt ? ALT : 0) | (k.meta ? COMMAND : 0);
     // Ctrl is Command on non-Apple hosts (`KeyboardInput.js:66-70`).
     if ((mods & CONTROL) !== 0 && !this.isApple) mods = (mods & ~CONTROL) | COMMAND;
+    const zoomIn = zoomInChord(key, mods);
+    if (zoomIn) return 'zoom_in';
     for (const b of BINDINGS) if (b.key === key && b.mods === mods) return b.id;
     return null;
   }

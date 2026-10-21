@@ -223,3 +223,38 @@ describe('KeyMap commands on a board (AC-UI-09)', () => {
     expect(saved).toBe(1);
   });
 });
+
+describe('Zoom in on every "+" chord (owner fix list, item 5)', () => {
+  const k = (key: string, m: Partial<KeyChord>): KeyChord => ({
+    key,
+    shift: false,
+    ctrl: false,
+    alt: false,
+    meta: false,
+    ...m,
+  });
+
+  it('Apple: ⌘+, ⌘⇧= (a US "+") and ⌘= zoom in; ⌘- still zooms out', () => {
+    const km = new KeyMap(true);
+    expect(km.resolve(k('+', { meta: true }))).toBe('zoom_in');
+    expect(km.resolve(k('+', { meta: true, shift: true }))).toBe('zoom_in');
+    expect(km.resolve(k('=', { meta: true }))).toBe('zoom_in');
+    expect(km.resolve(k('=', { meta: true, shift: true }))).toBe('zoom_in');
+    expect(km.resolve(k('-', { meta: true }))).toBe('zoom_out');
+  });
+
+  it('off Apple: Ctrl in place of ⌘, the same chords', () => {
+    const km = new KeyMap(false);
+    expect(km.resolve(k('+', { ctrl: true }))).toBe('zoom_in');
+    expect(km.resolve(k('+', { ctrl: true, shift: true }))).toBe('zoom_in');
+    expect(km.resolve(k('=', { ctrl: true }))).toBe('zoom_in');
+  });
+
+  it('not without the command key, nor with Alt', () => {
+    const km = new KeyMap(true);
+    expect(km.resolve(k('=', {}))).toBeNull();
+    expect(km.resolve(k('+', { shift: true }))).toBeNull();
+    expect(km.resolve(k('=', { meta: true, alt: true }))).toBeNull();
+    expect(km.resolve(k('=', { ctrl: true }))).toBeNull();
+  });
+});

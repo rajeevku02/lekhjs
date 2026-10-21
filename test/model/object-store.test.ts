@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG_DEFAULTS, EngineConfig } from '../../src/base';
 import { Point, Rect } from '../../src/geometry';
-import { ConnectionDependencyMap, LINEAR_CANDIDATES_MAX, OrderAllocator, SpatialIndex } from '../../src/model';
+import { ConnectionDependencyMap, OrderAllocator, SpatialIndex } from '../../src/model';
 import { BoxShape, FakeConnector, FakeGroup, fixedClock, newStore, rng } from './helpers';
 
 const box = (id: string, order = 0, x = 0) => new BoxShape(id, new Rect(x, 0, 10, 10), order);
@@ -158,12 +158,16 @@ describe('SpatialIndex', () => {
   });
 });
 
-describe('candidates on a small page (P3)', () => {
-  // Up to LINEAR_CANDIDATES_MAX objects, candidates scans the store instead of searching the index
-  // (P-03 on the small corpus boards: the tree search, dedup set and sort per hit test cost more
-  // than the test itself). It must return what the index returns, in store order.
-  for (const n of [1, 5, LINEAR_CANDIDATES_MAX, LINEAR_CANDIDATES_MAX + 1]) {
-    it(`gives the index's answer with ${String(n)} objects, lifted and non-finite ones included`, () => {
+describe('candidates from the index', () => {
+  // Every hit test takes its candidates from the spatial index on any page size (spec 03 §3): they
+  // must be the objects whose extent meets the query rect (an object with a non-finite extent is
+  // returned by every search), lifted ones under their current extent, in store order.
+  const finite = (e: Rect) =>
+    Number.isFinite(e.x) && Number.isFinite(e.y) && Number.isFinite(e.width) && Number.isFinite(e.height);
+  const meets = (a: Rect, b: Rect) =>
+    a.x <= b.x + b.width && b.x <= a.x + a.width && a.y <= b.y + b.height && b.y <= a.y + a.height;
+  for (const n of [1, 5, 32, 33]) {
+    it(`gives the objects meeting the rect with ${String(n)} objects, lifted and non-finite ones included`, () => {
       const r = rng(n);
       const store = newStore();
       const boxes: BoxShape[] = [];
@@ -180,7 +184,8 @@ describe('candidates on a small page (P3)', () => {
         store.flushLayout();
         for (let i = 0; i < 200; i++) {
           const q = new Rect(r() * 500 - 50, r() * 500 - 50, r() * 120, r() * 120);
-          expect(ids(store.candidates(q))).toEqual(ids(store.indexCandidates(q)));
+          const want = store.objects.filter((o) => !finite(o.extent()) || meets(o.extent(), q));
+          expect(ids(store.candidates(q))).toEqual(ids(want));
         }
       };
       check();

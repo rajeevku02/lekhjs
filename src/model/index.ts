@@ -26,7 +26,7 @@ export { ConnectionDependencyMap } from './connection-dependency-map';
 export { LayoutTracker, type LayoutHost } from './layout-tracker';
 export { OrderAllocator, type Ordered } from './order-allocator';
 export { HitTester, type ContainingOptions, type HitScene, type NearObject } from './hit-tester';
-export { LINEAR_CANDIDATES_MAX, ObjectStore, type IdEntry, type ObjectStoreOptions } from './object-store';
+export { ObjectStore, type IdEntry, type ObjectStoreOptions } from './object-store';
 export { BackgroundType, OLD_GRID_BACKGROUND, OLD_GRID_BACKGROUND_2, PageBackground } from './page-background';
 export {
   CanvasSizeType,

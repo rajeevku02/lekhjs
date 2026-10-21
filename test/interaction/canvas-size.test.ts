@@ -178,7 +178,11 @@ describe('the placeholder page while a cloud board connects (owner round UI4 ite
   function connecting(w = 800, ht = 600) {
     const runtime = testRuntime();
     const scheduler = new FakeScheduler();
-    const session = new BoardSession(runtime, { images: new FakeImagePort(), scheduler, transport: new FakeTransport() });
+    const session = new BoardSession(runtime, {
+      images: new FakeImagePort(),
+      scheduler,
+      transport: new FakeTransport(),
+    });
     session.dispatch({ type: 'connect', docid: DOCID, version: 0 });
     const frames = new ManualFrameScheduler();
     const bv = new BoardView({ session, env: DESKTOP_WEB, frames, readOnly: () => false });
@@ -212,7 +216,13 @@ describe('the placeholder page while a cloud board connects (owner round UI4 ite
     const doc = board('fixed', { width: 400, height: 300 });
     session.dispatch({
       type: 'remoteFrame',
-      text: JSON.stringify({ docid: DOCID, version: 3, timestamp: 1, type: 'update', updates: { changes: { doc }, type: 'load', permission: 'write' } }),
+      text: JSON.stringify({
+        docid: DOCID,
+        version: 3,
+        timestamp: 1,
+        type: 'update',
+        updates: { changes: { doc }, type: 'load', permission: 'write' },
+      }),
     });
     settle();
     expect(session.isLoaded).toBe(true);

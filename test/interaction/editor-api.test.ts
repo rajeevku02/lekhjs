@@ -110,7 +110,7 @@ describe('ConnectionApi', () => {
   // Owner, round IC1: an arrowhead picked from the connection popup's preview changed the connector
   // but not the popup. The popup re-reads the connector when the published selection changes, and
   // the arrowheads were not part of it, so no change to them was published.
-  it('publishes the selected connector\'s arrowheads with the selection: picker, swap, undo / redo, a collaborator', () => {
+  it("publishes the selected connector's arrowheads with the selection: picker, swap, undo / redo, a collaborator", () => {
     const h = viewHarness({ cloud: true });
     const con = h.obj(C) as ConnectionObject;
     h.dispatch({ type: 'command', origin: 'ui', command: { kind: 'select', ids: [C] } });
@@ -132,7 +132,9 @@ describe('ConnectionApi', () => {
     expect(arrows()?.start).toBe(picked?.end);
     // Undo and redo clear the selection (the popup has no connector then); selected again, the
     // published arrowheads are the connector's after each.
-    const reselect = () => h.dispatch({ type: 'command', origin: 'ui', command: { kind: 'select', ids: [C] } });
+    const reselect = () => {
+      h.dispatch({ type: 'command', origin: 'ui', command: { kind: 'select', ids: [C] } });
+    };
     h.bv.commands.run('undo');
     reselect();
     expect(arrows()).toEqual(picked);
@@ -140,7 +142,10 @@ describe('ConnectionApi', () => {
     reselect();
     expect(arrows()?.start).toBe(picked?.end);
     // A collaborator removes the end arrowhead while the connector stays selected.
-    h.dispatch({ type: 'remoteFrame', text: frame(updatetypes.changeArrow, { [`doc.pages.${P}.objects.${C}.arrows.end`]: null }, 12) });
+    h.dispatch({
+      type: 'remoteFrame',
+      text: frame(updatetypes.changeArrow, { [`doc.pages.${P}.objects.${C}.arrows.end`]: null }, 12),
+    });
     expect(con.arrows.end()).toBeNull();
     expect(arrows()?.end).toBeNull();
     off();

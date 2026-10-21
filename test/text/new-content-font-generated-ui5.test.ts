@@ -44,12 +44,15 @@ function added(h: ViewHarness, fn: () => void): LekhObject[] {
 
 /** A library insert of the board's `id` shape: a new object on a copy of its template, placed as a drop places it. */
 function insert(id: Id): { h: ViewHarness; obj: TemplatedObject } {
-  const h = viewHarness({ board: readFileSync(path.join(FIXTURES, BOARDS[id]), 'utf8'), measurer: new FamilyMeasurer(), host: 'web' });
+  const h = viewHarness({
+    board: readFileSync(path.join(FIXTURES, BOARDS[id]), 'utf8'),
+    measurer: new FamilyMeasurer(),
+    host: 'web',
+  });
   const src = h.session.editor.doc
     .activePage()
     .objectStore.objects.find((o) => o instanceof TemplatedObject && o.shapeTemplate()?.id() === id) as
-    | TemplatedObject
-    | undefined;
+    TemplatedObject | undefined;
   const tmpl = src?.shapeTemplate()?.clone() ?? null;
   if (src === undefined || tmpl === null) throw new Error(`no ${id} in the fixture`);
   expect(tmpl.getStyle().effectiveFontFamily()).toBe('');

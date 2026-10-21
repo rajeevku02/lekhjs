@@ -7,7 +7,10 @@ ts: 'text/ TextLayout.lineHeight: LP = 1.18 x fontSize x fontMultiplier (src/tex
 user_visible: true
 fixture: parity/fixtures/DR-TXT-02/font-multiplier-pitch.lekh
 rule:
-  json: ['params.height of auto-sized multi-line text with fontmultiplier != 1 (switches-off runs only; the gate runs use lineSpacingCompat). Fixture n1 (fontsize 20, fontmultiplier 2, three lines): C++ 3 x 20, TS 3 x 1.18 x 40; n2 (fontmultiplier 1) differs by DR-TXT-01 alone']
+  json:
+    [
+      'params.height of auto-sized multi-line text with fontmultiplier != 1 (switches-off runs only; the gate runs use lineSpacingCompat). Fixture n1 (fontsize 20, fontmultiplier 2, three lines): C++ 3 x 20, TS 3 x 1.18 x 40; n2 (fontmultiplier 1) differs by DR-TXT-01 alone',
+    ]
   image:
     compat_switch: lineSpacingCompat
   perf: null

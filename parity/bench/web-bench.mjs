@@ -141,7 +141,8 @@ if (opt.sets === 'syn') {
       p !== null && typeof p === 'object' && !Array.isArray(p) && Object.keys(p).length === 1 && 'objects' in p;
     const ids = Object.keys(pages).filter((k) => isPhantom(pages[k]));
     if (ids.length === 0 || ids.length === Object.keys(pages).length) return { text, dropped: 0 };
-    for (const k of ids) delete pages[k];
+    const drop = new Set(ids);
+    doc.pages = Object.fromEntries(Object.entries(pages).filter(([k]) => !drop.has(k)));
     return { text: JSON.stringify(doc), dropped: ids.length };
   };
   const ids = Object.keys(inv)

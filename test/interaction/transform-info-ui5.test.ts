@@ -33,7 +33,11 @@ class TextRecorder implements DrawingPlatform {
   drawText(laid: LaidOutText, style: Style): void {
     const text = laid.lines.map((l) => l.text).join('\n');
     const c = style.effectiveTextFill().solidColor;
-    this.texts.push({ text, fontSize: style.effectiveFontSize(), color: `${String(c.red)},${String(c.green)},${String(c.blue)}` });
+    this.texts.push({
+      text,
+      fontSize: style.effectiveFontSize(),
+      color: `${String(c.red)},${String(c.green)},${String(c.blue)}`,
+    });
   }
   drawImage(): void {}
   saveContext(): void {}

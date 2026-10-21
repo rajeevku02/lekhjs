@@ -3,7 +3,7 @@ title: 'MCP board_edit on a 0.25 MiB board is up to 8 % slower on lekhjs than on
 area: PERF
 kind: accepted-perf
 cpp: 'kashi MCP on the vendored backend wasm (lbs master eb9e0c8): board_edit (compile, stand-in dispatch, layout check) on the 0.25 MiB synthetic board, p95 213.4 ms (median of 5 runs, test/pool/perf.js, 50 calls)'
-ts: 'kashi on lekhjs pool workers at the default pool settings since round RC2 (MCP_CORE_WORKER_HEAP_MB=256, MCP_CORE_RECYCLE_AFTER=1000 by the owner''s decision of 2026-10-20; lbs dcd4695, lekhjs cdf8449 dist 09d96398): p95 113.8 ms against C++ 200.3 ms, ratio 0.57 (A/A margin 0.10). At the earlier recycle of 50 it was 1.08 (A3: 231.5 vs 213.4 ms, margin 0.05; lbs b08fbb4, lekhjs ec1e82a dist 61fafba9) and 1.27 (P1); the difference was the worker recycle (a fresh worker runs cold JS), not the engine'
+ts: "kashi on lekhjs pool workers at the default pool settings since round RC2 (MCP_CORE_WORKER_HEAP_MB=256, MCP_CORE_RECYCLE_AFTER=1000 by the owner's decision of 2026-10-20; lbs dcd4695, lekhjs cdf8449 dist 09d96398): p95 113.8 ms against C++ 200.3 ms, ratio 0.57 (A/A margin 0.10). At the earlier recycle of 50 it was 1.08 (A3: 231.5 vs 213.4 ms, margin 0.05; lbs b08fbb4, lekhjs ec1e82a dist 61fafba9) and 1.27 (P1); the difference was the worker recycle (a fresh worker runs cold JS), not the engine"
 user_visible: false
 fixture: parity/fixtures/DR-PERF-01/synthetic-0.25mib.lekh
 rule:

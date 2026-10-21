@@ -41,6 +41,22 @@ export class LenientParseError extends Error {
   }
 }
 
+/**
+ * On an object that held a duplicated key: the key → the FIRST value read for it (the object keeps
+ * the last, JSON.parse semantics). Not enumerable, so comparisons and JSON.stringify never see it;
+ * the `duplicate-key` normaliser (DR-ENG-02) reads it on the input board.
+ */
+export const FIRST_VALUES = Symbol('firstValues');
+
+/** @param {{ [k: string]: LValue }} o @returns {Map<string, LValue>} */
+function firstValues(o) {
+  const own = /** @type {any} */ (o)[FIRST_VALUES];
+  if (own instanceof Map) return own;
+  const m = new Map();
+  Object.defineProperty(o, FIRST_VALUES, { value: m, enumerable: false });
+  return m;
+}
+
 const WS = new Set([' ', '\t', '\n', '\r', '﻿']);
 
 /**
@@ -158,7 +174,11 @@ export function lenientParse(text) {
         if (text.charAt(i) !== ':') fail('json_unescaped_key', 'expected ":" after a key');
         i++;
         const v = value();
-        if (Object.prototype.hasOwnProperty.call(o, k)) duplicateKeys++;
+        if (Object.prototype.hasOwnProperty.call(o, k)) {
+          duplicateKeys++;
+          const first = firstValues(o);
+          if (!first.has(k)) first.set(k, /** @type {LValue} */ (o[k]));
+        }
         o[k] = v;
         skip();
         const d = text.charAt(i);

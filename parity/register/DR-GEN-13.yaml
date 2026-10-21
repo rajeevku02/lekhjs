@@ -5,12 +5,12 @@ kind: intended-change
 cpp: "Lua tostring wrote %.14g with '.0' on integral floats, and text sizes were float32 widened (7.0999999046326)"
 ts: 'Withdrawn (task B4, orchestrator decision): the ports write data numbers as Lua 5.3 tostring did (generators/wireframe-lua num/int/lnum/pnum), so the stored text stays byte-compatible with the C++ output; the strict data-text oracle (test/generators/oracle) checks it. Float32-widened inputs still arrive widened and print as C++ did.'
 user_visible: false
-fixture: test/generators/register.test.ts
+fixture: parity/fixtures/DR-GEN-13/lua-data-numbers.lekh
 rule:
   json: []
   image: null
   perf: null
-evidence: 'spec 04 §5.5, §14; research 03 §3'
+evidence: 'spec 04 §5.5, §14; research 03 §3; unit test test/generators/register.test.ts; board test test/model/register-boards.test.ts'
 status: rejected
 signed_off_by: null
 signed_off_at: null

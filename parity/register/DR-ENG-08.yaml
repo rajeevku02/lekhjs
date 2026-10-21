@@ -5,12 +5,12 @@ kind: intended-change
 cpp: 'ObjectStore::getErasableObjects collected into a std::set of pointers: pointer-address order, unreproducible'
 ts: 'model/HitTester.erasableAt: near objects, then their connectors, each in store order'
 user_visible: false
-fixture: test/model/hit-tester.test.ts
+fixture: parity/fixtures/DR-ENG-08/erase-batch.lekh
 rule:
   json: ['updates.changes (delete frame entry order)']
   image: null
   perf: null
-evidence: 'spec 03 §4 #6'
+evidence: 'spec 03 §4 #6; unit test test/model/hit-tester.test.ts; board test test/model/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

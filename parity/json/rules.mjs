@@ -18,7 +18,7 @@ const { withinTolerance } = /** @type {typeof import('./tolerance.cjs')} */ (req
  * @property {string[]} pattern
  * @property {'ignore' | 'tolerance' | 'normalise'} op
  * @property {Record<string, unknown[]>} when
- * @property {((a: any, b: any, input?: any, rest?: string[]) => boolean | null) | null} equal
+ * @property {((a: any, b: any, input?: any, rest?: string[], path?: string[]) => boolean | null) | null} equal
  * @property {number | undefined} abs
  * @property {number | undefined} rel
  */
@@ -47,7 +47,7 @@ export function compileRules(entries) {
         out.errors.push(`${id}: a rule.json item needs a path starting with /`);
         continue;
       }
-      /** @type {((a: any, b: any, input?: any, rest?: string[]) => boolean | null) | null} */
+      /** @type {((a: any, b: any, input?: any, rest?: string[], path?: string[]) => boolean | null) | null} */
       let equal = null;
       if (item.op === 'normalise') {
         const n = NORMALISERS[item.normaliser];
@@ -155,7 +155,7 @@ export function applyRules(reg, diffs, cpp, ts, input) {
         const b = at(ts, d.path);
         explained = a instanceof LNum && b instanceof LNum && withinTolerance(a.value, b.value, r.abs ?? 0, r.rel ?? 0);
       } else if (r.equal !== null) {
-        const verdict = r.equal(cAt, tAt, input === undefined ? undefined : at(input, prefix), d.path.slice(n));
+        const verdict = r.equal(cAt, tAt, input === undefined ? undefined : at(input, prefix), d.path.slice(n), d.path);
         if (verdict === null) continue;
         explained = verdict === true;
       }

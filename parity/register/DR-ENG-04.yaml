@@ -5,12 +5,16 @@ kind: reader-quirk
 cpp: 'atoi/int parsing truncated integer members to 32 bits (B13), e.g. large order values'
 ts: 'io/ JSON reader: plain doubles, any integer-valued number is an integer; colours only read as value | 0 (E7)'
 user_visible: true
-fixture: test/io/register.test.ts
+fixture: parity/fixtures/DR-ENG-04/large-order.lekh
 rule:
-  json: ['pages.*.objects.*.order']
+  json:
+    - 'pages.*.objects.*.order'
+    - path: '/**'
+      op: normalise
+      normaliser: wide-integer
   image: null
   perf: null
-evidence: 'spec 03 §10.1, §15 B13, §16'
+evidence: 'spec 03 §10.1, §15 B13, §16; unit test test/io/register.test.ts; board test test/io/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

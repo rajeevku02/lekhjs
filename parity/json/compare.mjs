@@ -196,7 +196,11 @@ export function compareBoard({ board, inputText, cpp, ts, stamp, reg, filed, cus
     rec.status = cBad !== null ? 'cpp_fail' : 'ts_fail';
     if (cBad !== null) rec.cpp_error = `output: ${cBad}`;
     else rec.ts_code = `output_${bad(ts.json) ?? e.code}`;
-    if (cBad === 'json_unescaped_key') rec.unescaped_key = true;
+    if (cBad === 'json_unescaped_key') {
+      rec.unescaped_key = true;
+      // The C++ writer left a key unescaped (B18e, OQ-12): DR-ENG-07 is that difference.
+      if (filed.has('DR-ENG-07')) rec.register = { 'DR-ENG-07': 1 };
+    }
     return rec;
   }
   const { diffs, tolerance } = diff(canon.cpp, canon.ts);

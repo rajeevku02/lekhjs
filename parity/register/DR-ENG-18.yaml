@@ -5,12 +5,12 @@ kind: bug-fix
 cpp: 'ConnectionObject::getSelectionRectangle, getDistanceFrom and canEditTextAt called connection_->update(), which re-routed and wrote the automatic directions into the stored segments (B9)'
 ts: 'model/ConnectionObject: the route is computed only in layout(); queries read the layout'
 user_visible: true
-fixture: test/model/connection.test.ts
+fixture: parity/fixtures/DR-ENG-18/stale-auto-route.lekh
 rule:
   json: ['pages.*.objects.*.params (automatic connectors)']
   image: null
   perf: null
-evidence: 'spec 03 §3.1, §5.1, §15 B9'
+evidence: 'spec 03 §3.1, §5.1, §15 B9; unit test test/model/connection.test.ts; board test test/model/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

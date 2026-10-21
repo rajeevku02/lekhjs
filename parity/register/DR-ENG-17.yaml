@@ -5,12 +5,12 @@ kind: bug-fix
 cpp: "ObjectStore::getBoundsOfAll seeded the union with the first object's unstroked rect (B8)"
 ts: "model/HitTester.boundsOfAll: every object's visual bounds grown by half its stroke (fixed in E5)"
 user_visible: true
-fixture: test/model/hit-tester.test.ts
+fixture: parity/fixtures/DR-ENG-17/first-stroke-bounds.lekh
 rule:
   json: ['canvas size of auto pages', 'export bounds']
   image: { align: reference-origin }
   perf: null
-evidence: 'spec 03 §4 #15, §15 B8; decision OQ-18'
+evidence: 'spec 03 §4 #15, §15 B8; decision OQ-18; unit test test/model/hit-tester.test.ts; board test test/model/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

@@ -5,12 +5,14 @@ kind: bug-fix
 cpp: 'JsonParser::store wrote object keys unescaped, so a key with a quote or backslash made invalid JSON (B18e)'
 ts: 'io/ writeJsonText: every key and string escaped by JSON.stringify, keys in UTF-8 byte order (E7)'
 user_visible: false
-fixture: test/io/register.test.ts
+fixture: parity/fixtures/DR-ENG-07/quoted-key.lekh
 rule:
+  # The C++ output of the fixture does not parse (json_unescaped_key); json/compare.mjs ties that
+  # cpp_fail to this entry.
   json: []
   image: null
   perf: null
-evidence: 'spec 03 §10.2, §10.3, §15 B18e'
+evidence: 'spec 03 §10.2, §10.3, §15 B18e; unit test test/io/register.test.ts; board test test/io/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

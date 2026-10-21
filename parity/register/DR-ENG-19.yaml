@@ -5,12 +5,12 @@ kind: bug-fix
 cpp: 'The serializer kept whichever colliding id the hash map iterated last (B14)'
 ts: 'io/ JsonDocumentWriter: embed and help ids sorted by UTF-8 bytes, the first wins (E7)'
 user_visible: false
-fixture: test/io/register.test.ts
+fixture: parity/fixtures/DR-ENG-19/colliding-embed-ids.lekh
 rule:
   json: ['templates.*.embeds', 'help']
   image: null
   perf: null
-evidence: 'spec 03 §10.2, §15 B14'
+evidence: 'spec 03 §10.2, §15 B14; unit test test/io/register.test.ts; board test test/io/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

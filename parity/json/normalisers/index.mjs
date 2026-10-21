@@ -2,9 +2,9 @@
 // The four canonicalisation steps (`generator-script`, `info-version`, `root-style`,
 // `lua-data-number`) always run; a rule naming one of them is a no-op that register:check accepts.
 // A normaliser a rule applies with `op: normalise` exports `equal(cpp, ts) → boolean | null` over
-// the two subtrees at the matched path, with the input board's subtree there as a third argument
-// and the differing path below the matched one as a fourth (null: not applicable; the next rule is
-// tried).
+// the two subtrees at the matched path, with the input board's subtree there as a third argument,
+// the differing path below the matched one as a fourth and the whole differing path as a fifth
+// (null: not applicable; the next rule is tried).
 import * as dateMalformed from './date-malformed.mjs';
 import * as drawRestyle from './draw-restyle.mjs';
 import * as emptyLineGeneratorData from './empty-line-generator-data.mjs';
@@ -21,8 +21,14 @@ import * as luaDataNumber from './lua-data-number.mjs';
 import * as placeholderVerbatim from './placeholder-verbatim.mjs';
 import * as sixDigitData from './six-digit-data.mjs';
 import * as rootStyle from './root-style.mjs';
+import * as duplicateKey from './duplicate-key.mjs';
+import * as emptyRouteParams from './empty-route-params.mjs';
+import * as integerWithFraction from './integer-with-fraction.mjs';
+import * as nonfiniteZero from './nonfinite-zero.mjs';
+import * as unknownGeneratorKept from './unknown-generator-kept.mjs';
+import * as wideInteger from './wide-integer.mjs';
 
-/** @type {Readonly<Record<string, { name: string, equal?: (a: any, b: any, input?: any, rest?: string[]) => boolean | null }>>} */
+/** @type {Readonly<Record<string, { name: string, equal?: (a: any, b: any, input?: any, rest?: string[], path?: string[]) => boolean | null }>>} */
 export const NORMALISERS = Object.freeze({
   [generatorScript.name]: generatorScript,
   [infoVersion.name]: infoVersion,
@@ -40,6 +46,12 @@ export const NORMALISERS = Object.freeze({
   [geometryPrecision.name]: geometryPrecision,
   [phantomPage.name]: phantomPage,
   [drawRestyle.name]: drawRestyle,
+  [duplicateKey.name]: duplicateKey,
+  [integerWithFraction.name]: integerWithFraction,
+  [wideInteger.name]: wideInteger,
+  [nonfiniteZero.name]: nonfiniteZero,
+  [emptyRouteParams.name]: emptyRouteParams,
+  [unknownGeneratorKept.name]: unknownGeneratorKept,
 });
 
 /** The canonicalisation steps every comparison applies (no rule needed). */

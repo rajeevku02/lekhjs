@@ -5,12 +5,15 @@ kind: bug-fix
 cpp: 'DataExpression::parse returned null and the template dereferenced it (B18a, crash)'
 ts: 'template/ShapeTemplate: a null compiled expression evaluates to 0, expression_invalid warned once per template'
 user_visible: true
-fixture: test/template/shape-template.test.ts
+fixture: parity/fixtures/DR-GEN-01/unparsable-expression.lekh
 rule:
   json: []
+  # C++ DataExpression::parse returns null on an operator followed by another operator (w*-0.5,
+  # w/-2, w+-1, w**2: probed on the Node oracle, RF1) and the load traps on the null call.
+  cpp_fail: { input_matches: '"data":\s*\[[^\]]*"[^"]*[-+*/]\s*[-+*/][^"]*"' }
   image: null
   perf: null
-evidence: 'spec 03 §14, §15 B18a; spec 04 §2'
+evidence: 'spec 03 §14, §15 B18a; spec 04 §2; unit test test/template/shape-template.test.ts; board test test/model/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

@@ -5,12 +5,15 @@ kind: reader-quirk
 cpp: "JsonParser kept the first of duplicated keys and leaked the duplicate's value (B18d)"
 ts: 'io/ JSON reader: JSON.parse semantics (and the same in the LenientJson fallback), last duplicate wins; nothing leaks (E7)'
 user_visible: false
-fixture: test/io/register.test.ts
+fixture: parity/fixtures/DR-ENG-02/duplicate-key.lekh
 rule:
-  json: []
+  json:
+    - path: '/*'
+      op: normalise
+      normaliser: duplicate-key
   image: null
   perf: null
-evidence: 'spec 03 §10.1, §15 B18d, §16'
+evidence: 'spec 03 §10.1, §15 B18d, §16; unit test test/io/register.test.ts; board test test/io/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

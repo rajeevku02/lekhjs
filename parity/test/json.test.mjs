@@ -649,3 +649,114 @@ describe('cpp_oom browser retry (G1)', () => {
     assert.equal(r.browser_retry, 'oom');
   });
 });
+
+describe('RF1 board-fixture normalisers (DR-ENG-02, -03, -04, -06, -07, -20, DR-GEN-01, -12)', () => {
+  const P = (/** @type {string} */ t) => lenientParse(t).value;
+  const L = (/** @type {unknown} */ v) => P(JSON.stringify(v));
+  const reg = (/** @type {string} */ id, /** @type {string} */ p, /** @type {string} */ normaliser) =>
+    compileRules([
+      { file: `${id}.yaml`, data: { id, rule: { json: [{ path: p, op: 'normalise', normaliser }] } }, parseErrors: [] },
+    ]);
+  const run = (/** @type {any} */ r, /** @type {any} */ cpp, /** @type {any} */ ts, /** @type {any} */ input) =>
+    applyRules(r, diff(cpp, ts).diffs, cpp, ts, input);
+
+  it('lenient-parse keeps the first value of a duplicated key, out of sight', async () => {
+    const { FIRST_VALUES } = await import('../json/lenient-parse.mjs');
+    const v = /** @type {any} */ (P('{"a":{"x":1,"x":2,"x":3}}'));
+    assert.equal(v.a.x.value, 3);
+    assert.equal(v.a[FIRST_VALUES].get('x').value, 1);
+    assert.deepEqual(Object.keys(v.a), ['x']);
+  });
+  it('duplicate-key: C++ first, TS last, only at the duplicated member', () => {
+    const r = reg('DR-ENG-02', '/*', 'duplicate-key');
+    const input = P('{"p":{"o":{"cx":100,"cx":150,"cy":1}}}');
+    assert.equal(
+      run(r, L({ p: { o: { cx: 100, cy: 1 } } }), L({ p: { o: { cx: 150, cy: 1 } } }), input).unexplained.length,
+      0,
+    );
+    // C++ wrote neither value, or another member differs: not explained.
+    assert.equal(
+      run(r, L({ p: { o: { cx: 7, cy: 1 } } }), L({ p: { o: { cx: 150, cy: 1 } } }), input).unexplained.length,
+      1,
+    );
+    const both = run(r, L({ p: { o: { cx: 100, cy: 2 } } }), L({ p: { o: { cx: 150, cy: 1 } } }), input);
+    assert.deepEqual(
+      both.unexplained.map((d) => d.path.join('/')),
+      ['p/o/cy'],
+    );
+  });
+  it('integer-with-fraction: an integer member written 2.0, read as absent by C++', () => {
+    const r = reg('DR-ENG-03', '/**', 'integer-with-fraction');
+    const input = P('{"o":{"order":2.0,"cx":2.0},"t":{"flags":31}}');
+    assert.equal(run(r, L({ o: { order: 115 } }), L({ o: { order: 2 } }), input).unexplained.length, 0);
+    // not an integer member, an integer token in the input, or TS changed the value
+    assert.equal(run(r, L({ o: { cx: 1 } }), L({ o: { cx: 2 } }), input).unexplained.length, 1);
+    assert.equal(run(r, L({ t: { flags: 7 } }), L({ t: { flags: 31 } }), input).unexplained.length, 1);
+    assert.equal(run(r, L({ o: { order: 115 } }), L({ o: { order: 3 } }), input).unexplained.length, 1);
+  });
+  it('wide-integer: C++ kept the low 32 bits of an integer past int32', () => {
+    const r = reg('DR-ENG-04', '/**', 'wide-integer');
+    const input = P('{"o":{"order":1099511627779},"s":{"order":5}}');
+    assert.equal(run(r, L({ o: { order: 3 } }), L({ o: { order: 1099511627779 } }), input).unexplained.length, 0);
+    assert.equal(run(r, L({ o: { order: 4 } }), L({ o: { order: 1099511627779 } }), input).unexplained.length, 1);
+    assert.equal(run(r, L({ s: { order: 6 } }), L({ s: { order: 5 } }), input).unexplained.length, 1);
+  });
+  it('nonfinite-zero: C++ inf/nan where TS wrote 0', () => {
+    const r = reg('DR-ENG-06', '/**', 'nonfinite-zero');
+    const input = P('{"p":{"a":1e999,"b":1}}');
+    assert.equal(run(r, P('{"p":{"a":inf,"b":1}}'), L({ p: { a: 0, b: 1 } }), input).unexplained.length, 0);
+    assert.equal(run(r, P('{"p":{"a":nan,"b":1}}'), L({ p: { a: 0, b: 1 } }), input).unexplained.length, 0);
+    assert.equal(run(r, P('{"p":{"a":inf,"b":1}}'), L({ p: { a: 5, b: 1 } }), input).unexplained.length, 1);
+    assert.equal(run(r, L({ p: { a: 0, b: 2 } }), L({ p: { a: 0, b: 1 } }), input).unexplained.length, 1);
+  });
+  it('empty-route-params: an orthogonal connector stored with no segments', () => {
+    const r = reg('DR-ENG-20', '/pages/*/objects/*', 'empty-route-params');
+    const con = (/** @type {unknown} */ params, ctype = 2) => ({ pages: { p: { objects: { c: { ctype, params } } } } });
+    const seg = [{ angle: 0, autotype: 0, dx: 0, dy: 0, step: 0 }];
+    assert.equal(run(r, L(con(seg)), L(con([])), L(con([]))).unexplained.length, 0);
+    assert.equal(run(r, L(con(seg, 1)), L(con([], 1)), L(con([], 1))).unexplained.length, 1);
+    assert.equal(run(r, L(con(seg)), L(con([])), L(con(seg))).unexplained.length, 1);
+  });
+  it('unknown-generator-kept: C++ dropped a non-script generator, TS wrote the template as read', () => {
+    const r = reg('DR-GEN-12', '/**/template', 'unknown-generator-kept');
+    const tpl = { id: 'x.y', default: { width: 80 }, generator: { type: 'native', shape: 'x.future' } };
+    const wrap = (/** @type {unknown} */ t) => ({ o: { template: t } });
+    const cpp = L(wrap({ id: 'x.y', default: { width: 80, angle: 0 } }));
+    assert.equal(run(r, cpp, L(wrap(tpl)), L(wrap(tpl))).unexplained.length, 0);
+    // TS changed the template, or C++ kept a generator: not explained
+    assert.ok(run(r, cpp, L(wrap({ ...tpl, default: { width: 81 } })), L(wrap(tpl))).unexplained.length > 0);
+    const kept = L(wrap({ ...tpl, generator: { type: 'native', shape: 'x.other' } }));
+    assert.ok(run(r, kept, L(wrap(tpl)), L(wrap(tpl))).unexplained.length > 0);
+  });
+  it('DR-GEN-01 cpp_fail: an operator followed by another in a data string', async () => {
+    const { parse } = await import('yaml');
+    const e = parse(readFileSync(path.join(import.meta.dirname, '..', 'register', 'DR-GEN-01.yaml'), 'utf8'));
+    const r = compileRules([{ file: 'DR-GEN-01.yaml', data: e, parseErrors: [] }]);
+    const filed = new Set(['DR-GEN-01']);
+    const data = (/** @type {string[]} */ d) => JSON.stringify({ t: { data: d, draw: ['M 0 1 L 2 3'] } }, null, 1);
+    for (const x of ['w*-0.5', 'w/-2', 'w+-1', 'w**2'])
+      assert.equal(cppFailEntry(r, data(['-w/2', x, 'h/2']), filed), 'DR-GEN-01', x);
+    for (const x of ['-w/2', 'w*(-0.5)', 'w-1', '0.5*w'])
+      assert.equal(cppFailEntry(r, data(['-h/2', x, '-w/2']), filed), null, x);
+  });
+});
+
+describe('DR-ENG-07: a C++ output with an unescaped key', () => {
+  it('is a cpp_fail tied to DR-ENG-07 when the entry is filed', async () => {
+    const { compareBoard } = await import('../json/compare.mjs');
+    const a = {
+      reg: compileRules([]),
+      board: { idx: 'b1', file: 'x.lekh' },
+      inputText: '{"pages":{"p":{"objects":{"n\\"1":{}}}}}',
+      cpp: { ok: true, json: '{"pages":{"p":{"objects":{"n"1":{}}}}}' },
+      ts: { ok: true, json: '{"pages":{"p":{"objects":{"n\\"1":{}}}}}' },
+      stamp: /** @type {const} */ ('app'),
+      customer: false,
+    };
+    const r = compareBoard({ ...a, filed: new Set(['DR-ENG-07']) });
+    assert.equal(r.status, 'cpp_fail');
+    assert.equal(r.unescaped_key, true);
+    assert.deepEqual(r.register, { 'DR-ENG-07': 1 });
+    assert.equal(compareBoard({ ...a, filed: new Set() }).register, undefined);
+  });
+});

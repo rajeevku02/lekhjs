@@ -1,0 +1,73 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Sample",
+     "order": 1,
+     "params": {
+      "cx": 150,
+      "cy": 100,
+      "width": 80,
+      "height": 28,
+      "angle": 0
+     },
+     "template": {
+      "id": "avabodh.wireframe.button",
+      "data": [
+       "-w/2",
+       "-h/2",
+       "-w/2",
+       "h/2",
+       "w/2",
+       "h/2",
+       "w/2",
+       "-h/2"
+      ],
+      "default": {
+       "width": 80,
+       "height": 28
+      },
+      "style": {
+       "strokewidth": 1.5
+      },
+      "generator": {
+       "type": "native",
+       "shape": "sample.future",
+       "text": "Button"
+      }
+     }
+    }
+   }
+  }
+ }
+}

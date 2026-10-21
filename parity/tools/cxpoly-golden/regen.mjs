@@ -123,7 +123,7 @@ const golden = {
   about:
     'AC-REC-07 ordered CxPoly golden, written by parity/tools/cxpoly-golden/regen.mjs from the C++ ' +
     'PolyColl on the synthetic line sets, built with doubles and PI = π. `fixed` has the C2 width fix ' +
-    '(the TS default); `legacy` is the C++ as is (TS with quirks.legacyWidthBug).',
+    '(the TS default, DR-REC-02); `legacy` is the C++ as is (TS with quirks.legacyWidthBug).',
   fixed: fixed.cases,
   legacy: legacy.cases,
 };

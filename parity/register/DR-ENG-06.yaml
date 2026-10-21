@@ -5,12 +5,16 @@ kind: bug-fix
 cpp: 'ostream << float wrote nan / inf, which is not JSON (the file then failed to load anywhere but in LenientJson)'
 ts: 'io/ writeJsonText: NaN and ±Infinity written as 0, counted, logged once per write as nonfinite_write (E7)'
 user_visible: false
-fixture: test/io/register.test.ts
+fixture: parity/fixtures/DR-ENG-06/non-finite.lekh
 rule:
-  json: ['any number member']
+  json:
+    - 'any number member'
+    - path: '/**'
+      op: normalise
+      normaliser: nonfinite-zero
   image: null
   perf: null
-evidence: 'spec 03 §10.2, §16; AC-ENG-30'
+evidence: 'spec 03 §10.2, §16; AC-ENG-30; unit test test/io/register.test.ts; board test test/io/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

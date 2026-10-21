@@ -5,12 +5,12 @@ kind: bug-fix
 cpp: "ObjectStore::getConnections looked only at a group's members, so an edge attached to the group was orphaned on delete or clone (B18c)"
 ts: "model/ConnectionDependencyMap and HitTester.connectionsOf key the group's own id too"
 user_visible: true
-fixture: test/model/connection.test.ts
+fixture: parity/fixtures/DR-ENG-21/group-edge.lekh
 rule:
   json: []
   image: null
   perf: null
-evidence: 'spec 03 §4 #9, §15 B18c'
+evidence: 'spec 03 §4 #9, §15 B18c; unit test test/model/connection.test.ts; board test test/model/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

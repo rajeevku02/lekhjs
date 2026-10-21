@@ -123,7 +123,7 @@ describe('other queries', () => {
     expect(store.connectionsOf(m1)).toEqual([]);
   });
 
-  it('erasableAt: near objects in store order, then their connectors', () => {
+  it('erasableAt (DR-ENG-08): near objects in store order, then their connectors', () => {
     const store = newStore();
     const a = new BoxShape('a', new Rect(0, 0, 50, 50), 100);
     const b = new BoxShape('b', new Rect(300, 0, 50, 50), 200);
@@ -136,7 +136,7 @@ describe('other queries', () => {
     expect(store.hit.erasableAt(new Point(55, 25))).toEqual([a, c, c]);
   });
 
-  it('objectsIn and boundsOfAll (every stroke counted, B8)', () => {
+  it('objectsIn and boundsOfAll (every stroke counted, B8 / DR-ENG-17)', () => {
     const store = newStore();
     const a = new BoxShape('a', new Rect(0, 0, 50, 50), 100);
     const b = new BoxShape('b', new Rect(100, 100, 50, 50), 200);

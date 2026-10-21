@@ -5,12 +5,15 @@ kind: bug-fix
 cpp: 'LineConnection::getParams read origLines_[0] of an empty vector (B18b, crash)'
 ts: 'model/LineConnection.getParams: [] when there are no segments'
 user_visible: false
-fixture: test/model/connection.test.ts
+fixture: parity/fixtures/DR-ENG-20/orthogonal-no-segments.lekh
 rule:
-  json: []
+  json:
+    - path: '/pages/*/objects/*'
+      op: normalise
+      normaliser: empty-route-params
   image: null
   perf: null
-evidence: 'spec 03 §15 B18b'
+evidence: 'spec 03 §15 B18b; unit test test/model/connection.test.ts; board test test/model/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

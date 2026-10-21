@@ -1,0 +1,170 @@
+{
+ "info": {
+  "author": "",
+  "description": "Diagram created using Lekh",
+  "platform": "1",
+  "title": "Sample",
+  "version": "4.2"
+ },
+ "attributes": {
+  "grid": {
+   "present": false
+  },
+  "scaling": {
+   "unit": "point",
+   "scale": 1
+  }
+ },
+ "pages": {
+  "p1": {
+   "name": "Page one",
+   "order": 1,
+   "canvassizetype": "infinite",
+   "canvasname": "",
+   "size": {
+    "width": 0,
+    "height": 0,
+    "unit": "point"
+   },
+   "background": {
+    "color": -1
+   },
+   "objects": {
+    "n1": {
+     "type": "templated",
+     "name": "Rectangle",
+     "order": 1,
+     "params": {
+      "cx": 100,
+      "cy": 100,
+      "width": 80,
+      "height": 40,
+      "angle": 0
+     },
+     "template": {
+      "id": "sample.host1",
+      "data": [
+       "-w/2",
+       "-h/2",
+       "-w/2",
+       "h/2",
+       "w/2",
+       "h/2",
+       "w/2",
+       "-h/2"
+      ],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z"
+       }
+      ],
+      "flags": 31,
+      "polygon": true,
+      "texts": [
+       {
+        "location": "default",
+        "text": ""
+       }
+      ],
+      "embeds": [
+       {
+        "name": "alpha_beta.gamma",
+        "location": "0 1 2 3 4"
+       }
+      ]
+     }
+    },
+    "n2": {
+     "type": "templated",
+     "name": "Rectangle",
+     "order": 2,
+     "params": {
+      "cx": 300,
+      "cy": 100,
+      "width": 80,
+      "height": 40,
+      "angle": 0
+     },
+     "template": {
+      "id": "sample.host2",
+      "data": [
+       "-w/2",
+       "-h/2",
+       "-w/2",
+       "h/2",
+       "w/2",
+       "h/2",
+       "w/2",
+       "-h/2"
+      ],
+      "default": {
+       "width": 10,
+       "height": 10,
+       "angle": 0
+      },
+      "draw": [
+       {
+        "path": "M 0 1 L 2 3 L 4 5 L 6 7 Z"
+       }
+      ],
+      "flags": 31,
+      "polygon": true,
+      "texts": [
+       {
+        "location": "default",
+        "text": ""
+       }
+      ],
+      "embeds": [
+       {
+        "name": "alpha.beta_gamma",
+        "location": "0 1 2 3 4"
+       }
+      ]
+     }
+    }
+   }
+  }
+ },
+ "templates": {
+  "one": {
+   "id": "alpha.beta_gamma",
+   "data": [
+    "0",
+    "0"
+   ],
+   "draw": [
+    {
+     "path": "M 0 1"
+    }
+   ],
+   "default": {
+    "width": 11,
+    "height": 11,
+    "angle": 0
+   }
+  },
+  "two": {
+   "id": "alpha_beta.gamma",
+   "data": [
+    "0",
+    "0"
+   ],
+   "draw": [
+    {
+     "path": "M 0 1"
+    }
+   ],
+   "default": {
+    "width": 22,
+    "height": 22,
+    "angle": 0
+   }
+  }
+ }
+}

@@ -5,12 +5,12 @@ kind: intended-change
 cpp: 'TemplatedObject::getAlignmentDists sorted the candidates with an unstable std::sort; ties picked an arbitrary target'
 ts: 'model/TemplatedObject.alignmentDists: candidates found by binary search over stable-sorted points, then a stable sort by distance'
 user_visible: true
-fixture: test/model/templated-object.test.ts
+fixture: parity/fixtures/DR-ENG-09/alignment-tie.lekh
 rule:
   json: []
   image: null
   perf: null
-evidence: 'spec 03 §4 #11-#12'
+evidence: 'spec 03 §4 #11-#12; unit test test/model/templated-object.test.ts; board test test/model/register-boards.test.ts'
 status: proposed
 signed_off_by: null
 signed_off_at: null

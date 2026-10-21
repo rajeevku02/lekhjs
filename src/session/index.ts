@@ -24,6 +24,8 @@ export type {
   Handle,
   IdSource,
   ImagePort,
+  LoadFailure,
+  LoadFailureDetails,
   LoadResult,
   Logger,
   PaintLayer,

@@ -18,6 +18,7 @@
 // false); a remote margin of `null` shows the margin with its old size. Changed from C++: a
 // connector whose end is neither on the page nor in the frame fails the frame (spec 03 §11.2;
 // C++ dropped the connector and applied the rest).
+import { isLekhError } from '../base';
 import {
   JsonDocumentReader,
   LoadContext,
@@ -136,20 +137,36 @@ export abstract class UpdateAction {
   abstract apply(env: ApplyEnv, out: ApplyRecord): void;
 }
 
+/** Why a `load` frame's document did not read: the `LoadError` code, its text and details. */
+export interface FrameLoadFailure {
+  readonly code: string;
+  readonly message: string;
+  readonly details?: Readonly<Record<string, string | number | boolean>>;
+}
+
 /** C++ `DocReloadUpdateAction`: replace the whole document. */
 export class DocReloadUpdateAction extends UpdateAction {
   private readonly node_: JsonObject;
   private read_: ReadResult | null = null;
+  private failure_: FrameLoadFailure | null = null;
 
   constructor(node: JsonObject) {
     super();
     this.node_ = node;
   }
 
+  /** After a failed `validate`: why the document did not read (null for a non-`LekhError`). */
+  get loadFailure(): FrameLoadFailure | null {
+    return this.failure_;
+  }
+
   validate(env: ApplyEnv): boolean {
     try {
       this.read_ = env.codec.readValue(this.node_);
-    } catch {
+    } catch (err) {
+      this.failure_ = isLekhError(err)
+        ? { code: err.code, message: err.message, ...(err.details !== undefined ? { details: err.details } : {}) }
+        : null;
       return false;
     }
     return true;

@@ -332,7 +332,11 @@ export class BoardSession {
     );
     this.unsubscribe_.push(
       this.sync.on('syncError', (e) => {
-        this.pending_.errors.push({ code: e.code, eventType: 'remoteFrame' });
+        this.pending_.errors.push({
+          code: e.code,
+          eventType: 'remoteFrame',
+          ...(e.load !== undefined ? { load: e.load } : {}),
+        });
       }),
       this.sync.on('serverMessage', (m) => {
         const d = dialogForMessage(m);
@@ -431,7 +435,12 @@ export class BoardSession {
     } catch (err) {
       if (isLekhError(err) && err.code !== 'budget_exceeded') {
         this.runtime.logger.warn('load_failed', { code: err.code });
-        return { ok: false, code: err.code, message: err.message };
+        return {
+          ok: false,
+          code: err.code,
+          message: err.message,
+          ...(err.details !== undefined ? { details: err.details } : {}),
+        };
       }
       throw err;
     }
@@ -1015,7 +1024,12 @@ export class BoardSession {
     if (!r.ok) {
       // No dialog of the session's own: C++ `CoreIO::load` / `openFile` hand the error to the host,
       // which shows it once ("Error while loading!" on iOS and Android; the web shows nothing).
-      this.pending_.errors.push({ code: r.code, eventType: 'open', message: r.message });
+      this.pending_.errors.push({
+        code: r.code,
+        eventType: 'open',
+        message: r.message,
+        ...(r.details !== undefined ? { details: r.details } : {}),
+      });
     }
   }
 

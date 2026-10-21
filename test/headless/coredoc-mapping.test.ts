@@ -52,8 +52,15 @@ describe('AC-ARC-09: the CoreDoc mapping resolves to lekhjs/headless', () => {
     expectTypeOf<ConstructorParameters<typeof BoardSession>[0]>().toEqualTypeOf<Runtime>();
     // `doc.load(raw)` + `doc.message()` → `s.load(raw): LoadResult`
     expectTypeOf<BoardSession['load']>().parameter(0).toEqualTypeOf<string | object>();
+    // (`details`: the reader's content-free details, for a load failure report; round BR1.)
     expectTypeOf<ReturnType<BoardSession['load']>>().toEqualTypeOf<
-      { readonly ok: true } | { readonly ok: false; readonly code: string; readonly message: string }
+      | { readonly ok: true }
+      | {
+          readonly ok: false;
+          readonly code: string;
+          readonly message: string;
+          readonly details?: Readonly<Record<string, string | number | boolean>>;
+        }
     >();
     // `doc.serialize()` → `s.serialize({ stamp: 'cloud' })`
     expectTypeOf<BoardSession['serialize']>().parameter(0).toEqualTypeOf<{ stamp: 'offline' | 'cloud' }>();

@@ -36,7 +36,7 @@ import {
   type Params,
 } from '../../model';
 import { isJsonObject, type JsonObject, type JsonValue } from '../../template';
-import { LoadError } from '../errors';
+import { LoadError, withLoadDetails } from '../errors';
 import { convertLegacy, legacyBase, LEGACY_TYPES, type LegacyObject } from '../legacy/legacy-converter';
 import type { LoadContext } from '../load-context';
 import { parseStyleOrDrawingProfile } from '../codec/style-codec';
@@ -127,7 +127,9 @@ export class ObjectReader {
     const entries = objectEntries(member(root, 'objects'), this.ctx, true);
     if (entries === null) throw new LoadError('object_parse', { reason: 'objects_not_a_list' });
     const objs: LekhObject[] = [];
+    let index = -1;
     for (const [id, jobj] of entries) {
+      index++;
       if (!hasMember(jobj, 'type')) {
         const recovered = hasMember(jobj, 'template') ? this.recoverTypeless(id, jobj) : null;
         if (recovered === null) {
@@ -138,7 +140,13 @@ export class ObjectReader {
         }
         continue;
       }
-      objs.push(this.parseObject(id, jobj));
+      try {
+        objs.push(this.parseObject(id, jobj));
+      } catch (e) {
+        // Where it stopped (the entry's position in byte order), for a load failure report.
+        if (e instanceof LoadError) throw withLoadDetails(e, { object_index: index });
+        throw e;
+      }
     }
     // Stable (Array.prototype.sort is): equal orders keep the byte order of their ids (DR-ENG-11).
     objs.sort((a, b) => a.order - b.order);

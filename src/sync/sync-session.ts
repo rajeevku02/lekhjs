@@ -35,7 +35,13 @@ import { PresenceTracker } from './presence-tracker';
 import { ReconnectPolicy, type ReconnectDecision } from './reconnect-policy';
 import type { Transport, TransportState } from './transport';
 import { UpdateDecoder } from './update-decoder';
-import { ApplyRecord, type ApplyEnv, type ApplyResult } from './update-actions';
+import {
+  ApplyRecord,
+  DocReloadUpdateAction,
+  type ApplyEnv,
+  type ApplyResult,
+  type FrameLoadFailure,
+} from './update-actions';
 
 /** What the realtime session needs from its board session. */
 export interface SyncHost {
@@ -58,7 +64,12 @@ export interface ServerMessage {
 export interface SyncEvents {
   applied: ApplyResult;
   /** A frame was rejected or could not be read (the host may offer Reload). */
-  syncError: { readonly code: 'frame_rejected' | 'frame_parse'; readonly reason: string };
+  syncError: {
+    readonly code: 'frame_rejected' | 'frame_parse';
+    readonly reason: string;
+    /** A rejected `load` frame whose document did not read: the load error (no board content). */
+    readonly load?: FrameLoadFailure;
+  };
   serverMessage: ServerMessage;
   presenceChanged: Record<string, never>;
   /** A stamp above this engine's latest format arrived: reload (it then fails `format_too_new`). */
@@ -274,7 +285,8 @@ export class SyncSession {
     };
     if (!action.validate(env)) {
       this.opts_.logger?.warn('frame_rejected', { type: u.type });
-      this.emit('syncError', { code: 'frame_rejected', reason: u.type });
+      const load = action instanceof DocReloadUpdateAction ? action.loadFailure : null;
+      this.emit('syncError', { code: 'frame_rejected', reason: u.type, ...(load !== null ? { load } : {}) });
       return { kind: 'rejected', reason: u.type };
     }
     const record = new ApplyRecord();

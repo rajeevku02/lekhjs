@@ -41,6 +41,7 @@ export {
   type ApplyEnv,
   type ApplyResult,
   type AttrUpdate,
+  type FrameLoadFailure,
   type ObjStyle,
 } from './update-actions';
 export { UpdateDecoder } from './update-decoder';

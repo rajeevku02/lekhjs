@@ -130,7 +130,28 @@ export interface SessionEvents {
    * Engine errors (spec 03 §14); no board content. `message`: a failed `open`'s fixed user text
    * (the `LoadError` message), for the host to show as C++ hosts showed `CoreIO::openFile`'s error.
    */
-  error: { readonly code: string; readonly eventType: SessionEvent['type']; readonly message?: string };
+  error: {
+    readonly code: string;
+    readonly eventType: SessionEvent['type'];
+    readonly message?: string;
+    /** A failed `open`'s content-free reader details (`reason`, `page_index`, `object_index`). */
+    readonly details?: LoadFailureDetails;
+    /**
+     * A rejected `load` frame (`frame_rejected`, a cloud board's document from the server): the
+     * load failure that rejected it, when the document did not read (lekhjs `LoadError`).
+     */
+    readonly load?: LoadFailure;
+  };
+}
+
+/** The content-free details of a failed load: counts, kinds, indexes; never board text. */
+export type LoadFailureDetails = Readonly<Record<string, string | number | boolean>>;
+
+/** Why a document did not load: the `LoadError` code, its fixed user text and details. */
+export interface LoadFailure {
+  readonly code: string;
+  readonly message: string;
+  readonly details?: LoadFailureDetails;
 }
 
 export interface ViewState {
@@ -210,7 +231,8 @@ export interface AbortSignalLike {
 
 /** What `BoardSession.load` returns. */
 export type LoadResult =
-  { readonly ok: true } | { readonly ok: false; readonly code: string; readonly message: string };
+  | { readonly ok: true }
+  | { readonly ok: false; readonly code: string; readonly message: string; readonly details?: LoadFailureDetails };
 
 /** The read-only view of the document React and the semantic layer get. */
 export type ReadonlyDoc = Pick<

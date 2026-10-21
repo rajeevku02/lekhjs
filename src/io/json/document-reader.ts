@@ -27,7 +27,7 @@ import {
   type JsonObject,
   type JsonValue,
 } from '../../template';
-import { LoadError } from '../errors';
+import { LoadError, withLoadDetails } from '../errors';
 import { FormatVersion } from '../format/format-version';
 import { completeHooks } from '../codec/generator-hooks';
 import { parseStyleOrDrawingProfile } from '../codec/style-codec';
@@ -130,13 +130,21 @@ export class JsonDocumentReader {
       if (attrs !== undefined) this.parseDocAttributes(attrs, doc);
       const pages: Page[] = [];
       const phantoms: Page[] = [];
+      let pageIndex = -1;
       for (const [id, node] of membersInByteOrder(member(root, 'pages'))) {
+        pageIndex++;
         if (isJsonObject(node) && !hasMember(node, 'objects')) {
           ctx.note('page_skipped');
           continue;
         }
         const page = new Page(id, '', doc.storeOptions);
-        this.parsePage(node, page, objects);
+        try {
+          this.parsePage(node, page, objects);
+        } catch (e) {
+          // Which page entry (byte order) failed, for a load failure report.
+          if (e instanceof LoadError) throw withLoadDetails(e, { page_index: pageIndex });
+          throw e;
+        }
         if (isJsonObject(node) && Object.keys(node).length === 1 && hasMember(node, 'objects')) phantoms.push(page);
         else pages.push(page);
       }

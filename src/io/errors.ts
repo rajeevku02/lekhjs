@@ -29,3 +29,11 @@ export class LoadError extends LekhError {
     this.name = 'LoadError';
   }
 }
+
+/**
+ * `err` with `extra` added to its details (a key it already has is kept): where the reader was
+ * when it failed, e.g. `object_index`, `page_index`. Content-free: indexes, never ids or text.
+ */
+export function withLoadDetails(err: LoadError, extra: Record<string, string | number | boolean>): LoadError {
+  return new LoadError(err.code, { ...extra, ...err.details });
+}

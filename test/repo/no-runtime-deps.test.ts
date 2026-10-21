@@ -15,7 +15,11 @@ describe('runtime dependencies', () => {
 
   it('npm ls --omit=dev lists no packages', () => {
     const out = execFileSync('npm', ['ls', '--omit=dev', '--json'], { cwd: PKG_ROOT, encoding: 'utf8' });
-    const tree = JSON.parse(out) as { dependencies?: Record<string, unknown> };
-    expect(Object.keys(tree.dependencies ?? {})).toEqual([]);
+    const tree = JSON.parse(out) as { dependencies?: Record<string, { extraneous?: boolean }> };
+    // A worktree whose node_modules is a symlink to another checkout's makes npm list every
+    // installed dev package as `extraneous` (it resolves them through the link's real path). An
+    // extraneous package is not a declared dependency, so only the others count.
+    const declared = Object.entries(tree.dependencies ?? {}).filter(([, d]) => d.extraneous !== true);
+    expect(declared.map(([name]) => name)).toEqual([]);
   });
 });

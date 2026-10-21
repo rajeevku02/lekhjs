@@ -9,7 +9,7 @@ import { Point, Rect, Size } from '../geometry';
 import { ConnectionObject, TemplatedObject, type LekhObject } from '../model';
 import type { Style } from '../style';
 import { TextSide, TextTemplate, textEditRect } from '../template';
-import { LINE_PITCH, buildCanvasFont, textStyleSnapshot, type FontNameResolver } from '../text';
+import { LINE_PITCH, buildCanvasFont, textStyleSnapshot, type FontNameResolver, type LaidOutText, type WrapMode } from '../text';
 import type { InteractionBoard } from './board';
 import type { CanvasView } from './canvas-view';
 import type { TextEditView } from './ui-types';
@@ -19,6 +19,8 @@ export interface TextEditHost {
   readonly fontResolver: FontNameResolver;
   /** The session's measure (C++ `Platform::measureText`). */
   measure(text: string, style: Style, constraint: Size): Size;
+  /** The session's layout (`TemplateText.layout`): where the canvas places the lines in `box`. */
+  layout?(text: string, style: Style, box: Rect, wrapWidth: number, wrapMode: WrapMode): LaidOutText;
 }
 
 /** C++ `Edit::isFLoatingObjText`: a text object (its template is a `TextTemplate`). */
@@ -145,9 +147,23 @@ export class TextEditSession {
     const zoom = this.board_.view().zoom;
     const tl = cv.toView(new Point(r.x, r.y));
     const px = ts.fontSize * ts.fontMultiplier;
+    // Where the canvas puts the first line in the box (TextLayout `place`, by the vertical
+    // alignment): a floating text's box is a unit taller than its lines (`textSizeAdjustment`), so
+    // its first line sits half a unit (centred) below the box top, where a textarea starts it.
+    const slack = Math.max(0, r.height - measured.height);
+    let textTop = ts.verticalAlign === 'top' ? 0 : ts.verticalAlign === 'bottom' ? slack : slack / 2;
+    let baseline: number | undefined;
+    const lo = h.layout?.(text, style, r, wrap, free ? 'float' : 'wrap');
+    const first = lo?.lines[0];
+    if (lo !== undefined && first !== undefined) {
+      textTop = first.top - r.y;
+      if (lo.baseline === 'alphabetic') baseline = first.baselineY - r.y;
+    }
     return Object.freeze({
       objectId: o.id,
       rect: new Rect(tl.x, tl.y, r.width * zoom, r.height * zoom),
+      textTop: textTop * zoom,
+      ...(baseline !== undefined ? { baseline: baseline * zoom } : {}),
       rotation: o.rotation(),
       font: buildCanvasFont(ts.font, px * zoom),
       color: style.effectiveTextFill().solidColor.toCss(),

@@ -43,6 +43,10 @@ export interface SelectionAction {
 export interface TextEditView {
   readonly objectId: string;
   readonly rect: Rect;
+  /** View px from `rect`'s top to the first line's top, as the canvas places the lines. */
+  readonly textTop?: number;
+  /** View px from `rect`'s top to the first line's alphabetic baseline, as the canvas paints it. */
+  readonly baseline?: number;
   readonly rotation: number;
   readonly font: string;
   readonly color: string;
@@ -50,7 +54,7 @@ export interface TextEditView {
   readonly lineHeight: number;
   readonly text: string;
   readonly placeholder?: string;
-  /** C++ `TextEditParam` (spec 06 §6.1): a textarea, bordered on the web, growing with the text. */
+  /** C++ `TextEditParam` (spec 06 §6.1): a textarea, bordered on every host (`showBorder`), growing with the text. */
   readonly multiLine?: boolean;
   readonly showBorder?: boolean;
   readonly variableWidth?: boolean;

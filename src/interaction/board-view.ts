@@ -153,6 +153,7 @@ export class BoardView {
     this.textEdit.setHost({
       fontResolver: opts.session.runtime.fontResolver,
       measure: (text, style, constraint) => opts.session.text.measure(text, style, constraint),
+      layout: (text, style, box, wrapWidth, wrapMode) => opts.session.text.layout(text, style, box, wrapWidth, 0, wrapMode),
     });
     this.recognition = new RecognitionController({
       board: this.board,

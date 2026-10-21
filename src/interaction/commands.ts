@@ -384,7 +384,7 @@ export class CommandDispatcher {
   }
 
   /**
-   * C++ `CanvasWidget::setViewFromBegnining` (the toolbar's "Move to begining"): 100 %, and on
+   * C++ `CanvasWidget::setViewFromBegnining` (the toolbar's "Move to beginning"): 100 %, and on
    * an infinite canvas the content's top-left brought into view (centred on an axis it fits in,
    * else 65 px in, clear of the toolbar; the x inset only on a big screen). A fixed or auto-size
    * page goes back to 100 % placed as on the board's first open (`computeSize(true)`: centred on

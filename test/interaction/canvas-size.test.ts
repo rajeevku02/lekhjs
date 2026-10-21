@@ -102,7 +102,7 @@ describe('first open places a finite page as C++ computeSize(true) (UI3 #2)', ()
     expect(h.session.viewTransform.scrollY).toBe(0);
   });
 
-  it('Move to begining on a finite page: 100 % and placed as on the open', () => {
+  it('Move to beginning on a finite page: 100 % and placed as on the open', () => {
     const { h, settle } = painted(board('fixed', { width: 400, height: 300 }));
     h.bv.board.setView({ zoom: 2, tx: -300, ty: -200 });
     settle();

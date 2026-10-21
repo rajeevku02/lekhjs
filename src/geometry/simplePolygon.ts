@@ -56,7 +56,7 @@ export class SimplePolygon {
     if (this.vertices_.length < 4) return false;
     const t1 = newTrimInfo();
     const t2 = newTrimInfo();
-    this.tryTrimBegining(t1);
+    this.tryTrimBeginning(t1);
     this.tryTrimEnd(t2);
     if (t1.canDo && t2.canDo) {
       if (t1.dist < t2.dist) t2.canDo = false;
@@ -136,7 +136,7 @@ export class SimplePolygon {
     }
   }
 
-  private tryTrimBegining(ti: TrimInfo): void {
+  private tryTrimBeginning(ti: TrimInfo): void {
     const len = this.vertices_.length;
     let trim = 0;
     let prevDist = INT_MAX;

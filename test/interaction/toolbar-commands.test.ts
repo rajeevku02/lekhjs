@@ -1,5 +1,5 @@
 // The commands the React toolbars call (task W4; spec 05 §7.1): Clear Canvas, Reset Zoom, the
-// web zoom control's 5 % steps, Move to begining; and the selection-menu state the React menu
+// web zoom control's 5 % steps, Move to beginning; and the selection-menu state the React menu
 // reads (hidden while the selection moves, AC-UI-23), and the erase/laser toasts' point.
 import { describe, expect, it } from 'vitest';
 import { Point } from '../../src/geometry';
@@ -34,7 +34,7 @@ describe('toolbar commands', () => {
     expect(h.session.view.zoom).toBe(1);
   });
 
-  it('Move to begining: 100 % and the content top-left in view', () => {
+  it('Move to beginning: 100 % and the content top-left in view', () => {
     const h = viewHarness();
     h.bv.board.setView({ zoom: 2, tx: -5000, ty: -4000 });
     h.bv.commands.goToBeginning(false);

@@ -18,6 +18,10 @@
 //    means ink-only at once, with no respawn.
 //  - Drain: `drain(sessionId)` lets that session's jobs run normally, capped at 3 s; at the cap
 //    the in-flight one is abandoned and every remaining stroke of the session becomes ink.
+//  - Test gate (`gateNext` / `releaseGate`, behind `__lekhTest.recognizer`; production never
+//    arms it): the next stroke's job is held open by the caller instead of the worker. Its answer
+//    is withheld, and no watchdog runs, until `releaseGate()`; so a test can make things happen
+//    "during a job" without racing a fixed spin against the watchdog.
 import type { Clock, Handle, Logger, Scheduler, WorkerLike } from '../../base';
 import type { RecognizerConfig } from '../core/RecognizerConfig';
 import type { RecMutation } from '../delegate/RecMutation';
@@ -28,8 +32,10 @@ import {
   type InitMsg,
   type JobMsg,
   type JobTestHooks,
+  type ErrorMsg,
   type RecErrorCode,
   type RecResponse,
+  type ResultMsg,
   type SceneSnapshot,
 } from '../worker/protocol';
 
@@ -98,6 +104,8 @@ interface QueuedJob {
   readonly stroke: CapturedStroke;
   /** Test hooks armed for this stroke. */
   readonly test?: JobTestHooks;
+  /** The test gate is armed for this stroke (`gateNext`). */
+  gate?: boolean;
 }
 
 interface InFlight extends QueuedJob {
@@ -105,6 +113,8 @@ interface InFlight extends QueuedJob {
   timer: Handle | null;
   /** Main-thread ms of the dispatch (snapshot build + post). */
   dispatchMs: number;
+  /** The worker's answer, withheld while the test gate is closed. */
+  withheld: ResultMsg | ErrorMsg | null;
 }
 
 interface Spawned {
@@ -137,6 +147,7 @@ export class RecognitionClient {
   private config_: RecognizerConfig | null = null;
   private disposed_ = false;
   private nextTest_: JobTestHooks | null = null;
+  private nextGate_ = false;
   private readonly drains_: Drain[] = [];
 
   constructor(opts: RecognitionClientOptions) {
@@ -162,11 +173,13 @@ export class RecognitionClient {
     this.emit({ kind: 'submit' });
     const test = this.nextTest_;
     this.nextTest_ = null;
+    const gate = this.nextGate_;
+    this.nextGate_ = false;
     if (this.inkOnly_) {
       this.ink(session, stroke);
       return;
     }
-    this.queue_.push({ session, stroke, ...(test !== null ? { test } : {}) });
+    this.queue_.push({ session, stroke, ...(test !== null ? { test } : {}), ...(gate ? { gate } : {}) });
     this.pump();
   }
 
@@ -197,12 +210,45 @@ export class RecognitionClient {
     const f = this.inflight_;
     if (f === null) return;
     this.clearTimer(f);
-    if (!hidden) this.armWatchdog(f);
+    if (!hidden && f.gate !== true) this.armWatchdog(f);
   }
 
   /** Test hooks for the next submitted stroke (`__lekhTest.recognizer`). */
   armTest(hooks: JobTestHooks): void {
     this.nextTest_ = { ...this.nextTest_, ...hooks };
+  }
+
+  /**
+   * Test gate (`__lekhTest.recognizer.gateNext`): the next submitted stroke's job stays in flight
+   * (its session held) until `releaseGate()`, whatever the worker does: its answer is withheld and
+   * no watchdog runs for it. A crash still ends it as usual.
+   */
+  gateNext(): void {
+    this.nextGate_ = true;
+  }
+
+  /**
+   * Opens the gate: a withheld answer is applied now; a job not answered yet continues with a
+   * fresh watchdog; a gated stroke still queued (or not yet submitted) is no longer gated.
+   * Whether a gated job or stroke was found.
+   */
+  releaseGate(): boolean {
+    let found = this.nextGate_;
+    this.nextGate_ = false;
+    for (const j of this.queue_) {
+      if (j.gate === true) {
+        j.gate = false;
+        found = true;
+      }
+    }
+    const f = this.inflight_;
+    if (f === null || f.gate !== true) return found;
+    f.gate = false;
+    const m = f.withheld;
+    f.withheld = null;
+    if (m !== null) this.onAnswer(f, m);
+    else this.armWatchdog(f);
+    return true;
   }
 
   /**
@@ -373,6 +419,15 @@ export class RecognitionClient {
     }
     const f = this.inflight_;
     if (f === null || m.jobId !== f.jobId) return; // a late answer for an abandoned job
+    if (f.gate === true) {
+      f.withheld = m;
+      return;
+    }
+    this.onAnswer(f, m);
+  }
+
+  /** The in-flight job's `result` or job-level `error`: apply (or ink), end the hold, go on. */
+  private onAnswer(f: InFlight, m: ResultMsg | ErrorMsg): void {
     this.clearTimer(f);
     this.inflight_ = null;
     const t0 = this.o_.clock.now();
@@ -440,7 +495,7 @@ export class RecognitionClient {
       this.pump();
       return;
     }
-    const f: InFlight = { ...next, jobId: this.nextJobId_++, timer: null, dispatchMs: 0 };
+    const f: InFlight = { ...next, jobId: this.nextJobId_++, timer: null, dispatchMs: 0, withheld: null };
     this.inflight_ = f;
     const stroke = next.stroke.points.slice();
     const job: JobMsg = {
@@ -462,7 +517,7 @@ export class RecognitionClient {
       return;
     }
     f.dispatchMs = this.o_.clock.now() - t0;
-    this.armWatchdog(f);
+    if (f.gate !== true) this.armWatchdog(f);
   }
 
   private armWatchdog(f: InFlight): void {

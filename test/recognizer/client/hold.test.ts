@@ -1,6 +1,7 @@
 // The recognition hold (spec 07 §6.5) with a real session, port and worker host:
 //  - AC-REC-19: remote realtime frames arriving during a job are applied after the result, in
-//    arrival order;
+//    arrival order; an object such a frame adds still takes its stacking place from its own
+//    `order` (C++ `ObjectStore::add`), so it can sit below the result it was applied after;
 //  - AC-REC-37: an undo pressed during a job undoes the recognised result (and redo restores it);
 //  - AC-REC-42: a selection move started before and released during a hold is committed after the
 //    result as one undo step, and the result is applied (no rec_stale).
@@ -48,6 +49,47 @@ describe('remote frames during a job (AC-REC-19)', () => {
     // first the result (the new shape), then the three frames in order
     expect(seen.map((s) => s.cx)).toEqual([cx0, 50, 60, 70]);
     expect(seen[0]?.changed.length).toBe(1);
+  });
+});
+
+describe('objects added by frames held during a job (AC-REC-19, round REC19)', () => {
+  it('are applied after the result in arrival order, and stacked by their own order', async () => {
+    const r = await sessionRig({ board: 'format/03-connector.lekh', cloud: true });
+    const store = () => r.session.editor.doc.activePage().objectStore;
+    const top = store().objects.at(-1)?.order ?? 0;
+    const applied: (readonly string[])[] = [];
+    r.session.on('documentChanged', (e) => applied.push(e.changedIds));
+    const before = r.objects();
+    r.client.submit(r.port, r.stroke(rectStroke(600, 400)));
+    await r.tick(50);
+    expect(r.session.recognitionHeld).toBe(true);
+    // A collaborator's three objects, numbered on its own copy of the page from the same top: the
+    // first one's order is below whatever this client's result will get (top + 100..199, C++
+    // getNextOrder), the next two above it.
+    const json = r.session.codec.writeObject(store().getObject(A) as TemplatedObject) as Record<string, unknown>;
+    const remote: [string, number][] = [
+      ['R1', top + 1],
+      ['R2', top + 300],
+      ['R3', top + 400],
+    ];
+    remote.forEach(([id, order], i) => {
+      r.session.dispatch({
+        type: 'remoteFrame',
+        text: frame(updatetypes.addObjects, { [`doc.pages.${P}.objects.${id}`]: { ...json, order } }, 8 + i),
+      });
+    });
+    expect(applied).toEqual([]);
+    expect(r.objects()).toEqual(before);
+    await r.tick(400);
+    const result = r.objects().find((id) => !before.includes(id) && !id.startsWith('R'));
+    expect(result).toBeDefined();
+    // Apply order: the result first, then the frames in arrival order.
+    expect(applied).toEqual([[result], ['R1'], ['R2'], ['R3']]);
+    // Store (z) order follows `order`: R1 sits below the result it was applied after.
+    const resOrder = store().getObject(result as string)?.order ?? 0;
+    expect(resOrder).toBeGreaterThanOrEqual(top + 100);
+    expect(resOrder).toBeLessThan(top + 200);
+    expect(r.objects()).toEqual([...before, 'R1', result, 'R2', 'R3']);
   });
 });
 

@@ -16,7 +16,7 @@ rule:
   image: null
   perf: null
 evidence: 'round LB1 (2026-10-21): the 10 corpus boards both engines refused (A1 both_fail): 5 hold a type-less object with exactly template + params {angle,cx,cy,height,width} and no order, 6 a page with only canvasname/canvassizetype/size or only order (one board has both); unit test test/io/store-debris.test.ts; C++ side FileFormatFacts.ATypelessEntryIsSkipped and APageWithoutObjectsFailsTheLoad'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-21'
+review: 'Owner in chat, 2026-10-21: "accept DR-FMT-03"'

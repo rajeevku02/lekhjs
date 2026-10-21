@@ -739,6 +739,27 @@ describe('RF1 board-fixture normalisers (DR-ENG-02, -03, -04, -06, -07, -20, DR-
     for (const x of ['-w/2', 'w*(-0.5)', 'w-1', '0.5*w'])
       assert.equal(cppFailEntry(r, data(['-h/2', x, '-w/2']), filed), null, x);
   });
+  it('DR-FMT-03 cpp_fail: a type-less object with a template, or a page without objects', async () => {
+    const { parse } = await import('yaml');
+    const e = parse(readFileSync(path.join(import.meta.dirname, '..', 'register', 'DR-FMT-03.yaml'), 'utf8'));
+    const r = compileRules([{ file: 'DR-FMT-03.yaml', data: e, parseErrors: [] }]);
+    assert.deepEqual(r.errors, []);
+    const filed = new Set(['DR-FMT-03']);
+    const board = (/** @type {unknown} */ pages) => JSON.stringify({ info: { version: '4.2' }, pages });
+    const typed = { type: 'templated', order: 1, params: {}, template: { id: 'x' } };
+    assert.equal(
+      cppFailEntry(r, board({ p: { objects: { a: { params: {}, template: { id: 'x' } } } } }), filed),
+      'DR-FMT-03',
+    );
+    assert.equal(cppFailEntry(r, board({ p: { objects: {} }, q: { order: 2 } }), filed), 'DR-FMT-03');
+    assert.equal(
+      cppFailEntry(r, JSON.stringify({ info: {}, objects: [{ template: { id: 'x' } }] }), filed),
+      'DR-FMT-03',
+    );
+    // A whole board, or an entry the C++ workaround already skips: not this entry.
+    assert.equal(cppFailEntry(r, board({ p: { objects: { a: typed, b: { params: {} } } } }), filed), null);
+    assert.equal(cppFailEntry(r, 'not json', filed), null);
+  });
 });
 
 describe('DR-ENG-07: a C++ output with an unescaped key', () => {

@@ -10,6 +10,9 @@
 //     single-page form; neither writes anything (AC-ENG-34);
 //   - a phantom page (an entry holding only `objects`, from the old silent-empty-board bug) is kept
 //     as "Recovered", "Recovered 2", … after the real pages, in memory only (DR-FMT-01);
+//   - a `pages` entry with no `objects` member is skipped, in memory only (DR-FMT-03; C++ failed the
+//     load). No writer produces one: it is what the store leaves when a page attribute (canvas size,
+//     order) is `$set` on a page whose entry is gone. It holds no objects, so nothing is lost;
 //   - document templates are kept as frozen definitions (`TemplateDef`), and the help texts the
 //     file carries are returned rather than written into a global store.
 // Ported as is: a black page background is lost on load (OQ-13); connectors are fixed up against
@@ -128,6 +131,10 @@ export class JsonDocumentReader {
       const pages: Page[] = [];
       const phantoms: Page[] = [];
       for (const [id, node] of membersInByteOrder(member(root, 'pages'))) {
+        if (isJsonObject(node) && !hasMember(node, 'objects')) {
+          ctx.note('page_skipped');
+          continue;
+        }
         const page = new Page(id, '', doc.storeOptions);
         this.parsePage(node, page, objects);
         if (isJsonObject(node) && Object.keys(node).length === 1 && hasMember(node, 'objects')) phantoms.push(page);

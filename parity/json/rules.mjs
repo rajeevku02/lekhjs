@@ -26,9 +26,41 @@ const { withinTolerance } = /** @type {typeof import('./tolerance.cjs')} */ (req
 /**
  * @typedef {object} CompiledRegister
  * @property {CompiledRule[]} json
- * @property {{ id: string, re: RegExp }[]} cppFail
+ * @property {{ id: string, re: { test: (text: string) => boolean } }[]} cppFail
  * @property {string[]} errors   rules that could not be compiled (register:check reports them)
  */
+
+/**
+ * @param {unknown} v
+ * @returns {v is Record<string, unknown>}
+ */
+const isPlainObject = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
+
+/** @param {unknown} v  an array's items, an object's values, else none */
+const entriesOf = (v) => (Array.isArray(v) ? v : isPlainObject(v) ? Object.values(v) : []);
+
+/**
+ * Structural checks a `rule.cpp_fail.input_check` names: `(inputText) => boolean`, for a C++ refusal
+ * that a regular expression over the text cannot pin.
+ * @type {Record<string, (text: string) => boolean>}
+ */
+export const INPUT_CHECKS = {
+  // DR-FMT-03: a `pages` entry without `objects`, or an `objects` entry (a page's, or the single-page
+  // form's) with a `template` and no `type`: the half-entries kashi's field `$set` leaves.
+  'store-debris': (text) => {
+    let root;
+    try {
+      root = JSON.parse(text);
+    } catch {
+      return false;
+    }
+    if (!isPlainObject(root)) return false;
+    /** @param {unknown} objects */
+    const typeless = (objects) => entriesOf(objects).some((o) => isPlainObject(o) && !('type' in o) && 'template' in o);
+    if (!('pages' in root)) return typeless(root['objects']);
+    return entriesOf(root['pages']).some((p) => isPlainObject(p) && (!('objects' in p) || typeless(p['objects'])));
+  },
+};
 
 /**
  * @param {import('../register/load.mjs').RegisterEntry[]} entries  active entries, in file order
@@ -67,6 +99,11 @@ export function compileRules(entries) {
         abs: item.abs,
         rel: item.rel,
       });
+    }
+    if (rule.cpp_fail && typeof rule.cpp_fail.input_check === 'string') {
+      const check = INPUT_CHECKS[rule.cpp_fail.input_check];
+      if (check === undefined) out.errors.push(`${id}: unknown rule.cpp_fail.input_check ${rule.cpp_fail.input_check}`);
+      else out.cppFail.push({ id, re: { test: check } });
     }
     if (rule.cpp_fail && typeof rule.cpp_fail.input_matches === 'string') {
       try {

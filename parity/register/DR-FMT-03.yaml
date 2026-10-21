@@ -1,0 +1,22 @@
+id: DR-FMT-03
+title: 'Store debris loads: a type-less object with a template is read as templated, a page without objects is skipped'
+area: FMT
+kind: intended-change
+cpp: 'Serializer.cpp parseObjects (:875-884) skips only an entry with neither type nor template; parseObject (:897-900) refuses one with a template and no type, and parsePage -> parseObjects (:850-852, :551-553, :583-585) refuses a page without objects. Either fails the whole load (DocManager: "Unable to load. The file is either malfromed ...")'
+ts: 'io/json object-reader parseObjects: an entry with a template and no type is read as a templated object (object_recovered; it has no order, so the page store gives it the next one) or skipped when it does not parse as one (object_skipped); document-reader read: a pages entry without objects is skipped (page_skipped). In memory only: nothing is written because of it. A realtime addpages page without objects is still refused'
+user_visible: true
+fixture: parity/fixtures/DR-FMT-03/store-debris.lekh
+rule:
+  json: []
+  # No writer produces these entries: kashi applies a frame as a Mongo $set per field path
+  # (lbs docdb.update), so a template change (UserAction::raiseTemplateChange: .template and
+  # .params.{cx,cy,width,height,angle}) or a page attribute change (PageSizeChangeAction, page order)
+  # on an object or page whose entry is gone builds a half-entry. C++ refuses the board; TS loads it.
+  cpp_fail: { input_check: store-debris }
+  image: null
+  perf: null
+evidence: 'round LB1 (2026-10-21): the 10 corpus boards both engines refused (A1 both_fail): 5 hold a type-less object with exactly template + params {angle,cx,cy,height,width} and no order, 6 a page with only canvasname/canvassizetype/size or only order (one board has both); unit test test/io/store-debris.test.ts; C++ side FileFormatFacts.ATypelessEntryIsSkipped and APageWithoutObjectsFailsTheLoad'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

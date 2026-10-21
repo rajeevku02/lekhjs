@@ -49,9 +49,12 @@
         "cpp_fail": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["input_matches"],
-          "description": "Ties a cpp_fail (C++ refuses, TS loads) to this entry when the input matches",
-          "properties": { "input_matches": { "type": "string", "minLength": 1 } }
+          "minProperties": 1,
+          "description": "Ties a cpp_fail (C++ refuses, TS loads) to this entry when the input matches the regular expression input_matches, or passes the named structural check input_check (json/rules.mjs INPUT_CHECKS)",
+          "properties": {
+            "input_matches": { "type": "string", "minLength": 1 },
+            "input_check": { "enum": ["store-debris"] }
+          }
         },
         "image": {
           "oneOf": [

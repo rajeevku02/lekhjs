@@ -45,6 +45,8 @@ export interface LoadWarning {
     | 'nonfinite_read'
     | 'connector_end_missing'
     | 'object_skipped'
+    | 'object_recovered'
+    | 'page_skipped'
     | 'template_skipped'
     | 'embed_cycle'
     | 'legacy_converted';

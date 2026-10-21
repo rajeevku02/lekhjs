@@ -10,6 +10,11 @@
 //   - members are visited in UTF-8 byte order (C++ `std::map`); an entry with neither `type` nor
 //     `template` is skipped (the "spurious objects" workaround); one failing object fails the
 //     whole read, as today;
+//   - an entry with a `template` but no `type` is read as a `templated` object, or skipped when it
+//     does not parse as one (DR-FMT-03; C++ failed the whole load). It is what the store leaves when
+//     a template change (`UserAction::raiseTemplateChange`: `.template` and `.params.*`) is `$set`
+//     on an object whose entry is not there; it carries no `order`, so the page store gives it the
+//     next one (on top), as it does any object added without one;
 //   - the array form gets minted ids and `order = index + 1`;
 //   - objects are then stably sorted by `order`, so equal orders keep the byte order of their ids
 //     (DR-ENG-11; C++ `std::sort` left them in any order);
@@ -123,8 +128,14 @@ export class ObjectReader {
     if (entries === null) throw new LoadError('object_parse', { reason: 'objects_not_a_list' });
     const objs: LekhObject[] = [];
     for (const [id, jobj] of entries) {
-      if (!hasMember(jobj, 'type') && !hasMember(jobj, 'template')) {
-        this.ctx.note('object_skipped');
+      if (!hasMember(jobj, 'type')) {
+        const recovered = hasMember(jobj, 'template') ? this.recoverTypeless(id, jobj) : null;
+        if (recovered === null) {
+          this.ctx.note('object_skipped');
+        } else {
+          this.ctx.note('object_recovered');
+          objs.push(recovered);
+        }
         continue;
       }
       objs.push(this.parseObject(id, jobj));
@@ -132,6 +143,23 @@ export class ObjectReader {
     // Stable (Array.prototype.sort is): equal orders keep the byte order of their ids (DR-ENG-11).
     objs.sort((a, b) => a.order - b.order);
     return objs;
+  }
+
+  /**
+   * An entry with a `template` and no `type` (DR-FMT-03): the half-object the store builds when a
+   * template change is applied to an object whose entry is missing (a concurrent delete, or an add
+   * that was never stored). No writer produces one. It is read as a `templated` object so the shape
+   * and the connectors that name it survive; `null` (skip it) when it does not parse as one. C++
+   * `parseObject` refused it (`Serializer.cpp:897-900`), which failed the whole load.
+   */
+  private recoverTypeless(id: string, jobj: JsonValue | undefined): LekhObject | null {
+    if (!isJsonObject(jobj) || !isJsonObject(member(jobj, 'template'))) return null;
+    try {
+      return this.tryParseObject(id, { ...jobj, type: 'templated' });
+    } catch (e) {
+      if (e instanceof LoadError) return null;
+      throw e;
+    }
   }
 
   /** C++ `parseObject(id, &obj, jobj)`: throws `object_parse` when it does not parse. */

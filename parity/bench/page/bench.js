@@ -13,7 +13,8 @@
 // result JSON (perf-device/1) carries the raw per-pass samples; `node parity/bench/verdict.mjs
 // <file>` turns it into the §6.3 table. Synthetic boards only (boards/*.json, from synth.mjs).
 //
-// URL: bench.html?lekhtest=1[&runs=5][&pause=180][&boards=a,b][&metrics=P-01,P-02,P-03][&device=name]
+// URL: bench.html?lekhtest=1[&engines=cpp|ts][&runs=5][&pause=180][&boards=a,b][&metrics=P-01,P-02,P-03][&device=name]
+//      [&post=1: also POST the result JSON to the bench server][&autostart=1]
 /* global document, location */
 
 const q = new URLSearchParams(location.search);
@@ -21,6 +22,9 @@ const RUNS = Number(q.get('runs') ?? 5);
 const PAUSE_S = Number(q.get('pause') ?? 180);
 const METRICS = new Set((q.get('metrics') ?? 'P-01,P-02,P-03').split(','));
 const DEVICE = q.get('device') ?? '';
+// engines=cpp or engines=ts: one engine only, so a driver can give each run its own fresh WebView
+// process (on iOS a C++ pass on a large board can end the WebView content process).
+const ENGINES = (q.get('engines') ?? 'cpp,ts').split(',');
 const out = document.getElementById('log');
 const log = (/** @type {string} */ s) => {
   out.textContent += s + '\n';
@@ -30,10 +34,40 @@ const log = (/** @type {string} */ s) => {
 /** @param {number} ms */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/** Opens a fresh iframe on the build and waits for its hooks. @param {'cpp' | 'ts'} engine */
+/**
+ * Removes a build's iframe. WebKit frees a canvas backing store only on GC, so the canvases are shrunk
+ * to 0 x 0 first; otherwise the next build's getContext('2d') can return null under the canvas memory
+ * cap (seen on an iPhone 8: the C++ board then never installs its hooks).
+ * @param {HTMLIFrameElement} f
+ */
+function releaseFrame(f) {
+  try {
+    for (const c of f.contentDocument?.querySelectorAll('canvas') ?? []) {
+      c.width = 0;
+      c.height = 0;
+    }
+  } catch {
+    // A frame we cannot reach: just remove it.
+  }
+  f.remove();
+}
+
+/** Opens a build, retried up to twice when its hooks did not appear. @param {'cpp' | 'ts'} engine */
 async function openBuild(engine) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await openBuildOnce(engine);
+    } catch (e) {
+      if (attempt >= 3 || !/no __lekhTest/.test(String(/** @type {any} */ (e)?.message))) throw e;
+      log(`${engine}: hooks missing, retry ${attempt}`);
+    }
+  }
+}
+
+/** Opens a fresh iframe on the build and waits for its hooks. @param {'cpp' | 'ts'} engine */
+async function openBuildOnce(engine) {
   const old = document.getElementById('frame');
-  if (old) old.remove();
+  if (old) releaseFrame(/** @type {HTMLIFrameElement} */ (old));
   const f = document.createElement('iframe');
   f.id = 'frame';
   f.width = '1280';
@@ -63,6 +97,9 @@ async function measure(/** @type {any} */ w, /** @type {any} */ b) {
   if (!ld.ok) return { error: String(ld.error) };
   await t.settle();
   res.load = perf.now() - l0;
+  // As the box bench (web-bench.mjs, IM1): P-01 above waits for fonts and paint but not images on
+  // either build; the pan/zoom and hit paths run with the images decoded (untimed).
+  await t.settle({ images: true });
   const v0 = t.getView();
   if (METRICS.has('P-02')) {
     const vw = w.innerWidth / 2;
@@ -133,12 +170,17 @@ async function main() {
   for (const b of pick) boards.push({ ...b, text: await (await fetch(`boards/${b.file}`)).text() });
   log(`device ${DEVICE || navigator.userAgent}; ${boards.length} boards; ${RUNS} runs per build; pause ${PAUSE_S} s`);
   const started = new Date().toISOString();
-  log('warm-up C++');
-  await pass('cpp', boards);
-  log('warm-up TS');
-  await pass('ts', boards);
+  if (ENGINES.includes('cpp')) {
+    log('warm-up C++');
+    await pass('cpp', boards);
+  }
+  if (ENGINES.includes('ts')) {
+    log('warm-up TS');
+    await pass('ts', boards);
+  }
   const order = [];
   for (let i = 0; order.length < 2 * RUNS; i++) order.push(...(i % 2 === 0 ? ['cpp', 'ts'] : ['ts', 'cpp']));
+  for (let i = order.length - 1; i >= 0; i--) if (!ENGINES.includes(order[i])) order.splice(i, 1);
   /** @type {{ cpp: any[], ts: any[] }} */
   const runs = { cpp: [], ts: [] };
   let prev = 'ts';
@@ -152,7 +194,8 @@ async function main() {
     runs[/** @type {'cpp' | 'ts'} */ (e)].push(await pass(/** @type {any} */ (e), boards));
     log(`run ${e} #${runs[/** @type {'cpp' | 'ts'} */ (e)].length} ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   }
-  document.getElementById('frame')?.remove();
+  const last = document.getElementById('frame');
+  if (last) releaseFrame(/** @type {HTMLIFrameElement} */ (last));
   const result = {
     schema: 'perf-device/1',
     device: DEVICE,
@@ -172,6 +215,11 @@ async function main() {
   a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
   a.download = `perf-device-${(DEVICE || 'device').replace(/[^A-Za-z0-9-]+/g, '_')}-${started.slice(0, 16).replace(/[:T]/g, '')}.json`;
   a.style.display = 'inline';
+  if (q.get('post') === '1') {
+    // build-device-bench.mjs --serve stores a POSTed result under <out>/results/ (no Download step).
+    const r = await fetch('result', { method: 'POST', headers: { 'content-type': 'application/json' }, body: text });
+    log(r.ok ? `posted to the bench server: ${await r.text()}` : `post failed: ${r.status}`);
+  }
   log('done: press Download and send the file');
 }
 

@@ -77,6 +77,19 @@ if (opt.serve) {
   createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
     const p = decodeURIComponent(url.pathname);
+    if (req.method === 'POST' && p === '/result') {
+      // bench.html?post=1: the finished perf-device/1 JSON, kept as <out>/results/<time>.json.
+      const chunks = /** @type {Buffer[]} */ ([]);
+      req.on('data', (c) => chunks.push(c));
+      req.on('end', () => {
+        mkdirSync(path.join(OUT, 'results'), { recursive: true });
+        const name = `perf-device-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+        writeFileSync(path.join(OUT, 'results', name), Buffer.concat(chunks));
+        process.stdout.write(`result saved: results/${name}\n`);
+        res.writeHead(200, { ...ISOLATION, 'content-type': 'text/plain' }).end(name);
+      });
+      return;
+    }
     const own = p === '/bench.html' || p === '/bench.js' || p.startsWith('/boards/');
     const engine = /(?:^|;\s*)lekhbench=(cpp|ts)/.exec(req.headers.cookie ?? '')?.[1] ?? 'ts';
     const base = own ? OUT : path.join(OUT, engine);

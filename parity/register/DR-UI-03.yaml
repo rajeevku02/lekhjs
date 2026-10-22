@@ -1,0 +1,17 @@
+id: DR-UI-03
+title: 'The board chrome is drawn with DOM, CSS and SVG, not canvases: frame borders and labels are within a pixel of C++, not pixel-identical'
+area: UI
+kind: intended-change
+cpp: 'The C++ canvas UI (lib:: widgets, WidgetObject::drawBorder) painted every tool bar, popover, menu, list row, label, switch and preview on the UI canvas; the TS port until 2026-10-22 matched it pixel for pixel by giving each frame, label, switch, arrow preview and library cell a canvas of its own (AC-UI-18: under 0.1 % differing pixels per screen)'
+ts: 'lekhboard-capacitor board UI: frames are CSS borders and a blurred ::before shadow from the same tokens and placement, labels visible DOM text (sans-serif, 1em lines, centred), switches CSS, arrowhead previews SVG images drawn by the engine on SvgDrawingPlatform, library cells images of thumbnails drawn on one shared canvas. Borders snap to whole pixels and text sits about half a pixel lower, so screens differ from the C++ web build by 0.1-1.1 % of their pixels; only the three board layers are canvases'
+user_visible: true
+fixture: parity/fixtures/DR-UI-03/board-free.json
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'Owner request 2026-10-22 (round DOM1: React only, best effort, relax where it cannot match; WebKit per-process canvas memory); e2e board-screens-parity.spec.js report of 2026-10-22; KB /frontend/lekhboard-capacitor/board/components.md section 1 and section 5'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

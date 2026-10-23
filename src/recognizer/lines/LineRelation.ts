@@ -46,7 +46,7 @@ export class LineRelation {
    * while one straight line still fits it no worse than either line's own cost; yields the
    * number of steps (`process`) or the joined segment (`process2`).
    */
-  private grow(onStep: (tempPoints: Point[]) => void): void {
+  private grow(onStep: (first: Point, last: Point) => void): void {
     const pair1 = this.line1.points();
     const pair2 = this.line2.points();
     const points1 = pair1.points;
@@ -56,15 +56,24 @@ export class LineRelation {
     this.stepProcessed = 0;
     let step = toIntCount(getErrSize(minp));
     if (step === 0) step = 1;
+    if (minp === 0) return;
+
+    // Build the largest window once (what the inc = minp iteration would produce).
+    // Every smaller inc is a contiguous sub-range of it.
+    const buf: Point[] = [];
+    addPoints(buf, points1, pair1.reverse, points1.size - minp, points1.size - 1);
+    const mid = buf.length; // == minp; boundary between the two segments
+    addPoints(buf, points2, pair2.reverse, 0, minp - 1);
+    const lastIdx = buf.length - 1;
+
     for (let inc = step; inc <= minp; inc += step) {
-      const tempPoints: Point[] = [];
-      addPoints(tempPoints, points1, pair1.reverse, points1.size - inc, points1.size - 1);
-      addPoints(tempPoints, points2, pair2.reverse, 0, inc);
-      const cost = this.agg.getCost(Span.of(tempPoints));
+      const lo = Math.max(mid - inc, 0);
+      const hi = Math.min(mid + inc, lastIdx);
+      const cost = this.agg.getCost(new Span(buf, lo, hi));
       if (cost.greaterThan(this.line1.line.cost).boolValue() && cost.greaterThan(this.line2.line.cost).boolValue()) {
         break;
       }
-      onStep(tempPoints);
+      onStep(buf[lo] as Point, buf[hi] as Point);
     }
   }
 
@@ -80,9 +89,9 @@ export class LineRelation {
     const pair1 = this.line1.points();
     let tmpFirst = pair1.reverse ? pair1.points.first() : pair1.points.last();
     let tmpLast = tmpFirst;
-    this.grow((tempPoints) => {
-      tmpFirst = tempPoints[0] as Point;
-      tmpLast = tempPoints[tempPoints.length - 1] as Point;
+    this.grow((first, last) => {
+      tmpFirst = first;
+      tmpLast = last;
     });
     this.lineProcessed = new LineSegment(pointOnLine(this.line1, tmpFirst), pointOnLine(this.line2, tmpLast));
   }

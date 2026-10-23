@@ -31,15 +31,16 @@ export class Span<T> {
     return this.start > this.end;
   }
 
-  /** Element `index` of the span; throws like `std::vector::at` outside the array. */
   at(index: number): T {
-    return this.absolute(this.start + index);
+    return this.items[this.start + index] as T;
   }
+
   first(): T {
-    return this.absolute(this.start);
+    return this.items[this.start] as T;
   }
+
   last(): T {
-    return this.absolute(this.end);
+    return this.items[this.end] as T;
   }
 
   /** A sub-span `[from, to]` relative to this one, clamped to its end (C++ `Coll::slice`). */

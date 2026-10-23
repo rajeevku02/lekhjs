@@ -143,7 +143,7 @@ describe('recognizer parity reference (spec 07 §7.4.1)', () => {
     expect(manifest.cases).toBe(cases.length);
     // The TS line aggregator the reference was last compared against is the one the port runs: bump
     // lineAggregatorImplModule.id whenever LineMerger's output changes, re-run the strict parity run
-    // (REC_PARITY=1) and record the new id and date here (KB parity-and-corpus.md §5.5).
+    // (REC_PARITY=1) and record the new id and date here (KB parity-and-corpus.md §5.1, §5.6).
     expect(
       manifest['tsLineAggregatorId'],
       'MANIFEST.tsLineAggregatorId: re-run REC_PARITY=1 and record the TS id it compared',

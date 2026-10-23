@@ -70,7 +70,8 @@ describe('LineAggregatorImpl (M1)', () => {
     }
     expect(lines.map((l) => [l.points().startIndex, l.points().endIndex])).toEqual([
       [0, 30],
-      [30, 60],
+      // The last line ends one point before the stroke's end, as the C++ aggregator does (owner, 2026-10-23, after LineMerger fix 1b7540a).
+      [30, 59],
     ]);
     agg.reset();
     expect(agg.lines()).toEqual([]);

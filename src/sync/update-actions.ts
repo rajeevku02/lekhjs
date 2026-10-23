@@ -15,9 +15,9 @@
 // fails; a delete of an id that is not there deletes the rest; `delallobjects` ignores everything
 // else in the frame; an `addobjects` frame takes its page from the last object key (in key
 // order); an arrow change applies but does not advance the version (C++ `apply()` returned
-// false); a remote margin of `null` shows the margin with its old size. Changed from C++: a
-// connector whose end is neither on the page nor in the frame fails the frame (spec 03 §11.2;
-// C++ dropped the connector and applied the rest).
+// false). Changed from C++: a connector whose end is neither on the page nor in the frame fails
+// the frame (spec 03 §11.2; C++ dropped the connector and applied the rest); a remote margin of
+// `null` hides the margin (C++ showed it with its old size, DR-ENG-30).
 import { isLekhError } from '../base';
 import {
   JsonDocumentReader,
@@ -667,8 +667,15 @@ export class PageAttrChangeAction extends UpdateAction {
     }
     for (const [id, node] of this.margins) {
       const page = doc.getPage(id);
-      // As C++: `show` is set whatever the node is, so a `null` (hide) keeps the old size shown.
-      if (page !== null) page.margin = { show: true, size: sizeFrom(node, page.margin.size) };
+      // Changed from C++ (DR-ENG-30): an object shows the margin at its size; `null` (what a
+      // removed or undone margin is raised as, C++ and TS alike) resets it to a page's default,
+      // hidden and 0 x 0, as a reopen reads it (the margin box is drawn from the size alone,
+      // Page.marginBox). C++ set `show = true` and kept the old size whatever arrived
+      // (UpdateAction.cpp:457-470), so the peer kept drawing a removed margin until reopen.
+      if (page === null) continue;
+      page.margin = isJsonObject(node)
+        ? { show: true, size: sizeFrom(node, page.margin.size) }
+        : { show: false, size: new PageSize() };
     }
     for (const [id, name] of this.names) {
       const page = doc.getPage(id);

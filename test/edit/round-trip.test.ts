@@ -28,6 +28,7 @@ import {
 import type { ConnectionObject } from '../../src/model';
 import {
   ArrowLocation,
+  CanvasSizeType,
   GroupObject,
   PageBackground,
   PageSize,
@@ -295,6 +296,69 @@ describe('commands and their updates stay in step with a peer', () => {
     pe.deletePage(0);
     sync(a, b);
     same(a, b);
+  });
+
+  it('margin add, resize, remove, undo, redo: the peer follows each step (UF6, DR-ENG-30)', () => {
+    // C++ PageAttrChangeAction::apply sets margin.show = true whatever arrives
+    // (UpdateAction.cpp:457-470), so a removed or undone margin (raised as null) stayed on the
+    // peer at its old size until reopen. The port hides it (owner, 2026-10-23).
+    const { a, b } = pair();
+    const pe = new PageEditor(a.editor);
+    // What is drawn: the margin box comes from the size alone (Page.marginBox).
+    for (const x of [a, b]) {
+      x.doc.activePage().canvasSizeType = CanvasSizeType.Fixed;
+      x.doc.activePage().size = new PageSize(Unit.Point, 612, 792);
+    }
+    const shown = (x: Board) => {
+      const p = x.doc.activePage();
+      p.getCanvasSize(false);
+      const m = p.margin;
+      const drawn = p.marginBox(1) !== null;
+      expect(drawn).toBe(m.show);
+      return m.show ? [m.size.width, m.size.height, m.size.unit] : null;
+    };
+    const step = (f: () => void) => {
+      pe.start();
+      f();
+      sync(a, b);
+      same(a, b);
+      expect(shown(b)).toEqual(shown(a));
+    };
+    step(() => {
+      pe.setMarginSize(new PageSize(Unit.Point, 10, 10));
+    });
+    expect(shown(b)).toEqual([10, 10, Unit.Point]);
+    step(() => {
+      pe.setMarginSize(new PageSize(Unit.Inch, 1, 2));
+    });
+    expect(shown(b)).toEqual([1, 2, Unit.Inch]);
+    step(() => {
+      pe.setMarginSize(new PageSize(Unit.Point, 0, 0));
+    });
+    expect(shown(b)).toBeNull();
+    step(() => {
+      a.editor.undo.undo();
+    });
+    expect(shown(b)).toEqual([1, 2, Unit.Inch]);
+    step(() => {
+      a.editor.undo.redo();
+    });
+    expect(shown(b)).toBeNull();
+    step(() => {
+      a.editor.undo.undo();
+    });
+    step(() => {
+      a.editor.undo.undo();
+    });
+    expect(shown(b)).toEqual([10, 10, Unit.Point]);
+    step(() => {
+      a.editor.undo.undo();
+    });
+    expect(shown(b)).toBeNull();
+    step(() => {
+      a.editor.undo.redo();
+    });
+    expect(shown(b)).toEqual([10, 10, Unit.Point]);
   });
 
   it('C++ quirk kept: page orders an addpages frame renumbers are not applied by peers', () => {

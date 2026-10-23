@@ -1,0 +1,14 @@
+{
+  "board_free": true,
+  "entry": "DR-ENG-30",
+  "justification": "No board fixture can show this difference: it is in how a peer applies a realtime changepageattr frame, not in anything a stored board holds (the server stores the null; a reopen reads no margin on either engine). The frames below are what C++ SetPageMarginAction::raise (UserAction.cpp:1634-1651) and the TS SetPageMarginAction (src/edit/page-actions.ts) both send, byte for byte. Applied in order to a Letter page, C++ PageAttrChangeAction::apply (UpdateAction.cpp:457-470) ends with the margin shown at 90 x 90 after frame 3; lekhjs ends with no margin. Tests: test/sync/apply.test.ts and test/edit/round-trip.test.ts (DR-ENG-30).",
+  "frames": [
+    { "type": "changepageattr", "changes": { "doc.pages.P1.margin": { "width": 36, "height": 36, "unit": "point" } } },
+    { "type": "changepageattr", "changes": { "doc.pages.P1.margin": { "width": 90, "height": 90, "unit": "point" } } },
+    { "type": "changepageattr", "changes": { "doc.pages.P1.margin": null } }
+  ],
+  "after_frame_3": {
+    "cpp": { "show": true, "size": { "width": 90, "height": 90, "unit": "point" }, "drawn": true },
+    "lekhjs": { "show": false, "size": { "width": 0, "height": 0, "unit": "point" }, "drawn": false }
+  }
+}

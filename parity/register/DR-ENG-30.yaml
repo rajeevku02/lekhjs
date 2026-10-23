@@ -1,0 +1,17 @@
+id: DR-ENG-30
+title: "A collaborator's removed or undone margin disappears on the peer at once, not at reopen"
+area: ENG
+kind: bug-fix
+cpp: 'A removed margin (size 0) and the undo of an added one are raised as changepageattr doc.pages.<id>.margin = null (SetPageMarginAction::raise, UserAction.cpp:1634-1651); PageAttrChangeAction::apply (UpdateAction.cpp:457-470) set margin.show = true and kept the old size whatever arrived, so the peer kept drawing the margin box at its old size until it reopened the board (the server stored the null, so a reopen showed no margin). The owner decided to leave the C++ engine as is (2026-10-23)'
+ts: 'sync/update-actions.ts PageAttrChangeAction.apply: an object shows the margin at its size, as before; null resets the margin to the page default (hidden, 0 x 0), which is how a reopen reads it, so the margin box goes at once. The frames TS sends are unchanged and byte-identical to C++, so a C++ peer behaves exactly as with a C++ sender'
+user_visible: true
+fixture: parity/fixtures/DR-ENG-30/margin-frames.json
+rule:
+  json: []
+  image: null
+  perf: null
+evidence: 'Owner in chat, 2026-10-23: "For the margin changes in collaboration mode: Let us fix this in the TS port. Leave the c++ bug." (round UF6 of Work 01M4X7TCHFB862XGT68GPY071C, reported in UF1). test/sync/apply.test.ts and test/edit/round-trip.test.ts (fail before the fix); Chromium check of two contexts on one board, margin add, resize, remove, undo, redo: the collaborator shows each step live'
+status: proposed
+signed_off_by: null
+signed_off_at: null
+review: null

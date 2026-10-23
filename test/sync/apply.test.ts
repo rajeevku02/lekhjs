@@ -2,9 +2,10 @@
 // apply (B4, AC-ENG-13), the version rules (B2, B3), non-finite literals (AC-ENG-32) and the stamp
 // key in any update type (AC-FMT-08).
 import { describe, expect, it } from 'vitest';
-import type { ConnectionObject, TemplatedObject } from '../../src/model';
+import { CanvasSizeType, PageSize, type ConnectionObject, type TemplatedObject } from '../../src/model';
 import { FrameCodec, UpdateDecoder, updatetypes } from '../../src/sync';
-import { A, B, C, DOCID, P, board, fixtureJson, frame } from './helpers';
+import { Unit } from '../../src/style';
+import { A, B, C, DOCID, P, board, fixtureJson, frame, must } from './helpers';
 
 const obj = (b: ReturnType<typeof board>, id: string) => b.doc.getPage(P)?.objectStore.getObject(id) ?? null;
 const prefix = `doc.pages.${P}.objects.`;
@@ -251,6 +252,30 @@ describe('SyncSession.receive: each update type', () => {
     expect(b.doc.activePage().id).toBe(first);
     b.sync.receive(frame(updatetypes.delPages, { 'doc.pages.NEW': null }));
     expect(b.doc.getPage('NEW')).toBeNull();
+  });
+
+  it('changepageattr margin: an object shows it at that size, null hides it (UF6, DR-ENG-30)', () => {
+    // The frames C++ SetPageMarginAction::raise sends (UserAction.cpp:1634-1651); TS sends the same.
+    const b = board(fixtureJson('format/03-connector.lekh'));
+    const key = `doc.pages.${P}.margin`;
+    const m = () => must(b.doc.getPage(P)).margin;
+    b.sync.receive(frame(updatetypes.changePageAttr, { [key]: { width: 36, height: 18, unit: 'point' } }, 7));
+    expect(m().show).toBe(true);
+    expect([m().size.width, m().size.height]).toEqual([36, 18]);
+    b.sync.receive(frame(updatetypes.changePageAttr, { [key]: { width: 1, height: 2, unit: 'inch' } }, 8));
+    expect(m().show).toBe(true);
+    expect([m().size.width, m().size.height, m().size.unit]).toEqual([1, 2, Unit.Inch]);
+    const page = must(b.doc.getPage(P));
+    page.canvasSizeType = CanvasSizeType.Fixed;
+    page.size = new PageSize(Unit.Point, 612, 792);
+    page.getCanvasSize(false);
+    expect(page.marginBox(1)).not.toBeNull();
+    b.sync.receive(frame(updatetypes.changePageAttr, { [key]: null }, 9));
+    expect(m().show).toBe(false);
+    // Not drawn (the margin box is drawn from the size alone) and as a reopen reads it.
+    expect(page.marginBox(1)).toBeNull();
+    expect([m().size.width, m().size.height]).toEqual([0, 0]);
+    expect(b.text()).not.toContain('"margin"');
   });
 
   it('a load replaces the document and takes its version (B2 reset)', () => {

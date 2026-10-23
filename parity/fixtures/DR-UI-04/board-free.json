@@ -1,0 +1,5 @@
+{
+ "board_free": true,
+ "entry": "DR-UI-04",
+ "justification": "# DR-UI-04: the canvas (i) goes with its shape or a selection (board-free)\n\nNo board fixture can show this difference: the canvas (i) is board UI over the canvas, shown after\na Smart Draw stroke is recognised, and what differs is when it goes, after an undo, a redo, Clear\ncanvas, a collaborator's delete or move, a page switch or a selection. None of that is in anything\na board stores or draws. Any board shows it, on the TS front end against the C++ web build:\n\n- draw a rectangle with Smart Draw: the (i) appears above it on both;\n- undo (toolbar button, not a key): C++ keeps the (i) over the empty canvas, TS removes it;\n- the same for Clear canvas, a page switch, a collaborator deleting the shape and selecting the\n  shape from a menu; a collaborator moving the shape moves the TS (i) with it, C++ leaves it.\n\nlekhboard-capacitor lekh/test/board/ui/owner-uf2.test.tsx covers each case on the TS side.\n\nOwner request 2026-10-23 (Work 01M4X7TCHFB862XGT68GPY071C, round UF2).\n"
+}

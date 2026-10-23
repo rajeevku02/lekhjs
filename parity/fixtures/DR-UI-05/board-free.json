@@ -1,0 +1,5 @@
+{
+ "board_free": true,
+ "entry": "DR-UI-05",
+ "justification": "# DR-UI-05: the connect handle ring is white in dark mode (board-free)\n\nNo board fixture can show this difference: the connect handles are selection overlay drawn on the\ninteraction layer, not anything a board stores or draws. Any board shows it in dark mode: select a\nshape, and each connect handle on its selection rectangle is a white ring with a black dot on TS,\na solid black disc on C++ (ConnectHandleWidget.cpp:69-84: the ring is filled with\nsystem_background_color, black in dark mode, the same colour as its stroke and the dot).\n\nlekhjs test/interaction/connect-handle-dark-uf2.test.ts checks both themes on the TS side.\n\nOwner request 2026-10-23 (Work 01M4X7TCHFB862XGT68GPY071C, round UF2).\n"
+}

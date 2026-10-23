@@ -130,6 +130,39 @@ describe('SyncSession.receive: each update type', () => {
     expect(b.sync.version).toBe(8);
   });
 
+  it('addobjects: a shape embedding a document template that arrives in the same frame shows the embed (UF4)', () => {
+    // C++ AddDelObjectsUpdateAction::apply (UpdateAction.cpp:94-107) adds the frame's
+    // doc.templates.* to the document before it parses the objects (:122), so the shape's embed
+    // resolves. The receiver used to parse the objects in validate, before the templates were in
+    // the document: the embed was dropped until the board was reopened.
+    const b = board(json());
+    const shape = b.io.codec.writeObject(obj(b, A) as TemplatedObject) as Record<string, unknown>;
+    const tmpl = shape['template'] as Record<string, unknown>;
+    const out = b.sync.receive(
+      frame(updatetypes.addObjects, {
+        [`${prefix}N1`]: {
+          ...shape,
+          order: 10,
+          template: { ...tmpl, id: 'lib.outer', embeds: [{ name: 'lib.inner.icon', location: '0 0 20 20 0' }] },
+        },
+        'doc.templates.lib_inner_icon': {
+          id: 'lib.inner.icon',
+          data: ['-w/2', '-h/2', 'w/2', 'h/2'],
+          draw: ['M 0 1 L 2 3'],
+        },
+      }),
+    );
+    expect(out.kind).toBe('applied');
+    expect(b.doc.hasTemplate('lib.inner.icon')).toBe(true);
+    const n1 = obj(b, 'N1') as TemplatedObject;
+    expect(
+      n1
+        .shapeTemplate()
+        ?.embeds()
+        .map((e) => e.template.id()),
+    ).toEqual(['lib.inner.icon']);
+  });
+
   it('delallobjects clears the page', () => {
     const b = board(json());
     const out = b.sync.receive(frame(updatetypes.delAllObjects, { [`doc.pages.${P}.objects`]: {} }));

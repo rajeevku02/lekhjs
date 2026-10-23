@@ -46,6 +46,7 @@ import {
   buildTemplateDef,
   isJsonObject,
   type CatalogIssue,
+  type DocTemplates,
   type JsonObject,
   type JsonValue,
   type ShapeTemplate,
@@ -231,7 +232,15 @@ export class AddDelObjectsUpdateAction extends UpdateAction {
     }
     if (this.objects.length === 0) return true;
 
-    const ctx = new LoadContext(env.codec.env, env.doc);
+    // C++ apply adds the frame's templates to the document before it parses the objects
+    // (UpdateAction.cpp:94-107, then :122), so an object embedding one of them resolves the embed.
+    // Here the objects are parsed before apply touches the document: they read the frame's
+    // templates first, then the document's (UF4).
+    const frameDefs = new Map<string, TemplateDef>();
+    for (const def of this.defs_) frameDefs.set(def.id, def);
+    const docTemplates: DocTemplates =
+      frameDefs.size === 0 ? env.doc : { get: (id) => frameDefs.get(id) ?? env.doc.get(id) };
+    const ctx = new LoadContext(env.codec.env, env.doc, docTemplates);
     const reader = new ObjectReader(ctx);
     const objs: LekhObject[] = [];
     try {

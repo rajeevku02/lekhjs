@@ -22,6 +22,7 @@ import {
 } from '../model';
 import type { ViewTransform } from '../render';
 import type { BoardSession, CommandContext, EditCommand, PaintLayer, UiRequests } from '../session';
+import type { PointerLoc } from '../sync';
 import type { ShapeTemplate } from '../template';
 import type { GestureTimers } from './gesture-listener';
 import { InputTrace } from './input-trace';
@@ -66,6 +67,11 @@ export interface InteractionBoard {
   clipboard(): ClipboardService;
   /** A laser trail for the collaborators (C++ a `trackpointer` update), document units. */
   sendPointers(points: readonly Point[]): void;
+  /**
+   * The collaborators' laser trails by user id (C++ `UpdateManager::cursorTracker_`, received
+   * `trackpointer` updates), document units; expired points already dropped.
+   */
+  presence?(): ReadonlyMap<string, PointerLoc>;
   /** The opt-in input trace (off unless the host sets its sink). */
   readonly trace?: InputTrace;
 }
@@ -217,6 +223,10 @@ export class SessionBoard implements InteractionBoard {
 
   sendPointers(points: readonly Point[]): void {
     this.session.sync.raise({ type: 'trackpointer', changes: {}, pointers: points.map((p) => ({ x: p.x, y: p.y })) });
+  }
+
+  presence(): ReadonlyMap<string, PointerLoc> {
+    return this.session.sync.presence.pointers();
   }
 }
 

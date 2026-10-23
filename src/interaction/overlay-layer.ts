@@ -13,6 +13,7 @@ import { Point, PointType, Rect } from '../geometry';
 import { ConnectionObject, TemplatedObject, isConnector, type LekhObject } from '../model';
 import type { DrawingPlatform } from '../render';
 import { Color, Style } from '../style';
+import { PRESENCE_COLORS, trailRadius } from '../sync';
 import { objectsOf, type InteractionBoard } from './board';
 import type { CanvasView } from './canvas-view';
 import type { CursorState } from './cursor';
@@ -370,10 +371,53 @@ export class OverlayLayer implements OverlayHost, RouterLayer {
     const paint = this.paint();
     this.layout();
     this.drawSelectionExtras(dp);
+    this.drawTrackers(dp);
     for (const t of this.transients_) t.draw(dp, paint);
     this.drawScrollIndicator(dp, paint);
     if (this.target_ !== null && !this.rect.isScaling) this.rect.draw(dp, paint);
     if (this.vertex.isActive()) this.vertex.draw(dp, paint);
+  }
+
+  /**
+   * C++ `UpdateManager::drawTrackers` → `CursorTracker::draw` (CursorTracker.cpp:106-151), called
+   * last in `LekhCore::draw` (LekhCore.cpp:207): each collaborator's laser trail, newest point
+   * first, a dot of the user's colour (radius 10 shrinking 6 % a point, 3 after the tenth) ringed
+   * red at radius + 2 and white at radius - 3. C++ draws it on the Drawing canvas in document units
+   * on the zoomed, scrolled platform; here on the Middle canvas through the view, which looks the
+   * same. The C++ web platform reads the style at `endDrawing` (Platform.js:354-394), so the third
+   * circle is white, not red, as its code order would suggest.
+   */
+  private drawTrackers(dp: DrawingPlatform): void {
+    const pointers = this.board.presence?.();
+    if (pointers === undefined || pointers.size === 0) return;
+    const mdp = new ViewMappedPlatform(dp, this.board.view());
+    for (const loc of pointers.values()) {
+      const colour = PRESENCE_COLORS[loc.colorIndex] ?? new Color(0, 0, 0);
+      let index = 0;
+      for (let i = loc.points.length - 1; i >= 0; i--) {
+        const pt = loc.points[i] as Point;
+        const rad = trailRadius(index);
+        index++;
+        const dot = new Style();
+        dot.setStrokeColor(colour);
+        dot.setFillColor(colour);
+        mdp.startDrawing(pt, dot);
+        mdp.addCircle(pt, rad);
+        mdp.endDrawing();
+        const red = new Style();
+        red.setNoFill();
+        red.setStrokeColor(new Color(200, 0, 0, 255));
+        mdp.startDrawing(pt, red);
+        mdp.addCircle(pt, rad + 2);
+        mdp.endDrawing();
+        const white = new Style();
+        white.setNoFill();
+        white.setStrokeColor(new Color(255, 255, 255, 255));
+        mdp.startDrawing(pt, white);
+        mdp.addCircle(pt, Math.max(0, rad - 3));
+        mdp.endDrawing();
+      }
+    }
   }
 
   /**

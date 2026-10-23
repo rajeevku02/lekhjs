@@ -638,7 +638,8 @@ export async function samplePixels(b, pts) {
 /** @param {Buffer} b */
 export async function pdfInfo(b) {
   const pdfjs = await import(pathToFileURL(require.resolve('pdfjs-dist/legacy/build/pdf.mjs')).href);
-  const doc = await pdfjs.getDocument({ data: new Uint8Array(b), verbosity: 0, disableFontFace: true }).promise;
+  const task = pdfjs.getDocument({ data: new Uint8Array(b), verbosity: 0, disableFontFace: true });
+  const doc = await task.promise;
   const pages = [];
   let text = '';
   for (let i = 1; i <= doc.numPages; i++) {
@@ -671,7 +672,7 @@ export async function pdfInfo(b) {
       [...latin.matchAll(/\/BaseFont\s*\/([A-Z]{6}\+)?([A-Za-z0-9-]+)/g)].map((m) => /** @type {string} */ (m[2])),
     ),
   ];
-  await doc.destroy();
+  await task.destroy();
   return { numPages: pages.length, pages, text, fonts };
 }
 
@@ -737,8 +738,9 @@ export async function checkCase(c, files, o = {}) {
         let pass;
         if (q.want === 'transparent') pass = p[3] === 0;
         else {
-          const [r, g, b] = rgb(q.want);
-          pass = p[3] === 255 && Math.abs(p[0] - r) <= tol && Math.abs(p[1] - g) <= tol && Math.abs(p[2] - b) <= tol;
+          const [r = 0, g = 0, b = 0] = rgb(q.want);
+          const [pr = 0, pg = 0, pb = 0, pa = 0] = p;
+          pass = pa === 255 && Math.abs(pr - r) <= tol && Math.abs(pg - g) <= tol && Math.abs(pb - b) <= tol;
         }
         t(
           pass,

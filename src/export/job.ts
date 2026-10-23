@@ -120,13 +120,24 @@ function yieldToUi(): Promise<void> {
   });
 }
 
-/** The image URLs of the selected pages (objects at any depth), distinct. */
+/**
+ * The images of the selected pages (objects at any depth), distinct: the URLs, then the inline
+ * images' `data:` cache keys. An inline image is prepared like a URL (pinned, and asked of the
+ * port when not decoded), because the session's cache evicts it after 60 s off screen like any
+ * image, and nothing else decodes it again for an export. C++ kept the bitmap on the element, so
+ * it was always exported (owner round EX2).
+ */
 export function exportImageUrls(source: ExportSource, plans: readonly ExportPagePlan[]): string[] {
   const out = new Set<string>();
   for (const p of plans) {
     const page = source.document.pages[p.pageIndex];
     if (page === undefined) continue;
     for (const url of ImageRefs.page(page)) out.add(url);
+  }
+  for (const p of plans) {
+    const page = source.document.pages[p.pageIndex];
+    if (page === undefined) continue;
+    for (const key of ImageRefs.inline(page.objectStore.objects)) out.add(key);
   }
   return [...out];
 }

@@ -66,3 +66,4 @@ customer boards, ids, e-mail addresses or board URLs.
 | EXP-44  | <host> | <device> | <OS> | <build> |           |      |
 | EXP-45  | <host> | <device> | <OS> | <build> |           |      |
 | EXP-46  | <host> | <device> | <OS> | <build> |           |      |
+| EXP-47  | <host> | <device> | <OS> | <build> |           |      |

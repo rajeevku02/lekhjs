@@ -221,7 +221,7 @@ const large = build(largeContent());
 
 // Which value each page's type must show, checked here so a generator change cannot pass silently.
 const wantTypes = ['fixed', 'fixed', 'auto', 'infinite', 'infinite', 'infinite', 'infinite'];
-suite.pages.forEach((p, i) => {
+suite.pages.forEach((/** @type {any} */ p, /** @type {number} */ i) => {
   if (p.type !== wantTypes[i]) throw new Error(`page ${String(i)} is ${p.type}, want ${String(wantTypes[i])}`);
 });
 

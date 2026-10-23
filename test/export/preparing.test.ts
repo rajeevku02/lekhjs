@@ -19,6 +19,13 @@ function headless(): { s: BoardSession; sched: FakeScheduler } {
   const s = new BoardSession(rt, { images: new FakeImagePort(), scheduler: sched });
   const r = s.load(readText(path.join(CORE_FIXTURES, FIXTURE)));
   if (!r.ok) throw new Error(r.message);
+  // The fixture's inline image decoded, as at load on a host: these cases are about its URL images
+  // (an evicted inline image is prepared too: inline-image-evicted.test.ts).
+  for (const p of s.document.pages) {
+    for (const o of p.objectStore.objects) {
+      for (const key of o.inlineImageKeys()) s.dispatch({ type: 'imageLoaded', url: key, image: solidImage(8, 8) });
+    }
+  }
   return { s, sched };
 }
 
@@ -29,7 +36,9 @@ describe('preparing: wait, pin, placeholder (AC-EXP-38)', () => {
       s,
       planExport(s, { format: 'png', region: 'full', padding: 0, scale: 1, includeBackground: false }),
     );
-    expect(urls).toHaveLength(2);
+    // Two URL images, then the inline image's key (decoded above, so never asked for).
+    expect(urls).toHaveLength(3);
+    expect(urls[2]?.startsWith('data:')).toBe(true);
     const [reachable, unreachable] = urls as [string, string];
     let pinnedDuringWait = false;
     const images = new ControlledImagePort((asked, timeoutMs) => {
@@ -42,7 +51,7 @@ describe('preparing: wait, pin, placeholder (AC-EXP-38)', () => {
     const e = env({ images });
     const r = await run(s, { format: 'png' }, e);
     expect(r.status).toBe('done');
-    expect(images.ensured).toEqual([urls]);
+    expect(images.ensured).toEqual([urls.slice(0, 2)]); // the inline image is decoded already
     expect(pinnedDuringWait).toBe(true);
     if (r.status === 'done') expect(r.warnings).toEqual([{ code: 'export_image_missing', count: 1 }]);
     expect(e.logs).toContain('export_image_missing {"count":1}');
@@ -68,7 +77,7 @@ describe('preparing: wait, pin, placeholder (AC-EXP-38)', () => {
     expect(images.ensured).toEqual([[second]]);
     expect(r.status === 'done' && r.warnings).toEqual([]);
     const svg = Buffer.from(rec.file(rec.names[0] ?? '')).toString('utf8');
-    expect(svg.match(/<image /g)).toHaveLength(2);
+    expect(svg.match(/<image /g)).toHaveLength(3); // the two URL images and the inline one
     expect(svg).toContain('xlink:href="data:image/png;base64,iVBORw0KGgo');
   });
 
@@ -82,7 +91,7 @@ describe('preparing: wait, pin, placeholder (AC-EXP-38)', () => {
     );
     expect(r.status === 'done' && r.warnings).toEqual([{ code: 'export_image_missing', count: 2 }]);
     const svg = Buffer.from(rec.file(rec.names[0] ?? '')).toString('utf8');
-    expect(svg).not.toContain('<image ');
+    expect(svg.match(/<image /g)).toHaveLength(1); // only the decoded inline image
     // ShapeImageElement's placeholder: a filled quad where the image would be.
     expect(svg.match(/<path [^>]*fill="rgb\(/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
   });

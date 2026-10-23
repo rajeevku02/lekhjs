@@ -110,6 +110,11 @@ export interface ToastRequest {
    * kept on screen. Without it the toast is centred below the top toolbar (`Side::Top`).
    */
   readonly at?: Point;
+  /**
+   * C++ `Toast::Side::Bottom` with this bottom margin: centred horizontally, its bottom this many
+   * px above the view's bottom (`Toast::show`, Toast.cpp:74-75). Ignored with `at`.
+   */
+  readonly bottom?: number;
 }
 
 /** An image the user picked (`LekhPlugin.pickImage` natively, `<input type=file>` on the web). */

@@ -1,0 +1,187 @@
+{
+  "note": "Board points (1/144 in). Plans: ExportInputBuilder.cpp:25-39; PDF page = plan / 2 pt; raster px = round(plan x scale x hostScale).",
+  "export-suite.lekh": [
+    {
+      "index": 0,
+      "name": "Fixed A4",
+      "type": "fixed",
+      "canvasSizeType": 1,
+      "canvas": {
+        "width": 1190.551181,
+        "height": 1683.779528
+      },
+      "bounds": {
+        "x": 4.5,
+        "y": 99.5,
+        "width": 1356,
+        "height": 1461
+      },
+      "objects": 5,
+      "background": "#fff3c4"
+    },
+    {
+      "index": 1,
+      "name": "Landscape",
+      "type": "fixed",
+      "canvasSizeType": 1,
+      "canvas": {
+        "width": 1584,
+        "height": 1224
+      },
+      "bounds": {
+        "x": 219.5,
+        "y": 189.5,
+        "width": 881,
+        "height": 511
+      },
+      "objects": 2,
+      "background": "#e3f2fd"
+    },
+    {
+      "index": 2,
+      "name": "Auto",
+      "type": "auto",
+      "canvasSizeType": 0,
+      "canvas": {
+        "width": 864.5,
+        "height": 1014.5
+      },
+      "bounds": {
+        "x": 99.5,
+        "y": 99.5,
+        "width": 701,
+        "height": 851
+      },
+      "objects": 2,
+      "background": "#ffffff"
+    },
+    {
+      "index": 3,
+      "name": "Infinite",
+      "type": "infinite",
+      "canvasSizeType": 2,
+      "canvas": {
+        "width": 612,
+        "height": 792
+      },
+      "bounds": {
+        "x": -300.5,
+        "y": -150.5,
+        "width": 701,
+        "height": 451
+      },
+      "objects": 3,
+      "background": "#e8f5e9"
+    },
+    {
+      "index": 4,
+      "name": "",
+      "type": "infinite",
+      "canvasSizeType": 2,
+      "canvas": {
+        "width": 612,
+        "height": 792
+      },
+      "bounds": {
+        "x": 49.5,
+        "y": 69.5,
+        "width": 101,
+        "height": 61
+      },
+      "objects": 1,
+      "background": "#ffffff"
+    },
+    {
+      "index": 5,
+      "name": "Infinite",
+      "type": "infinite",
+      "canvasSizeType": 2,
+      "canvas": {
+        "width": 612,
+        "height": 792
+      },
+      "bounds": {
+        "x": -40.5,
+        "y": -40.5,
+        "width": 81,
+        "height": 81
+      },
+      "objects": 1,
+      "background": "#ffffff"
+    },
+    {
+      "index": 6,
+      "name": "Empty",
+      "type": "infinite",
+      "canvasSizeType": 2,
+      "canvas": {
+        "width": 612,
+        "height": 792
+      },
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "objects": 0,
+      "background": "#ffffff"
+    }
+  ],
+  "export-large.lekh": [
+    {
+      "index": 0,
+      "name": "Large 1",
+      "type": "fixed",
+      "canvasSizeType": 1,
+      "canvas": {
+        "width": 5000,
+        "height": 4000
+      },
+      "bounds": {
+        "x": 24.5,
+        "y": 24.5,
+        "width": 4951,
+        "height": 3951
+      },
+      "objects": 4,
+      "background": "#ffffff"
+    },
+    {
+      "index": 1,
+      "name": "Large 2",
+      "type": "fixed",
+      "canvasSizeType": 1,
+      "canvas": {
+        "width": 5000,
+        "height": 4000
+      },
+      "bounds": {
+        "x": 24.5,
+        "y": 24.5,
+        "width": 4951,
+        "height": 3951
+      },
+      "objects": 4,
+      "background": "#ffffff"
+    },
+    {
+      "index": 2,
+      "name": "Large 3",
+      "type": "fixed",
+      "canvasSizeType": 1,
+      "canvas": {
+        "width": 5000,
+        "height": 4000
+      },
+      "bounds": {
+        "x": 24.5,
+        "y": 24.5,
+        "width": 4951,
+        "height": 3951
+      },
+      "objects": 4,
+      "background": "#ffffff"
+    }
+  ]
+}

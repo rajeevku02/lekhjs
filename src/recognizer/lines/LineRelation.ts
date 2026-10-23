@@ -58,12 +58,15 @@ export class LineRelation {
     if (step === 0) step = 1;
     if (minp === 0) return;
 
-    // Build the largest window once (what the inc = minp iteration would produce).
-    // Every smaller inc is a contiguous sub-range of it.
+    // Build the largest window once (what the inc = minp iteration would produce): the last minp
+    // points of part 1, then points 0..minp of part 2. C++ takes part 2's points 0..inc inclusive
+    // (LineRelation.cpp:69 and :184, addPoints(.., 0, inc)), so the window holds inc + 1 of them
+    // and the inc = minp step reaches point minp when part 2 has more than minp points. Every
+    // smaller inc is a contiguous sub-range [mid - inc, mid + inc] of it.
     const buf: Point[] = [];
     addPoints(buf, points1, pair1.reverse, points1.size - minp, points1.size - 1);
     const mid = buf.length; // == minp; boundary between the two segments
-    addPoints(buf, points2, pair2.reverse, 0, minp - 1);
+    addPoints(buf, points2, pair2.reverse, 0, minp);
     const lastIdx = buf.length - 1;
 
     for (let inc = step; inc <= minp; inc += step) {

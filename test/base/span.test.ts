@@ -30,10 +30,24 @@ describe('Span (C++ Coll)', () => {
     expect([u.startIndex, u.endIndex]).toEqual([3, 3]);
   });
 
-  it('at throws outside the array, like vector::at', () => {
+  // Unchecked by design (owner, 2026-10-23, perf; C++ Coll::at is vector::at and throws):
+  // at / first / last index the backing array directly, with no span or array bounds check and
+  // no throw. Outside the span but inside the array they return the neighbouring element;
+  // outside the array they return undefined. Callers keep their own indices in range.
+  it('at, first and last are unchecked: no throw out of range', () => {
     const s = new Span(a, 3, 4);
     expect(s.at(1)).toBe(14);
-    expect(() => s.at(2)).toThrow(RangeError);
+    expect(() => s.at(2)).not.toThrow();
+    expect(s.at(2)).toBeUndefined();
+    expect(s.at(-1)).toBe(12);
+    expect(new Span(a, 1, 2).at(2)).toBe(13);
+    expect(s.at(-4)).toBeUndefined();
+    const e = new Span(a, 7, 6);
+    expect(e.empty).toBe(true);
+    expect(e.first()).toBeUndefined();
+    expect(e.last()).toBeUndefined();
+    expect(new Span(a).first()).toBe(11);
+    expect(new Span(a).last()).toBe(10);
   });
 
   it('start and end can be moved', () => {

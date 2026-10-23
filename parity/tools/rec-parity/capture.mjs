@@ -1,9 +1,9 @@
 // Reference capture for the recognizer parity run (spec 07 §7.4.1): every case of
 // test/recognizer/corpus/ goes through `window.__lekhTest.recognizeStroke` of the owner-built C++
 // web wasm (H-REC-2) in headless Chromium, and the recorded delegate calls are written to
-// test/recognizer/parity/reference/<case>.json with reference/MANIFEST.json
-// (`{ wasmCommit, wasmSha256, capturedAt, lineAggregatorId, cases }`, AC-REC-33); the oracle's path
-// and build info go to reference-provenance.json beside this tool (AC-ARC-12).
+// test/recognizer/parity/reference/<case>.json with reference/MANIFEST.json (`{ wasmCommit,
+// wasmSha256, capturedAt, lineAggregatorId, tsLineAggregatorId, tsComparedAt, cases }`, AC-REC-33);
+// the oracle's path and build info go to reference-provenance.json beside this tool (AC-ARC-12).
 //
 // Each case is also run on 8 seeded ±0.01 px jitters of its stroke; their calls (ink points left
 // out) are kept beside the reference so the comparison can apply the borderline rule (§7.4.2: a
@@ -160,6 +160,11 @@ const manifest = {
   wasmSha256: servedSha,
   provenance: 'parity/tools/rec-parity/reference-provenance.json',
   lineAggregatorId: build.build.lineAggregator,
+  // The TS line aggregator id (lekhjs lineAggregatorImplModule.id) this reference was last compared
+  // against, and the date: set by hand after a REC_PARITY=1 run (AC-REC-33, parity.test.ts); a fresh
+  // capture has not been compared yet.
+  tsLineAggregatorId: null,
+  tsComparedAt: null,
   capturedAt: new Date().toISOString(),
   browser: `chromium ${browser.version()} (headless)`,
   jitter: { variants: JITTERS, px: JITTER_PX },

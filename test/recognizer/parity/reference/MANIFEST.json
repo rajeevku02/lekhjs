@@ -4,6 +4,8 @@
   "wasmSha256": "8bd22d24d203f95b6ec8380290c58f48b59e26ea2ac8b07365965ab98a46cd3d",
   "provenance": "parity/tools/rec-parity/reference-provenance.json",
   "lineAggregatorId": "owner-real-2026-10-17",
+  "tsLineAggregatorId": "lekh-line-merger-2",
+  "tsComparedAt": "2026-10-23",
   "capturedAt": "2026-10-17T17:59:44.540Z",
   "browser": "chromium 139.0.7258.5 (headless)",
   "jitter": {

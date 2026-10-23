@@ -3,7 +3,9 @@
 // reference the wasm recorded (test/recognizer/parity/reference/, parity/tools/rec-parity/capture.mjs).
 //
 //  - strict: quirks on (the C1/C2 bugs put back); only proven-borderline cases may differ, at most
-//    0.5 % of the corpus (OQ-42, DR-REC-04);
+//    0.5 % of the corpus (OQ-42, DR-REC-04), plus the cases known-differences.json attributes to a
+//    register entry (DR-REC-04's float32 vs double coordinate cases, while they stay `tolerance`);
+//    the other known groups there (reference defects, line aggregator) are reported, not excused;
 //  - product: quirks off; every case beyond the strict differences is attributed to DR-REC-01 or
 //    DR-REC-02 by turning that one quirk back on.
 //
@@ -16,11 +18,19 @@
 // REC_PARITY_PROBES=1 adds the isSingleLine probe (owner question after M1). The MANIFEST check
 // (AC-REC-33) always runs.
 //
+// Line aggregator ids (AC-REC-33): the MANIFEST's `lineAggregatorId` names the C++ aggregator in the
+// reference wasm; `tsLineAggregatorId` names the TS module (LineMerger.js) the reference was last
+// compared against. The TS id is bumped whenever LineMerger's output changes
+// (src/recognizer/lines/LineAggregatorImpl.ts); the AC-REC-33 check then fails until this run is
+// repeated and the MANIFEST's `tsLineAggregatorId` / `tsComparedAt` are updated by hand from the
+// report (`manifest.tsLineAggregatorId`). capture.mjs writes both as null: a fresh reference has not
+// been compared yet.
+//
 // Besides the borderline rule for discrete outcomes (§7.4.2), the report shows for each tolerance
 // failure whether the wasm's own coordinates move past the tolerance under the same ±0.01 px jitter
 // (`oracleUnstable`): the stroke is pre-processed into integer pixels (GeoUtil::preProcess) and the
 // line split picks pixel indices, so a 0.01 px nudge can move a vertex by whole pixels.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { RecognizerQuirks } from '../../../src/recognizer/core';
@@ -44,6 +54,23 @@ const { cases, scenes } = loadCorpus();
 const manifest = loadManifest();
 const sessions = new SceneSessions(scenes);
 const caseMs: Record<string, number> = {};
+
+interface KnownGroup {
+  readonly id?: string;
+  readonly expect?: CaseResult['status'];
+  readonly reason: string;
+  readonly cases: readonly string[];
+}
+interface KnownDifferences {
+  readonly register: readonly KnownGroup[];
+  readonly referenceDefect: readonly KnownGroup[];
+  readonly lineAggregator: readonly KnownGroup[];
+}
+const known = JSON.parse(
+  readFileSync(path.join(PKG_ROOT, 'test/recognizer/parity/known-differences.json'), 'utf8'),
+) as KnownDifferences;
+const knownGroup = (groups: readonly KnownGroup[], name: string): KnownGroup | undefined =>
+  groups.find((g) => g.cases.includes(name));
 
 interface Row {
   readonly name: string;
@@ -105,7 +132,7 @@ function maxRatios(rows: readonly Row[]): Record<string, number> {
 }
 
 describe('recognizer parity reference (spec 07 §7.4.1)', () => {
-  it('AC-REC-33: the reference MANIFEST names the wasm commit, its sha256 and the LineAggregator', () => {
+  it('AC-REC-33: the reference MANIFEST names the wasm commit, its sha256, its LineAggregator and the TS one last compared', () => {
     // Read by key: the JSON keys are AC-REC-33's; the oracle's path and build info live in
     // parity/ (`provenance`), since nothing in test/ names one (AC-ARC-12).
     expect(manifest['provenance']).toBe('parity/tools/rec-parity/reference-provenance.json');
@@ -114,6 +141,14 @@ describe('recognizer parity reference (spec 07 §7.4.1)', () => {
     expect(typeof manifest.lineAggregatorId).toBe('string');
     expect(String(manifest.lineAggregatorId)).not.toMatch(/stub/i);
     expect(manifest.cases).toBe(cases.length);
+    // The TS line aggregator the reference was last compared against is the one the port runs: bump
+    // lineAggregatorImplModule.id whenever LineMerger's output changes, re-run the strict parity run
+    // (REC_PARITY=1) and record the new id and date here (KB parity-and-corpus.md §5.5).
+    expect(
+      manifest['tsLineAggregatorId'],
+      'MANIFEST.tsLineAggregatorId: re-run REC_PARITY=1 and record the TS id it compared',
+    ).toBe(lineAggregatorImplModule.id);
+    expect(String(manifest['tsComparedAt'])).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     // The TS side runs the owner's module, not the stub.
     expect(defaultLineAggregatorModule).toBe(lineAggregatorImplModule);
   });
@@ -124,7 +159,23 @@ describe.runIf(RUN)('recognizer corpus parity against the wasm reference (spec 0
   const rows = RUN ? runAll(defaultLineAggregatorModule) : [];
   const strictFail = rows.filter((r) => r.strict.status !== 'pass');
   const borderline = strictFail.filter((r) => r.strict.status === 'discrete' && r.oracleFlips);
-  const strictUnexplained = strictFail.filter((r) => !borderline.includes(r));
+  // Attributed to a register entry: listed under it and failing as the entry says (e.g. DR-REC-04:
+  // coordinates only, same discrete outcome).
+  const attributedTo = (r: Row): string | undefined => {
+    const g = knownGroup(known.register, r.name);
+    return g && r.strict.status === g.expect ? g.id : undefined;
+  };
+  const strictAttributed = strictFail.filter((r) => !borderline.includes(r) && attributedTo(r) !== undefined);
+  const notExcused = strictFail.filter((r) => !borderline.includes(r) && !strictAttributed.includes(r));
+  const knownDefect = notExcused.filter((r) => knownGroup(known.referenceDefect, r.name));
+  const knownLines = notExcused.filter((r) => knownGroup(known.lineAggregator, r.name));
+  const strictUnexplained = notExcused.filter((r) => !knownDefect.includes(r) && !knownLines.includes(r));
+  // Listed cases that no longer fail as listed: the list needs updating.
+  const listed = [...known.register, ...known.referenceDefect, ...known.lineAggregator].flatMap((g) => g.cases);
+  const staleKnown = rows
+    .filter((r) => listed.includes(r.name))
+    .filter((r) => r.strict.status === 'pass' || (knownGroup(known.register, r.name) && !strictAttributed.includes(r)))
+    .map((r) => ({ name: r.name, status: r.strict.status }));
   const productExtra = rows.filter((r) => r.strict.status === 'pass' && r.product.status !== 'pass');
 
   // Owner question (M1): LineMerger has no isSingleLine, so the module answers false. How much
@@ -157,6 +208,7 @@ describe.runIf(RUN)('recognizer corpus parity against the wasm reference (spec 0
       wasmSha256: manifest['wasmSha256'],
       lineAggregatorId: manifest.lineAggregatorId,
       tsLineAggregatorId: defaultLineAggregatorModule.id,
+      lastComparedTsLineAggregatorId: manifest['tsLineAggregatorId'] ?? null,
     },
     cases: rows.length,
     byScene: Object.fromEntries(
@@ -169,6 +221,14 @@ describe.runIf(RUN)('recognizer corpus parity against the wasm reference (spec 0
       toleranceOracleUnstable: strictFail.filter((r) => r.strict.status === 'tolerance' && r.oracleUnstable).length,
       borderline: borderline.map((r) => ({ name: r.name, ts: r.strict.ts, cpp: r.strict.cpp })),
       borderlineShare: borderline.length / rows.length,
+      attributed: strictAttributed.reduce<Record<string, string[]>>((m, r) => {
+        const id = attributedTo(r) as string;
+        (m[id] ??= []).push(r.name);
+        return m;
+      }, {}),
+      knownReferenceDefect: knownDefect.map((r) => ({ name: r.name, status: r.strict.status })),
+      knownLineAggregator: knownLines.map((r) => ({ name: r.name, status: r.strict.status })),
+      staleKnown,
       unexplained: strictUnexplained.map((r) => ({
         name: r.name,
         status: r.strict.status,
@@ -211,10 +271,9 @@ describe.runIf(RUN)('recognizer corpus parity against the wasm reference (spec 0
     writeFileSync(path.join(OUT, 'report.json'), `${JSON.stringify(report, null, 1)}\n`);
   }
 
-  it('AC-REC-26: strict run — every case matches, except proven-borderline cases ≤ 0.5 % of the corpus', () => {
-    expect(strictUnexplained.map((r) => `${r.name}: ${r.strict.status} ts=${r.strict.ts} cpp=${r.strict.cpp}`)).toEqual(
-      [],
-    );
+  it('AC-REC-26: strict run — every case matches, except proven-borderline cases ≤ 0.5 % of the corpus and register-attributed cases', () => {
+    // Known reference defects and line-aggregator cases are listed in the report but still fail here.
+    expect(notExcused.map((r) => `${r.name}: ${r.strict.status} ts=${r.strict.ts} cpp=${r.strict.cpp}`)).toEqual([]);
     expect(borderline.length).toBeLessThanOrEqual(Math.floor(BORDERLINE_SHARE * rows.length));
   });
 

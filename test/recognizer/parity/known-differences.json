@@ -1,0 +1,39 @@
+{
+  "about": "Strict-run cases (spec 07 §7.4.2) whose difference from the wasm reference is localised and decided (round REC27, owner decisions 2026-10-23; KB /frontend/lekhjs/recognition/parity-and-corpus.md §5.5). parity.test.ts reports each group under its own key. Only `register` cases are excused from AC-REC-26, and only while the case still fails with `expect`; the other groups are listed, not excused. A listed case that passes, or fails differently, is reported as stale.",
+  "register": [
+    {
+      "id": "DR-REC-04",
+      "expect": "tolerance",
+      "reason": "float32 vs double: the shipped float C++ stages on the TS lines give the reference, the double build gives TS (owner: \"Let us accept the float vs double issue i.e. DR-REC-04\")",
+      "cases": ["parallelogram-v03", "parallelogram-v07", "diamond-v07", "selfloop-small-z0"]
+    }
+  ],
+  "referenceDefect": [
+    {
+      "reason": "C++ geometry bug in the reference wasm: LineShape::distanceFrom / intersectionWith (PrimitiveShape.cpp:111-134) read the template's first segment start from MoveToCommand's cached lastPoint_, stale in the hook, so getObjectForConnection's reach around a rectangle's left edge is wrong. TS gives the intended geometry. Owner 2026-10-23: \"For C++ bug, let us do nothing\" (no C++ fix, no re-capture, no register entry)",
+      "cases": ["conn-edge-to-edge-z0", "conn-edge-to-edge-z1", "diag-elbow-z1", "selfloop-curve-z2"]
+    }
+  ],
+  "lineAggregator": [
+    {
+      "reason": "LineMerger.js (lekh-line-merger-N) and the C++ aggregator in the wasm (owner-real-2026-10-17) segment the stroke differently. Owner 2026-10-23: deferred to Work 01M5MJKJ2HHN35B2BEC0WWQ4J1; reproductions in parity/fixtures/rec-linemerger/",
+      "cases": [
+        "rightTriangle-v02",
+        "rightTriangle-v08",
+        "rightTriangle-v11",
+        "arc-v03",
+        "arc-v05",
+        "sCurve-v11",
+        "star-v09",
+        "overtrace-v02",
+        "spiral-v06",
+        "spiral-v09",
+        "spiral-v10",
+        "scribble-v08",
+        "cloudLoop-v05",
+        "cloudLoop-v06",
+        "beside-rect-z0"
+      ]
+    }
+  ]
+}

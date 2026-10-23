@@ -46,13 +46,16 @@ export class LineAggregatorImpl implements LineAggregator {
 }
 
 /**
- * The owner's module, recorded as `ready.lineAggregator` and as the parity MANIFEST
- * `lineAggregatorId` (AC-REC-33). `getCost` is `LineMerger`'s own (C++ `LineAggregator::getCost`),
+ * The owner's module, recorded as `ready.lineAggregator`, in the parity report and as the parity
+ * MANIFEST `tsLineAggregatorId` (AC-REC-33; the MANIFEST's `lineAggregatorId` names the C++
+ * aggregator in the reference wasm). Bump the id whenever `LineMerger`'s output changes, then re-run
+ * the strict parity run and record the new id in the MANIFEST. `-2`: 1b7540a (the last line ends one
+ * point before the stroke end). `getCost` is `LineMerger`'s own (C++ `LineAggregator::getCost`),
  * on a fresh merger per call so it depends on no `create()`d state; `LineMerger` has no
  * `isSingleLine`, so that keeps the stub's answer (false).
  */
 export const lineAggregatorImplModule: LineAggregatorModule = Object.freeze({
-  id: 'lekh-line-merger-1',
+  id: 'lekh-line-merger-2',
   create(config: RecognizerConfig): LineAggregator {
     return new LineAggregatorImpl(config);
   },

@@ -1,22 +1,29 @@
 id: DR-REC-04
-title: Borderline recognition outcomes flip because TS computes in doubles (and Math.PI), not float32
+title: Recognition computes in doubles (and Math.PI), not float32; borderline outcomes may flip and closed-shape vertices may land on another pixel
 area: REC
 kind: intended-change
-cpp: 'The web wasm computes the recognizer in float32 (number_t) with PI = 3.14159265 (base/Const.h:10); a stroke on a threshold can land either way'
-ts: 'lekhjs/src/recognizer computes in JS doubles with Math.PI (OQ-46); a stroke on a threshold may land on the other side'
+cpp: 'The web wasm computes the recognizer in float32 (number_t) with PI = 3.14159265 (base/Const.h:10); a stroke on a threshold can land either way, and a knife-edge closed-shape regularisation can pick other vertices'
+ts: 'lekhjs/src/recognizer computes in JS doubles with Math.PI (OQ-46); a stroke on a threshold may land on the other side, and a knife-edge regularisation may give other vertices with the same discrete outcome'
 user_visible: true
-# Recognizer data, not a board. The borderline cases are the corpus cases whose wasm outcome itself
-# flips under 8 seeded +-0.01 px jitters (test/recognizer/parity/reference/<case>.json `jitter`,
-# spec 07 §7.4.2); the strict run lists them in parity/out/rec-parity/report.json.
-# Task R5 (2026-10-17, wasm fa71c40, 362 cases): 14 proven-borderline cases (3.9 %, over the
-# 0.5 % bar of OQ-42): 10 spirals, 2 cloud loops, 1 overtrace, 1 self-loop at zoom 0.5.
+# Recognizer data, not a board. Two kinds of difference:
+#  - discrete flips: the corpus cases whose wasm outcome itself flips under 8 seeded +-0.01 px
+#    jitters (test/recognizer/parity/reference/<case>.json `jitter`, spec 07 §7.4.2); the strict
+#    run lists them in parity/out/rec-parity/report.json `strict.borderline`. Task R5 (2026-10-17,
+#    wasm fa71c40, 362 cases): 14 proven-borderline cases (3.9 %, over the 0.5 % bar of OQ-42).
+#  - coordinate-only differences (round REC27, extended by the owner 2026-10-23): same discrete
+#    outcome, vertices outside the 0.05 px tolerance. The shipped float C++ stages on the TS lines
+#    reproduce the reference exactly, the double C++ build gives the TS result. The strict run
+#    attributes exactly these cases to this entry (test/recognizer/parity/known-differences.json,
+#    report.json `strict.attributed`), and only while their status is `tolerance`.
 fixture: test/recognizer/parity/parity.test.ts
 rule:
   json: []
   image: null
   perf: null
-evidence: 'spec 07 §7.4.2, OQ-42, OQ-46; task R5 strict parity run'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+  recognizer:
+    strict_tolerance_cases: [parallelogram-v03, parallelogram-v07, diamond-v07, selfloop-small-z0]
+evidence: 'spec 07 §7.4.2, OQ-42, OQ-46; task R5 strict parity run; round REC27 C++ replay (float vs double build on the TS lines, lekhjs 4e949e8, lekhcore b8d8edc)'
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-23'
+review: 'Owner in chat, 2026-10-23: "Let us accept the float vs double issue i.e. DR-REC-04"'

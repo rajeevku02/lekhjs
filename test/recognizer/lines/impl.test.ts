@@ -43,7 +43,7 @@ function lStroke(): Point[] {
 describe('LineAggregatorImpl (M1)', () => {
   it('is the default module, with its own id', () => {
     expect(defaultLineAggregatorModule).toBe(lineAggregatorImplModule);
-    expect(lineAggregatorImplModule.id).toBe('lekh-line-merger-1');
+    expect(lineAggregatorImplModule.id).toBe('lekh-line-merger-2');
     expect(lineAggregatorImplModule.create(RECOGNIZER_CONFIG_DEFAULTS)).toBeInstanceOf(LineAggregatorImpl);
   });
 
@@ -176,11 +176,11 @@ const tick = (): Promise<unknown> => new Promise((r) => setTimeout(r, 0));
 const STROKE = flat(lStroke());
 
 describe('the worker and its line aggregator', () => {
-  it('serveRecognizer with no lineAggregator answers ready.lineAggregator = lekh-line-merger-1', async () => {
+  it('serveRecognizer with no lineAggregator answers ready.lineAggregator = lekh-line-merger-2', async () => {
     const w = served();
     w.send(INIT);
     await tick();
-    expect(w.out[0]).toMatchObject({ type: 'ready', lineAggregator: 'lekh-line-merger-1' });
+    expect(w.out[0]).toMatchObject({ type: 'ready', lineAggregator: 'lekh-line-merger-2' });
   });
 
   it('a test-lines message before init picks a test module (the e2e mechanics run the stub)', async () => {
@@ -203,10 +203,10 @@ describe('the worker and its line aggregator', () => {
     off.send({ type: 'test-lines', module: 'stub' });
     off.send(INIT);
     await tick();
-    expect(late.out[0]).toMatchObject({ type: 'ready', lineAggregator: 'lekh-line-merger-1' });
-    expect(unknown.out[0]).toMatchObject({ type: 'ready', lineAggregator: 'lekh-line-merger-1' });
+    expect(late.out[0]).toMatchObject({ type: 'ready', lineAggregator: 'lekh-line-merger-2' });
+    expect(unknown.out[0]).toMatchObject({ type: 'ready', lineAggregator: 'lekh-line-merger-2' });
     // Without the option the message reaches the host, which answers a protocol error.
-    expect(off.out.find((r) => r.type === 'ready')).toMatchObject({ lineAggregator: 'lekh-line-merger-1' });
+    expect(off.out.find((r) => r.type === 'ready')).toMatchObject({ lineAggregator: 'lekh-line-merger-2' });
   });
 
   it('a job on the stub is ink; on the owner module it is a shape', async () => {

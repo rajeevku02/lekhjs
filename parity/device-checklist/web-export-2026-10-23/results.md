@@ -69,3 +69,18 @@ The e2e config has Chromium only; the board-panel file cases (EXP-10…EXP-24) a
 | EXP-01…EXP-08                               | web  | workstation, WebKit 2191  | Linux | lekhboard-capacitor 155252d + lekhjs bbb135f | pass      |                                                                                                                                     |
 | EXP-10…EXP-12, EXP-15…EXP-17, EXP-19…EXP-24 | web  | workstation, WebKit 2191  | Linux | lekhboard-capacitor 155252d + lekhjs bbb135f | pass      | EXP-15 failed in the first WebKit run (blank image after the 60 s cache expiry; fixed in lekhjs bbb135f, EXP-47)                    |
 | EXP-13, EXP-14, EXP-18                      | web  | workstation, WebKit 2191  | Linux | lekhboard-capacitor 155252d + lekhjs bbb135f | fail      | several files: only the last download arrives (1 of 7, 1 of 3, 1 of 7); single-file exports pass. Open decision, see the EX2 report |
+
+## Re-run after owner round EX3 (several files are one zip on the web)
+
+Owner decision (2026-10-23): on the web an export of several files is one download `<board>.zip`
+holding the files under their usual names; one file stays one file (lekhboard-capacitor
+`deliver.ts` / `zip.ts`). The checker opens the zip (`suite.mjs check` with `--host web` also
+requires that one download). Run against the worktree front end on `:4005` with the EX3
+lekhboard-capacitor working tree (uncommitted at run time, committed as the EX3 commit).
+
+| EXP-id                                       | host | device                                                | OS    | build                   | pass/fail | note                                                                                       |
+| -------------------------------------------- | ---- | ----------------------------------------------------- | ----- | ----------------------- | --------- | ------------------------------------------------------------------------------------------ |
+| EXP-13, EXP-14, EXP-18                       | web  | workstation, Chromium 1181, Firefox 1489, WebKit 2191 | Linux | lekhboard-capacitor EX3 | pass      | one download `export-suite.zip` each (7, 3, 7 files); `unzip -t` clean; was fail in WebKit |
+| EXP-31, EXP-46                               | web  | workstation, Chromium 1181, Firefox 1489, WebKit 2191 | Linux | lekhboard-capacitor EX3 | pass      | EXP-31: dark and light zips' files byte-identical                                          |
+| EXP-01…EXP-30, EXP-32, EXP-34…EXP-38, EXP-47 | web  | workstation, Chromium 1181                            | Linux | lekhboard-capacitor EX3 | pass      | EXP-36: one `exp-folder-<stamp>.zip` holding the two PDFs; EXP-09 unchanged on the web     |
+| EXP-25…EXP-29, EXP-32                        | web  | workstation, Firefox 1489, WebKit 2191                | Linux | lekhboard-capacitor EX3 | pass      | EXP-27: one `export-large.zip` of three 6455 × 5164 PNGs; EXP-32 cancel: no download       |

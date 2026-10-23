@@ -24,7 +24,12 @@
 //            devicePixelRatio, export.md §10); the 50 MP page / 100 MP export cap (DR-EXP-04)
 //   SVG      root width/height/viewBox = plan; background-color only with Include Background
 //   JPEG     white ground, then the page colour with Include Background; PNG transparent
+//   web zip  several files on the web are one download `<doc>.zip` holding them under these names
+//            (owner round EX3, lekhboard-capacitor deliver.ts / zip.ts); one file stays one file.
+//            `check` opens any `.zip` it is given (also Android's `lekh-export.zip`) and checks
+//            what is inside; with `--host web` (the default) several files must be that one zip.
 import fs from 'node:fs';
+import zlib from 'node:zlib';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -519,9 +524,26 @@ export function rasterSizes(/** @type {any[]} */ plans, /** @type {number} */ sc
 /**
  * The files a case must produce, with what to check in each.
  * @param {FileCase} c
- * @param {{ doc?: string, hostScale?: number }} [o]
+ * @param {{ doc?: string, hostScale?: number, host?: string }} [o]
  */
 export function expectedFiles(c, o = {}) {
+  const e = expectedFilesInZip(c, o);
+  const doc = o.doc ?? FIXTURES[c.fixture].doc;
+  const base = trim(doc) === '' ? 'drawing' : trim(doc);
+  const web = (o.host ?? 'web') === 'web';
+  return {
+    ...e,
+    zip: web && e.files.length > 1 ? `${base}.zip` : null,
+    downloads: web && e.files.length > 1 ? 1 : e.files.length,
+  };
+}
+
+/**
+ * The files themselves (on the web, several of them are inside the one zip).
+ * @param {FileCase} c
+ * @param {{ doc?: string, hostScale?: number }} [o]
+ */
+function expectedFilesInZip(c, o = {}) {
   const doc = o.doc ?? FIXTURES[c.fixture].doc;
   const plan = planCase(c, doc);
   if (c.extra?.['empty'] === true || plan.pages.length === 0) return { empty: true, files: [], toast: null };
@@ -591,6 +613,56 @@ export function expectedFiles(c, o = {}) {
 }
 
 // ---------------------------------------------------------------- reading files
+
+/**
+ * The entries of a ZIP (stored or deflated; no ZIP64), from its central directory, with a CRC-32
+ * check when this Node has `zlib.crc32`.
+ * @param {Buffer} b
+ * @returns {{ name: string, bytes: Buffer, crcOk: boolean | null }[]}
+ */
+export function unzip(b) {
+  let eocd = -1;
+  for (let i = b.length - 22; i >= Math.max(0, b.length - 22 - 0xffff); i--)
+    if (b.readUInt32LE(i) === 0x06054b50) {
+      eocd = i;
+      break;
+    }
+  if (eocd < 0) throw new Error('not a zip: no end of central directory');
+  const n = b.readUInt16LE(eocd + 10);
+  let p = b.readUInt32LE(eocd + 16);
+  const out = [];
+  for (let k = 0; k < n; k++) {
+    if (b.readUInt32LE(p) !== 0x02014b50) throw new Error('bad central directory');
+    const method = b.readUInt16LE(p + 10);
+    const crc = b.readUInt32LE(p + 16);
+    const csize = b.readUInt32LE(p + 20);
+    const nameLen = b.readUInt16LE(p + 28);
+    const extraLen = b.readUInt16LE(p + 30);
+    const commentLen = b.readUInt16LE(p + 32);
+    const off = b.readUInt32LE(p + 42);
+    const name = b.subarray(p + 46, p + 46 + nameLen).toString('utf8');
+    const start = off + 30 + b.readUInt16LE(off + 26) + b.readUInt16LE(off + 28);
+    const raw = b.subarray(start, start + csize);
+    const bytes = method === 0 ? Buffer.from(raw) : method === 8 ? zlib.inflateRawSync(raw) : null;
+    if (bytes === null) throw new Error(`${name}: compression method ${String(method)}`);
+    const crcFn = /** @type {any} */ (zlib).crc32;
+    out.push({
+      name: name.replace(/^.*\//, ''),
+      bytes,
+      crcOk: typeof crcFn === 'function' ? crcFn(bytes) >>> 0 === crc : null,
+    });
+    p += 46 + nameLen + extraLen + commentLen;
+  }
+  return out;
+}
+
+/**
+ * The files with every `.zip` among them replaced by what it holds.
+ * @param {{ name: string, bytes: Buffer }[]} files
+ */
+export function expandZips(files) {
+  return files.flatMap((f) => (f.name.toLowerCase().endsWith('.zip') ? unzip(f.bytes) : [f]));
+}
 
 /** @param {Buffer} b */
 export function pngSize(b) {
@@ -703,11 +775,11 @@ const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 /**
  * Checks exported files against a case. `files` are { name, bytes } (bytes: Buffer).
  * @param {FileCase} c
- * @param {{ name: string, bytes: Buffer }[]} files
- * @param {{ doc?: string, hostScale?: number, tolerance?: number }} [o]
+ * @param {{ name: string, bytes: Buffer }[]} downloads the downloaded or shared files (a zip is opened)
+ * @param {{ doc?: string, hostScale?: number, tolerance?: number, host?: string }} [o]
  * @returns {Promise<{ ok: boolean, lines: string[] }>}
  */
-export async function checkCase(c, files, o = {}) {
+export async function checkCase(c, downloads, o = {}) {
   const exp = expectedFiles(c, o);
   const tol = o.tolerance ?? 8;
   /** @type {string[]} */
@@ -717,6 +789,18 @@ export async function checkCase(c, files, o = {}) {
     if (!pass) ok = false;
     lines.push(`${pass ? 'PASS' : 'FAIL'} ${c.id} ${what}`);
   };
+  if (exp.zip !== null) {
+    const got = downloads.map((f) => f.name);
+    t(got.length === 1 && got[0] === exp.zip, `one download ${JSON.stringify(got)} (want ["${exp.zip}"])`);
+  }
+  /** @type {{ name: string, bytes: Buffer, crcOk?: boolean | null }[]} */
+  let files = downloads;
+  try {
+    files = expandZips(downloads);
+  } catch (e) {
+    t(false, `zip readable: ${String(e)}`);
+  }
+  for (const f of files) if (f.crcOk === false) t(false, `${f.name} CRC-32 in the zip`);
   t(files.length === exp.files.length, `file count ${String(files.length)} (want ${String(exp.files.length)})`);
   const want = exp.files.map((f) => f.name).sort();
   const got = files.map((f) => f.name).sort();
@@ -802,7 +886,10 @@ export async function checkCase(c, files, o = {}) {
   return { ok, lines };
 }
 
-/** What a file is, for the `inspect` command and for results notes. */
+/**
+ * What a file is, for the `inspect` command and for results notes (a zip: what each entry is).
+ * @returns {Promise<Record<string, unknown>>}
+ */
 export async function inspect(/** @type {string} */ name, /** @type {Buffer} */ bytes) {
   const ext = path.extname(name).toLowerCase();
   if (ext === '.png') return { name, png: pngSize(bytes) };
@@ -810,6 +897,7 @@ export async function inspect(/** @type {string} */ name, /** @type {Buffer} */ 
   if (ext === '.pdf') return { name, pdf: await pdfInfo(bytes) };
   if (ext === '.svg') return { name, svg: svgInfo(bytes.toString('utf8')) };
   if (ext === '.lekh') return { name, bytes: bytes.length };
+  if (ext === '.zip') return { name, zip: await Promise.all(unzip(bytes).map((e) => inspect(e.name, e.bytes))) };
   return { name, bytes: bytes.length };
 }
 
@@ -846,6 +934,7 @@ async function main() {
       {
         ...(flags['doc'] !== undefined ? { doc: flags['doc'] } : {}),
         hostScale,
+        host,
       },
     );
     for (const l of r.lines) console.log(l);

@@ -936,6 +936,10 @@ export class SetSizeApi {
     const o = this.obj_;
     const s = this.start_;
     if (o === null || s === null) return;
+    // The panel closes with its selection (owner round UF1): after an undo that removed the
+    // object, nothing is recorded for it (a step on a removed object would clear the redo stack
+    // and send a change for an object the board no longer has).
+    if (!this.host_.board.document().pages.some((p) => p.objectStore.entry(o) !== undefined)) return;
     this.host_.board.edit((ctx) => {
       const ds = o.ds;
       if (ds.width() !== s.width || ds.height() !== s.height || ds.cx() !== s.cx || ds.cy() !== s.cy) {

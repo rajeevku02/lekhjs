@@ -207,6 +207,10 @@ export class ObjectStore implements LayoutOwner, LayoutHost, HitScene, SceneQuer
     if (at < 0) this.objects_.push(found);
     else this.objects_.splice(at, 0, found);
     this.bump();
+    // Its place in the paint order changed: a changed object, so the edit that moved it repaints
+    // (C++ `Command::changeZOrder`'s `setNeedsDisplay`, Command.cpp:89; owner round UF1: Move to
+    // Back / Front, and their undo and redo, left the canvas as it was).
+    this.markDirty(found);
   }
 
   nextOrder(): number {

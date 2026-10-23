@@ -1187,12 +1187,20 @@ export class BoardSession {
     switch (cmd.kind) {
       case 'undo':
       case 'redo': {
-        // Undoing a page action (add, delete, rename, reorder, duplicate) changes no object, so
+        // Undoing a page or document action (add, delete, rename, reorder, duplicate a page; the
+        // canvas size, margin, orientation, background, grid or scaling) changes no object, so
         // nothing else would tell the view: announce it as a view change, as a remote page change
-        // is (`pagesChanged`), so the page list and the pages button follow.
+        // is (`pagesChanged`), so the page list and the pages button follow, every layer repaints
+        // and the canvas size is recomputed (C++ `Command::undo/redo`: `computeSize(false)` and
+        // `setNeedsDisplay`, Command.cpp:125-139; owner round UF1: an undone canvas size or
+        // margin showed only after the next scroll).
         const pages = this.pageSignature();
+        const attrs = this.pageAttrs();
         this.applySelection(cmd.kind === 'undo' ? c.undo() : c.redo());
-        if (this.pageSignature() !== pages) this.markView();
+        if (this.pageSignature() !== pages || !sameRefs(this.pageAttrs(), attrs)) {
+          this.markView();
+          this.requestPaint('drawing');
+        }
         return;
       }
       case 'select':
@@ -1312,6 +1320,18 @@ export class BoardSession {
     return `${String(d.activePageIndex)}|${d.pages.map((p) => `${p.id}:${String(p.order)}:${p.name}`).join('\n')}`;
   }
 
+  /**
+   * The page and document attributes an undo step can change without touching an object. The
+   * actions assign new values (`PageSizeChangeAction`, `SetPageMarginAction`,
+   * `BackgroundChangeAction`, `ChangeScalingAction`), so identity is the comparison.
+   */
+  private pageAttrs(): unknown[] {
+    const d = this.doc_;
+    const out: unknown[] = [d.grid.present, d.grid.type, d.scaling];
+    for (const p of d.pages) out.push(p.canvasSizeType, p.size, p.canvasName, p.orientation, p.margin, p.background);
+    return out;
+  }
+
   private markView(): void {
     this.viewState_ = null;
     this.pending_.view = true;
@@ -1414,4 +1434,8 @@ export function dialogForMessage(m: ServerMessage): DialogRequest | null {
   }
   if (m.reload) return { kind: 'reload', message: m.message };
   return { kind: 'message', message: m.message };
+}
+
+function sameRefs(a: readonly unknown[], b: readonly unknown[]): boolean {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
 }

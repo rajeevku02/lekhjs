@@ -8,6 +8,7 @@
 //   stack (the hold defers only the live local edits' steps).
 // - The registered `RecognitionApplier` validates (`rec_stale` → ink) and applies through
 //   `MutationApplier`.
+import type { LekhObject } from '../../model';
 import type { BoardSession, CommandContext } from '../../session';
 import { recognizerConfigFrom, type RecognizerConfig } from '../core/RecognizerConfig';
 import type { RecMutation } from '../delegate/RecMutation';
@@ -25,6 +26,8 @@ export interface SessionStroke extends CapturedStroke {
 export interface SessionRecognitionPortOptions {
   readonly sessionId: string;
   readonly stats?: RecognitionStats;
+  /** `MutationApplierOptions.onShapeAdded` (C++ `InfoManager::smartModeShapeAdded`). */
+  readonly onShapeAdded?: (obj: LekhObject) => void;
   /** Called with `rec_stale` when a result was turned into ink (telemetry). */
   readonly onStale?: () => void;
 }
@@ -64,6 +67,7 @@ export class SessionRecognitionPort implements RecognitionSessionPort {
     this.applier_ = new MutationApplier({
       currentStyle: () => session.currentStyle,
       ...(opts.stats !== undefined ? { stats: opts.stats } : {}),
+      ...(opts.onShapeAdded !== undefined ? { onShapeAdded: opts.onShapeAdded } : {}),
     });
     session.setRecognitionApplier((ctx, ev) => {
       this.onResult(ctx, ev.strokeId, ev.mutations);

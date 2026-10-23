@@ -10,6 +10,14 @@ export interface OverlayTokens {
   readonly cornerColor: Color;
   /** `system_background_color`. */
   readonly backgroundColor: Color;
+  /**
+   * The fill of a connect handle's ring: `system_background_color` of the LIGHT theme in both,
+   * as `selection_rectangle_corner_color` takes `system_label_color`'s light value in both
+   * (WidgetStyle.cpp:374), so the dot always sits on a white ring. C++ `ConnectHandleWidget::draw`
+   * fills the ring with the theme's own `system_background_color` (ConnectHandleWidget.cpp:73),
+   * black in dark mode: ring, stroke and dot all black, one solid disc (owner round UF2).
+   */
+  readonly connectRingFill: Color;
   /** `connect_target_highlight_color`. */
   readonly connectTargetColor: Color;
   /** `scroll_indicator_color`. */
@@ -34,6 +42,7 @@ export interface OverlayTokens {
 const LIGHT: OverlayTokens = Object.freeze({
   cornerColor: new Color(0, 0, 0),
   backgroundColor: new Color(255, 255, 255),
+  connectRingFill: new Color(255, 255, 255),
   connectTargetColor: new Color(0, 113, 227),
   scrollIndicatorColor: new Color(100, 100, 100, 180),
   resizeIndicatorColor: Color.fromInt(0xfff0f0f0),

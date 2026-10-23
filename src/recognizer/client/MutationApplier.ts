@@ -72,6 +72,13 @@ export interface MutationApplierOptions {
   /** The drawing style new shapes take (C++ `LekhGlobal::currentStyle`). */
   readonly currentStyle: () => Style;
   readonly stats?: RecognitionStats;
+  /**
+   * C++ `InfoManager::smartModeShapeAdded`: called with the shape a stroke was recognised as, by
+   * `convert` (the new shape), `add` (the first) and `connect` (the connector), as
+   * `LekhCanvasDelegate::convert`, `addShapes` and `addConnection` call it (LekhCanvasDelegate.cpp:273,
+   * 293, 377); not for an arrow, a double-line arrow or ink. The host shows the canvas (i) above it.
+   */
+  readonly onShapeAdded?: (obj: LekhObject) => void;
 }
 
 export type ApplyOutcome = { readonly ok: true } | { readonly ok: false; readonly code: 'rec_stale' };
@@ -251,6 +258,7 @@ export class MutationApplier {
         const o = this.buildShape(ctx, shapeToCanvas(m.shape, view));
         if (o === null) return;
         ed.tx.run(new ConvertObjectsAction(ed.env, ctx.doc, this.objectsOf(ctx, m.deleteIds), o));
+        this.o_.onShapeAdded?.(o);
         this.stats_.markRecognized();
         return;
       }
@@ -265,6 +273,7 @@ export class MutationApplier {
         }
         if (objs.length === 0) return;
         ed.tx.run(new AddObjectAction(ed.env, ctx.doc, objs));
+        this.o_.onShapeAdded?.(objs[0] as LekhObject);
         this.stats_.markRecognized();
         return;
       }
@@ -357,6 +366,7 @@ export class MutationApplier {
     const ed = ctx.editor;
     if (m.deletedIds.length === 0) ed.tx.run(new AddObjectAction(ed.env, ctx.doc, [con]));
     else ed.tx.run(new ConvertObjectsAction(ed.env, ctx.doc, this.objectsOf(ctx, m.deletedIds), con));
+    this.o_.onShapeAdded?.(con);
     this.stats_.markRecognized();
     this.stats_.onConnectorAdded();
   }

@@ -98,10 +98,10 @@ export class ConnectHandle {
     return Math.abs(at.x - this.centre.x) <= r && Math.abs(at.y - this.centre.y) <= r;
   }
 
-  /** A contrasting ring under a dot. */
+  /** A contrasting ring under a dot: a white ring in both themes (`connectRingFill`, owner round UF2). */
   draw(dp: DrawingPlatform, tokens: OverlayTokens): void {
     const ring = new Style();
-    ring.setFillColor(tokens.backgroundColor);
+    ring.setFillColor(tokens.connectRingFill);
     ring.setStrokeColor(tokens.cornerColor);
     ring.setStrokeWidth(1);
     dp.startDrawing(this.centre, ring);

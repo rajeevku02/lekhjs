@@ -11,7 +11,7 @@ rule:
   image: null
   perf: null
 evidence: 'Owner request in round UF2 (2026-10-23) of Work 01M4X7TCHFB862XGT68GPY071C: "In the dark mode the circle becomes full solid."; register entry requested 2026-10-23 ("Register entries: Yes please"); lekhjs b605605; test/interaction/connect-handle-dark-uf2.test.ts (dark: white ring, black dot; light unchanged)'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-23'
+review: 'Owner in chat, 2026-10-23: "accept DR-UI-04 and DR-UI-05"'

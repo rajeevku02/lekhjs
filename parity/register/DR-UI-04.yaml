@@ -11,7 +11,7 @@ rule:
   image: null
   perf: null
 evidence: 'Owner request in round UF2 (2026-10-23) of Work 01M4X7TCHFB862XGT68GPY071C, register entry requested 2026-10-23 ("Register entries: Yes please"); lekhjs b605605 (onShapeAdded), lekhboard-capacitor fc39d64 (InfoMount); lekh/test/board/ui/owner-uf2.test.tsx (shows on a recognised shape; goes on undo and stays gone on redo, on Clear canvas, on a selection, on a delete and a page switch, on a key on the board but not one typed in a field; follows its shape; none for a connect-dragger connector)'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-23'
+review: 'Owner in chat, 2026-10-23: "accept DR-UI-04 and DR-UI-05"'

@@ -11,7 +11,7 @@ rule:
   image: null
   perf: null
 evidence: 'Owner request 2026-10-22 (round DOM1: React only, best effort, relax where it cannot match; WebKit per-process canvas memory); e2e board-screens-parity.spec.js report of 2026-10-22; KB /frontend/lekhboard-capacitor/board/components.md section 1 and section 5'
-status: proposed
-signed_off_by: null
-signed_off_at: null
-review: null
+status: accepted
+signed_off_by: 'owner (Rajeev Kumar)'
+signed_off_at: '2026-10-23'
+review: 'Owner in chat, 2026-10-23: "accept DR-UI-03"'

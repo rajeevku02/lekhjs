@@ -99,7 +99,29 @@ const MESSAGES: Readonly<Record<ExportErrorCode, string>> = Object.freeze({
 /** The `ExportError` of a thrown value (spec 08 §10.3); never board content. */
 export function exportErrorOf(err: unknown): ExportError {
   const code = codeOf(err);
-  return { code, message: MESSAGES[code] };
+  const detail = code === 'export_internal' ? errorDetail(err) : '';
+  return { code, message: MESSAGES[code], ...(detail !== '' ? { detail } : {}) };
+}
+
+/** The longest `detail` (characters). */
+export const ERROR_DETAIL_MAX = 200;
+
+/**
+ * An unexpected error's details for the error dialog ("…Please reach out to support with following
+ * details:"): its name and where it was thrown (the first stack frames), never its message, which
+ * may quote board text (AC-EXP-31). C++ Android showed the message and the stack trace
+ * (LekhExporter.showError). Never logged.
+ */
+function errorDetail(err: unknown): string {
+  if (!(err instanceof Error)) return '';
+  const frames = (err.stack ?? '')
+    .split('\n')
+    .map((l) => l.trim())
+    // V8: "at fn (url:line:col)" (its first line is "Name: message", skipped); JSC: "fn@url:line:col".
+    .filter((l) => l.startsWith('at ') || (/^[^\s:]*@/.test(l) && !l.includes(' ')))
+    .slice(0, 2);
+  const s = [err.name, ...frames].join(' ').replace(/\s+/g, ' ').trim();
+  return s.length > ERROR_DETAIL_MAX ? `${s.slice(0, ERROR_DETAIL_MAX - 1)}…` : s;
 }
 
 function codeOf(err: unknown): ExportErrorCode {

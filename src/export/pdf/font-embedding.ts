@@ -3,7 +3,9 @@
 // written: **embedded** as a subset (`/FontFile2` for TrueType, `/FontFile3` for CFF) when OS/2
 // `fsType` allows it, or **outlines** (filled glyph paths, no text object) when the font is
 // restricted (bit 1), forbids subsetting (bit 8), is bitmap-only (bit 9), or is variable (the
-// requested instance is outlined; PDFKit would embed the default instance only).
+// requested instance is outlined; PDFKit would embed the default instance only). A face fontkit
+// cannot draw (no `glyf` / `CFF ` / `CFF2` outlines, or a `layout` that throws) is not opened,
+// so the chain moves on to the next source.
 import type { FontData } from '../types';
 import type { FontkitCollection, FontkitFont, FontkitFsType, FontkitModule } from './ports';
 
@@ -49,6 +51,29 @@ export function fsTypeAllowsEmbedding(fsType: number): boolean {
 export function isVariableFont(font: FontkitFont): boolean {
   const t = font.directory?.tables;
   return t !== undefined && 'fvar' in t;
+}
+
+/**
+ * Whether fontkit can draw the face's glyphs: it reads outlines from `glyf` (TrueType), `CFF ` or
+ * `CFF2` only. macOS 15's PingFang SC, which CoreText hands out for Han, has Apple's `hvgl`
+ * outlines and none of these, and fontkit's `layout` then throws on the first glyph ("Cannot read
+ * properties of null (reading 'id')"); such a face is not used, so the chain goes on to the next
+ * source (or the image fallback). Fonts without a table directory (test doubles) pass.
+ */
+export function hasUsableOutlines(font: FontkitFont): boolean {
+  const t = font.directory?.tables;
+  if (t === undefined) return true;
+  return 'glyf' in t || 'CFF ' in t || 'CFF2' in t;
+}
+
+/** Whether `layout` works on the face (it throws for a face whose glyphs fontkit cannot build). */
+export function layoutWorks(font: FontkitFont): boolean {
+  try {
+    const run = font.layout(' ', []);
+    return Array.isArray(run.glyphs) && run.glyphs.every((g) => g !== null && g !== undefined);
+  } catch {
+    return false;
+  }
 }
 
 function isCollection(v: FontkitFont | FontkitCollection): v is FontkitCollection {
@@ -98,6 +123,10 @@ export function openFont(
 ): OpenedFont | null {
   const face = openFace(fontkit, data, log);
   if (face === null) return null;
+  if (!hasUsableOutlines(face)) {
+    log?.('font_no_outlines');
+    return null;
+  }
   const variable = data.variable || isVariableFont(face);
   let font = face;
   if (variable && face.getVariation !== undefined) {
@@ -108,6 +137,18 @@ export function openFont(
       font = face.getVariation(axis !== undefined ? { wght } : {});
     } catch {
       font = face;
+    }
+  }
+  if (!layoutWorks(font)) {
+    if (font === face) {
+      log?.('font_layout_failed');
+      return null;
+    }
+    // The instance cannot be laid out: the default instance, if it can.
+    font = face;
+    if (!layoutWorks(font)) {
+      log?.('font_layout_failed');
+      return null;
     }
   }
   const embeddable = data.embeddable && fsTypeAllowsEmbedding(fsTypeValue(face['OS/2']?.fsType));

@@ -81,7 +81,11 @@ export type ExportWarningCode =
 export interface ExportError {
   readonly code: ExportErrorCode;
   readonly message: string;
-  /** Debug builds only; never board content. */
+  /**
+   * `export_internal` only: the unexpected error's name and its first stack frames (never its
+   * message, which may quote board text; at most 200 characters), shown as the error dialog's
+   * details; never logged.
+   */
   readonly detail?: string;
 }
 

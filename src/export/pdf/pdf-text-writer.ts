@@ -47,6 +47,7 @@ export class PdfTextWriter {
   private readonly registered = new Set<string>();
   private readonly images = new Map<RunImage, PdfImage>();
   private outlinedRuns = 0;
+  private failedRuns = 0;
 
   constructor(doc: PdfDocument, resolver: PdfFontResolver) {
     this.doc = doc;
@@ -56,6 +57,11 @@ export class PdfTextWriter {
   /** Runs drawn as outlines so far (`font_outlined`). */
   get outlined(): number {
     return this.outlinedRuns;
+  }
+
+  /** Font runs left out because drawing them threw (logged as `font_run_failed`). */
+  get failed(): number {
+    return this.failedRuns;
   }
 
   write(t: LaidOutText, style: Style): void {
@@ -116,6 +122,23 @@ export class PdfTextWriter {
       return;
     }
     if (r.text === '') return;
+    try {
+      this.drawFontRun(r, x, baseline, px, rgb, opacity);
+    } catch {
+      // One run fontkit or PDFKit cannot draw is left out; the export goes on.
+      this.failedRuns++;
+    }
+  }
+
+  private drawFontRun(
+    r: Extract<LineRun, { kind: 'font' }>,
+    x: number,
+    baseline: number,
+    px: number,
+    rgb: [number, number, number],
+    opacity: number,
+  ): void {
+    const doc = this.doc;
     if (r.font.mode === 'outline') {
       if (this.outline(r.font, r.text, x, baseline, px, r.synthItalic)) {
         doc.fillColor(rgb, opacity);

@@ -220,6 +220,7 @@ export class PdfExporter implements PdfRenderer {
     await flush();
 
     const warnings = resolver.warnings();
+    if (text.failed > 0) log?.('font_run_failed', { count: text.failed });
     if (text.outlined > 0) {
       warnings.push({ code: 'font_outlined', count: text.outlined });
       log?.('font_outlined', { count: text.outlined });

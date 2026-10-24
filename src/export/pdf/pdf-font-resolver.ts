@@ -99,6 +99,8 @@ export class PdfFontResolver {
   private readonly plans = new Map<string, LinePlan>();
   private readonly fontUnavailable = new Set<string>();
   private readonly emojiRuns = new Set<string>();
+  /** Fonts whose `layout` threw on a run of this export: their runs become image runs. */
+  private readonly broken = new Set<string>();
   private reportedBytes = 0;
 
   constructor(opts: PdfFontResolverOptions) {
@@ -133,6 +135,25 @@ export class PdfFontResolver {
         }
       }
     }
+    // A face that opened but cannot lay out one of its runs (fontkit throws) is dropped for the
+    // whole export, so its runs fall back (another font, or an image) instead of failing it.
+    for (let changed = true; changed;) {
+      changed = false;
+      for (const c of texts) {
+        for (const line of c.text.lines) {
+          for (const r of this.structural(c.text, line)) {
+            if (r.kind !== 'font' || this.broken.has(r.font.key)) continue;
+            try {
+              r.font.font.layout(r.text, []);
+            } catch {
+              this.broken.add(r.font.key);
+              this.o.log?.('font_layout_failed');
+              changed = true;
+            }
+          }
+        }
+      }
+    }
     // Every line's runs are final now; render the image runs.
     for (const c of texts) {
       const css = color(c);
@@ -155,7 +176,14 @@ export class PdfFontResolver {
     let width = 0;
     for (const r of this.structural(t, line)) {
       if (r.kind === 'font') {
-        const w = (r.font.font.layout(r.text, []).advanceWidth / r.font.font.unitsPerEm) * t.px;
+        let w = 0;
+        try {
+          w = (r.font.font.layout(r.text, []).advanceWidth / r.font.font.unitsPerEm) * t.px;
+        } catch {
+          // `prepare` has dropped every face that throws; a run that still does is drawn
+          // without advance rather than failing the export (the writer skips it).
+          this.o.log?.('font_layout_failed');
+        }
         runs.push({ ...r, width: w });
         width += w;
       } else {
@@ -209,9 +237,9 @@ export class PdfFontResolver {
     const levels = this.o.bidi.levels(line.text, line.dir);
     const assign = clusters.map((k) => {
       if (k.emoji) return null;
-      if (primary !== null && covers(primary, k)) return primary;
+      if (primary !== null && !this.broken.has(primary.key) && covers(primary, k)) return primary;
       const st = this.fallbacks.get(fallbackKey(traits, k.script, line.text));
-      return st?.fonts.find((f) => covers(f, k)) ?? null;
+      return st?.fonts.find((f) => !this.broken.has(f.key) && covers(f, k)) ?? null;
     });
     const spans = this.splitter.runs(clusters, (k, i) => {
       const f = assign[i];

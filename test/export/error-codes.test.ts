@@ -102,6 +102,16 @@ describe('error codes (AC-EXP-27)', () => {
     expect(exportErrorOf(named('SecurityError')).code).toBe('export_image_unreadable');
     expect(exportErrorOf('string').code).toBe('export_internal');
   });
+
+  it('export_internal carries the error name and where it was thrown, never its message (EX2 fix 2)', () => {
+    const e = exportErrorOf(new TypeError(`Cannot read properties of null (reading 'id') ${MARKER}`));
+    expect(e.code).toBe('export_internal');
+    expect(e.detail).toMatch(/^TypeError at /);
+    expect(e.detail).not.toContain(MARKER);
+    expect(e.detail).not.toContain('Cannot read');
+    expect((e.detail ?? '').length).toBeLessThanOrEqual(200);
+    expect(exportErrorOf({ code: 'export_write_failed' }).detail).toBeUndefined();
+  });
 });
 
 describe('log privacy (AC-EXP-31)', () => {

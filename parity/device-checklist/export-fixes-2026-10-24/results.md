@@ -94,3 +94,56 @@ wrapper around `Capacitor.toNative` in the WebView. Aggregates only.
   files and the harness files were removed from the phone. The app's preferences were restored from
   the copy taken before the run, the WebView export key was set back to its recorded value, and a
   Debug build without the harness was installed.
+
+## Galaxy Tab S6 Lite (SM-P610, Android 13, devicePixelRatio 1.5), 2026-10-24, after the EX3 reconcile
+
+Build: debug APK, dev-configured, built in a copy of lekhandroid `a967b445` (`git archive`, so
+without the owner's uncommitted bundle files) with a fresh web bundle of lekhboard-capacitor
+`30111bc` + lekhjs `ef460c7` (`vite build`, `apiUrl` devapi.lekh.app / `appUrl` devdocs.lekh.app,
+no other backend host in the bundle), `./gradlew :lekhDiagram:assembleDebug`, installed with
+`install -r` over the previous debug build. Android System WebView 155.0.8059.43, as in the
+`android-export-2026-10-23` run (Google Play updated it to 155.0.8059.46 when airplane mode was
+turned off after EXP-45; the timings below are all on .43). Driving: CDP on the debug WebView for the
+panels, `adb input` / `uiautomator` for the document picker and native dialogs, files saved through
+the picker into Downloads and pulled. Native calls (`setSetting`, `shareFiles`, `showDialog`,
+`getFontData`, the usage-event POST) were timed by a wrapper around `Capacitor.toNative`, and the
+encode calls by a wrapper around `toDataURL` / `toBlob`. For the timed runs no DevTools session
+stayed attached: the export was started over CDP, then the session was closed until the file was
+saved. Aggregates only.
+
+| Fix / case | Result | Evidence |
+|---|---|---|
+| 1, EXP-09 board panel → doc list | pass | The native `last_export_params` started empty, and the WebView `localStorage` held an EX1 LEKH value. The board panel opened with the defaults (PDF, background off): the WebView value was ignored. Then JPEG x3 Full Page 35, background on → Export. The native setting held exactly that, and the doc-list popup opened with JPEG, x3, Full Page, background on. |
+| 1, EXP-09 doc list → board panel | pass | The doc list was set to PNG x2 Drawing Area 12, background on → Export. The board panel then opened at PNG, x2, Drawing Area, padding 12. |
+| 1, Save to gallery | pass | The background setting came from the doc list's native write. Save to gallery on page 2 gave one JPEG in `Pictures/`, 1382 × 827. The ground was #e4f2fd (≈ #e3f2fd), so the background was on. Before EX2 the background was always off. |
+| 3, EXP-36 | pass | The cloud folder held export-large and export-suite. Folder → Export → PDF made one `shareFiles` with 2 files and gave one Save (`lekh-export.zip`): export-suite.pdf has 7 pages, export-large.pdf 3 × 2500 × 2000 pt. A second run used PNG x2 with an injected failure (`getImageData` throws on its 2nd call), which failed export-large, the board exported first. One `shareFiles` held only the suite's 7 PNGs, each 2 × the EXP-13 size (± 1 px). One `board_exported` event was sent. Then came the native "Error / Error in exporting some of the boards.". `cache/export` held no file of export-large, only the suite's 7 PNGs and the native zip. |
+| 3, several files (EX3 note) | as expected | Android Save zips several files today, but the zip is still named `lekh-export.zip`: TS passes `zipName` (`export-suite.zip`, `zz-agent-test-ex2-android.zip`), and the native side ignores it until its EX3 half lands. Share was not run. |
+| 4, EXP-45 | pass | scripts.lekh → PDF, in airplane mode (offline confirmed from the WebView), cold app. Han, Japanese, Korean, Arabic and Devanagari are all extractable. Before, Devanagari was not. Every script is drawn and emoji are images (rendered with pdf.js). Fonts `getFontData` returned: Han and Japanese `NotoSerifCJK-Regular.ttc` #3 (NotoSerifCJKtc-Regular, static); Korean `SamsungKorean-Regular.ttf` (static); Arabic `NotoNaskhArabicUI-Regular.ttf` (static); Devanagari `SECDevanagari-Regular.otf` (static CFF, sans; before: `NotoSerifDevanagari-VF.ttf`). EXP-30 (export-matrix PDF): suite checker 14 PASS, 0 FAIL. |
+| 6, EXP-13 timing | pass | PNG x1, all 7 pages, Drawing Area 20 (the settings of the original run). Two runs; in each, the first encode to "Saving…" took about 0.6 s for all 7 pages. Before: about 13 s per page ("Rendering page i of n…"), about 55 s in all. The modal's first text was "Saving…": the pages were done too soon for "Rendering page i of n…" to be seen. `toDataURL` per page: 280–288 ms for 2094 × 2252, 39–66 ms for the next three pages, 15–19 ms for the two small ones, 1 ms for 60 × 60. In the same WebView `toBlob` of 741 × 891 still takes 4.07–4.11 s (`toDataURL` 49–73 ms; before 4.06 s / 142 ms). "Saving…" (writing, native zip, picker) took about 5.3 s, and Export to the file in Downloads about 9.6 s. Suite checker `--host android --dpr 1.5`: 26 PASS, 0 FAIL on both zips. |
+| 7, PDF fonts phase | pass | The modal read "Preparing fonts…", never "Downloading fonts (0.0 MB)…". It lasted 4.1 s for scripts.lekh (offline, cold app) and 4.7 s for export-matrix. Before: about 25 s. The `getFontData` calls took 32–59 ms each, except the first of a session (616–627 ms). |
+| 5, board panel | pass | Capped: `subscription_expires_at` set to 0. On-device board, LEKH → Export. `num_offline_export_done` was written 1 at +371 ms and `board_exported` was sent at +398 ms. `shareFiles` was called at +399 ms and was still pending with the document picker up, when the native preference already read 1. |
+| 5, doc list | pass | On-device board, LEKH: the counter went 1 → 2 at +261 ms and the event was sent at +302 ms. Both came before the picker closed (`shareFiles` still pending). |
+| EXP-33 (regression) | pass | The picker was dismissed with Back. `shareFiles` resolved `{handedOff: false}`. There was no dialog, Downloads was unchanged, and the counter stayed at its value (counted once). |
+| EXP-13, EXP-40 (regression) | pass | As above. |
+
+- New observation (Samsung fonts): a Han or Japanese run in a Noto Sans box gets the serif,
+  Traditional-Chinese face of NotoSerifCJK (`collectionIndex` 3, NotoSerifCJKtc), while the
+  screen draws it in Samsung's sans CJK. Two causes. First, Samsung's `fonts.xml` registers
+  `SECCJK-Regular.ttc` (sans) and `NotoSerifCJK-Regular.ttc`, not the `NotoSansCJK-Regular.ttc`
+  that is in `/system/fonts`, and `FontData.familyScore` decides sans by file name, so SECCJK
+  scores no better than the serif face. Second, `scriptLanguage` takes the language from the
+  first code point (Han → `zh` for the Japanese line too), and `localeScore` matches only the
+  language, so a `zh-Hant` face wins. The text is still extractable, but the glyph style differs
+  from the screen. Suspected: lekhandroid `FontData.java` `familyScore` / `scriptLanguage` /
+  `localeScore`. Not fixed.
+- The doc-list export of the cloud export-suite spent about 4 s in "Preparing…" (the board's
+  content fetched from the dev backend); not compared before.
+- Afterwards the dev-cloud folder and its two boards were deleted. The on-device fixtures, the
+  saved exports (Downloads, Pictures) and the app's `cache/export` were removed. The app's
+  preferences (`last_export_params` empty, `subscription_expires_at` and the counter as found),
+  `files/` and the WebView's local storage were restored from the copy taken before the run. The
+  app was signed out, as found. Airplane mode is off, with Wi-Fi and Bluetooth on as before. No adb
+  forwards remain. Restoring the copy with a host-made tar first left the app's data directory
+  mode 755 (so `run-as` refused) and macOS `._*` files; the mode was set back to 700 through the
+  debug app's JDWP, and the stray files and the other modes were fixed with `run-as`. The
+  debug build above is installed and launches to the sign-in screen.

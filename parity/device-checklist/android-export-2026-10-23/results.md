@@ -69,7 +69,7 @@ Not on Android: EXP-42 (iOS), EXP-43 (Mac), EXP-46 (web).
 
 - **Raster pages are slow on this WebView.** On the board, each page whose PNG or JPEG goes through the single-canvas path stays at "Rendering page i of n…" for about 13 s. A 7-page PNG export (EXP-13) takes about 55 s; the banded 45 MP page of EXP-25 takes 10 s. `canvas.toBlob` measured alone in this WebView takes 4.06–4.09 s for a 741 × 891 canvas (four runs; `OffscreenCanvas.convertToBlob` is the same, `toDataURL` 142 ms). Suspected: `lekhboard-capacitor/lekh/src/board/export/browserCanvas.ts` `encode` (toBlob), as WebView 155 runs it.
 - On native hosts the PDF progress modal reads "Downloading fonts (0.0 MB)…" for about 25 s while the native `getFontData` calls run.
-- After Logout the native `subscription_expires_at` keeps the account's expiry (`services/auth.js` `logout` does not reset it), so a signed-out user's on-device exports are not capped. The cap of EXP-39 was therefore produced by setting the value to 0 and restored after.
+- After Logout the native `subscription_expires_at` keeps the account's expiry (`services/auth.js` `logout` does not reset it), so a signed-out user's on-device exports are not capped. (By design, owner decision of 2026-10-24: while signed out, the last signed-in user's subscription applies; not a bug.) The cap of EXP-39 was therefore produced by setting the value to 0 and restored after.
 - Delivered exports leave their temp files in the app's `cache/export/` until the 24 h clean-up (`ExportFiles.removeOldExports`, by design); a cancelled job deletes its files.
 
 ## Differences from the web results (web-export-2026-10-23)

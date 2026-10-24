@@ -60,3 +60,37 @@ USB list empty throughout), so fixes 4, 6 and 7 (timings) on Android and fixes 1
 iPhone were not run on the devices; they are covered by unit tests only. To do on the tablet: EXP-09,
 EXP-36, EXP-45 (Devanagari extractable), a 7-page PNG export (EXP-13) timed, the PDF fonts phase text
 and its duration (before: about 25 s).
+
+## iPhone (iPhone 8, iOS 16.7.14, Debug, dev-configured), 2026-10-24, after the EX3 reconcile
+
+Build: lekhboard-capacitor `30111bc` (the six EX2 fix commits rebased onto the owner's EX3
+`0f9d4e3`; EX2 fix 1 reduced to a 3 s timeout on the native read, EX3's settings store kept) +
+lekhjs `ef460c7`, `vite build` with `apiUrl` devapi.lekh.app / `appUrl` devdocs.lekh.app (no other
+backend host in the bundle), in a copy of the lekhios working tree (`bebe202` plus the owner's
+uncommitted deployment-target change), the command-file harness in the copy only (as in
+`ios-export-2026-10-23`). Native UI could not be tapped: share sheets were screenshotted and ended
+by relaunching the app, and the files handed to `shareFiles` were pulled from `tmp/export/<job>/`.
+Native calls (`setSetting`, `shareFiles`, `showDialog`, the usage-event POST) were timed by a
+wrapper around `Capacitor.toNative` in the WebView. Aggregates only.
+
+| Fix / case | Result | Evidence |
+|---|---|---|
+| 1, EXP-09 board panel → doc list | pass | The native store started empty, and the WebView `localStorage` held an SVG value. The board panel opened with the defaults (PDF, background off): the old WebView value was ignored, as EX3 intends. Then PNG x2 Drawing Area 12 → Export. The native setting held that value while the sheet was still up, and the doc-list popup opened with PNG x2 Drawing Area padding 12. |
+| 1, EXP-09 doc list → board panel | pass | The doc list was set to JPEG x3 Full Page 35, background on → Export. After a relaunch, the board panel opened at JPEG x3 Full Page, background on. |
+| 3, EXP-36 | pass | The cloud folder held the export-suite board and export-large, and the export was PNG x2. An injected failure (`getImageData` throws on its 2nd call) failed export-large, which was exported first. One share sheet, "Save 7 Images", got only the suite's 7 PNGs: valid, each exactly 2 × the EXP-13 size. No export-large file was handed off or left in `tmp/export`. One `board_exported` event was sent. In a second run, `shareFiles` was answered by the harness, and the app then called the native `showDialog` "Error" / "Error in exporting some of the boards.". |
+| 5, board panel | pass | The capped user had `subscription_expires_at` 0, set after launch. A LEKH export from an on-device board wrote `num_offline_export_done` 1 at +56 ms and sent `board_exported` at +58 ms. `shareFiles` was called at +58 ms and still had not resolved 12 s later, with the sheet up. |
+| 5, doc list | pass | On-device board, LEKH: the counter went 1 → 2 at +229 ms and the event was sent at +237 ms, both before `shareFiles` (still pending while the sheet was up). |
+| EXP-13 (regression) | pass | One share sheet, "Save 7 Images". `suite.mjs check --host ios`: 26 PASS, 0 FAIL. |
+| EXP-45 | pass | scripts.lekh PDF with the network cut (`dvt condition` 100 % loss, confirmed from the WebView). Han, Japanese, Korean, Arabic and Devanagari are extractable. Embedded fonts: PingFangSC-Regular, NotoSans-Regular, AppleSDGothicNeo-Regular, GeezaPro, KohinoorDevanagari-Regular. The fonts phase read "Preparing fonts…" (fix 7) for about 0.4 s. |
+| 2, error dialog | pass | Injected failure on a board-panel PNG x2 export of export-large. The native dialog text was "An unexpected error occurred while exporting. Please reach out to support with following details:", then `export_internal`, then the detail `TypeError @ <bundle frame>` (no message text). |
+
+- The EX2 fix-1 one-time move of a WebView value into the native store (verified on the Mac above)
+  was dropped in the reconcile. On this build an EX1 value in `localStorage` is ignored, as EX3
+  specifies.
+- iOS 16 kept a SpringBoard "iPhone is not Activated" alert over the app for most of the run. It
+  did not block the WebView or the share sheets. The app's own native alerts queue behind it, which
+  is why the EXP-36 dialog was read from the `showDialog` call.
+- Afterwards the dev-cloud folder and boards were deleted. The on-device fixtures, the export temp
+  files and the harness files were removed from the phone. The app's preferences were restored from
+  the copy taken before the run, the WebView export key was set back to its recorded value, and a
+  Debug build without the harness was installed.

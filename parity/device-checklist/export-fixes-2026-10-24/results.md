@@ -147,3 +147,36 @@ saved. Aggregates only.
   mode 755 (so `run-as` refused) and macOS `._*` files; the mode was set back to 700 through the
   debug app's JDWP, and the stray files and the other modes were fixed with `run-as`. The
   debug build above is installed and launches to the sign-in screen.
+
+## Galaxy Tab S6 Lite, 2026-10-24, EX2 fix 4b (Android getFontData CJK face)
+
+Build: debug APK, dev-configured, built in a copy of lekhandroid `ad113b71` (`git archive` of
+`a967b445` plus the change) with a fresh web bundle of lekhboard-capacitor `30111bc` + lekhjs
+`9b66138` (`vite build`, `apiUrl` devapi.lekh.app / `appUrl` devdocs.lekh.app, no other backend
+host), `install -r`. Device locales: en-US, ja-JP. The WebView draws Han in a sans box with the
+Japanese forms of the sans `SECCJK` face (canvas glyphs compared with each candidate face), and a
+serif box with `NotoSerifCJK` JP. `getFontData` answers, before → after:
+
+| Run | Sans box | Serif box |
+|---|---|---|
+| Han (`中文：…`) | NotoSerifCJK #3 → **SECCJK #0** | NotoSerifCJK #3 → **NotoSerifCJK #0** |
+| Japanese, kanji first (`日本語：い…`) | NotoSerifCJK #3 → **SECCJK #0** | NotoSerifCJK #3 → **NotoSerifCJK #0** |
+| Japanese, kana first (`いろは…`) | NotoSerifCJK #0 → **SECCJK #0** | NotoSerifCJK #0 (same) |
+| Korean | NotoSerifCJK #1 → **SamsungKorean-Regular** (bold: SamsungKorean-Bold, same) | NotoSerifCJK #1 (same) |
+| Arabic | SECNaskhArabicUI-Regular (same); bold NotoNaskhArabic-Bold → SECNaskhArabicUI-Bold | SECNaskhArabicUI-Regular (same) |
+| Devanagari | SECDevanagari-Regular → SECDevanagariUI-Regular (static, both) | NotoSerifDevanagari-VF (same) |
+
+Noto Sans Mono and Caveat boxes get the sans answers. All static except NotoSerifDevanagari-VF.
+
+| Case | Result | Evidence |
+|---|---|---|
+| EXP-45, scripts.lekh (Noto Sans) → PDF | pass | Embedded SECCJKjp-Regular, NotoSans-Regular, SamsungKorean, SECNaskhArabicUI, SECDevanagariUI-Regular. Han, Japanese, Korean, Arabic and Devanagari extractable; every script drawn, emoji as images (pdf.js). |
+| EXP-45, the same board in Noto Serif → PDF | pass | Embedded NotoSerifCJKjp-Regular, NotoSerif-Regular, NotoSerifCJKkr-Regular, SECNaskhArabicUI, NotoSerifDevanagari-Regular; all extractable and drawn. |
+| EXP-30, export-matrix → PDF | pass | Suite checker `--host android --dpr 1.5`: 14 PASS, 0 FAIL. |
+| EXP-13 (regression) | pass | 26 PASS, 0 FAIL. |
+
+Not run in airplane mode this time (the native chain never downloads). Afterwards the four
+`zz-agent-test-*` on-device boards, the saved files in Downloads and the app's `cache/export`
+were removed; the app's preferences and `files/settings` were restored from a copy taken on the
+device; the WebView's `setting_last_export_params` was unchanged. The build above is installed
+and launches to the sign-in screen.

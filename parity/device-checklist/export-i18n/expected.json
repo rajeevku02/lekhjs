@@ -1,0 +1,3430 @@
+{
+  "note": "Board points. Pages are infinite: a Drawing Area / PDF plan is the bounds plus the padding on each side (ExportInputBuilder.cpp:25-39). Target rect: [x, y, width, height] of the box (or region) whose text is checked.",
+  "namesBoard": "出口 निर्यात تصدير",
+  "namesFolder": "फ़ोल्डर 文件夹",
+  "i18n-scripts.lekh": [
+    {
+      "index": 0,
+      "name": "Latin Greek Cyrillic",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 417
+      },
+      "objects": 10,
+      "background": null,
+      "targets": [
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt có dấu: Ặ ặ Ẩ ẩ Ỡ ỡ Ữ ữ đ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć gęślą jaźń",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul ılık; Iı İi Şş Ğğ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        },
+        {
+          "sample": "el",
+          "text": "Ξεσκεπάζω την ψυχοφθόρα βδελυγμία",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 302, 680, 56]
+        },
+        {
+          "sample": "ru",
+          "text": "Съешь же ещё этих мягких французских булок",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 392, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "name": "RTL",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 327
+      },
+      "objects": 8,
+      "background": null,
+      "targets": [
+        {
+          "sample": "ar",
+          "text": "السلام عليكم ورحمة الله",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "he",
+          "text": "שלום עולם, עברית",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو: یہ ٹھیک ہے",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        },
+        {
+          "sample": "fa",
+          "text": "من می‌خواهم فارسی بنویسم",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 302, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Indic",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 687
+      },
+      "objects": 16,
+      "background": null,
+      "targets": [
+        {
+          "sample": "hi",
+          "text": "हिन्दी: क्षत्रिय, कार्य, श्री",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা: শিক্ষা, রাষ্ট্র",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்: வணக்கம், கொண்டு",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        },
+        {
+          "sample": "te",
+          "text": "తెలుగు: ప్రపంచం, క్షేమం",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 302, 680, 56]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ: ಪ್ರಪಂಚ, ಕ್ಷೇಮ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 392, 680, 56]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം: ലോകം, അവൻ, ക്ഷ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 482, 680, 56]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી: નમસ્તે, ક્ષમા",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 572, 680, 56]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ: ਸਤ ਸ੍ਰੀ ਅਕਾਲ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 662, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Thai Lao Khmer Myanmar",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 327
+      },
+      "objects": 8,
+      "background": null,
+      "targets": [
+        {
+          "sample": "th",
+          "text": "สวัสดีชาวโลก ภาษาไทย",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "lo",
+          "text": "ສະບາຍດີ ພາສາລາວ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "km",
+          "text": "សួស្តីពិភពលោក ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        },
+        {
+          "sample": "my",
+          "text": "မင်္ဂလာပါ မြန်မာဘာသာ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 302, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "name": "CJK",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 327
+      },
+      "objects": 8,
+      "background": null,
+      "targets": [
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文：你好，世界！",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文：你好，世界！",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語：こんにちは、カタカナ、漢字",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어: 안녕하세요 세계",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 302, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "name": "CJK Ext B",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 147
+      },
+      "objects": 4,
+      "background": null,
+      "targets": [
+        {
+          "sample": "extb",
+          "text": "𠜎𠜱𠝹𠱓",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Emoji",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 237
+      },
+      "objects": 6,
+      "background": null,
+      "targets": [
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦 👩🏽‍💻 🧑‍🤝‍🧑",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳 🇯🇵 🇧🇷 🏳️‍🌈 🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏻 👍🏼 👍🏽 👍🏾 👍🏿 1️⃣ #️⃣",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Others",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 417
+      },
+      "objects": 10,
+      "background": null,
+      "targets": [
+        {
+          "sample": "am",
+          "text": "ሰላም ለዓለም፣ አማርኛ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "ka",
+          "text": "გამარჯობა მსოფლიო, ქართული",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "hy",
+          "text": "Բարեւ աշխարհ, Հայերեն",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        },
+        {
+          "sample": "bo",
+          "text": "བཀྲ་ཤིས་བདེ་ལེགས། བོད་ཡིག",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 302, 680, 56]
+        },
+        {
+          "sample": "si",
+          "text": "ආයුබෝවන්, ශ්‍රී ලංකා",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 392, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Edge cases",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 31.5,
+        "width": 891,
+        "height": 597
+      },
+      "objects": 14,
+      "background": null,
+      "targets": [
+        {
+          "sample": "bidi-ar",
+          "text": "Order 66 costs 1,234.50 ريال (العربية 2024) today",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 32, 680, 56]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "עברית with English and 123 מספרים",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 122, 680, 56]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "قیمت ۱۲۳٫۴۵ تومان",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 212, 680, 56]
+        },
+        {
+          "sample": "nfc",
+          "text": "café naïve Ệ 한",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 302, 680, 56]
+        },
+        {
+          "sample": "nfd",
+          "text": "café naïve Ệ 한",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 392, 680, 56]
+        },
+        {
+          "sample": "combining",
+          "text": "ậ́ ǭ x̰̱̃ é́́",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 482, 680, 56]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampfschifffahrtselektrizitätenhauptbetriebswerkbauunterbeamtengesellschaft",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [220, 572, 680, 56]
+        }
+      ]
+    }
+  ],
+  "i18n-styles.lekh": [
+    {
+      "index": 0,
+      "name": "Styles",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 17.5,
+        "width": 1116,
+        "height": 2669
+      },
+      "objects": 210,
+      "background": null,
+      "targets": [
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 18, 230, 44]
+        },
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 18, 230, 44]
+        },
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 18, 230, 44]
+        },
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 18, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 82, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 82, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 82, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 82, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 146, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 146, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 146, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 146, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 210, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 210, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 210, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 210, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 274, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 274, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 274, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 274, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 338, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 338, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 338, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 338, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 402, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 402, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 402, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 402, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 466, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 466, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 466, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 466, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 530, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 530, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 530, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 530, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 594, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 594, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 594, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 594, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 658, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 658, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 658, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 658, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 722, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 722, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 722, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 722, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 786, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 786, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 786, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 786, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 850, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 850, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 850, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 850, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 914, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 914, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 914, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 914, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 978, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 978, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 978, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 978, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1042, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1042, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1042, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1042, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1106, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1106, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1106, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1106, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1170, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1170, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1170, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1170, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1234, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1234, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1234, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1234, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1298, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1298, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1298, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1298, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1426, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1426, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1426, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1426, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1490, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1490, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1490, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1490, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1554, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1554, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1554, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1554, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1618, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1618, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1618, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1618, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1682, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1682, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1682, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1682, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1874, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1874, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1874, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1874, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 1938, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 1938, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 1938, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 1938, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2002, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2002, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2002, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2002, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2066, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2066, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2066, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2066, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2130, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2130, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2130, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2130, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2194, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2194, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2194, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2194, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2322, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2322, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2322, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2322, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2386, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2386, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2386, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2386, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2450, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2450, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2450, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2450, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2514, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2514, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2514, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2514, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2578, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2578, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2578, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2578, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [145, 2642, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "bold",
+          "rect": [395, 2642, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "italic",
+          "rect": [645, 2642, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [895, 2642, 230, 44]
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "name": "Families",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 17.5,
+        "width": 1116,
+        "height": 2669
+      },
+      "objects": 210,
+      "background": null,
+      "targets": [
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 18, 230, 44]
+        },
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 18, 230, 44]
+        },
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 18, 230, 44]
+        },
+        {
+          "sample": "vi",
+          "text": "Tiếng Việt",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 18, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 82, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 82, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 82, 230, 44]
+        },
+        {
+          "sample": "pl",
+          "text": "Zażółć",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 82, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 146, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 146, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 146, 230, 44]
+        },
+        {
+          "sample": "tr",
+          "text": "İstanbul",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 146, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 210, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 210, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 210, 230, 44]
+        },
+        {
+          "sample": "el",
+          "text": "Ελληνικά",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 210, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 274, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 274, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 274, 230, 44]
+        },
+        {
+          "sample": "ru",
+          "text": "Русский",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 274, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 338, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 338, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 338, 230, 44]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 338, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 402, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 402, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 402, 230, 44]
+        },
+        {
+          "sample": "he",
+          "text": "עברית",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 402, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 466, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 466, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 466, 230, 44]
+        },
+        {
+          "sample": "ur",
+          "text": "اردو",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 466, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 530, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 530, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 530, 230, 44]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 530, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 594, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 594, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 594, 230, 44]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 594, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 658, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 658, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 658, 230, 44]
+        },
+        {
+          "sample": "bn",
+          "text": "বাংলা",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 658, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 722, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 722, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 722, 230, 44]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 722, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 786, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 786, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 786, 230, 44]
+        },
+        {
+          "sample": "te",
+          "text": "నమస్కారం",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 786, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 850, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 850, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 850, 230, 44]
+        },
+        {
+          "sample": "kn",
+          "text": "ಕನ್ನಡ",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 850, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 914, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 914, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 914, 230, 44]
+        },
+        {
+          "sample": "ml",
+          "text": "മലയാളം",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 914, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 978, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 978, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 978, 230, 44]
+        },
+        {
+          "sample": "gu",
+          "text": "ગુજરાતી",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 978, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1042, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1042, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1042, 230, 44]
+        },
+        {
+          "sample": "pa",
+          "text": "ਪੰਜਾਬੀ",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1042, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1106, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1106, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1106, 230, 44]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1106, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1170, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1170, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1170, 230, 44]
+        },
+        {
+          "sample": "lo",
+          "text": "ພາສາລາວ",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1170, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1234, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1234, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1234, 230, 44]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1234, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1298, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1298, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1298, 230, 44]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1298, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1362, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1426, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1426, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1426, 230, 44]
+        },
+        {
+          "sample": "zh-Hant",
+          "text": "繁體中文",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1426, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1490, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1490, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1490, 230, 44]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1490, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1554, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1554, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1554, 230, 44]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1554, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1618, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1618, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1618, 230, 44]
+        },
+        {
+          "sample": "extb",
+          "text": "𠜎",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1618, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1682, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1682, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1682, 230, 44]
+        },
+        {
+          "sample": "extb-ja",
+          "text": "𩸽（ほっけ）",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1682, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1746, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-flags",
+          "text": "🇮🇳",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1810, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1874, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1874, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1874, 230, 44]
+        },
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏽",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1874, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 1938, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 1938, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 1938, 230, 44]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 1938, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2002, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2002, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2002, 230, 44]
+        },
+        {
+          "sample": "ka",
+          "text": "ქართული",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2002, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2066, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2066, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2066, 230, 44]
+        },
+        {
+          "sample": "hy",
+          "text": "Հայերեն",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2066, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2130, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2130, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2130, 230, 44]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2130, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2194, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2194, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2194, 230, 44]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2194, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-ar",
+          "text": "bidi",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2258, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2322, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2322, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2322, 230, 44]
+        },
+        {
+          "sample": "bidi-he",
+          "text": "bidi RTL",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2322, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2386, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2386, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2386, 230, 44]
+        },
+        {
+          "sample": "fa-digits",
+          "text": "۱۲۳٫۴۵",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2386, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2450, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2450, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2450, 230, 44]
+        },
+        {
+          "sample": "nfc",
+          "text": "NFC",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2450, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2514, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2514, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2514, 230, 44]
+        },
+        {
+          "sample": "nfd",
+          "text": "NFD",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2514, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2578, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2578, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2578, 230, 44]
+        },
+        {
+          "sample": "combining",
+          "text": "stack",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2578, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "family:Noto Sans",
+          "rect": [145, 2642, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "family:Noto Serif",
+          "rect": [395, 2642, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "family:Noto Sans Mono",
+          "rect": [645, 2642, 230, 44]
+        },
+        {
+          "sample": "long",
+          "text": "Donaudampf…",
+          "kind": "shape",
+          "variant": "family:Caveat",
+          "rect": [895, 2642, 230, 44]
+        }
+      ]
+    }
+  ],
+  "i18n-layout.lekh": [
+    {
+      "index": 0,
+      "name": "Containers",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 9.5,
+        "y": 24.5,
+        "width": 1051,
+        "height": 1351
+      },
+      "objects": 84,
+      "background": null,
+      "targets": [
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 25, 260, 50]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 30, 220, 40]
+        },
+        {
+          "sample": "ar",
+          "text": "العربية",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 15, 270, 70]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 125, 260, 50]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 130, 220, 40]
+        },
+        {
+          "sample": "fa",
+          "text": "فارسی",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 115, 270, 70]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 225, 260, 50]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 230, 220, 40]
+        },
+        {
+          "sample": "hi",
+          "text": "हिन्दी",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 215, 270, 70]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 325, 260, 50]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 330, 220, 40]
+        },
+        {
+          "sample": "ta",
+          "text": "தமிழ்",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 315, 270, 70]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 425, 260, 50]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 430, 220, 40]
+        },
+        {
+          "sample": "th",
+          "text": "ภาษาไทย",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 415, 270, 70]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 525, 260, 50]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 530, 220, 40]
+        },
+        {
+          "sample": "km",
+          "text": "ភាសាខ្មែរ",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 515, 270, 70]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 625, 260, 50]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 630, 220, 40]
+        },
+        {
+          "sample": "my",
+          "text": "မြန်မာ",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 615, 270, 70]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 725, 260, 50]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 730, 220, 40]
+        },
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 715, 270, 70]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 825, 260, 50]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 830, 220, 40]
+        },
+        {
+          "sample": "ja",
+          "text": "日本語です",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 815, 270, 70]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 925, 260, 50]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 930, 220, 40]
+        },
+        {
+          "sample": "ko",
+          "text": "한국어",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 915, 270, 70]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 1025, 260, 50]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 1030, 220, 40]
+        },
+        {
+          "sample": "am",
+          "text": "አማርኛ",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 1015, 270, 70]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 1125, 260, 50]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 1130, 220, 40]
+        },
+        {
+          "sample": "bo",
+          "text": "བོད་ཡིག",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 1115, 270, 70]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 1225, 260, 50]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 1230, 220, 40]
+        },
+        {
+          "sample": "si",
+          "text": "සිංහල",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 1215, 270, 70]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [160, 1325, 260, 50]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "free",
+          "variant": "regular",
+          "rect": [450, 1330, 220, 40]
+        },
+        {
+          "sample": "emoji-zwj",
+          "text": "👨‍👩‍👧‍👦",
+          "kind": "edge",
+          "variant": "regular",
+          "rect": [745, 1315, 270, 70]
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "name": "Wrapping",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 24.5,
+        "y": 4.5,
+        "width": 911,
+        "height": 736
+      },
+      "objects": 20,
+      "background": null,
+      "targets": [
+        {
+          "sample": "th-long",
+          "text": "ภาษาไทยไม่มีการเว้นวรรคระหว่างคำจึงต้องตัดคำตามพจนานุกรม",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [25, 40, 150, 320],
+          "gap": [180, 40, 30, 320]
+        },
+        {
+          "sample": "km-long",
+          "text": "ភាសាខ្មែរមិនមានដកឃ្លារវាងពាក្យទេ ដូច្នេះត្រូវកាត់ពាក្យតាមវចនានុក្រម",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [215, 40, 150, 320],
+          "gap": [370, 40, 30, 320]
+        },
+        {
+          "sample": "my-long",
+          "text": "မြန်မာဘာသာတွင်စကားလုံးများကြားတွင်နေရာလွတ်မရှိပါ",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [405, 40, 150, 320],
+          "gap": [560, 40, 30, 320]
+        },
+        {
+          "sample": "zh-long",
+          "text": "这是一个没有空格的中文段落用于检查固定宽度的文本框是否在框内正确换行并且不会溢出到框外面去",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [595, 40, 150, 320],
+          "gap": [750, 40, 30, 320]
+        },
+        {
+          "sample": "ja-long",
+          "text": "日本語の文章は単語の間に空白がないので任意の文字の間で改行できます。「括弧」や句読点、は行頭に来ません。",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [785, 40, 150, 320],
+          "gap": [940, 40, 30, 320]
+        },
+        {
+          "sample": "ko-long",
+          "text": "한국어는 단어 사이에 띄어쓰기를 사용하지만 긴 문장은 여러 줄로 나뉘어야 합니다.",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [25, 420, 150, 320],
+          "gap": [180, 420, 30, 320]
+        },
+        {
+          "sample": "ar-long",
+          "text": "هذا نص عربي طويل يجب أن يلتف على عدة أسطر داخل المربع الضيق",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [215, 420, 150, 320],
+          "gap": [370, 420, 30, 320]
+        },
+        {
+          "sample": "hi-long",
+          "text": "यह एक लंबा हिन्दी वाक्य है जो संकरे बक्से में कई पंक्तियों में टूटना चाहिए",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [405, 420, 150, 320],
+          "gap": [560, 420, 30, 320]
+        },
+        {
+          "sample": "long-narrow",
+          "text": "Donaudampfschifffahrtselektrizitätenhauptbetriebswerkbauunterbeamtengesellschaft",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [595, 420, 150, 320],
+          "gap": [750, 420, 30, 320]
+        },
+        {
+          "sample": "mixed-long",
+          "text": "Lekh は whiteboard アプリ with 中文 text and English words mixed together.",
+          "kind": "wrap",
+          "variant": "regular",
+          "rect": [785, 420, 150, 320],
+          "gap": [940, 420, 30, 320]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Runs",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 49.5,
+        "y": 29.5,
+        "width": 901,
+        "height": 486
+      },
+      "objects": 5,
+      "background": null,
+      "targets": [
+        {
+          "sample": "multi",
+          "text": "Latin 中文 العربية हिन्दी ไทย ქართული 😀 end",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [50, 30, 900, 60]
+        },
+        {
+          "sample": "lines",
+          "text": "First line in English\nسطر عربي ثانٍ\nतीसरी पंक्ति हिन्दी",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [50, 135, 500, 130]
+        },
+        {
+          "sample": "ar-left",
+          "text": "السلام عليكم ورحمة الله",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [50, 305, 500, 50]
+        },
+        {
+          "sample": "ar-right",
+          "text": "السلام عليكم ورحمة الله",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [50, 385, 500, 50]
+        },
+        {
+          "sample": "decorated",
+          "text": "مرحبا 你好 नमस्ते",
+          "kind": "shape",
+          "variant": "bold-italic",
+          "rect": [50, 465, 500, 50]
+        }
+      ]
+    }
+  ],
+  "i18n-names.lekh": [
+    {
+      "index": 0,
+      "name": "中文",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 19.5,
+        "y": 31.5,
+        "width": 681,
+        "height": 57
+      },
+      "objects": 1,
+      "background": null,
+      "targets": [
+        {
+          "sample": "zh-Hans",
+          "text": "简体中文：你好，世界！",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [20, 32, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "name": "العربية",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 19.5,
+        "y": 31.5,
+        "width": 681,
+        "height": 57
+      },
+      "objects": 1,
+      "background": null,
+      "targets": [
+        {
+          "sample": "ar",
+          "text": "السلام عليكم ورحمة الله",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [20, 32, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "हिन्दी",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 19.5,
+        "y": 31.5,
+        "width": 681,
+        "height": 57
+      },
+      "objects": 1,
+      "background": null,
+      "targets": [
+        {
+          "sample": "hi",
+          "text": "हिन्दी: क्षत्रिय, कार्य, श्री",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [20, 32, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Ελληνικά",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 19.5,
+        "y": 31.5,
+        "width": 681,
+        "height": 57
+      },
+      "objects": 1,
+      "background": null,
+      "targets": [
+        {
+          "sample": "el",
+          "text": "Ξεσκεπάζω την ψυχοφθόρα βδελυγμία",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [20, 32, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Emoji 😀",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 19.5,
+        "y": 31.5,
+        "width": 681,
+        "height": 57
+      },
+      "objects": 1,
+      "background": null,
+      "targets": [
+        {
+          "sample": "emoji-skin",
+          "text": "👍🏻 👍🏼 👍🏽 👍🏾 👍🏿 1️⃣ #️⃣",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [20, 32, 680, 56]
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "name": "中文",
+      "type": "infinite",
+      "canvas": null,
+      "bounds": {
+        "x": 19.5,
+        "y": 31.5,
+        "width": 681,
+        "height": 57
+      },
+      "objects": 1,
+      "background": null,
+      "targets": [
+        {
+          "sample": "ja",
+          "text": "日本語：こんにちは、カタカナ、漢字",
+          "kind": "shape",
+          "variant": "regular",
+          "rect": [20, 32, 680, 56]
+        }
+      ]
+    }
+  ]
+}

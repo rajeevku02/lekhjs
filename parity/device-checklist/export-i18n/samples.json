@@ -1,0 +1,1842 @@
+{
+  "note": "Sample strings of the multilingual export suite (README.md). Edit the text here, then run build.mjs to rebuild the fixtures and codepoints (build.mjs --check verifies them). expect.pdf per host: text = every non-emoji character extractable from the PDF; image = drawn as an image; outline = drawn as glyph outlines (not extractable); a list allows either. verified: whether a run on that host has confirmed it.",
+  "hosts": ["web", "ios", "mac", "android"],
+  "samples": [
+    {
+      "id": "vi",
+      "lang": "vi",
+      "script": "Latn",
+      "language": "Vietnamese",
+      "dir": "ltr",
+      "group": "Latin Greek Cyrillic",
+      "text": "Tiếng Việt có dấu: Ặ ặ Ẩ ẩ Ỡ ỡ Ữ ữ đ",
+      "short": "Tiếng Việt",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "two marks on one letter (breve or circumflex plus a tone mark), not overlapping; đ with its bar",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+0054 U+0069 U+1EBF U+006E U+0067 U+0020 U+0056 U+0069 U+1EC7 U+0074 U+0020 U+0063 U+00F3 U+0020 U+0064 U+1EA5 U+0075 U+003A U+0020 U+1EB6 U+0020 U+1EB7 U+0020 U+1EA8 U+0020 U+1EA9 U+0020 U+1EE0 U+0020 U+1EE1 U+0020 U+1EEE U+0020 U+1EEF U+0020 U+0111"
+    },
+    {
+      "id": "pl",
+      "lang": "pl",
+      "script": "Latn",
+      "language": "Polish",
+      "dir": "ltr",
+      "group": "Latin Greek Cyrillic",
+      "text": "Zażółć gęślą jaźń",
+      "short": "Zażółć",
+      "source": "traditional pangram, public domain (Polish)",
+      "look": "ogonek under ą ę, acute on ó ś ć ź ń, dot on ż",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+005A U+0061 U+017C U+00F3 U+0142 U+0107 U+0020 U+0067 U+0119 U+015B U+006C U+0105 U+0020 U+006A U+0061 U+017A U+0144"
+    },
+    {
+      "id": "tr",
+      "lang": "tr",
+      "script": "Latn",
+      "language": "Turkish",
+      "dir": "ltr",
+      "group": "Latin Greek Cyrillic",
+      "text": "İstanbul ılık; Iı İi Şş Ğğ",
+      "short": "İstanbul",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "capital İ has a dot, ı has none; cedilla on Ş ş",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+0130 U+0073 U+0074 U+0061 U+006E U+0062 U+0075 U+006C U+0020 U+0131 U+006C U+0131 U+006B U+003B U+0020 U+0049 U+0131 U+0020 U+0130 U+0069 U+0020 U+015E U+015F U+0020 U+011E U+011F"
+    },
+    {
+      "id": "el",
+      "lang": "el",
+      "script": "Grek",
+      "language": "Greek",
+      "dir": "ltr",
+      "group": "Latin Greek Cyrillic",
+      "text": "Ξεσκεπάζω την ψυχοφθόρα βδελυγμία",
+      "short": "Ελληνικά",
+      "source": "traditional pangram, public domain (Greek)",
+      "look": "tonos accents on ά ό ί",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+039E U+03B5 U+03C3 U+03BA U+03B5 U+03C0 U+03AC U+03B6 U+03C9 U+0020 U+03C4 U+03B7 U+03BD U+0020 U+03C8 U+03C5 U+03C7 U+03BF U+03C6 U+03B8 U+03CC U+03C1 U+03B1 U+0020 U+03B2 U+03B4 U+03B5 U+03BB U+03C5 U+03B3 U+03BC U+03AF U+03B1"
+    },
+    {
+      "id": "ru",
+      "lang": "ru",
+      "script": "Cyrl",
+      "language": "Russian",
+      "dir": "ltr",
+      "group": "Latin Greek Cyrillic",
+      "text": "Съешь же ещё этих мягких французских булок",
+      "short": "Русский",
+      "source": "traditional pangram, public domain (Russian)",
+      "look": "ё with diaeresis",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+0421 U+044A U+0435 U+0448 U+044C U+0020 U+0436 U+0435 U+0020 U+0435 U+0449 U+0451 U+0020 U+044D U+0442 U+0438 U+0445 U+0020 U+043C U+044F U+0433 U+043A U+0438 U+0445 U+0020 U+0444 U+0440 U+0430 U+043D U+0446 U+0443 U+0437 U+0441 U+043A U+0438 U+0445 U+0020 U+0431 U+0443 U+043B U+043E U+043A"
+    },
+    {
+      "id": "ar",
+      "lang": "ar",
+      "script": "Arab",
+      "language": "Arabic",
+      "dir": "rtl",
+      "group": "RTL",
+      "text": "السلام عليكم ورحمة الله",
+      "short": "العربية",
+      "source": "constructed for this suite (common words, no copyrighted text) (a greeting)",
+      "look": "letters joined, read right to left; lam-alef ligature لا in السلام; the word order right to left",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": true,
+          "mac": true,
+          "android": true
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0627 U+0644 U+0633 U+0644 U+0627 U+0645 U+0020 U+0639 U+0644 U+064A U+0643 U+0645 U+0020 U+0648 U+0631 U+062D U+0645 U+0629 U+0020 U+0627 U+0644 U+0644 U+0647"
+    },
+    {
+      "id": "he",
+      "lang": "he",
+      "script": "Hebr",
+      "language": "Hebrew",
+      "dir": "rtl",
+      "group": "RTL",
+      "text": "שלום עולם, עברית",
+      "short": "עברית",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world)",
+      "look": "right to left; final mem ם at the word end; the comma after עולם on its left",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansHebrew",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+05E9 U+05DC U+05D5 U+05DD U+0020 U+05E2 U+05D5 U+05DC U+05DD U+002C U+0020 U+05E2 U+05D1 U+05E8 U+05D9 U+05EA"
+    },
+    {
+      "id": "ur",
+      "lang": "ur",
+      "script": "Arab",
+      "language": "Urdu",
+      "dir": "rtl",
+      "group": "RTL",
+      "text": "اردو: یہ ٹھیک ہے",
+      "short": "اردو",
+      "source": "constructed for this suite (common words, no copyrighted text) (it is fine)",
+      "look": "Urdu letters ٹ (tteh), ھ (do-chashmi he), ہ, ے (bari ye) joined; Naskh style is expected (not Nastaliq) where the font is Noto Sans Arabic",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0627 U+0631 U+062F U+0648 U+003A U+0020 U+06CC U+06C1 U+0020 U+0679 U+06BE U+06CC U+06A9 U+0020 U+06C1 U+06D2"
+    },
+    {
+      "id": "fa",
+      "lang": "fa",
+      "script": "Arab",
+      "language": "Persian",
+      "dir": "rtl",
+      "group": "RTL",
+      "text": "من می‌خواهم فارسی بنویسم",
+      "short": "فارسی",
+      "source": "constructed for this suite (common words, no copyrighted text) (I want to write Persian)",
+      "look": "ZWNJ: in می‌خواهم the ی of می is NOT joined to خ, but the word has no space either",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0645 U+0646 U+0020 U+0645 U+06CC U+200C U+062E U+0648 U+0627 U+0647 U+0645 U+0020 U+0641 U+0627 U+0631 U+0633 U+06CC U+0020 U+0628 U+0646 U+0648 U+06CC U+0633 U+0645"
+    },
+    {
+      "id": "hi",
+      "lang": "hi",
+      "script": "Deva",
+      "language": "Hindi",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "हिन्दी: क्षत्रिय, कार्य, श्री",
+      "short": "हिन्दी",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "ि drawn left of its consonant (हि, त्रि); conjuncts क्ष, न्द, त्र; reph र् as a hook above य in कार्य; श्री",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": true,
+          "mac": true,
+          "android": true
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansDevanagari",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0939 U+093F U+0928 U+094D U+0926 U+0940 U+003A U+0020 U+0915 U+094D U+0937 U+0924 U+094D U+0930 U+093F U+092F U+002C U+0020 U+0915 U+093E U+0930 U+094D U+092F U+002C U+0020 U+0936 U+094D U+0930 U+0940"
+    },
+    {
+      "id": "bn",
+      "lang": "bn",
+      "script": "Beng",
+      "language": "Bengali",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "বাংলা: শিক্ষা, রাষ্ট্র",
+      "short": "বাংলা",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "ি left of শ; conjuncts ক্ষ and ষ্ট্র",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansBengali",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+09AC U+09BE U+0982 U+09B2 U+09BE U+003A U+0020 U+09B6 U+09BF U+0995 U+09CD U+09B7 U+09BE U+002C U+0020 U+09B0 U+09BE U+09B7 U+09CD U+099F U+09CD U+09B0"
+    },
+    {
+      "id": "ta",
+      "lang": "ta",
+      "script": "Taml",
+      "language": "Tamil",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "தமிழ்: வணக்கம், கொண்டு",
+      "short": "தமிழ்",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello)",
+      "look": "two-part vowel ொ: ெ left and ா right of க in கொ; pulli dots (்)",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansTamil",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0BA4 U+0BAE U+0BBF U+0BB4 U+0BCD U+003A U+0020 U+0BB5 U+0BA3 U+0B95 U+0BCD U+0B95 U+0BAE U+0BCD U+002C U+0020 U+0B95 U+0BCA U+0BA3 U+0BCD U+0B9F U+0BC1"
+    },
+    {
+      "id": "te",
+      "lang": "te",
+      "script": "Telu",
+      "language": "Telugu",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "తెలుగు: ప్రపంచం, క్షేమం",
+      "short": "నమస్కారం",
+      "source": "constructed for this suite (common words, no copyrighted text) (world, welfare)",
+      "look": "subjoined ర under ప in ప్ర; క్ష conjunct",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansTelugu",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0C24 U+0C46 U+0C32 U+0C41 U+0C17 U+0C41 U+003A U+0020 U+0C2A U+0C4D U+0C30 U+0C2A U+0C02 U+0C1A U+0C02 U+002C U+0020 U+0C15 U+0C4D U+0C37 U+0C47 U+0C2E U+0C02"
+    },
+    {
+      "id": "kn",
+      "lang": "kn",
+      "script": "Knda",
+      "language": "Kannada",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "ಕನ್ನಡ: ಪ್ರಪಂಚ, ಕ್ಷೇಮ",
+      "short": "ಕನ್ನಡ",
+      "source": "constructed for this suite (common words, no copyrighted text) (world, welfare)",
+      "look": "subjoined forms ನ್ನ, ಪ್ರ, ಕ್ಷ",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansKannada",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0C95 U+0CA8 U+0CCD U+0CA8 U+0CA1 U+003A U+0020 U+0CAA U+0CCD U+0CB0 U+0CAA U+0C82 U+0C9A U+002C U+0020 U+0C95 U+0CCD U+0CB7 U+0CC7 U+0CAE"
+    },
+    {
+      "id": "ml",
+      "lang": "ml",
+      "script": "Mlym",
+      "language": "Malayalam",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "മലയാളം: ലോകം, അവൻ, ക്ഷ",
+      "short": "മലയാളം",
+      "source": "constructed for this suite (common words, no copyrighted text) (world, he)",
+      "look": "two-part vowel ോ around ല; chillu ൻ; conjunct ക്ഷ",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansMalayalam",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0D2E U+0D32 U+0D2F U+0D3E U+0D33 U+0D02 U+003A U+0020 U+0D32 U+0D4B U+0D15 U+0D02 U+002C U+0020 U+0D05 U+0D35 U+0D7B U+002C U+0020 U+0D15 U+0D4D U+0D37"
+    },
+    {
+      "id": "gu",
+      "lang": "gu",
+      "script": "Gujr",
+      "language": "Gujarati",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "ગુજરાતી: નમસ્તે, ક્ષમા",
+      "short": "ગુજરાતી",
+      "source": "constructed for this suite (common words, no copyrighted text) (greeting, forgiveness)",
+      "look": "conjuncts સ્ત, ક્ષ; ુ below ગ",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansGujarati",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0A97 U+0AC1 U+0A9C U+0AB0 U+0ABE U+0AA4 U+0AC0 U+003A U+0020 U+0AA8 U+0AAE U+0AB8 U+0ACD U+0AA4 U+0AC7 U+002C U+0020 U+0A95 U+0ACD U+0AB7 U+0AAE U+0ABE"
+    },
+    {
+      "id": "pa",
+      "lang": "pa",
+      "script": "Guru",
+      "language": "Punjabi (Gurmukhi)",
+      "dir": "ltr",
+      "group": "Indic",
+      "text": "ਪੰਜਾਬੀ: ਸਤ ਸ੍ਰੀ ਅਕਾਲ",
+      "short": "ਪੰਜਾਬੀ",
+      "source": "constructed for this suite (common words, no copyrighted text) (a greeting)",
+      "look": "subjoined ਰ in ਸ੍ਰੀ; tippi ੰ",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansGurmukhi",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0A2A U+0A70 U+0A1C U+0A3E U+0A2C U+0A40 U+003A U+0020 U+0A38 U+0A24 U+0020 U+0A38 U+0A4D U+0A30 U+0A40 U+0020 U+0A05 U+0A15 U+0A3E U+0A32"
+    },
+    {
+      "id": "th",
+      "lang": "th",
+      "script": "Thai",
+      "language": "Thai",
+      "dir": "ltr",
+      "group": "Thai Lao Khmer Myanmar",
+      "text": "สวัสดีชาวโลก ภาษาไทย",
+      "short": "ภาษาไทย",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world, Thai language)",
+      "look": "vowel and tone marks stacked above/below (สวัสดี, ไทย) without colliding",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansThai",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0E2A U+0E27 U+0E31 U+0E2A U+0E14 U+0E35 U+0E0A U+0E32 U+0E27 U+0E42 U+0E25 U+0E01 U+0020 U+0E20 U+0E32 U+0E29 U+0E32 U+0E44 U+0E17 U+0E22"
+    },
+    {
+      "id": "lo",
+      "lang": "lo",
+      "script": "Laoo",
+      "language": "Lao",
+      "dir": "ltr",
+      "group": "Thai Lao Khmer Myanmar",
+      "text": "ສະບາຍດີ ພາສາລາວ",
+      "short": "ພາສາລາວ",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello, Lao language)",
+      "look": "marks above and below",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansLao",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0EAA U+0EB0 U+0E9A U+0EB2 U+0E8D U+0E94 U+0EB5 U+0020 U+0E9E U+0EB2 U+0EAA U+0EB2 U+0EA5 U+0EB2 U+0EA7"
+    },
+    {
+      "id": "km",
+      "lang": "km",
+      "script": "Khmr",
+      "language": "Khmer",
+      "dir": "ltr",
+      "group": "Thai Lao Khmer Myanmar",
+      "text": "សួស្តីពិភពលោក ភាសាខ្មែរ",
+      "short": "ភាសាខ្មែរ",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world, Khmer language)",
+      "look": "subscript consonants (coeng): ស្ត, ខ្ម; pre-base vowel េ left of ល, ែ around ខ្ម",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansKhmer",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+179F U+17BD U+179F U+17D2 U+178F U+17B8 U+1796 U+17B7 U+1797 U+1796 U+179B U+17C4 U+1780 U+0020 U+1797 U+17B6 U+179F U+17B6 U+1781 U+17D2 U+1798 U+17C2 U+179A"
+    },
+    {
+      "id": "my",
+      "lang": "my",
+      "script": "Mymr",
+      "language": "Burmese",
+      "dir": "ltr",
+      "group": "Thai Lao Khmer Myanmar",
+      "text": "မင်္ဂလာပါ မြန်မာဘာသာ",
+      "short": "မြန်မာ",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello, Burmese language)",
+      "look": "kinzi င်္ drawn above ဂ; medial ြ wrapping around မ in မြ",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansMyanmar",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+1019 U+1004 U+103A U+1039 U+1002 U+101C U+102C U+1015 U+102B U+0020 U+1019 U+103C U+1014 U+103A U+1019 U+102C U+1018 U+102C U+101E U+102C"
+    },
+    {
+      "id": "zh-Hans",
+      "lang": "zh-Hans",
+      "script": "Hans",
+      "language": "Chinese (Simplified)",
+      "dir": "ltr",
+      "group": "CJK",
+      "text": "简体中文：你好，世界！",
+      "short": "简体中文",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world)",
+      "look": "Simplified forms 简 体; full-width punctuation",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": true,
+          "mac": true,
+          "android": true
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansSC"
+      },
+      "codepoints": "U+7B80 U+4F53 U+4E2D U+6587 U+FF1A U+4F60 U+597D U+FF0C U+4E16 U+754C U+FF01"
+    },
+    {
+      "id": "zh-Hant",
+      "lang": "zh-Hant",
+      "script": "Hant",
+      "language": "Chinese (Traditional)",
+      "dir": "ltr",
+      "group": "CJK",
+      "text": "繁體中文：你好，世界！",
+      "short": "繁體中文",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world)",
+      "look": "Traditional forms 繁 體; on the web the PDF draws them with Noto Sans SC (Han → SC unless the browser language is zh-TW/HK), so mainland glyph shapes are expected there",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "why": {
+          "android": "Samsung answers NotoSerifCJK (Traditional, serif) for Han runs (export-fixes-2026-10-24 observation): text, but serif shapes."
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansSC"
+      },
+      "codepoints": "U+7E41 U+9AD4 U+4E2D U+6587 U+FF1A U+4F60 U+597D U+FF0C U+4E16 U+754C U+FF01"
+    },
+    {
+      "id": "ja",
+      "lang": "ja",
+      "script": "Jpan",
+      "language": "Japanese",
+      "dir": "ltr",
+      "group": "CJK",
+      "text": "日本語：こんにちは、カタカナ、漢字",
+      "short": "日本語です",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello, katakana, kanji)",
+      "look": "kana and kanji; Japanese glyph shapes (Noto Sans JP on the web because the text has kana)",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": true,
+          "mac": true,
+          "android": true
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansJP"
+      },
+      "codepoints": "U+65E5 U+672C U+8A9E U+FF1A U+3053 U+3093 U+306B U+3061 U+306F U+3001 U+30AB U+30BF U+30AB U+30CA U+3001 U+6F22 U+5B57"
+    },
+    {
+      "id": "ko",
+      "lang": "ko",
+      "script": "Kore",
+      "language": "Korean",
+      "dir": "ltr",
+      "group": "CJK",
+      "text": "한국어: 안녕하세요 세계",
+      "short": "한국어",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world)",
+      "look": "Hangul syllables",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": true,
+          "mac": true,
+          "android": true
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansKR"
+      },
+      "codepoints": "U+D55C U+AD6D U+C5B4 U+003A U+0020 U+C548 U+B155 U+D558 U+C138 U+C694 U+0020 U+C138 U+ACC4"
+    },
+    {
+      "id": "extb",
+      "lang": "zh-Hant",
+      "script": "Hani",
+      "language": "CJK Extension B (Cantonese)",
+      "dir": "ltr",
+      "group": "CJK Ext B",
+      "text": "𠜎𠜱𠝹𠱓",
+      "short": "𠜎",
+      "source": "constructed for this suite (common words, no copyrighted text) (four Han characters from CJK Unified Ideographs Extension B, U+2070E, U+20731, U+20779, U+20C53)",
+      "look": "four Han characters, none a tofu box",
+      "expect": {
+        "pdf": {
+          "web": "image",
+          "ios": ["text", "image"],
+          "mac": ["text", "image"],
+          "android": ["text", "image"]
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "why": {
+          "web": "Han without kana asks for Noto Sans SC unless the browser language is zh-TW/HK/Hant (scriptFontKey, lekhjs web-script-font-provider.ts); the SC subset has none of these four Ext B characters (Noto Sans TC has all four) and the provider offers no second CJK face, so the run is drawn as an image with the toast.",
+          "ios": "Whether the system CJK face getFontData picks covers these Ext B characters is not known before the first native run; with no cover the run is an image (and the toast).",
+          "mac": "Whether the system CJK face getFontData picks covers these Ext B characters is not known before the first native run; with no cover the run is an image (and the toast).",
+          "android": "Whether the system CJK face getFontData picks covers these Ext B characters is not known before the first native run; with no cover the run is an image (and the toast)."
+        },
+        "pdfOrder": "logical"
+      },
+      "codepoints": "U+2070E U+20731 U+20779 U+20C53"
+    },
+    {
+      "id": "extb-ja",
+      "lang": "ja",
+      "script": "Jpan",
+      "language": "CJK Extension B in Japanese",
+      "dir": "ltr",
+      "group": "CJK Ext B",
+      "text": "𩸽（ほっけ）",
+      "short": "𩸽（ほっけ）",
+      "source": "constructed for this suite (common words, no copyrighted text) (U+29E3D, the fish hokke, with its reading in kana)",
+      "look": "𩸽 is a single fish-radical character, not a box",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansJP"
+      },
+      "codepoints": "U+29E3D U+FF08 U+307B U+3063 U+3051 U+FF09"
+    },
+    {
+      "id": "emoji-zwj",
+      "lang": "und",
+      "script": "Zsye",
+      "language": "Emoji ZWJ sequences",
+      "dir": "ltr",
+      "group": "Emoji",
+      "text": "👨‍👩‍👧‍👦 👩🏽‍💻 🧑‍🤝‍🧑",
+      "short": "👨‍👩‍👧‍👦",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "each ZWJ sequence is ONE glyph (a family, a woman technologist, people holding hands), not its parts side by side",
+      "expect": {
+        "pdf": {
+          "web": "image",
+          "ios": "image",
+          "mac": "image",
+          "android": "image"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "why": {
+          "web": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "ios": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "mac": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "android": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast."
+        },
+        "pdfOrder": "logical"
+      },
+      "codepoints": "U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466 U+0020 U+1F469 U+1F3FD U+200D U+1F4BB U+0020 U+1F9D1 U+200D U+1F91D U+200D U+1F9D1"
+    },
+    {
+      "id": "emoji-flags",
+      "lang": "und",
+      "script": "Zsye",
+      "language": "Emoji flags",
+      "dir": "ltr",
+      "group": "Emoji",
+      "text": "🇮🇳 🇯🇵 🇧🇷 🏳️‍🌈 🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+      "short": "🇮🇳",
+      "source": "constructed for this suite (common words, no copyrighted text) (India, Japan, Brazil, rainbow flag, Scotland: a tag sequence)",
+      "look": "five flags; a platform without the Scotland flag shows a black flag, never letters",
+      "expect": {
+        "pdf": {
+          "web": "image",
+          "ios": "image",
+          "mac": "image",
+          "android": "image"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "why": {
+          "web": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "ios": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "mac": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "android": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast."
+        },
+        "pdfOrder": "logical"
+      },
+      "codepoints": "U+1F1EE U+1F1F3 U+0020 U+1F1EF U+1F1F5 U+0020 U+1F1E7 U+1F1F7 U+0020 U+1F3F3 U+FE0F U+200D U+1F308 U+0020 U+1F3F4 U+E0067 U+E0062 U+E0073 U+E0063 U+E0074 U+E007F"
+    },
+    {
+      "id": "emoji-skin",
+      "lang": "und",
+      "script": "Zsye",
+      "language": "Emoji skin tones and keycaps",
+      "dir": "ltr",
+      "group": "Emoji",
+      "text": "👍🏻 👍🏼 👍🏽 👍🏾 👍🏿 1️⃣ #️⃣",
+      "short": "👍🏽",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "five thumbs in five skin tones (not a thumb plus a colour square); keycaps 1 and #",
+      "expect": {
+        "pdf": {
+          "web": "image",
+          "ios": "image",
+          "mac": "image",
+          "android": "image"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "why": {
+          "web": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "ios": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "mac": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast.",
+          "android": "Emoji are drawn as images on every host (spec 08 §6.1, export.md §7 source 4) and never raise the toast."
+        },
+        "pdfOrder": "logical"
+      },
+      "codepoints": "U+1F44D U+1F3FB U+0020 U+1F44D U+1F3FC U+0020 U+1F44D U+1F3FD U+0020 U+1F44D U+1F3FE U+0020 U+1F44D U+1F3FF U+0020 U+0031 U+FE0F U+20E3 U+0020 U+0023 U+FE0F U+20E3"
+    },
+    {
+      "id": "am",
+      "lang": "am",
+      "script": "Ethi",
+      "language": "Amharic (Ethiopic)",
+      "dir": "ltr",
+      "group": "Others",
+      "text": "ሰላም ለዓለም፣ አማርኛ",
+      "short": "አማርኛ",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world, Amharic)",
+      "look": "Ethiopic syllables; ፣ is the Ethiopic comma",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansEthiopic",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+1230 U+120B U+121D U+0020 U+1208 U+12D3 U+1208 U+121D U+1363 U+0020 U+12A0 U+121B U+122D U+129B"
+    },
+    {
+      "id": "ka",
+      "lang": "ka",
+      "script": "Geor",
+      "language": "Georgian",
+      "dir": "ltr",
+      "group": "Others",
+      "text": "გამარჯობა მსოფლიო, ქართული",
+      "short": "ქართული",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world, Georgian)",
+      "look": "Mkhedruli letters",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansGeorgian",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+10D2 U+10D0 U+10DB U+10D0 U+10E0 U+10EF U+10DD U+10D1 U+10D0 U+0020 U+10DB U+10E1 U+10DD U+10E4 U+10DA U+10D8 U+10DD U+002C U+0020 U+10E5 U+10D0 U+10E0 U+10D7 U+10E3 U+10DA U+10D8"
+    },
+    {
+      "id": "hy",
+      "lang": "hy",
+      "script": "Armn",
+      "language": "Armenian",
+      "dir": "ltr",
+      "group": "Others",
+      "text": "Բարեւ աշխարհ, Հայերեն",
+      "short": "Հայերեն",
+      "source": "constructed for this suite (common words, no copyrighted text) (hello world, Armenian)",
+      "look": "Armenian capitals Բ Հ",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansArmenian",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0532 U+0561 U+0580 U+0565 U+0582 U+0020 U+0561 U+0577 U+056D U+0561 U+0580 U+0570 U+002C U+0020 U+0540 U+0561 U+0575 U+0565 U+0580 U+0565 U+0576"
+    },
+    {
+      "id": "bo",
+      "lang": "bo",
+      "script": "Tibt",
+      "language": "Tibetan",
+      "dir": "ltr",
+      "group": "Others",
+      "text": "བཀྲ་ཤིས་བདེ་ལེགས། བོད་ཡིག",
+      "short": "བོད་ཡིག",
+      "source": "constructed for this suite (common words, no copyrighted text) (tashi delek, Tibetan script)",
+      "look": "stacked ཀྲ; tsheg dots ་ between syllables; shad །",
+      "expect": {
+        "pdf": {
+          "web": "image",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "why": {
+          "web": "The web PDF downloads Noto fonts for 22 scripts only (lekhboard fonts/noto, fonts.md §4.1); Tibetan is not one of them, so the run is drawn as an image and the toast \"Some text was exported as an image…\" is raised.",
+          "ios": "Apple systems have a Tibetan face (Kailasa); expected embedded as text (not yet run).",
+          "mac": "Apple systems have a Tibetan face (Kailasa); expected embedded as text (not yet run).",
+          "android": "Android has a Noto Tibetan face; expected embedded as text (not yet run)."
+        },
+        "pdfOrder": "logical",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0F56 U+0F40 U+0FB2 U+0F0B U+0F64 U+0F72 U+0F66 U+0F0B U+0F56 U+0F51 U+0F7A U+0F0B U+0F63 U+0F7A U+0F42 U+0F66 U+0F0D U+0020 U+0F56 U+0F7C U+0F51 U+0F0B U+0F61 U+0F72 U+0F42"
+    },
+    {
+      "id": "si",
+      "lang": "si",
+      "script": "Sinh",
+      "language": "Sinhala",
+      "dir": "ltr",
+      "group": "Others",
+      "text": "ආයුබෝවන්, ශ්‍රී ලංකා",
+      "short": "සිංහල",
+      "source": "constructed for this suite (common words, no copyrighted text) (welcome, Sri Lanka)",
+      "look": "two-part vowel ෝ; ශ්‍රී written with ZWJ as the rakaransaya (conjunct) form",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansSinhala",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+0D86 U+0DBA U+0DD4 U+0DB6 U+0DDD U+0DC0 U+0DB1 U+0DCA U+002C U+0020 U+0DC1 U+0DCA U+200D U+0DBB U+0DD3 U+0020 U+0DBD U+0D82 U+0D9A U+0DCF"
+    },
+    {
+      "id": "bidi-ar",
+      "lang": "en",
+      "script": "Latn+Arab",
+      "language": "Mixed bidi, LTR paragraph",
+      "dir": "ltr",
+      "group": "Edge cases",
+      "text": "Order 66 costs 1,234.50 ريال (العربية 2024) today",
+      "short": "bidi",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "the Arabic words read right to left inside the English sentence; 1,234.50 and 2024 keep their digit order; the parentheses mirror correctly",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+004F U+0072 U+0064 U+0065 U+0072 U+0020 U+0036 U+0036 U+0020 U+0063 U+006F U+0073 U+0074 U+0073 U+0020 U+0031 U+002C U+0032 U+0033 U+0034 U+002E U+0035 U+0030 U+0020 U+0631 U+064A U+0627 U+0644 U+0020 U+0028 U+0627 U+0644 U+0639 U+0631 U+0628 U+064A U+0629 U+0020 U+0032 U+0030 U+0032 U+0034 U+0029 U+0020 U+0074 U+006F U+0064 U+0061 U+0079"
+    },
+    {
+      "id": "bidi-he",
+      "lang": "he",
+      "script": "Hebr+Latn",
+      "language": "Mixed bidi, RTL paragraph",
+      "dir": "rtl",
+      "group": "Edge cases",
+      "text": "עברית with English and 123 מספרים",
+      "short": "bidi RTL",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "paragraph is right to left (starts at the right with עברית); \"with English and 123\" reads left to right inside it",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansHebrew"
+      },
+      "codepoints": "U+05E2 U+05D1 U+05E8 U+05D9 U+05EA U+0020 U+0077 U+0069 U+0074 U+0068 U+0020 U+0045 U+006E U+0067 U+006C U+0069 U+0073 U+0068 U+0020 U+0061 U+006E U+0064 U+0020 U+0031 U+0032 U+0033 U+0020 U+05DE U+05E1 U+05E4 U+05E8 U+05D9 U+05DD"
+    },
+    {
+      "id": "fa-digits",
+      "lang": "fa",
+      "script": "Arab",
+      "language": "Persian digits",
+      "dir": "rtl",
+      "group": "Edge cases",
+      "text": "قیمت ۱۲۳٫۴۵ تومان",
+      "short": "۱۲۳٫۴۵",
+      "source": "constructed for this suite (common words, no copyrighted text) (price 123.45 toman)",
+      "look": "Extended Arabic-Indic digits ۱۲۳٫۴۵ read left to right inside the RTL line",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0642 U+06CC U+0645 U+062A U+0020 U+06F1 U+06F2 U+06F3 U+066B U+06F4 U+06F5 U+0020 U+062A U+0648 U+0645 U+0627 U+0646"
+    },
+    {
+      "id": "nfc",
+      "lang": "und",
+      "script": "Latn+Hang",
+      "language": "Precomposed (NFC)",
+      "dir": "ltr",
+      "group": "Edge cases",
+      "text": "café naïve Ệ 한",
+      "short": "NFC",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "looks identical to the NFD row below",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansKR"
+      },
+      "codepoints": "U+0063 U+0061 U+0066 U+00E9 U+0020 U+006E U+0061 U+00EF U+0076 U+0065 U+0020 U+1EC6 U+0020 U+D55C"
+    },
+    {
+      "id": "nfd",
+      "lang": "und",
+      "script": "Latn+Hang",
+      "language": "Decomposed (NFD)",
+      "dir": "ltr",
+      "group": "Edge cases",
+      "text": "café naïve Ệ 한",
+      "short": "NFD",
+      "source": "constructed for this suite (common words, no copyrighted text) (the NFC row decomposed: combining marks and conjoining Hangul jamo)",
+      "look": "looks identical to the NFC row above: marks on their letters, 한 one syllable block (not three jamo)",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansKR"
+      },
+      "codepoints": "U+0063 U+0061 U+0066 U+0065 U+0301 U+0020 U+006E U+0061 U+0069 U+0308 U+0076 U+0065 U+0020 U+0045 U+0323 U+0302 U+0020 U+1112 U+1161 U+11AB"
+    },
+    {
+      "id": "combining",
+      "lang": "und",
+      "script": "Latn",
+      "language": "Combining-mark stacks",
+      "dir": "ltr",
+      "group": "Edge cases",
+      "text": "ậ́ ǭ x̰̱̃ é́́",
+      "short": "stack",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "marks stacked above and below their base letter, not drawn after it or on top of each other",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+0061 U+0323 U+0302 U+0301 U+0020 U+006F U+0328 U+0304 U+0020 U+0078 U+0303 U+0330 U+0331 U+0020 U+0065 U+0301 U+0301 U+0301"
+    },
+    {
+      "id": "long",
+      "lang": "de",
+      "script": "Latn",
+      "language": "Very long unbroken string",
+      "dir": "ltr",
+      "group": "Edge cases",
+      "text": "Donaudampfschifffahrtselektrizitätenhauptbetriebswerkbauunterbeamtengesellschaft",
+      "short": "Donaudampf…",
+      "source": "constructed for this suite (common words, no copyrighted text) (a well-known German compound word)",
+      "look": "one word wider than its box: broken inside the word, every letter present, nothing outside the box",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+0044 U+006F U+006E U+0061 U+0075 U+0064 U+0061 U+006D U+0070 U+0066 U+0073 U+0063 U+0068 U+0069 U+0066 U+0066 U+0066 U+0061 U+0068 U+0072 U+0074 U+0073 U+0065 U+006C U+0065 U+006B U+0074 U+0072 U+0069 U+007A U+0069 U+0074 U+00E4 U+0074 U+0065 U+006E U+0068 U+0061 U+0075 U+0070 U+0074 U+0062 U+0065 U+0074 U+0072 U+0069 U+0065 U+0062 U+0073 U+0077 U+0065 U+0072 U+006B U+0062 U+0061 U+0075 U+0075 U+006E U+0074 U+0065 U+0072 U+0062 U+0065 U+0061 U+006D U+0074 U+0065 U+006E U+0067 U+0065 U+0073 U+0065 U+006C U+006C U+0073 U+0063 U+0068 U+0061 U+0066 U+0074"
+    },
+    {
+      "id": "multi",
+      "lang": "und",
+      "script": "Mixed",
+      "language": "Several scripts in one line",
+      "dir": "ltr",
+      "group": "Layout",
+      "text": "Latin 中文 العربية हिन्दी ไทย ქართული 😀 end",
+      "short": "multi",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "each script in its own shape, in this order left to right except the Arabic word, which reads right to left; the emoji in colour",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansGeorgian"
+      },
+      "codepoints": "U+004C U+0061 U+0074 U+0069 U+006E U+0020 U+4E2D U+6587 U+0020 U+0627 U+0644 U+0639 U+0631 U+0628 U+064A U+0629 U+0020 U+0939 U+093F U+0928 U+094D U+0926 U+0940 U+0020 U+0E44 U+0E17 U+0E22 U+0020 U+10E5 U+10D0 U+10E0 U+10D7 U+10E3 U+10DA U+10D8 U+0020 U+1F600 U+0020 U+0065 U+006E U+0064"
+    },
+    {
+      "id": "lines",
+      "lang": "und",
+      "script": "Mixed",
+      "language": "Three lines, three directions",
+      "dir": "ltr",
+      "group": "Layout",
+      "text": "First line in English\nسطر عربي ثانٍ\nतीसरी पंक्ति हिन्दी",
+      "short": "lines",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "three lines; the Arabic line is right to left",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansDevanagari"
+      },
+      "codepoints": "U+0046 U+0069 U+0072 U+0073 U+0074 U+0020 U+006C U+0069 U+006E U+0065 U+0020 U+0069 U+006E U+0020 U+0045 U+006E U+0067 U+006C U+0069 U+0073 U+0068 U+000A U+0633 U+0637 U+0631 U+0020 U+0639 U+0631 U+0628 U+064A U+0020 U+062B U+0627 U+0646 U+064D U+000A U+0924 U+0940 U+0938 U+0930 U+0940 U+0020 U+092A U+0902 U+0915 U+094D U+0924 U+093F U+0020 U+0939 U+093F U+0928 U+094D U+0926 U+0940"
+    },
+    {
+      "id": "ar-left",
+      "lang": "ar",
+      "script": "Arab",
+      "language": "Arabic, left aligned",
+      "dir": "rtl",
+      "group": "Layout",
+      "text": "السلام عليكم ورحمة الله",
+      "short": "ar-left",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "the Arabic line starts at the left edge of the box",
+      "align": "left",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0627 U+0644 U+0633 U+0644 U+0627 U+0645 U+0020 U+0639 U+0644 U+064A U+0643 U+0645 U+0020 U+0648 U+0631 U+062D U+0645 U+0629 U+0020 U+0627 U+0644 U+0644 U+0647"
+    },
+    {
+      "id": "ar-right",
+      "lang": "ar",
+      "script": "Arab",
+      "language": "Arabic, right aligned",
+      "dir": "rtl",
+      "group": "Layout",
+      "text": "السلام عليكم ورحمة الله",
+      "short": "ar-right",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "the Arabic line ends at the right edge of the box",
+      "align": "right",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0627 U+0644 U+0633 U+0644 U+0627 U+0645 U+0020 U+0639 U+0644 U+064A U+0643 U+0645 U+0020 U+0648 U+0631 U+062D U+0645 U+0629 U+0020 U+0627 U+0644 U+0644 U+0647"
+    },
+    {
+      "id": "decorated",
+      "lang": "und",
+      "script": "Mixed",
+      "language": "Bold italic underline across scripts",
+      "dir": "ltr",
+      "group": "Layout",
+      "text": "مرحبا 你好 नमस्ते",
+      "short": "decorated",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "bold, slanted, one underline under all three words",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0645 U+0631 U+062D U+0628 U+0627 U+0020 U+4F60 U+597D U+0020 U+0928 U+092E U+0938 U+094D U+0924 U+0947"
+    },
+    {
+      "id": "th-long",
+      "lang": "th",
+      "script": "Thai",
+      "language": "Thai paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "ภาษาไทยไม่มีการเว้นวรรคระหว่างคำจึงต้องตัดคำตามพจนานุกรม",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (the same sentence as fixtures/wrap-corpus)",
+      "look": "broken between words (ภาษาไทย|ไม่มี|การ…), never inside a syllable",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansThai"
+      },
+      "codepoints": "U+0E20 U+0E32 U+0E29 U+0E32 U+0E44 U+0E17 U+0E22 U+0E44 U+0E21 U+0E48 U+0E21 U+0E35 U+0E01 U+0E32 U+0E23 U+0E40 U+0E27 U+0E49 U+0E19 U+0E27 U+0E23 U+0E23 U+0E04 U+0E23 U+0E30 U+0E2B U+0E27 U+0E48 U+0E32 U+0E07 U+0E04 U+0E33 U+0E08 U+0E36 U+0E07 U+0E15 U+0E49 U+0E2D U+0E07 U+0E15 U+0E31 U+0E14 U+0E04 U+0E33 U+0E15 U+0E32 U+0E21 U+0E1E U+0E08 U+0E19 U+0E32 U+0E19 U+0E38 U+0E01 U+0E23 U+0E21"
+    },
+    {
+      "id": "km-long",
+      "lang": "km",
+      "script": "Khmr",
+      "language": "Khmer paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "ភាសាខ្មែរមិនមានដកឃ្លារវាងពាក្យទេ ដូច្នេះត្រូវកាត់ពាក្យតាមវចនានុក្រម",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (Khmer has no spaces between words, so words are cut with a dictionary)",
+      "look": "broken between words, never between a consonant and its subscript (្)",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansKhmer",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+1797 U+17B6 U+179F U+17B6 U+1781 U+17D2 U+1798 U+17C2 U+179A U+1798 U+17B7 U+1793 U+1798 U+17B6 U+1793 U+178A U+1780 U+1783 U+17D2 U+179B U+17B6 U+179A U+179C U+17B6 U+1784 U+1796 U+17B6 U+1780 U+17D2 U+1799 U+1791 U+17C1 U+0020 U+178A U+17BC U+1785 U+17D2 U+1793 U+17C1 U+17C7 U+178F U+17D2 U+179A U+17BC U+179C U+1780 U+17B6 U+178F U+17CB U+1796 U+17B6 U+1780 U+17D2 U+1799 U+178F U+17B6 U+1798 U+179C U+1785 U+1793 U+17B6 U+1793 U+17BB U+1780 U+17D2 U+179A U+1798"
+    },
+    {
+      "id": "my-long",
+      "lang": "my",
+      "script": "Mymr",
+      "language": "Burmese paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "မြန်မာဘာသာတွင်စကားလုံးများကြားတွင်နေရာလွတ်မရှိပါ",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (Burmese has no spaces between words)",
+      "look": "broken between syllables/words, never between a consonant and its medial or vowel sign",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansMyanmar",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+1019 U+103C U+1014 U+103A U+1019 U+102C U+1018 U+102C U+101E U+102C U+1010 U+103D U+1004 U+103A U+1005 U+1000 U+102C U+1038 U+101C U+102F U+1036 U+1038 U+1019 U+103B U+102C U+1038 U+1000 U+103C U+102C U+1038 U+1010 U+103D U+1004 U+103A U+1014 U+1031 U+101B U+102C U+101C U+103D U+1010 U+103A U+1019 U+101B U+103E U+102D U+1015 U+102B"
+    },
+    {
+      "id": "zh-long",
+      "lang": "zh-Hans",
+      "script": "Hans",
+      "language": "Chinese paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "这是一个没有空格的中文段落用于检查固定宽度的文本框是否在框内正确换行并且不会溢出到框外面去",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (the CJK paragraph of fixtures/scripts.lekh)",
+      "look": "broken between any two characters; no line starts with ，。",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansSC"
+      },
+      "codepoints": "U+8FD9 U+662F U+4E00 U+4E2A U+6CA1 U+6709 U+7A7A U+683C U+7684 U+4E2D U+6587 U+6BB5 U+843D U+7528 U+4E8E U+68C0 U+67E5 U+56FA U+5B9A U+5BBD U+5EA6 U+7684 U+6587 U+672C U+6846 U+662F U+5426 U+5728 U+6846 U+5185 U+6B63 U+786E U+6362 U+884C U+5E76 U+4E14 U+4E0D U+4F1A U+6EA2 U+51FA U+5230 U+6846 U+5916 U+9762 U+53BB"
+    },
+    {
+      "id": "ja-long",
+      "lang": "ja",
+      "script": "Jpan",
+      "language": "Japanese paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "日本語の文章は単語の間に空白がないので任意の文字の間で改行できます。「括弧」や句読点、は行頭に来ません。",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (after fixtures/wrap-corpus: cjk and kinsoku)",
+      "look": "no line starts with 、。」 (kinsoku); no line ends with 「",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansJP"
+      },
+      "codepoints": "U+65E5 U+672C U+8A9E U+306E U+6587 U+7AE0 U+306F U+5358 U+8A9E U+306E U+9593 U+306B U+7A7A U+767D U+304C U+306A U+3044 U+306E U+3067 U+4EFB U+610F U+306E U+6587 U+5B57 U+306E U+9593 U+3067 U+6539 U+884C U+3067 U+304D U+307E U+3059 U+3002 U+300C U+62EC U+5F27 U+300D U+3084 U+53E5 U+8AAD U+70B9 U+3001 U+306F U+884C U+982D U+306B U+6765 U+307E U+305B U+3093 U+3002"
+    },
+    {
+      "id": "ko-long",
+      "lang": "ko",
+      "script": "Kore",
+      "language": "Korean paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "한국어는 단어 사이에 띄어쓰기를 사용하지만 긴 문장은 여러 줄로 나뉘어야 합니다.",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (Korean uses spaces, but a long sentence must still wrap)",
+      "look": "broken at spaces (or between syllables), syllable blocks intact",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansKR"
+      },
+      "codepoints": "U+D55C U+AD6D U+C5B4 U+B294 U+0020 U+B2E8 U+C5B4 U+0020 U+C0AC U+C774 U+C5D0 U+0020 U+B744 U+C5B4 U+C4F0 U+AE30 U+B97C U+0020 U+C0AC U+C6A9 U+D558 U+C9C0 U+B9CC U+0020 U+AE34 U+0020 U+BB38 U+C7A5 U+C740 U+0020 U+C5EC U+B7EC U+0020 U+C904 U+B85C U+0020 U+B098 U+B258 U+C5B4 U+C57C U+0020 U+D569 U+B2C8 U+B2E4 U+002E"
+    },
+    {
+      "id": "ar-long",
+      "lang": "ar",
+      "script": "Arab",
+      "language": "Arabic paragraph",
+      "dir": "rtl",
+      "group": "Paragraphs",
+      "text": "هذا نص عربي طويل يجب أن يلتف على عدة أسطر داخل المربع الضيق",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (a long Arabic text must wrap onto several lines in the narrow box)",
+      "look": "each line right to left, the first words on the first line at the right; letters joined",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Right-to-left or mixed-direction text: the PDF holds runs in visual order, and how a reader puts RTL text back into logical order varies; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansArabic"
+      },
+      "codepoints": "U+0647 U+0630 U+0627 U+0020 U+0646 U+0635 U+0020 U+0639 U+0631 U+0628 U+064A U+0020 U+0637 U+0648 U+064A U+0644 U+0020 U+064A U+062C U+0628 U+0020 U+0623 U+0646 U+0020 U+064A U+0644 U+062A U+0641 U+0020 U+0639 U+0644 U+0649 U+0020 U+0639 U+062F U+0629 U+0020 U+0623 U+0633 U+0637 U+0631 U+0020 U+062F U+0627 U+062E U+0644 U+0020 U+0627 U+0644 U+0645 U+0631 U+0628 U+0639 U+0020 U+0627 U+0644 U+0636 U+064A U+0642"
+    },
+    {
+      "id": "hi-long",
+      "lang": "hi",
+      "script": "Deva",
+      "language": "Hindi paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "यह एक लंबा हिन्दी वाक्य है जो संकरे बक्से में कई पंक्तियों में टूटना चाहिए",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (a long Hindi sentence that must wrap in the narrow box)",
+      "look": "broken at spaces; no conjunct split across lines",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "visual",
+        "pdfOrderWhy": "Pre-base vowel signs and reordered marks: the PDF holds glyphs in visual order and each glyph maps to its characters, so a vowel drawn before its consonant (ि, ি, ெ, េ, ြ, ෙ) is extracted before it; the content check compares the characters as a multiset.",
+        "webFont": "NotoSansDevanagari",
+        "bold": {
+          "android": {
+            "pdf": ["text", "outline"],
+            "why": "Android 13 ships several of these scripts only as variable fonts; a variable font at a non-default instance (bold) is drawn as outlines (lekhjs bd5dd71, export.md §7 Embedding), so bold may be outlined (drawn, not extractable). Which scripts depends on the device fonts; the native run records it."
+          }
+        }
+      },
+      "codepoints": "U+092F U+0939 U+0020 U+090F U+0915 U+0020 U+0932 U+0902 U+092C U+093E U+0020 U+0939 U+093F U+0928 U+094D U+0926 U+0940 U+0020 U+0935 U+093E U+0915 U+094D U+092F U+0020 U+0939 U+0948 U+0020 U+091C U+094B U+0020 U+0938 U+0902 U+0915 U+0930 U+0947 U+0020 U+092C U+0915 U+094D U+0938 U+0947 U+0020 U+092E U+0947 U+0902 U+0020 U+0915 U+0908 U+0020 U+092A U+0902 U+0915 U+094D U+0924 U+093F U+092F U+094B U+0902 U+0020 U+092E U+0947 U+0902 U+0020 U+091F U+0942 U+091F U+0928 U+093E U+0020 U+091A U+093E U+0939 U+093F U+090F"
+    },
+    {
+      "id": "long-narrow",
+      "lang": "de",
+      "script": "Latn",
+      "language": "Very long unbroken string, narrow box",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "Donaudampfschifffahrtselektrizitätenhauptbetriebswerkbauunterbeamtengesellschaft",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text)",
+      "look": "broken inside the word on many lines, nothing to the right of the box",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSans"
+      },
+      "codepoints": "U+0044 U+006F U+006E U+0061 U+0075 U+0064 U+0061 U+006D U+0070 U+0066 U+0073 U+0063 U+0068 U+0069 U+0066 U+0066 U+0066 U+0061 U+0068 U+0072 U+0074 U+0073 U+0065 U+006C U+0065 U+006B U+0074 U+0072 U+0069 U+007A U+0069 U+0074 U+00E4 U+0074 U+0065 U+006E U+0068 U+0061 U+0075 U+0070 U+0074 U+0062 U+0065 U+0074 U+0072 U+0069 U+0065 U+0062 U+0073 U+0077 U+0065 U+0072 U+006B U+0062 U+0061 U+0075 U+0075 U+006E U+0074 U+0065 U+0072 U+0062 U+0065 U+0061 U+006D U+0074 U+0065 U+006E U+0067 U+0065 U+0073 U+0065 U+006C U+006C U+0073 U+0063 U+0068 U+0061 U+0066 U+0074"
+    },
+    {
+      "id": "mixed-long",
+      "lang": "und",
+      "script": "Mixed",
+      "language": "Mixed Latin and CJK paragraph",
+      "dir": "ltr",
+      "group": "Paragraphs",
+      "text": "Lekh は whiteboard アプリ with 中文 text and English words mixed together.",
+      "short": "",
+      "source": "constructed for this suite (common words, no copyrighted text) (fixtures/wrap-corpus: mixed)",
+      "look": "Latin words not broken inside; CJK broken anywhere",
+      "expect": {
+        "pdf": {
+          "web": "text",
+          "ios": "text",
+          "mac": "text",
+          "android": "text"
+        },
+        "verified": {
+          "web": true,
+          "ios": false,
+          "mac": false,
+          "android": false
+        },
+        "pdfOrder": "logical",
+        "webFont": "NotoSansJP"
+      },
+      "codepoints": "U+004C U+0065 U+006B U+0068 U+0020 U+306F U+0020 U+0077 U+0068 U+0069 U+0074 U+0065 U+0062 U+006F U+0061 U+0072 U+0064 U+0020 U+30A2 U+30D7 U+30EA U+0020 U+0077 U+0069 U+0074 U+0068 U+0020 U+4E2D U+6587 U+0020 U+0074 U+0065 U+0078 U+0074 U+0020 U+0061 U+006E U+0064 U+0020 U+0045 U+006E U+0067 U+006C U+0069 U+0073 U+0068 U+0020 U+0077 U+006F U+0072 U+0064 U+0073 U+0020 U+006D U+0069 U+0078 U+0065 U+0064 U+0020 U+0074 U+006F U+0067 U+0065 U+0074 U+0068 U+0065 U+0072 U+002E"
+    }
+  ]
+}

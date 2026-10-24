@@ -1,0 +1,1776 @@
+{
+  "scripts": {
+    "0": {
+      "vi/shape/regular": {
+        "ink": 0.04833,
+        "extentW": 0.442
+      },
+      "pl/shape/regular": {
+        "ink": 0.02564,
+        "extentW": 0.2083
+      },
+      "tr/shape/regular": {
+        "ink": 0.03187,
+        "extentW": 0.2738
+      },
+      "el/shape/regular": {
+        "ink": 0.05791,
+        "extentW": 0.4821
+      },
+      "ru/shape/regular": {
+        "ink": 0.067,
+        "extentW": 0.6057
+      }
+    },
+    "1": {
+      "ar/shape/regular": {
+        "ink": 0.02452,
+        "extentW": 0.244
+      },
+      "he/shape/regular": {
+        "ink": 0.02245,
+        "extentW": 0.2054
+      },
+      "ur/shape/regular": {
+        "ink": 0.01457,
+        "extentW": 0.1667
+      },
+      "fa/shape/regular": {
+        "ink": 0.0266,
+        "extentW": 0.2976
+      }
+    },
+    "2": {
+      "hi/shape/regular": {
+        "ink": 0.0301,
+        "extentW": 0.2188
+      },
+      "bn/shape/regular": {
+        "ink": 0.02468,
+        "extentW": 0.183
+      },
+      "ta/shape/regular": {
+        "ink": 0.04994,
+        "extentW": 0.372
+      },
+      "te/shape/regular": {
+        "ink": 0.02238,
+        "extentW": 0.2932
+      },
+      "kn/shape/regular": {
+        "ink": 0.03119,
+        "extentW": 0.2247
+      },
+      "ml/shape/regular": {
+        "ink": 0.04647,
+        "extentW": 0.3869
+      },
+      "gu/shape/regular": {
+        "ink": 0.02282,
+        "extentW": 0.2098
+      },
+      "pa/shape/regular": {
+        "ink": 0.02431,
+        "extentW": 0.2426
+      }
+    },
+    "3": {
+      "th/shape/regular": {
+        "ink": 0.02772,
+        "extentW": 0.2381
+      },
+      "lo/shape/regular": {
+        "ink": 0.02167,
+        "extentW": 0.186
+      },
+      "km/shape/regular": {
+        "ink": 0.03379,
+        "extentW": 0.253
+      },
+      "my/shape/regular": {
+        "ink": 0.03488,
+        "extentW": 0.2813
+      }
+    },
+    "4": {
+      "zh-Hans/shape/regular": {
+        "ink": 0.03494,
+        "extentW": 0.2753
+      },
+      "zh-Hant/shape/regular": {
+        "ink": 0.03826,
+        "extentW": 0.2753
+      },
+      "ja/shape/regular": {
+        "ink": 0.04613,
+        "extentW": 0.4479
+      },
+      "ko/shape/regular": {
+        "ink": 0.03559,
+        "extentW": 0.2649
+      }
+    },
+    "5": {
+      "extb/shape/regular": {
+        "ink": 0.00505,
+        "extentW": 0.0387
+      },
+      "extb-ja/shape/regular": {
+        "ink": 0.01609,
+        "extentW": 0.1414
+      }
+    },
+    "6": {
+      "emoji-zwj/shape/regular": {
+        "ink": 0.02892,
+        "extentW": 0.1116
+      },
+      "emoji-flags/shape/regular": {
+        "ink": 0.03655,
+        "extentW": 0.1949
+      },
+      "emoji-skin/shape/regular": {
+        "ink": 0.05559,
+        "extentW": 0.2693
+      }
+    },
+    "7": {
+      "am/shape/regular": {
+        "ink": 0.02474,
+        "extentW": 0.2083
+      },
+      "ka/shape/regular": {
+        "ink": 0.05184,
+        "extentW": 0.4479
+      },
+      "hy/shape/regular": {
+        "ink": 0.03565,
+        "extentW": 0.3259
+      },
+      "bo/shape/regular": {
+        "ink": 0.01885,
+        "extentW": 0.247
+      },
+      "si/shape/regular": {
+        "ink": 0.03776,
+        "extentW": 0.308
+      }
+    },
+    "8": {
+      "bidi-ar/shape/regular": {
+        "ink": 0.06234,
+        "extentW": 0.5833
+      },
+      "bidi-he/shape/regular": {
+        "ink": 0.04715,
+        "extentW": 0.433
+      },
+      "fa-digits/shape/regular": {
+        "ink": 0.01981,
+        "extentW": 0.2247
+      },
+      "nfc/shape/regular": {
+        "ink": 0.02099,
+        "extentW": 0.1786
+      },
+      "nfd/shape/regular": {
+        "ink": 0.02099,
+        "extentW": 0.1786
+      },
+      "combining/shape/regular": {
+        "ink": 0.01039,
+        "extentW": 0.0789
+      },
+      "long/shape/regular": {
+        "ink": 0.12906,
+        "extentW": 0.9539
+      }
+    }
+  },
+  "styles": {
+    "0": {
+      "vi/shape/regular": {
+        "ink": 0.04992,
+        "extentW": 0.3378
+      },
+      "vi/shape/bold": {
+        "ink": 0.07145,
+        "extentW": 0.3604
+      },
+      "vi/shape/italic": {
+        "ink": 0.0483,
+        "extentW": 0.3108
+      },
+      "vi/shape/bold-italic": {
+        "ink": 0.06832,
+        "extentW": 0.3378
+      },
+      "pl/shape/regular": {
+        "ink": 0.03266,
+        "extentW": 0.2117
+      },
+      "pl/shape/bold": {
+        "ink": 0.04692,
+        "extentW": 0.2207
+      },
+      "pl/shape/italic": {
+        "ink": 0.03203,
+        "extentW": 0.2072
+      },
+      "pl/shape/bold-italic": {
+        "ink": 0.04492,
+        "extentW": 0.2207
+      },
+      "tr/shape/regular": {
+        "ink": 0.04317,
+        "extentW": 0.2703
+      },
+      "tr/shape/bold": {
+        "ink": 0.05881,
+        "extentW": 0.2973
+      },
+      "tr/shape/italic": {
+        "ink": 0.04029,
+        "extentW": 0.2658
+      },
+      "tr/shape/bold-italic": {
+        "ink": 0.05668,
+        "extentW": 0.2928
+      },
+      "el/shape/regular": {
+        "ink": 0.04479,
+        "extentW": 0.2973
+      },
+      "el/shape/bold": {
+        "ink": 0.06431,
+        "extentW": 0.3243
+      },
+      "el/shape/italic": {
+        "ink": 0.04442,
+        "extentW": 0.2838
+      },
+      "el/shape/bold-italic": {
+        "ink": 0.06331,
+        "extentW": 0.3108
+      },
+      "ru/shape/regular": {
+        "ink": 0.03916,
+        "extentW": 0.2658
+      },
+      "ru/shape/bold": {
+        "ink": 0.05843,
+        "extentW": 0.2928
+      },
+      "ru/shape/italic": {
+        "ink": 0.03641,
+        "extentW": 0.2523
+      },
+      "ru/shape/bold-italic": {
+        "ink": 0.05355,
+        "extentW": 0.2703
+      },
+      "ar/shape/regular": {
+        "ink": 0.02528,
+        "extentW": 0.1757
+      },
+      "ar/shape/bold": {
+        "ink": 0.03954,
+        "extentW": 0.2027
+      },
+      "ar/shape/italic": {
+        "ink": 0.02553,
+        "extentW": 0.1847
+      },
+      "ar/shape/bold-italic": {
+        "ink": 0.03979,
+        "extentW": 0.2072
+      },
+      "he/shape/regular": {
+        "ink": 0.02452,
+        "extentW": 0.1847
+      },
+      "he/shape/bold": {
+        "ink": 0.03478,
+        "extentW": 0.2027
+      },
+      "he/shape/italic": {
+        "ink": 0.0239,
+        "extentW": 0.1937
+      },
+      "he/shape/bold-italic": {
+        "ink": 0.03378,
+        "extentW": 0.2027
+      },
+      "ur/shape/regular": {
+        "ink": 0.01339,
+        "extentW": 0.1036
+      },
+      "ur/shape/bold": {
+        "ink": 0.02077,
+        "extentW": 0.1171
+      },
+      "ur/shape/italic": {
+        "ink": 0.01326,
+        "extentW": 0.1171
+      },
+      "ur/shape/bold-italic": {
+        "ink": 0.02015,
+        "extentW": 0.1261
+      },
+      "fa/shape/regular": {
+        "ink": 0.02165,
+        "extentW": 0.1847
+      },
+      "fa/shape/bold": {
+        "ink": 0.03341,
+        "extentW": 0.2117
+      },
+      "fa/shape/italic": {
+        "ink": 0.02115,
+        "extentW": 0.1892
+      },
+      "fa/shape/bold-italic": {
+        "ink": 0.03416,
+        "extentW": 0.2162
+      },
+      "hi/shape/regular": {
+        "ink": 0.02978,
+        "extentW": 0.1396
+      },
+      "hi/shape/bold": {
+        "ink": 0.04029,
+        "extentW": 0.1486
+      },
+      "hi/shape/italic": {
+        "ink": 0.02978,
+        "extentW": 0.1396
+      },
+      "hi/shape/bold-italic": {
+        "ink": 0.04104,
+        "extentW": 0.1532
+      },
+      "bn/shape/regular": {
+        "ink": 0.02715,
+        "extentW": 0.1667
+      },
+      "bn/shape/bold": {
+        "ink": 0.03891,
+        "extentW": 0.1757
+      },
+      "bn/shape/italic": {
+        "ink": 0.02803,
+        "extentW": 0.1667
+      },
+      "bn/shape/bold-italic": {
+        "ink": 0.03904,
+        "extentW": 0.1757
+      },
+      "ta/shape/regular": {
+        "ink": 0.04017,
+        "extentW": 0.1982
+      },
+      "ta/shape/bold": {
+        "ink": 0.05643,
+        "extentW": 0.2207
+      },
+      "ta/shape/italic": {
+        "ink": 0.04017,
+        "extentW": 0.2027
+      },
+      "ta/shape/bold-italic": {
+        "ink": 0.05643,
+        "extentW": 0.2297
+      },
+      "te/shape/regular": {
+        "ink": 0.04842,
+        "extentW": 0.3108
+      },
+      "te/shape/bold": {
+        "ink": 0.06682,
+        "extentW": 0.3378
+      },
+      "te/shape/italic": {
+        "ink": 0.04817,
+        "extentW": 0.3153
+      },
+      "te/shape/bold-italic": {
+        "ink": 0.06607,
+        "extentW": 0.3423
+      },
+      "kn/shape/regular": {
+        "ink": 0.03253,
+        "extentW": 0.1532
+      },
+      "kn/shape/bold": {
+        "ink": 0.04329,
+        "extentW": 0.1667
+      },
+      "kn/shape/italic": {
+        "ink": 0.03228,
+        "extentW": 0.1622
+      },
+      "kn/shape/bold-italic": {
+        "ink": 0.04367,
+        "extentW": 0.1712
+      },
+      "ml/shape/regular": {
+        "ink": 0.05205,
+        "extentW": 0.3063
+      },
+      "ml/shape/bold": {
+        "ink": 0.06944,
+        "extentW": 0.3378
+      },
+      "ml/shape/italic": {
+        "ink": 0.05068,
+        "extentW": 0.3063
+      },
+      "ml/shape/bold-italic": {
+        "ink": 0.06994,
+        "extentW": 0.3423
+      },
+      "gu/shape/regular": {
+        "ink": 0.03491,
+        "extentW": 0.2207
+      },
+      "gu/shape/bold": {
+        "ink": 0.0483,
+        "extentW": 0.2387
+      },
+      "gu/shape/italic": {
+        "ink": 0.03554,
+        "extentW": 0.2207
+      },
+      "gu/shape/bold-italic": {
+        "ink": 0.04817,
+        "extentW": 0.2387
+      },
+      "pa/shape/regular": {
+        "ink": 0.03403,
+        "extentW": 0.1847
+      },
+      "pa/shape/bold": {
+        "ink": 0.03816,
+        "extentW": 0.1892
+      },
+      "pa/shape/italic": {
+        "ink": 0.03191,
+        "extentW": 0.1892
+      },
+      "pa/shape/bold-italic": {
+        "ink": 0.03791,
+        "extentW": 0.1892
+      },
+      "th/shape/regular": {
+        "ink": 0.03641,
+        "extentW": 0.2523
+      },
+      "th/shape/bold": {
+        "ink": 0.05218,
+        "extentW": 0.2703
+      },
+      "th/shape/italic": {
+        "ink": 0.03666,
+        "extentW": 0.2613
+      },
+      "th/shape/bold-italic": {
+        "ink": 0.04955,
+        "extentW": 0.2793
+      },
+      "lo/shape/regular": {
+        "ink": 0.03679,
+        "extentW": 0.2477
+      },
+      "lo/shape/bold": {
+        "ink": 0.0488,
+        "extentW": 0.2568
+      },
+      "lo/shape/italic": {
+        "ink": 0.03629,
+        "extentW": 0.2477
+      },
+      "lo/shape/bold-italic": {
+        "ink": 0.04955,
+        "extentW": 0.2658
+      },
+      "km/shape/regular": {
+        "ink": 0.04004,
+        "extentW": 0.2387
+      },
+      "km/shape/bold": {
+        "ink": 0.05218,
+        "extentW": 0.2568
+      },
+      "km/shape/italic": {
+        "ink": 0.04117,
+        "extentW": 0.2477
+      },
+      "km/shape/bold-italic": {
+        "ink": 0.0513,
+        "extentW": 0.2658
+      },
+      "my/shape/regular": {
+        "ink": 0.04004,
+        "extentW": 0.1847
+      },
+      "my/shape/bold": {
+        "ink": 0.05305,
+        "extentW": 0.1937
+      },
+      "my/shape/italic": {
+        "ink": 0.04054,
+        "extentW": 0.1847
+      },
+      "my/shape/bold-italic": {
+        "ink": 0.05243,
+        "extentW": 0.1937
+      },
+      "zh-Hans/shape/regular": {
+        "ink": 0.05268,
+        "extentW": 0.2838
+      },
+      "zh-Hans/shape/bold": {
+        "ink": 0.07057,
+        "extentW": 0.2838
+      },
+      "zh-Hans/shape/italic": {
+        "ink": 0.0513,
+        "extentW": 0.2883
+      },
+      "zh-Hans/shape/bold-italic": {
+        "ink": 0.07095,
+        "extentW": 0.2928
+      },
+      "zh-Hant/shape/regular": {
+        "ink": 0.06319,
+        "extentW": 0.2838
+      },
+      "zh-Hant/shape/bold": {
+        "ink": 0.07745,
+        "extentW": 0.2838
+      },
+      "zh-Hant/shape/italic": {
+        "ink": 0.06294,
+        "extentW": 0.2928
+      },
+      "zh-Hant/shape/bold-italic": {
+        "ink": 0.07833,
+        "extentW": 0.2928
+      },
+      "ja/shape/regular": {
+        "ink": 0.05956,
+        "extentW": 0.3468
+      },
+      "ja/shape/bold": {
+        "ink": 0.07795,
+        "extentW": 0.3468
+      },
+      "ja/shape/italic": {
+        "ink": 0.05943,
+        "extentW": 0.3559
+      },
+      "ja/shape/bold-italic": {
+        "ink": 0.0772,
+        "extentW": 0.3604
+      },
+      "ko/shape/regular": {
+        "ink": 0.03128,
+        "extentW": 0.1892
+      },
+      "ko/shape/bold": {
+        "ink": 0.04642,
+        "extentW": 0.1892
+      },
+      "ko/shape/italic": {
+        "ink": 0.03141,
+        "extentW": 0.1937
+      },
+      "ko/shape/bold-italic": {
+        "ink": 0.04605,
+        "extentW": 0.1937
+      },
+      "extb/shape/regular": {
+        "ink": 0.00375,
+        "extentW": 0.018
+      },
+      "extb/shape/bold": {
+        "ink": 0.00375,
+        "extentW": 0.018
+      },
+      "extb/shape/italic": {
+        "ink": 0.00375,
+        "extentW": 0.018
+      },
+      "extb/shape/bold-italic": {
+        "ink": 0.00375,
+        "extentW": 0.018
+      },
+      "extb-ja/shape/regular": {
+        "ink": 0.0523,
+        "extentW": 0.3829
+      },
+      "extb-ja/shape/bold": {
+        "ink": 0.07057,
+        "extentW": 0.3829
+      },
+      "extb-ja/shape/italic": {
+        "ink": 0.05355,
+        "extentW": 0.3874
+      },
+      "extb-ja/shape/bold-italic": {
+        "ink": 0.07045,
+        "extentW": 0.3919
+      },
+      "emoji-zwj/shape/regular": {
+        "ink": 0.03053,
+        "extentW": 0.0766
+      },
+      "emoji-zwj/shape/bold": {
+        "ink": 0.03053,
+        "extentW": 0.0766
+      },
+      "emoji-zwj/shape/italic": {
+        "ink": 0.03016,
+        "extentW": 0.0901
+      },
+      "emoji-zwj/shape/bold-italic": {
+        "ink": 0.03016,
+        "extentW": 0.0901
+      },
+      "emoji-flags/shape/regular": {
+        "ink": 0.02528,
+        "extentW": 0.0856
+      },
+      "emoji-flags/shape/bold": {
+        "ink": 0.02528,
+        "extentW": 0.0856
+      },
+      "emoji-flags/shape/italic": {
+        "ink": 0.02528,
+        "extentW": 0.0991
+      },
+      "emoji-flags/shape/bold-italic": {
+        "ink": 0.02528,
+        "extentW": 0.0991
+      },
+      "emoji-skin/shape/regular": {
+        "ink": 0.02115,
+        "extentW": 0.0676
+      },
+      "emoji-skin/shape/bold": {
+        "ink": 0.02115,
+        "extentW": 0.0676
+      },
+      "emoji-skin/shape/italic": {
+        "ink": 0.0214,
+        "extentW": 0.0766
+      },
+      "emoji-skin/shape/bold-italic": {
+        "ink": 0.0214,
+        "extentW": 0.0766
+      },
+      "am/shape/regular": {
+        "ink": 0.02915,
+        "extentW": 0.1712
+      },
+      "am/shape/bold": {
+        "ink": 0.03904,
+        "extentW": 0.1892
+      },
+      "am/shape/italic": {
+        "ink": 0.02828,
+        "extentW": 0.1802
+      },
+      "am/shape/bold-italic": {
+        "ink": 0.03841,
+        "extentW": 0.2027
+      },
+      "ka/shape/regular": {
+        "ink": 0.0543,
+        "extentW": 0.3649
+      },
+      "ka/shape/bold": {
+        "ink": 0.07783,
+        "extentW": 0.3829
+      },
+      "ka/shape/italic": {
+        "ink": 0.05643,
+        "extentW": 0.3694
+      },
+      "ka/shape/bold-italic": {
+        "ink": 0.0767,
+        "extentW": 0.3874
+      },
+      "hy/shape/regular": {
+        "ink": 0.04429,
+        "extentW": 0.2883
+      },
+      "hy/shape/bold": {
+        "ink": 0.06031,
+        "extentW": 0.3108
+      },
+      "hy/shape/italic": {
+        "ink": 0.04292,
+        "extentW": 0.2928
+      },
+      "hy/shape/bold-italic": {
+        "ink": 0.05943,
+        "extentW": 0.3153
+      },
+      "bo/shape/regular": {
+        "ink": 0.0244,
+        "extentW": 0.1892
+      },
+      "bo/shape/bold": {
+        "ink": 0.02515,
+        "extentW": 0.1892
+      },
+      "bo/shape/italic": {
+        "ink": 0.02252,
+        "extentW": 0.2027
+      },
+      "bo/shape/bold-italic": {
+        "ink": 0.02765,
+        "extentW": 0.2027
+      },
+      "si/shape/regular": {
+        "ink": 0.03941,
+        "extentW": 0.2297
+      },
+      "si/shape/bold": {
+        "ink": 0.05468,
+        "extentW": 0.2387
+      },
+      "si/shape/italic": {
+        "ink": 0.03991,
+        "extentW": 0.2297
+      },
+      "si/shape/bold-italic": {
+        "ink": 0.05393,
+        "extentW": 0.2387
+      },
+      "bidi-ar/shape/regular": {
+        "ink": 0.0204,
+        "extentW": 0.1171
+      },
+      "bidi-ar/shape/bold": {
+        "ink": 0.03078,
+        "extentW": 0.1306
+      },
+      "bidi-ar/shape/italic": {
+        "ink": 0.01977,
+        "extentW": 0.1216
+      },
+      "bidi-ar/shape/bold-italic": {
+        "ink": 0.02878,
+        "extentW": 0.1306
+      },
+      "bidi-he/shape/regular": {
+        "ink": 0.03766,
+        "extentW": 0.2613
+      },
+      "bidi-he/shape/bold": {
+        "ink": 0.05193,
+        "extentW": 0.2793
+      },
+      "bidi-he/shape/italic": {
+        "ink": 0.03691,
+        "extentW": 0.2477
+      },
+      "bidi-he/shape/bold-italic": {
+        "ink": 0.0503,
+        "extentW": 0.2613
+      },
+      "fa-digits/shape/regular": {
+        "ink": 0.02477,
+        "extentW": 0.2162
+      },
+      "fa-digits/shape/bold": {
+        "ink": 0.03478,
+        "extentW": 0.2252
+      },
+      "fa-digits/shape/italic": {
+        "ink": 0.0249,
+        "extentW": 0.2207
+      },
+      "fa-digits/shape/bold-italic": {
+        "ink": 0.03516,
+        "extentW": 0.2252
+      },
+      "nfc/shape/regular": {
+        "ink": 0.01977,
+        "extentW": 0.1306
+      },
+      "nfc/shape/bold": {
+        "ink": 0.02515,
+        "extentW": 0.1351
+      },
+      "nfc/shape/italic": {
+        "ink": 0.01964,
+        "extentW": 0.1306
+      },
+      "nfc/shape/bold-italic": {
+        "ink": 0.0254,
+        "extentW": 0.1396
+      },
+      "nfd/shape/regular": {
+        "ink": 0.02215,
+        "extentW": 0.1351
+      },
+      "nfd/shape/bold": {
+        "ink": 0.02965,
+        "extentW": 0.1441
+      },
+      "nfd/shape/italic": {
+        "ink": 0.02152,
+        "extentW": 0.1306
+      },
+      "nfd/shape/bold-italic": {
+        "ink": 0.0289,
+        "extentW": 0.1396
+      },
+      "combining/shape/regular": {
+        "ink": 0.0249,
+        "extentW": 0.1712
+      },
+      "combining/shape/bold": {
+        "ink": 0.03591,
+        "extentW": 0.1892
+      },
+      "combining/shape/italic": {
+        "ink": 0.02302,
+        "extentW": 0.1667
+      },
+      "combining/shape/bold-italic": {
+        "ink": 0.03466,
+        "extentW": 0.1847
+      },
+      "long/shape/regular": {
+        "ink": 0.06769,
+        "extentW": 0.491
+      },
+      "long/shape/bold": {
+        "ink": 0.09397,
+        "extentW": 0.518
+      },
+      "long/shape/italic": {
+        "ink": 0.06769,
+        "extentW": 0.4685
+      },
+      "long/shape/bold-italic": {
+        "ink": 0.09284,
+        "extentW": 0.4955
+      }
+    },
+    "1": {
+      "vi/shape/family:Noto Sans": {
+        "ink": 0.04992,
+        "extentW": 0.3378
+      },
+      "vi/shape/family:Noto Serif": {
+        "ink": 0.05581,
+        "extentW": 0.3468
+      },
+      "vi/shape/family:Noto Sans Mono": {
+        "ink": 0.05706,
+        "extentW": 0.4234
+      },
+      "vi/shape/family:Caveat": {
+        "ink": 0.04192,
+        "extentW": 0.2748
+      },
+      "pl/shape/family:Noto Sans": {
+        "ink": 0.03266,
+        "extentW": 0.2117
+      },
+      "pl/shape/family:Noto Serif": {
+        "ink": 0.03428,
+        "extentW": 0.2207
+      },
+      "pl/shape/family:Noto Sans Mono": {
+        "ink": 0.03516,
+        "extentW": 0.2477
+      },
+      "pl/shape/family:Caveat": {
+        "ink": 0.02052,
+        "extentW": 0.1622
+      },
+      "tr/shape/family:Noto Sans": {
+        "ink": 0.04317,
+        "extentW": 0.2703
+      },
+      "tr/shape/family:Noto Serif": {
+        "ink": 0.04705,
+        "extentW": 0.2838
+      },
+      "tr/shape/family:Noto Sans Mono": {
+        "ink": 0.04617,
+        "extentW": 0.3378
+      },
+      "tr/shape/family:Caveat": {
+        "ink": 0.02578,
+        "extentW": 0.2207
+      },
+      "el/shape/family:Noto Sans": {
+        "ink": 0.04479,
+        "extentW": 0.2973
+      },
+      "el/shape/family:Noto Serif": {
+        "ink": 0.04467,
+        "extentW": 0.3108
+      },
+      "el/shape/family:Noto Sans Mono": {
+        "ink": 0.0468,
+        "extentW": 0.3423
+      },
+      "el/shape/family:Caveat": {
+        "ink": 0.03954,
+        "extentW": 0.2748
+      },
+      "ru/shape/family:Noto Sans": {
+        "ink": 0.03916,
+        "extentW": 0.2658
+      },
+      "ru/shape/family:Noto Serif": {
+        "ink": 0.04592,
+        "extentW": 0.2928
+      },
+      "ru/shape/family:Noto Sans Mono": {
+        "ink": 0.04117,
+        "extentW": 0.2928
+      },
+      "ru/shape/family:Caveat": {
+        "ink": 0.0214,
+        "extentW": 0.1937
+      },
+      "ar/shape/family:Noto Sans": {
+        "ink": 0.02528,
+        "extentW": 0.1757
+      },
+      "ar/shape/family:Noto Serif": {
+        "ink": 0.02528,
+        "extentW": 0.1757
+      },
+      "ar/shape/family:Noto Sans Mono": {
+        "ink": 0.02528,
+        "extentW": 0.1757
+      },
+      "ar/shape/family:Caveat": {
+        "ink": 0.02528,
+        "extentW": 0.1757
+      },
+      "he/shape/family:Noto Sans": {
+        "ink": 0.02452,
+        "extentW": 0.1847
+      },
+      "he/shape/family:Noto Serif": {
+        "ink": 0.02452,
+        "extentW": 0.1847
+      },
+      "he/shape/family:Noto Sans Mono": {
+        "ink": 0.02452,
+        "extentW": 0.1847
+      },
+      "he/shape/family:Caveat": {
+        "ink": 0.02452,
+        "extentW": 0.1847
+      },
+      "ur/shape/family:Noto Sans": {
+        "ink": 0.01339,
+        "extentW": 0.1036
+      },
+      "ur/shape/family:Noto Serif": {
+        "ink": 0.01339,
+        "extentW": 0.1036
+      },
+      "ur/shape/family:Noto Sans Mono": {
+        "ink": 0.01339,
+        "extentW": 0.1036
+      },
+      "ur/shape/family:Caveat": {
+        "ink": 0.01339,
+        "extentW": 0.1036
+      },
+      "fa/shape/family:Noto Sans": {
+        "ink": 0.02165,
+        "extentW": 0.1847
+      },
+      "fa/shape/family:Noto Serif": {
+        "ink": 0.02165,
+        "extentW": 0.1847
+      },
+      "fa/shape/family:Noto Sans Mono": {
+        "ink": 0.02165,
+        "extentW": 0.1847
+      },
+      "fa/shape/family:Caveat": {
+        "ink": 0.02165,
+        "extentW": 0.1847
+      },
+      "hi/shape/family:Noto Sans": {
+        "ink": 0.02978,
+        "extentW": 0.1396
+      },
+      "hi/shape/family:Noto Serif": {
+        "ink": 0.02978,
+        "extentW": 0.1396
+      },
+      "hi/shape/family:Noto Sans Mono": {
+        "ink": 0.02978,
+        "extentW": 0.1396
+      },
+      "hi/shape/family:Caveat": {
+        "ink": 0.02978,
+        "extentW": 0.1396
+      },
+      "bn/shape/family:Noto Sans": {
+        "ink": 0.02715,
+        "extentW": 0.1667
+      },
+      "bn/shape/family:Noto Serif": {
+        "ink": 0.02715,
+        "extentW": 0.1667
+      },
+      "bn/shape/family:Noto Sans Mono": {
+        "ink": 0.02715,
+        "extentW": 0.1667
+      },
+      "bn/shape/family:Caveat": {
+        "ink": 0.02715,
+        "extentW": 0.1667
+      },
+      "ta/shape/family:Noto Sans": {
+        "ink": 0.04017,
+        "extentW": 0.1982
+      },
+      "ta/shape/family:Noto Serif": {
+        "ink": 0.04017,
+        "extentW": 0.1982
+      },
+      "ta/shape/family:Noto Sans Mono": {
+        "ink": 0.04017,
+        "extentW": 0.1982
+      },
+      "ta/shape/family:Caveat": {
+        "ink": 0.04017,
+        "extentW": 0.1982
+      },
+      "te/shape/family:Noto Sans": {
+        "ink": 0.04842,
+        "extentW": 0.3108
+      },
+      "te/shape/family:Noto Serif": {
+        "ink": 0.04855,
+        "extentW": 0.3108
+      },
+      "te/shape/family:Noto Sans Mono": {
+        "ink": 0.04842,
+        "extentW": 0.3108
+      },
+      "te/shape/family:Caveat": {
+        "ink": 0.04842,
+        "extentW": 0.3108
+      },
+      "kn/shape/family:Noto Sans": {
+        "ink": 0.03253,
+        "extentW": 0.1532
+      },
+      "kn/shape/family:Noto Serif": {
+        "ink": 0.03253,
+        "extentW": 0.1532
+      },
+      "kn/shape/family:Noto Sans Mono": {
+        "ink": 0.03253,
+        "extentW": 0.1532
+      },
+      "kn/shape/family:Caveat": {
+        "ink": 0.03253,
+        "extentW": 0.1532
+      },
+      "ml/shape/family:Noto Sans": {
+        "ink": 0.05205,
+        "extentW": 0.3063
+      },
+      "ml/shape/family:Noto Serif": {
+        "ink": 0.05205,
+        "extentW": 0.3063
+      },
+      "ml/shape/family:Noto Sans Mono": {
+        "ink": 0.05205,
+        "extentW": 0.3063
+      },
+      "ml/shape/family:Caveat": {
+        "ink": 0.05205,
+        "extentW": 0.3063
+      },
+      "gu/shape/family:Noto Sans": {
+        "ink": 0.03491,
+        "extentW": 0.2207
+      },
+      "gu/shape/family:Noto Serif": {
+        "ink": 0.03491,
+        "extentW": 0.2207
+      },
+      "gu/shape/family:Noto Sans Mono": {
+        "ink": 0.03491,
+        "extentW": 0.2207
+      },
+      "gu/shape/family:Caveat": {
+        "ink": 0.03491,
+        "extentW": 0.2207
+      },
+      "pa/shape/family:Noto Sans": {
+        "ink": 0.03403,
+        "extentW": 0.1847
+      },
+      "pa/shape/family:Noto Serif": {
+        "ink": 0.03403,
+        "extentW": 0.1847
+      },
+      "pa/shape/family:Noto Sans Mono": {
+        "ink": 0.03403,
+        "extentW": 0.1847
+      },
+      "pa/shape/family:Caveat": {
+        "ink": 0.03478,
+        "extentW": 0.1847
+      },
+      "th/shape/family:Noto Sans": {
+        "ink": 0.03641,
+        "extentW": 0.2523
+      },
+      "th/shape/family:Noto Serif": {
+        "ink": 0.03641,
+        "extentW": 0.2523
+      },
+      "th/shape/family:Noto Sans Mono": {
+        "ink": 0.03641,
+        "extentW": 0.2523
+      },
+      "th/shape/family:Caveat": {
+        "ink": 0.03641,
+        "extentW": 0.2523
+      },
+      "lo/shape/family:Noto Sans": {
+        "ink": 0.03679,
+        "extentW": 0.2477
+      },
+      "lo/shape/family:Noto Serif": {
+        "ink": 0.03679,
+        "extentW": 0.2477
+      },
+      "lo/shape/family:Noto Sans Mono": {
+        "ink": 0.03679,
+        "extentW": 0.2477
+      },
+      "lo/shape/family:Caveat": {
+        "ink": 0.03679,
+        "extentW": 0.2477
+      },
+      "km/shape/family:Noto Sans": {
+        "ink": 0.04004,
+        "extentW": 0.2387
+      },
+      "km/shape/family:Noto Serif": {
+        "ink": 0.04004,
+        "extentW": 0.2387
+      },
+      "km/shape/family:Noto Sans Mono": {
+        "ink": 0.04004,
+        "extentW": 0.2387
+      },
+      "km/shape/family:Caveat": {
+        "ink": 0.04004,
+        "extentW": 0.2387
+      },
+      "my/shape/family:Noto Sans": {
+        "ink": 0.04004,
+        "extentW": 0.1847
+      },
+      "my/shape/family:Noto Serif": {
+        "ink": 0.04004,
+        "extentW": 0.1847
+      },
+      "my/shape/family:Noto Sans Mono": {
+        "ink": 0.04004,
+        "extentW": 0.1847
+      },
+      "my/shape/family:Caveat": {
+        "ink": 0.04004,
+        "extentW": 0.1847
+      },
+      "zh-Hans/shape/family:Noto Sans": {
+        "ink": 0.05268,
+        "extentW": 0.2838
+      },
+      "zh-Hans/shape/family:Noto Serif": {
+        "ink": 0.05268,
+        "extentW": 0.2838
+      },
+      "zh-Hans/shape/family:Noto Sans Mono": {
+        "ink": 0.05268,
+        "extentW": 0.2838
+      },
+      "zh-Hans/shape/family:Caveat": {
+        "ink": 0.05268,
+        "extentW": 0.2838
+      },
+      "zh-Hant/shape/family:Noto Sans": {
+        "ink": 0.06319,
+        "extentW": 0.2838
+      },
+      "zh-Hant/shape/family:Noto Serif": {
+        "ink": 0.06319,
+        "extentW": 0.2838
+      },
+      "zh-Hant/shape/family:Noto Sans Mono": {
+        "ink": 0.06319,
+        "extentW": 0.2838
+      },
+      "zh-Hant/shape/family:Caveat": {
+        "ink": 0.06319,
+        "extentW": 0.2838
+      },
+      "ja/shape/family:Noto Sans": {
+        "ink": 0.05956,
+        "extentW": 0.3468
+      },
+      "ja/shape/family:Noto Serif": {
+        "ink": 0.05956,
+        "extentW": 0.3468
+      },
+      "ja/shape/family:Noto Sans Mono": {
+        "ink": 0.05956,
+        "extentW": 0.3468
+      },
+      "ja/shape/family:Caveat": {
+        "ink": 0.05956,
+        "extentW": 0.3468
+      },
+      "ko/shape/family:Noto Sans": {
+        "ink": 0.03128,
+        "extentW": 0.1892
+      },
+      "ko/shape/family:Noto Serif": {
+        "ink": 0.03128,
+        "extentW": 0.1892
+      },
+      "ko/shape/family:Noto Sans Mono": {
+        "ink": 0.03128,
+        "extentW": 0.1892
+      },
+      "ko/shape/family:Caveat": {
+        "ink": 0.03128,
+        "extentW": 0.1892
+      },
+      "extb/shape/family:Noto Sans": {
+        "ink": 0.00375,
+        "extentW": 0.018
+      },
+      "extb/shape/family:Noto Serif": {
+        "ink": 0.00375,
+        "extentW": 0.018
+      },
+      "extb/shape/family:Noto Sans Mono": {
+        "ink": 0.00988,
+        "extentW": 0.0405
+      },
+      "extb/shape/family:Caveat": {
+        "ink": 0.00325,
+        "extentW": 0.018
+      },
+      "extb-ja/shape/family:Noto Sans": {
+        "ink": 0.0523,
+        "extentW": 0.3829
+      },
+      "extb-ja/shape/family:Noto Serif": {
+        "ink": 0.0523,
+        "extentW": 0.3829
+      },
+      "extb-ja/shape/family:Noto Sans Mono": {
+        "ink": 0.0523,
+        "extentW": 0.3829
+      },
+      "extb-ja/shape/family:Caveat": {
+        "ink": 0.0523,
+        "extentW": 0.3829
+      },
+      "emoji-zwj/shape/family:Noto Sans": {
+        "ink": 0.03053,
+        "extentW": 0.0766
+      },
+      "emoji-zwj/shape/family:Noto Serif": {
+        "ink": 0.03053,
+        "extentW": 0.0766
+      },
+      "emoji-zwj/shape/family:Noto Sans Mono": {
+        "ink": 0.03053,
+        "extentW": 0.0766
+      },
+      "emoji-zwj/shape/family:Caveat": {
+        "ink": 0.03053,
+        "extentW": 0.0766
+      },
+      "emoji-flags/shape/family:Noto Sans": {
+        "ink": 0.02528,
+        "extentW": 0.0856
+      },
+      "emoji-flags/shape/family:Noto Serif": {
+        "ink": 0.02528,
+        "extentW": 0.0856
+      },
+      "emoji-flags/shape/family:Noto Sans Mono": {
+        "ink": 0.02528,
+        "extentW": 0.0856
+      },
+      "emoji-flags/shape/family:Caveat": {
+        "ink": 0.02477,
+        "extentW": 0.0856
+      },
+      "emoji-skin/shape/family:Noto Sans": {
+        "ink": 0.02115,
+        "extentW": 0.0676
+      },
+      "emoji-skin/shape/family:Noto Serif": {
+        "ink": 0.02115,
+        "extentW": 0.0676
+      },
+      "emoji-skin/shape/family:Noto Sans Mono": {
+        "ink": 0.02115,
+        "extentW": 0.0676
+      },
+      "emoji-skin/shape/family:Caveat": {
+        "ink": 0.0209,
+        "extentW": 0.0676
+      },
+      "am/shape/family:Noto Sans": {
+        "ink": 0.02915,
+        "extentW": 0.1712
+      },
+      "am/shape/family:Noto Serif": {
+        "ink": 0.02915,
+        "extentW": 0.1712
+      },
+      "am/shape/family:Noto Sans Mono": {
+        "ink": 0.02915,
+        "extentW": 0.1712
+      },
+      "am/shape/family:Caveat": {
+        "ink": 0.02915,
+        "extentW": 0.1712
+      },
+      "ka/shape/family:Noto Sans": {
+        "ink": 0.0543,
+        "extentW": 0.3649
+      },
+      "ka/shape/family:Noto Serif": {
+        "ink": 0.0543,
+        "extentW": 0.3649
+      },
+      "ka/shape/family:Noto Sans Mono": {
+        "ink": 0.0543,
+        "extentW": 0.3649
+      },
+      "ka/shape/family:Caveat": {
+        "ink": 0.0543,
+        "extentW": 0.3649
+      },
+      "hy/shape/family:Noto Sans": {
+        "ink": 0.04429,
+        "extentW": 0.2883
+      },
+      "hy/shape/family:Noto Serif": {
+        "ink": 0.04429,
+        "extentW": 0.2883
+      },
+      "hy/shape/family:Noto Sans Mono": {
+        "ink": 0.04429,
+        "extentW": 0.2883
+      },
+      "hy/shape/family:Caveat": {
+        "ink": 0.04429,
+        "extentW": 0.2883
+      },
+      "bo/shape/family:Noto Sans": {
+        "ink": 0.0244,
+        "extentW": 0.1892
+      },
+      "bo/shape/family:Noto Serif": {
+        "ink": 0.0244,
+        "extentW": 0.1892
+      },
+      "bo/shape/family:Noto Sans Mono": {
+        "ink": 0.0244,
+        "extentW": 0.1892
+      },
+      "bo/shape/family:Caveat": {
+        "ink": 0.02265,
+        "extentW": 0.1892
+      },
+      "si/shape/family:Noto Sans": {
+        "ink": 0.03941,
+        "extentW": 0.2297
+      },
+      "si/shape/family:Noto Serif": {
+        "ink": 0.03941,
+        "extentW": 0.2297
+      },
+      "si/shape/family:Noto Sans Mono": {
+        "ink": 0.03941,
+        "extentW": 0.2297
+      },
+      "si/shape/family:Caveat": {
+        "ink": 0.03941,
+        "extentW": 0.2297
+      },
+      "bidi-ar/shape/family:Noto Sans": {
+        "ink": 0.0204,
+        "extentW": 0.1171
+      },
+      "bidi-ar/shape/family:Noto Serif": {
+        "ink": 0.0224,
+        "extentW": 0.1306
+      },
+      "bidi-ar/shape/family:Noto Sans Mono": {
+        "ink": 0.0244,
+        "extentW": 0.1667
+      },
+      "bidi-ar/shape/family:Caveat": {
+        "ink": 0.01101,
+        "extentW": 0.0856
+      },
+      "bidi-he/shape/family:Noto Sans": {
+        "ink": 0.03766,
+        "extentW": 0.2613
+      },
+      "bidi-he/shape/family:Noto Serif": {
+        "ink": 0.04617,
+        "extentW": 0.2883
+      },
+      "bidi-he/shape/family:Noto Sans Mono": {
+        "ink": 0.04204,
+        "extentW": 0.3378
+      },
+      "bidi-he/shape/family:Caveat": {
+        "ink": 0.0234,
+        "extentW": 0.2027
+      },
+      "fa-digits/shape/family:Noto Sans": {
+        "ink": 0.02477,
+        "extentW": 0.2162
+      },
+      "fa-digits/shape/family:Noto Serif": {
+        "ink": 0.02477,
+        "extentW": 0.2162
+      },
+      "fa-digits/shape/family:Noto Sans Mono": {
+        "ink": 0.02477,
+        "extentW": 0.2162
+      },
+      "fa-digits/shape/family:Caveat": {
+        "ink": 0.02477,
+        "extentW": 0.2162
+      },
+      "nfc/shape/family:Noto Sans": {
+        "ink": 0.01977,
+        "extentW": 0.1306
+      },
+      "nfc/shape/family:Noto Serif": {
+        "ink": 0.02002,
+        "extentW": 0.1396
+      },
+      "nfc/shape/family:Noto Sans Mono": {
+        "ink": 0.01939,
+        "extentW": 0.1216
+      },
+      "nfc/shape/family:Caveat": {
+        "ink": 0.01639,
+        "extentW": 0.1171
+      },
+      "nfd/shape/family:Noto Sans": {
+        "ink": 0.02215,
+        "extentW": 0.1351
+      },
+      "nfd/shape/family:Noto Serif": {
+        "ink": 0.02327,
+        "extentW": 0.1486
+      },
+      "nfd/shape/family:Noto Sans Mono": {
+        "ink": 0.0214,
+        "extentW": 0.1261
+      },
+      "nfd/shape/family:Caveat": {
+        "ink": 0.01814,
+        "extentW": 0.1216
+      },
+      "combining/shape/family:Noto Sans": {
+        "ink": 0.0249,
+        "extentW": 0.1712
+      },
+      "combining/shape/family:Noto Serif": {
+        "ink": 0.02703,
+        "extentW": 0.1757
+      },
+      "combining/shape/family:Noto Sans Mono": {
+        "ink": 0.02678,
+        "extentW": 0.2072
+      },
+      "combining/shape/family:Caveat": {
+        "ink": 0.01552,
+        "extentW": 0.1306
+      },
+      "long/shape/family:Noto Sans": {
+        "ink": 0.06769,
+        "extentW": 0.491
+      },
+      "long/shape/family:Noto Serif": {
+        "ink": 0.07533,
+        "extentW": 0.5045
+      },
+      "long/shape/family:Noto Sans Mono": {
+        "ink": 0.06907,
+        "extentW": 0.473
+      },
+      "long/shape/family:Caveat": {
+        "ink": 0.03654,
+        "extentW": 0.3423
+      }
+    }
+  },
+  "layout": {
+    "0": {
+      "ar/shape/regular": {
+        "ink": 0.02305,
+        "extentW": 0.1746
+      },
+      "ar/free/regular": {
+        "ink": 0.02773,
+        "extentW": 0.2
+      },
+      "ar/edge/regular": {
+        "ink": 0.04487,
+        "extentW": 1
+      },
+      "fa/shape/regular": {
+        "ink": 0.01946,
+        "extentW": 0.1825
+      },
+      "fa/free/regular": {
+        "ink": 0.02341,
+        "extentW": 0.2091
+      },
+      "fa/edge/regular": {
+        "ink": 0.04265,
+        "extentW": 1
+      },
+      "hi/shape/regular": {
+        "ink": 0.02702,
+        "extentW": 0.1389
+      },
+      "hi/free/regular": {
+        "ink": 0.0325,
+        "extentW": 0.1591
+      },
+      "hi/edge/regular": {
+        "ink": 0.04899,
+        "extentW": 1
+      },
+      "ta/shape/regular": {
+        "ink": 0.03779,
+        "extentW": 0.1944
+      },
+      "ta/free/regular": {
+        "ink": 0.04545,
+        "extentW": 0.2227
+      },
+      "ta/edge/regular": {
+        "ink": 0.05159,
+        "extentW": 1
+      },
+      "th/shape/regular": {
+        "ink": 0.03279,
+        "extentW": 0.246
+      },
+      "th/free/regular": {
+        "ink": 0.03943,
+        "extentW": 0.2818
+      },
+      "th/edge/regular": {
+        "ink": 0.04497,
+        "extentW": 1
+      },
+      "km/shape/regular": {
+        "ink": 0.03723,
+        "extentW": 0.2341
+      },
+      "km/free/regular": {
+        "ink": 0.04477,
+        "extentW": 0.2682
+      },
+      "km/edge/regular": {
+        "ink": 0.04455,
+        "extentW": 1
+      },
+      "my/shape/regular": {
+        "ink": 0.03675,
+        "extentW": 0.1786
+      },
+      "my/free/regular": {
+        "ink": 0.0442,
+        "extentW": 0.2045
+      },
+      "my/edge/regular": {
+        "ink": 0.04921,
+        "extentW": 1
+      },
+      "zh-Hans/shape/regular": {
+        "ink": 0.04989,
+        "extentW": 0.2817
+      },
+      "zh-Hans/free/regular": {
+        "ink": 0.06,
+        "extentW": 0.3227
+      },
+      "zh-Hans/edge/regular": {
+        "ink": 0.05196,
+        "extentW": 1
+      },
+      "ja/shape/regular": {
+        "ink": 0.05471,
+        "extentW": 0.3452
+      },
+      "ja/free/regular": {
+        "ink": 0.0658,
+        "extentW": 0.3955
+      },
+      "ja/edge/regular": {
+        "ink": 0.05296,
+        "extentW": 1
+      },
+      "ko/shape/regular": {
+        "ink": 0.03023,
+        "extentW": 0.1865
+      },
+      "ko/free/regular": {
+        "ink": 0.03636,
+        "extentW": 0.2136
+      },
+      "ko/edge/regular": {
+        "ink": 0.0472,
+        "extentW": 1
+      },
+      "am/shape/regular": {
+        "ink": 0.02608,
+        "extentW": 0.1706
+      },
+      "am/free/regular": {
+        "ink": 0.03136,
+        "extentW": 0.1955
+      },
+      "am/edge/regular": {
+        "ink": 0.04593,
+        "extentW": 1
+      },
+      "bo/shape/regular": {
+        "ink": 0.01597,
+        "extentW": 0.1865
+      },
+      "bo/free/regular": {
+        "ink": 0.0192,
+        "extentW": 0.2136
+      },
+      "bo/edge/regular": {
+        "ink": 0.04222,
+        "extentW": 1
+      },
+      "si/shape/regular": {
+        "ink": 0.03666,
+        "extentW": 0.2262
+      },
+      "si/free/regular": {
+        "ink": 0.04409,
+        "extentW": 0.2591
+      },
+      "si/edge/regular": {
+        "ink": 0.05032,
+        "extentW": 1
+      },
+      "emoji-zwj/shape/regular": {
+        "ink": 0.02617,
+        "extentW": 0.0833
+      },
+      "emoji-zwj/free/regular": {
+        "ink": 0.03148,
+        "extentW": 0.0955
+      },
+      "emoji-zwj/edge/regular": {
+        "ink": 0.04926,
+        "extentW": 1
+      }
+    },
+    "1": {
+      "th-long/wrap/regular": {
+        "ink": 0.04586,
+        "extentW": 0.8099
+      },
+      "km-long/wrap/regular": {
+        "ink": 0.05388,
+        "extentW": 0.6901
+      },
+      "my-long/wrap/regular": {
+        "ink": 0.0504,
+        "extentW": 1
+      },
+      "zh-long/wrap/regular": {
+        "ink": 0.11525,
+        "extentW": 1
+      },
+      "ja-long/wrap/regular": {
+        "ink": 0.10866,
+        "extentW": 1
+      },
+      "ko-long/wrap/regular": {
+        "ink": 0.06704,
+        "extentW": 0.9085
+      },
+      "ar-long/wrap/regular": {
+        "ink": 0.03968,
+        "extentW": 0.8732
+      },
+      "hi-long/wrap/regular": {
+        "ink": 0.05812,
+        "extentW": 0.993
+      },
+      "long-narrow/wrap/regular": {
+        "ink": 0.07767,
+        "extentW": 1
+      },
+      "mixed-long/wrap/regular": {
+        "ink": 0.06051,
+        "extentW": 0.9577
+      }
+    },
+    "2": {
+      "multi/shape/regular": {
+        "ink": 0.04618,
+        "extentW": 0.4047
+      },
+      "lines/shape/regular": {
+        "ink": 0.03574,
+        "extentW": 0.315
+      },
+      "ar-left/shape/regular": {
+        "ink": 0.03852,
+        "extentW": 0.3313
+      },
+      "ar-right/shape/regular": {
+        "ink": 0.03852,
+        "extentW": 0.3333
+      },
+      "decorated/shape/bold-italic": {
+        "ink": 0.05667,
+        "extentW": 0.2622
+      }
+    }
+  }
+}

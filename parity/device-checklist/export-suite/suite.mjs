@@ -445,11 +445,12 @@ const trim = (/** @type {string} */ s) => s.replace(/^[ \t\r\n\f\v]+|[ \t\r\n\f\
 
 /**
  * ExportInputBuilder::makeInput (cpp:21-77): the plan of each selected page and its file name.
- * @param {FileCase} c
+ * `facts` defaults to this suite's fixture pages; ../export-i18n/suite.mjs passes its own.
+ * @param {{ pages: number[] | 'all', format: string, region: string, padding: number }} c
  * @param {string} doc
+ * @param {any[]} [facts]
  */
-export function planCase(c, doc) {
-  const facts = pageFacts(c.fixture);
+export function planCase(c, doc, facts = pageFacts(/** @type {FileCase} */ (c).fixture)) {
   const sel = c.pages === 'all' ? facts.map((p) => p.index) : c.pages;
   const ext = '.' + c.format;
   const base = trim(doc) === '' ? 'drawing' : trim(doc);
@@ -618,7 +619,7 @@ function expectedFilesInZip(c, o = {}) {
  * The entries of a ZIP (stored or deflated; no ZIP64), from its central directory, with a CRC-32
  * check when this Node has `zlib.crc32`.
  * @param {Buffer} b
- * @returns {{ name: string, bytes: Buffer, crcOk: boolean | null }[]}
+ * @returns {{ name: string, bytes: Buffer, crcOk: boolean | null, utf8Flag: boolean }[]}
  */
 export function unzip(b) {
   let eocd = -1;
@@ -650,6 +651,8 @@ export function unzip(b) {
       name: name.replace(/^.*\//, ''),
       bytes,
       crcOk: typeof crcFn === 'function' ? crcFn(bytes) >>> 0 === crc : null,
+      // General purpose bit 11: the name is UTF-8 (APPNOTE 4.4.4); without it unzip tools read CP437.
+      utf8Flag: (b.readUInt16LE(p + 8) & 0x0800) !== 0,
     });
     p += 46 + nameLen + extraLen + commentLen;
   }

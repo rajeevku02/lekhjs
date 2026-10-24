@@ -2,8 +2,9 @@
 // PostScript name, or by `collectionIndex` when the name is ''), and decides how its runs are
 // written: **embedded** as a subset (`/FontFile2` for TrueType, `/FontFile3` for CFF) when OS/2
 // `fsType` allows it, or **outlines** (filled glyph paths, no text object) when the font is
-// restricted (bit 1), forbids subsetting (bit 8), is bitmap-only (bit 9), or is variable (the
-// requested instance is outlined; PDFKit would embed the default instance only). A face fontkit
+// restricted (bit 1), forbids subsetting (bit 8), is bitmap-only (bit 9), or is variable at an
+// instance other than its default (the requested instance is outlined; PDFKit would embed the
+// default instance only). A TrueType variable font at its default instance is embedded. A face fontkit
 // cannot draw (no `glyf` / `CFF ` / `CFF2` outlines, or a `layout` that throws) is not opened,
 // so the chain moves on to the next source.
 import type { FontData } from '../types';
@@ -105,6 +106,18 @@ export function openFace(fontkit: FontkitModule, data: FontData, log?: (code: st
   return byIndex ?? fonts[0] ?? null;
 }
 
+/**
+ * A TrueType variable font drawn at its default instance embeds like a static font: the subset
+ * PDFKit writes (fontkit's TTF subsetter) is the face's own `glyf` outlines and `hmtx` advances,
+ * which are the default instance, so its text stays extractable. Android's Indic system fonts are
+ * variable only (`NotoSansDevanagari-VF.ttf`), and outlining them left Devanagari undrawn as text
+ * (export suite EXP-45). Any other instance, and a CFF2 variable font, is outlined.
+ */
+function defaultInstanceEmbeds(face: FontkitFont, font: FontkitFont): boolean {
+  const t = face.directory?.tables;
+  return font === face && t !== undefined && 'glyf' in t;
+}
+
 /** Whether a face is italic (fsSelection bit 0, or a non-zero italic angle). */
 export function faceIsItalic(font: FontkitFont): boolean {
   return font['OS/2']?.fsSelection?.italic === true || (font.italicAngle ?? 0) !== 0;
@@ -133,10 +146,13 @@ export function openFont(
     const axis = face.variationAxes?.['wght'];
     const want = bold ? 700 : 400;
     const wght = axis !== undefined ? Math.min(axis.max, Math.max(axis.min, want)) : want;
-    try {
-      font = face.getVariation(axis !== undefined ? { wght } : {});
-    } catch {
-      font = face;
+    // The default instance is the face itself (its glyf outlines); only another weight is built.
+    if (axis === undefined || wght !== axis.default) {
+      try {
+        font = face.getVariation(axis !== undefined ? { wght } : {});
+      } catch {
+        font = face;
+      }
     }
   }
   if (!layoutWorks(font)) {
@@ -155,7 +171,7 @@ export function openFont(
   return Object.freeze({
     key,
     font,
-    mode: embeddable && !variable ? 'embed' : 'outline',
+    mode: embeddable && (!variable || defaultInstanceEmbeds(face, font)) ? 'embed' : 'outline',
     postscriptName: face.postscriptName ?? data.postscriptName,
     italic: faceIsItalic(face),
     source: data.source,

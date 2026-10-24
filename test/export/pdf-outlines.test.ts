@@ -57,9 +57,9 @@ describe('outlined runs (AC-EXP-19)', () => {
   it.each([
     ['a restricted font (fsType 2)', 'Restricted-fsType2.ttf', true],
     ['a font the host reports as not embeddable', 'Restricted-fsType2.ttf', false],
-    ['a variable font', 'NotoSansVariable-ascii.ttf', true],
-  ])('%s is drawn as filled outlines with no text object', async (_n, file, embeddable) => {
-    const { r, raw, page, logs } = await exportPlatform(file, embeddable);
+    ['a variable font at another instance than its default (bold)', 'NotoSansVariable-ascii.ttf', true, true],
+  ])('%s is drawn as filled outlines with no text object', async (_n, file, embeddable, bold = false) => {
+    const { r, raw, page, logs } = await exportPlatform(file, embeddable, bold);
     expect((page?.items ?? []).map((i) => i.str)).toEqual(['Embedded text']);
     expect(fonts(raw)).toEqual(['NotoSans-Regular']);
     expect(raw).not.toContain('LekhRestrictedTest');
@@ -80,12 +80,13 @@ describe('outlined runs (AC-EXP-19)', () => {
     expect(fsTypeAllowsEmbedding(FS_TYPE_BITMAP_ONLY)).toBe(false);
   });
 
-  it('a variable font is outlined at the requested weight', () => {
+  it('a variable font is outlined at the requested weight, and embedded at its default (EX2 fix 4)', () => {
     const m = pdfModules();
-    const data = fixtureFont('NotoSansVariable-ascii.ttf');
+    const data = fixtureFont('NotoSansVariable-ascii.ttf', { variable: true });
     const regular = openFont(m.fontkit, data, 'F1', false);
     const bold = openFont(m.fontkit, data, 'F2', true);
-    expect(regular?.mode).toBe('outline');
+    // wght default 400: the face itself, embedded (its subset is the default instance).
+    expect(regular?.mode).toBe('embed');
     expect(bold?.mode).toBe('outline');
     const w = (f: typeof regular): number => f?.font.layout('Hamburgefonts', []).advanceWidth ?? 0;
     expect(w(bold)).toBeGreaterThan(w(regular) * 1.03);
@@ -95,5 +96,13 @@ describe('outlined runs (AC-EXP-19)', () => {
     const f = openFont(pdfModules().fontkit, fixtureFont('NotoSansArabic-subset.ttf'), 'F1', false);
     expect(f?.mode).toBe('embed');
     expect(f?.postscriptName).toBe('NotoSansArabic-Regular');
+  });
+
+  it('a TrueType variable font at its default instance is embedded: its text is extractable (EXP-45, Android NotoSansDevanagari-VF)', async () => {
+    const { r, raw, page } = await exportPlatform('NotoSansVariable-ascii.ttf', true, false);
+    expect((page?.items ?? []).map((i) => i.str).sort()).toEqual(['Embedded text', 'Outlined text']);
+    // Two embedded TrueType subsets: the bundled Noto Sans and the variable face's default instance.
+    expect(raw.match(/\/FontFile2/g)?.length).toBe(2);
+    expect(r.warnings).toEqual([]);
   });
 });
